@@ -1,0 +1,305 @@
+{
+  "artefacto": "Pool",
+  "cita_al_set_de_consultas": {
+    "autoria": "grupo-2",
+    "estado": "completo",
+    "identidad": "5b6cba32126fed61-grupo-2",
+    "nota": "El pedido y la categoría de cada consulta NO se copian acá: viven en el `SetDeConsultas` y se citan por `consulta_id`. Lo que sí se copia por valor es la ficha de cada obra, porque su único otro hogar es la corrida —clase 2, no va al repo y no se reproduce— (la regla de qué se versiona, el argumento de la RevisiónDeExplicaciones)."
+  },
+  "clase_de_identidad": 3,
+  "configuraciones": [
+    {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "cadena": [
+        "recuperador_visual",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "commit": "be7733cd52dcaa16b6de0c1c9a97fd9054fa29a9",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "corridas": [
+        "ad8a9888f75e0a10-1",
+        "987f1212215585c0-1",
+        "0aac9daa6d3d424f-1",
+        "3f1666a4034261ff-1"
+      ],
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    }
+  ],
+  "conteos": {
+    "n_consultas": 4,
+    "n_items": 20,
+    "n_juicios_por_anotador": 20,
+    "n_obras_distintas": 20,
+    "nota": "`n_items` es el presupuesto de anotación por persona: 4 consultas × top-5 = 20 juicios, ~5 minutos. No cuentan contra los ~540 de la campaña definitiva, y hacen falta dos personas porque κ necesita dos."
+  },
+  "corridas_descartadas": {
+    "con_degradacion": 60,
+    "fallidas": 0,
+    "ordinales_viejos": 0,
+    "otra_configuracion": 0,
+    "salida_incompleta": 0
+  },
+  "designacion": "piloto",
+  "estado": "piloto",
+  "identidad": "5b6cba32126fed61-piloto",
+  "nota_de_ceguera": "El CSV es ciego: no lleva ni la configuración de origen ni el `rank`. El origen vive en el `.json` porque *cegar al anotador y perder el dato son dos cosas distintas* — la mitigación 2 del diseño de la evaluación estratifica κ por configuración de origen y necesita el dato. ⚠️ Acá la única configuración es C1, así que no hay origen que cegar: cegarlo, cuando el pool sea la unión de cinco. Pero el `rank` se ciega igual, y es una decisión de esta pieza: el puesto del ranking filtra más que el nombre de la configuración. Ver *'se mezcla el orden'* en el diseño de la evaluación Pooling: lo que se juzga es la obra, no el puesto que el sistema le dio.",
+  "nota_de_corridas_descartadas": "`con_degradacion` es la regla de qué corridas agregan a la tabla del lado de la anotación: un top-5 degradado no es el de la configuración declarada, y acá el costo de dejarlo pasar es trabajo humano irrecuperable. `ordinales_viejos` es el muestreo fijado, registrado y con su variabilidad medida: hay dos corridas de la misma consulta a propósito, y se toma el último ordinal —el `corrida_id` elegido está en el origen, así que *cuál* es citable.",
+  "nota_de_estado": "🔴 Pool PROVISORIO de la ronda piloto (el diseño de la evaluación La ronda piloto). NO es el pool congelado: no es la unión de los top-5 de C0–C4, es el top-5 de una sola configuración sobre 4 de las 30 consultas. Lo que produce son 20 juicios que no cuentan contra los ~540, que se descartan si la rúbrica cambia —es el resultado que el piloto existe para producir— y que, si no cambia, se importan para los pares que además aparezcan en el pool congelado, porque un juicio es sobre el par (consulta, obra) y no sobre la configuración que lo trajo. Armar el pool congelado.",
+  "nota_de_identidad": "Clase 3: ancla de trabajo humano. La identidad es `split_id` + `designación`, y la designación la asigna una persona cuando decide abrir una ronda de anotación. El estado, las configuraciones de origen y la semilla de mezcla NO son ingredientes y van acá adentro: el estado no alcanza porque dos pools congelados del mismo split tendrían el mismo id (la verificación de la norma de los vectores), y las configuraciones tampoco porque ningún conjunto de entradas determina el contenido de un pool: los top-5 no son deterministas (). Congelar y agregar un finalista son derivar otro pool, nunca reescribir este.",
+  "origen": [
+    {
+      "artwork_id": "cma:147520",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ad8a9888f75e0a10-1",
+      "rank": 5,
+      "score": 0.6452021598815918
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ad8a9888f75e0a10-1",
+      "rank": 2,
+      "score": 0.7146435379981995
+    },
+    {
+      "artwork_id": "cma:161673",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ad8a9888f75e0a10-1",
+      "rank": 3,
+      "score": 0.6536111831665039
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ad8a9888f75e0a10-1",
+      "rank": 1,
+      "score": 0.7166538834571838
+    },
+    {
+      "artwork_id": "cma:150074",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ad8a9888f75e0a10-1",
+      "rank": 4,
+      "score": 0.6466425657272339
+    },
+    {
+      "artwork_id": "cma:169341",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "987f1212215585c0-1",
+      "rank": 5,
+      "score": 0.646560788154602
+    },
+    {
+      "artwork_id": "cma:101356",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "987f1212215585c0-1",
+      "rank": 3,
+      "score": 0.6518068313598633
+    },
+    {
+      "artwork_id": "cma:314500",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "987f1212215585c0-1",
+      "rank": 2,
+      "score": 0.6582697033882141
+    },
+    {
+      "artwork_id": "cma:314448",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "987f1212215585c0-1",
+      "rank": 1,
+      "score": 0.6614611148834229
+    },
+    {
+      "artwork_id": "cma:142475",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "987f1212215585c0-1",
+      "rank": 4,
+      "score": 0.6491487622261047
+    },
+    {
+      "artwork_id": "cma:134072",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "0aac9daa6d3d424f-1",
+      "rank": 3,
+      "score": 0.6889805793762207
+    },
+    {
+      "artwork_id": "cma:128392",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "0aac9daa6d3d424f-1",
+      "rank": 2,
+      "score": 0.6906764507293701
+    },
+    {
+      "artwork_id": "cma:136760",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "0aac9daa6d3d424f-1",
+      "rank": 5,
+      "score": 0.68668532371521
+    },
+    {
+      "artwork_id": "cma:150031",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "0aac9daa6d3d424f-1",
+      "rank": 4,
+      "score": 0.687053382396698
+    },
+    {
+      "artwork_id": "cma:128371",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "0aac9daa6d3d424f-1",
+      "rank": 1,
+      "score": 0.6961719989776611
+    },
+    {
+      "artwork_id": "cma:99428",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "3f1666a4034261ff-1",
+      "rank": 1,
+      "score": 0.7011936902999878
+    },
+    {
+      "artwork_id": "cma:95286",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "3f1666a4034261ff-1",
+      "rank": 5,
+      "score": 0.6886906623840332
+    },
+    {
+      "artwork_id": "cma:124080",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "3f1666a4034261ff-1",
+      "rank": 3,
+      "score": 0.6994558572769165
+    },
+    {
+      "artwork_id": "cma:173240",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "3f1666a4034261ff-1",
+      "rank": 2,
+      "score": 0.701042652130127
+    },
+    {
+      "artwork_id": "aic:79765",
+      "config_id": "6d1357d2aa871a22",
+      "configuracion": "C1",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "3f1666a4034261ff-1",
+      "rank": 4,
+      "score": 0.6902648210525513
+    }
+  ],
+  "procedencia": {
+    "capas_de_configuracion": [
+      "config/default.toml"
+    ],
+    "commit": "b2d5d00f7475812154109605c2e69393938d3d05",
+    "fecha_de_derivacion": "2026-10-24T13:30:46+00:00",
+    "manifiesto": {
+      "corpus_indexado": 2605,
+      "held_out": 289,
+      "split_id": "5b6cba32126fed61"
+    },
+    "top_k": 5
+  },
+  "regla": {
+    "categoria_repetida": "ambiguo",
+    "de_donde_sale_la_semilla": "la del `ManifiestoDeSplit` (clase 3, versionada)",
+    "elegidas": [
+      {
+        "artwork_id": "aic:65821",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c04-visual",
+        "pedido": "composiciones geométricas pero en tonos tierra",
+        "rango": "0e7af020aaabc44e",
+        "turno": 1
+      },
+      {
+        "artwork_id": "cma:145925",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c06-conceptual",
+        "pedido": "retratos conmemorativos en Italia",
+        "rango": "0f4c9297867e406b",
+        "turno": 2
+      },
+      {
+        "artwork_id": "cma:109240",
+        "categoria": "ambiguo",
+        "consulta_id": "c01-ambiguo",
+        "pedido": "con más vida",
+        "rango": "2ba5d1b2b425cf65",
+        "turno": 3
+      },
+      {
+        "artwork_id": "aic:105600",
+        "categoria": "ambiguo",
+        "consulta_id": "c05-ambiguo",
+        "pedido": "más cercano",
+        "rango": "51dfe122fc22b633",
+        "turno": 4
+      }
+    ],
+    "excluye": "las consultas marcadas `es_ejemplo` en el `SetDeConsultas`: un ejemplo no es dato (el set de consultas / M3-d).",
+    "fuente": "el diseño de la evaluación La ronda piloto (fijado el 2026-10-11, hallazgo)",
+    "imagenes_distintas": true,
+    "n_consultas": 4,
+    "orden_de_turnos": [
+      "visual_cromatico",
+      "conceptual_cultural",
+      "ambiguo",
+      "ambiguo"
+    ],
+    "por_que_esa_categoria_se_repite": "Decisión, declarada: el piloto existe para refinar la rúbrica antes de gastar las ~540, y la sección que un piloto más veces manda a reescribir es el desempate. La categoría ambigua es la que menos se defiende sola —«con más vida», «más humano»—, así que repetirla estresa el desempate dos veces y las otras dos categorías quedan cubiertas igual. Es un parámetro: `--categoria-repetida` lo cambia y el pool lo declara.",
+    "por_que_imagenes_distintas": "Los 20 juicios son el banco de pruebas de la rúbrica, y dos pedidos sobre la misma imagen comparten el instrumento visual: si la rúbrica falla solo con cierto tipo de obra, con 4 imágenes distintas se ve y con 3 puede no verse. el diseño de la evaluación pide *una categoría repetida*, no una imagen repetida, así que la restricción no contradice la regla: la desempata.",
+    "ranking_dentro_de_la_categoria": "sha256(\"<semilla>|<consulta_id>\"), el menor primero (`identidad.rango_de_seleccion`, el mismo primitivo con el que el Particionador elige el held-out). No es un PRNG a propósito: la declaración tiene que alcanzar para re-derivar la selección, y el algoritmo de `random.sample` cambió entre versiones de CPython.",
+    "semilla": 7369,
+    "texto": "El top-5 de v1 (= C1) sobre 4 de las 30 consultas, elegidas una por categoría más una repetida."
+  },
+  "semilla_de_mezcla": 7369,
+  "split_id": "5b6cba32126fed61",
+  "version_del_pool": "1"
+}

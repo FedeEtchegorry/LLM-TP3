@@ -1,0 +1,21 @@
+pool_id,fila,consulta_id,artwork_id,obra,artista,cultura,anio,museo,source_url
+5b6cba32126fed61-piloto,1,c04-visual,cma:147520,Card Rack with a Jack of Hearts,John F. Peto,United States,1890,cma,https://clevelandart.org/art/1973.30
+5b6cba32126fed61-piloto,2,c04-visual,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-piloto,3,c04-visual,cma:161673,Autumn Evening with Full Moon on Musashino Plain,,Japan,1600,cma,https://clevelandart.org/art/2000.4.2
+5b6cba32126fed61-piloto,4,c04-visual,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-piloto,5,c04-visual,cma:150074,Seventy-Two Peaks Under the Blue Sky with Mount Furong,Matsumura Goshun,Japan,1785,cma,https://clevelandart.org/art/1980.28
+5b6cba32126fed61-piloto,6,c06-conceptual,cma:169341,Portrait of Maharaja Pratap Singh (1764–1803),Sahib Ram,Northwestern India,1788,cma,https://clevelandart.org/art/2011.207
+5b6cba32126fed61-piloto,7,c06-conceptual,cma:101356,Oval portrait of a woman in a Chaghtai hat,,India,1735,cma,https://clevelandart.org/art/1920.1967
+5b6cba32126fed61-piloto,8,c06-conceptual,cma:314500,Royal Woman Holding a Flower,,Northwestern India,1665,cma,https://clevelandart.org/art/2018.194
+5b6cba32126fed61-piloto,9,c06-conceptual,cma:314448,A European Woman Pouring Wine into a Cup,,,1700,cma,https://clevelandart.org/art/2018.143
+5b6cba32126fed61-piloto,10,c06-conceptual,cma:142475,"Christ in a Mandorla, with the instruments of the Passion, with St. Stephen and St. Lawrence below",Berlinghiero,Italy,1225,cma,https://clevelandart.org/art/1966.237.c
+5b6cba32126fed61-piloto,11,c01-ambiguo,cma:134072,Sunny Autumn Day,George Inness,United States,1892,cma,https://clevelandart.org/art/1956.578
+5b6cba32126fed61-piloto,12,c01-ambiguo,cma:128392,"Edge of the Woods Near L'Hermitage, Pontoise",Camille Pissarro,France,1879,cma,https://clevelandart.org/art/1951.356
+5b6cba32126fed61-piloto,13,c01-ambiguo,cma:136760,"Saint-Mammès, Loing Canal",Alfred Sisley,France,1885,cma,https://clevelandart.org/art/1961.262
+5b6cba32126fed61-piloto,14,c01-ambiguo,cma:150031,The Marl Pit at Mulcent:  Evening,Antoine Chintreuil,France,1857,cma,https://clevelandart.org/art/1980.245
+5b6cba32126fed61-piloto,15,c01-ambiguo,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-piloto,16,c05-ambiguo,cma:99428,Hannah Wentworth Atkinson,Joseph Blackburn,America,1760,cma,https://clevelandart.org/art/1919.1005
+5b6cba32126fed61-piloto,17,c05-ambiguo,cma:95286,Portrait of a Woman,Jan Anthonisz. van Ravesteyn,Netherlands,1620,cma,https://clevelandart.org/art/1916.1055
+5b6cba32126fed61-piloto,18,c05-ambiguo,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-piloto,19,c05-ambiguo,cma:173240,Portrait of a Woman (Judith Colman Bulfinch?),John Smibert,America,1729,cma,https://clevelandart.org/art/1920.3919
+5b6cba32126fed61-piloto,20,c05-ambiguo,aic:79765,Portrait of a Woman,John Wollaston,United States,1749,aic,https://www.artic.edu/artworks/79765
