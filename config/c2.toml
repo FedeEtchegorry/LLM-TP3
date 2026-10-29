@@ -1,0 +1,10 @@
+[consulta]
+configuracion = "C2"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]

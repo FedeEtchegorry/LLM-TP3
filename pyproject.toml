@@ -1,0 +1,64 @@
+[project]
+name = "tp3-rag"
+version = "0.1.0"
+description = "RAG multimodal sobre pinturas de AIC y CMA — TP3, 73.69 LLM, ITBA 2026, Grupo 2"
+requires-python = ">=3.10.12,<3.11"
+authors = [{ name = "Grupo 2" }]
+readme = "README.md"
+
+dependencies = [
+    "requests (>=2.32,<3)",
+    "pillow (>=12.3,<13)",
+    "tomli (>=2.0,<3)",
+]
+
+[project.scripts]
+tp3-ingesta = "tp3_rag.cli.ingesta:main"
+tp3-split = "tp3_rag.cli.split:main"
+tp3-embeber = "tp3_rag.cli.embeber:main"
+tp3-indexar = "tp3_rag.cli.indexar:main"
+tp3-consultas = "tp3_rag.cli.consultas:main"
+tp3-responder = "tp3_rag.cli.responder:main"
+tp3-validar = "tp3_rag.cli.validar:main"
+tp3-anotar = "tp3_rag.cli.anotar:main"
+tp3-metricas = "tp3_rag.cli.metricas:main"
+
+[tool.poetry]
+packages = [{ include = "tp3_rag", from = "src" }]
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[tool.poetry.group.modelos.dependencies]
+torch = { version = "^2.14", source = "pytorch-cpu" }
+transformers = "^5.19"
+chromadb = "^1.3"
+onnxruntime = "<=1.23.2"
+langchain = "^1.0"
+langchain-openai = "^1.0"
+openai = "^2.7"
+langsmith = "^0.4"
+langchain-text-splitters = "^1.1"
+
+[tool.poetry.group.figuras.dependencies]
+umap-learn = "^0.5"
+matplotlib = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0"
+nbclient = "^0.10"
+ipykernel = "^6.30"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "nivel1: unitarios, sin red ni API (obligatorio)",
+    "nivel2: validadores de contrato",
+    "nivel3: sanity y regresión, necesitan índice",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"

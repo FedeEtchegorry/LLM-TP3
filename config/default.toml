@@ -1,0 +1,303 @@
+[rutas]
+http_cache = "data/http-cache"
+catalogo = "data/catalogo"
+imagenes = "data/imagenes"
+embeddings_imagen = "data/embeddings-imagen"
+artefactos_ingesta = "artifacts/ingesta"
+artefactos_embebido = "artifacts/embebido"
+artefactos_splits = "artifacts/splits"
+chroma = "data/chroma"
+artefactos_indices = "artifacts/indices"
+artefactos_corridas = "artifacts/corridas"
+artefactos_planes = "artifacts/planes"
+ground_truth_consultas = "artifacts/ground-truth/consultas"
+tokenizadores = "data/tokenizadores"
+
+[ingesta]
+museos = ["aic", "cma"]
+tipos = ["Painting"]
+licencia = "libre"
+limite_n = 0
+
+[ingesta.criterio_de_inclusion]
+description_no_vacia = true
+imagen_real = true
+
+[ingesta.tabla_de_licencias.aic]
+description = "CC-BY-4.0"
+provenance = "CC0"
+exhibitions = "CC0"
+citations = "CC0"
+
+[ingesta.tabla_de_licencias.cma]
+description = "CC0"
+did_you_know = "CC0"
+provenance = "CC0"
+exhibitions = "CC0"
+citations = "CC0"
+
+[ingesta.media_license]
+aic = "CC0"
+cma = "CC0"
+
+[ingesta.campos_de_texto.aic]
+description = { origen = "description", render = "html_a_texto" }
+provenance = { origen = "provenance_text", render = "html_a_texto" }
+exhibitions = { origen = "exhibition_history", render = "html_a_texto" }
+citations = { origen = "publication_history", render = "html_a_texto" }
+
+[ingesta.campos_de_texto.cma]
+description = { origen = "description", render = "html_a_texto" }
+did_you_know = { origen = "did_you_know", render = "html_a_texto" }
+provenance = { origen = "provenance", render = "lista_de_descripciones" }
+exhibitions = { origen = "exhibitions", render = "exhibiciones_cma" }
+citations = { origen = "citations", render = "lista_de_citas" }
+
+[ingesta.campos_canonicos.aic]
+title = "title"
+artist = "artist_title"
+date_display = "date_display"
+year = "date_start"
+medium = "medium_display"
+style = "style_title"
+culture = "place_of_origin"
+type = "artwork_type_title"
+source_url = "id"
+
+[ingesta.campos_canonicos.cma]
+title = "title"
+artist = "creators.description"
+date_display = "creation_date"
+year = "sortable_date"
+medium = "technique"
+culture = "culture"
+type = "type"
+source_url = "url"
+
+[ingesta.urls.aic]
+campo_de_imagen = "image_id"
+imagen = "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+campo_de_ficha = "id"
+ficha = "https://www.artic.edu/artworks/{id}"
+
+[ingesta.urls.cma]
+campo_de_imagen = "images.web.url"
+campo_de_ficha = "url"
+
+[normalizacion.culture]
+criterio = "primer_componente_por_coma"
+
+[split]
+semilla = 7369
+proporcion_held_out = 0.1
+
+[split.estrato]
+ejes = ["museo", "periodo"]
+campo_de_periodo = "year"
+etiqueta_sin_periodo = "sin_periodo"
+
+[[split.estrato.tramos]]
+nombre = "hasta-1399"
+hasta = 1399
+[[split.estrato.tramos]]
+nombre = "1400-1599"
+desde = 1400
+hasta = 1599
+[[split.estrato.tramos]]
+nombre = "1600-1699"
+desde = 1600
+hasta = 1699
+[[split.estrato.tramos]]
+nombre = "1700-1799"
+desde = 1700
+hasta = 1799
+[[split.estrato.tramos]]
+nombre = "1800-1874"
+desde = 1800
+hasta = 1874
+[[split.estrato.tramos]]
+nombre = "1875-1949"
+desde = 1875
+
+[embebido]
+checkpoint = "openai/clip-vit-base-patch32"
+version_del_preprocesado = "1"
+batch = 16
+threads = 8
+batch_maximo = 64
+
+[fragmentacion]
+estrategia = "por_campo_semantico"
+
+campos_de_knowledge = ["description", "did_you_know", "provenance"]
+
+tamano_objetivo = 500
+solapamiento = 50
+
+unidad = "tokens"
+tokenizador = "cl100k_base"
+
+separadores = ["\n\n", "\n", ". ", " ", ""]
+
+[proveedor]
+base_url = "https://sa-llmproxy.it.itba.edu.ar/"
+
+[proveedor.precio_usd_por_millon_de_tokens]
+"openai/text-embedding-3-small" = 0.02
+
+[embebido_texto]
+modelo = "openai/text-embedding-3-small"
+dim = 1536
+batch = 128
+limite_de_tokens = 8191
+
+[indice]
+metrica = "cosine"
+batch_de_upsert = 5000
+
+[http]
+proyecto = "ITBA-TP3-G2"
+user_agent = "ITBA-TP3-G2"
+reintentos = 4
+backoff_base = 1.5
+timeout_segundos = 60
+
+[http.headers_por_dominio."artic.edu"]
+"AIC-User-Agent" = "{aic_user_agent}"
+"User-Agent" = "{user_agent}"
+
+[http.headers_por_dominio."clevelandart.org"]
+"User-Agent" = "{user_agent}"
+
+[http.rate_limit_por_minuto]
+"api.artic.edu" = 60
+"www.artic.edu" = 0
+"openaccess-api.clevelandart.org" = 0
+"openaccess-cdn.clevelandart.org" = 0
+
+[museos.aic]
+base = "https://api.artic.edu/api/v1/artworks"
+campos = [
+    "id", "title", "artist_title", "date_display", "date_start", "date_end",
+    "medium_display", "style_title", "place_of_origin", "artwork_type_title",
+    "image_id", "is_public_domain", "description", "provenance_text",
+    "publication_history", "exhibition_history",
+]
+
+[museos.cma]
+base = "https://openaccess-api.clevelandart.org/api/artworks/"
+
+[consulta]
+configuracion = "C1"
+
+alfa = 0.5
+alfa_congelado = true
+
+n_candidatos = 20
+top_k = 5
+
+etapas = [
+    "recuperador_visual",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[consulta.plan_de_falla]
+
+[evidencia]
+n_fragmentos_por_obra = 3
+
+orden = "por_similitud_al_pedido"
+
+[recuperacion_textual]
+n_fragmentos_recuperados = 50
+
+agregacion = "mejor_fragmento"
+
+[fusion]
+estrategia = "rrf"
+k = 60
+
+[medicion]
+marcadores_de_negacion = [
+    "not related",
+    "unrelated",
+    "not associated",
+    "rather than",
+    "instead of",
+    "unlike",
+    "no connection",
+    "devoid of",
+]
+
+[medicion.terminos_de_cultura]
+Japan = ["Japanese"]
+China = ["Chinese"]
+Italy = ["Italian"]
+France = ["French"]
+India = ["Indian", "South Asian"]
+"Mughal India" = ["Mughal", "Indian"]
+
+[bindings.planificador]
+modelo = "openai/gpt-4.1-mini"
+prompt_id = "planificador-pre-retrieval-dos-consultas"
+version_del_prompt = "2"
+esquema_de_salida = "json"
+reintentos = 2
+
+[bindings.planificador.muestreo]
+temperature = 0.1
+top_p = 1.0
+seed = 7369
+max_tokens = 300
+
+[bindings.reranker]
+modelo = "openai/gpt-4.1-mini"
+prompt_id = "reranker-score-0-10-un-candidato"
+version_del_prompt = "1"
+esquema_de_salida = "json"
+reintentos = 2
+
+[bindings.reranker.muestreo]
+temperature = 0.0
+top_p = 1.0
+seed = 7369
+max_tokens = 200
+
+[bindings.generador]
+modelo = "openai/gpt-4.1-mini"
+prompt_id = "generador-es-afirmaciones-tipadas"
+version_del_prompt = "2"
+esquema_de_salida = "json"
+reintentos = 2
+
+[bindings.generador.muestreo]
+temperature = 0.2
+top_p = 1.0
+seed = 7369
+max_tokens = 1500
+
+[salida]
+formato = "markdown"
+atribucion = "al_pie_de_la_referencia"
+campos_de_la_ficha = ["artist", "date_display", "medium", "style", "museum"]
+[salida.nombre_del_museo]
+aic = "Art Institute of Chicago"
+cma = "The Cleveland Museum of Art"
+[salida.nombre_de_la_licencia]
+"CC-BY-4.0" = "CC BY 4.0"
+"CC0" = "CC0 1.0"
+[salida.exigen_atribucion]
+"CC-BY-4.0" = true
+"CC0" = false
+
+[trazas]
+proveedor = "langsmith"
+proyecto = "tp3-rag-g2-m4"
+timeout_segundos = 10
+
+[retencion]
+imagen = false
+pedido = false
+dias = 0
