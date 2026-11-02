@@ -1,0 +1,462 @@
+{
+  "a9a_cobertura_de_normalizacion": {
+    "campos": [
+      "artist",
+      "year",
+      "medium",
+      "culture",
+      "source_url",
+      "media_license"
+    ],
+    "denominador": "universo normalizado (no obras indexadas)",
+    "por_museo": {
+      "aic": {
+        "artist": {
+          "n": 1677,
+          "pct": 85.3
+        },
+        "culture": {
+          "n": 1965,
+          "pct": 100.0
+        },
+        "media_license": {
+          "n": 1965,
+          "pct": 100.0
+        },
+        "medium": {
+          "n": 1964,
+          "pct": 99.9
+        },
+        "n_universo_normalizado": 1965,
+        "source_url": {
+          "n": 1965,
+          "pct": 100.0
+        },
+        "year": {
+          "n": 1951,
+          "pct": 99.3
+        }
+      },
+      "cma": {
+        "artist": {
+          "n": 1819,
+          "pct": 46.1
+        },
+        "culture": {
+          "n": 3937,
+          "pct": 99.7
+        },
+        "media_license": {
+          "n": 3950,
+          "pct": 100.0
+        },
+        "medium": {
+          "n": 3949,
+          "pct": 100.0
+        },
+        "n_universo_normalizado": 3950,
+        "source_url": {
+          "n": 3950,
+          "pct": 100.0
+        },
+        "year": {
+          "n": 3950,
+          "pct": 100.0
+        }
+      }
+    },
+    "total": {
+      "artist": {
+        "n": 3496,
+        "pct": 59.1
+      },
+      "culture": {
+        "n": 5902,
+        "pct": 99.8
+      },
+      "media_license": {
+        "n": 5915,
+        "pct": 100.0
+      },
+      "medium": {
+        "n": 5913,
+        "pct": 100.0
+      },
+      "n_universo_normalizado": 5915,
+      "source_url": {
+        "n": 5915,
+        "pct": 100.0
+      },
+      "year": {
+        "n": 5901,
+        "pct": 99.8
+      }
+    }
+  },
+  "a9b_culture": {
+    "criterio": "primer_componente_por_coma",
+    "nota": "el criterio de normalización de culture sigue abierto: lo implementado es el punto de variación y lo que se publica es el par número + criterio, no el valor.",
+    "por_museo": {
+      "aic": {
+        "colapsados": 0,
+        "distintos_antes": 110,
+        "distintos_despues": 110,
+        "n_obras": 1965
+      },
+      "cma": {
+        "colapsados": 341,
+        "distintos_antes": 410,
+        "distintos_despues": 69,
+        "n_obras": 3950
+      }
+    },
+    "total": {
+      "colapsados": 347,
+      "distintos_antes": 501,
+      "distintos_despues": 154
+    }
+  },
+  "a9c_imagen": {
+    "alfa_o_paleta": 0,
+    "convertidas_a_rgb": 5751,
+    "fallas_de_conversion_de_formato": 1,
+    "fallas_de_embedding_por_formato": null,
+    "grises": 26,
+    "modos_originales": {
+      "L": 26,
+      "RGB": 5725
+    },
+    "motivos_de_descarte": {
+      "cuerpo_vacio": 1,
+      "descarga_fallida:ErrorDeConfiguración": 71,
+      "falla_de_formato:OSError": 1,
+      "sin_url_de_imagen": 91
+    },
+    "n_con_imagen_preparada": 5751,
+    "nota": "`fallas_de_embedding_por_formato` es `null` a propósito: el EmbebedorDeImágenes no corre, así que esa mitad del conteo de conversiones de imagen todavía no es medible. Lo que verifica es que la conversión a RGB de las 5751 imágenes preparadas no falló (1 fallas de formato)."
+  },
+  "artefacto": "ReporteDeIngesta",
+  "catalogo_id": "e10c4e4f9cce0e74",
+  "clase_de_identidad": 2,
+  "cobertura_por_campo_de_texto": {
+    "aic": {
+      "n_universo_normalizado": 1965,
+      "secciones": {
+        "citations": {
+          "n": 1216,
+          "pct": 61.9
+        },
+        "description": {
+          "n": 725,
+          "pct": 36.9
+        },
+        "exhibitions": {
+          "n": 958,
+          "pct": 48.8
+        },
+        "provenance": {
+          "n": 1297,
+          "pct": 66.0
+        }
+      }
+    },
+    "cma": {
+      "n_universo_normalizado": 3950,
+      "secciones": {
+        "citations": {
+          "n": 2299,
+          "pct": 58.2
+        },
+        "description": {
+          "n": 2184,
+          "pct": 55.3
+        },
+        "did_you_know": {
+          "n": 1399,
+          "pct": 35.4
+        },
+        "exhibitions": {
+          "n": 2364,
+          "pct": 59.8
+        },
+        "provenance": {
+          "n": 3621,
+          "pct": 91.7
+        }
+      }
+    }
+  },
+  "config_id": "ff9116c8c0360613",
+  "configuracion_resuelta": {
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "rutas": {
+      "artefactos_ingesta": "artifacts/ingesta",
+      "catalogo": "data/catalogo",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes"
+    }
+  },
+  "embebido": null,
+  "licencias_por_seccion": {
+    "aic": {
+      "citations": {
+        "CC0": 1216
+      },
+      "description": {
+        "CC-BY-4.0": 725
+      },
+      "exhibitions": {
+        "CC0": 958
+      },
+      "provenance": {
+        "CC0": 1297
+      }
+    },
+    "cma": {
+      "citations": {
+        "CC0": 2299
+      },
+      "description": {
+        "CC0": 2184
+      },
+      "did_you_know": {
+        "CC0": 1399
+      },
+      "exhibitions": {
+        "CC0": 2364
+      },
+      "provenance": {
+        "CC0": 3621
+      }
+    }
+  },
+  "nota_de_embebido": "`null` a propósito: el `EmbebedorDeImágenes` no corre (el plan de construcción lo manda a background), así que `n_embebidas` y el throughput de CLIP —dos campos que el módulo de indexación lista como contenido de este artefacto— todavía no existen. Ver el hallazgo sobre el sellado del reporte: un artefacto de clase 2 se abre, se llena y **se sella**, y estos dos campos llegan después de sellarlo.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades, la identidad del reporte de ingesta): registra **una ejecución**. El `catalogo_id` está adentro como procedencia además de en el nombre, y la fecha y el throughput **no entran en la identidad** porque no están determinados por el catálogo. El ordinal **no sube** al `variante_id`.",
+  "ordinal": 1,
+  "procedencia": {
+    "capas_de_configuracion": [
+      "config/default.toml"
+    ],
+    "commit": "15cda24f67b9206bd0e4fade98b460ccee8732fe",
+    "credenciales": {
+      "contacto_aic_presente": true,
+      "langsmith_api_key_presente": false,
+      "openai_api_key_presente": false
+    },
+    "fecha_de_ingesta": "2026-10-14T16:20:17+00:00",
+    "version_del_normalizador": "1"
+  },
+  "segundos": {
+    "listar.aic": 21.1,
+    "listar.cma": 43.51,
+    "total": 4129.9,
+    "traer_y_normalizar.aic": 513.11,
+    "traer_y_normalizar.cma": 3552.15
+  },
+  "universo": {
+    "n_normalizadas": 5915,
+    "por_museo": {
+      "aic": {
+        "bytes_descargados": 540932495,
+        "motivos_sin_imagen": {
+          "cuerpo_vacio": 1,
+          "descarga_fallida:ErrorDeConfiguración": 71,
+          "falla_de_formato:OSError": 1,
+          "sin_url_de_imagen": 91
+        },
+        "n_con_imagen_real": 1801,
+        "n_descargadas": 1801,
+        "n_normalizadas": 1965,
+        "n_sin_imagen_real": 164,
+        "paginacion": {
+          "museo": "aic",
+          "n_alcanzadas": 1965,
+          "n_no_alcanzadas": 0,
+          "n_total_declarada": 1965,
+          "nota": "keyset sobre id (sort[0]=id, limit=100, page=1): 20 requests. El tope de 1.000 de /search no se toca.",
+          "truncado_por_limite": false
+        }
+      },
+      "cma": {
+        "bytes_descargados": 1203494185,
+        "motivos_sin_imagen": {},
+        "n_con_imagen_real": 3950,
+        "n_descargadas": 3950,
+        "n_normalizadas": 3950,
+        "n_sin_imagen_real": 0,
+        "paginacion": {
+          "museo": "cma",
+          "n_alcanzadas": 3950,
+          "n_no_alcanzadas": 0,
+          "n_total_declarada": 3950,
+          "nota": "skip/limit=1000: 5 requests. El universo de CMA ya excluye las obras sin imagen (`has_image=1`).",
+          "truncado_por_limite": false
+        }
+      }
+    }
+  },
+  "version_del_reporte": "1"
+}
