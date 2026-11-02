@@ -1,0 +1,726 @@
+{
+  "artefacto": "FiguraUMAP",
+  "para": [
+    "la tabla de tokens, costo y la figura",
+    "el objetivo opcional de la figura UMAP",
+    "el registro de decisiones el criterio de idioma"
+  ],
+  "procedencia": {
+    "split_id": "5b6cba32126fed61",
+    "catalogo_id": "e10c4e4f9cce0e74",
+    "checkpoint": "openai/clip-vit-base-patch32",
+    "version_del_preprocesado": "1",
+    "semilla": 7369,
+    "umap": {
+      "n_components": 2,
+      "n_neighbors": 15,
+      "min_dist": 0.1,
+      "metric": "cosine",
+      "random_state": 7369
+    },
+    "k_vecinos": 10,
+    "fuente_de_los_vectores": "caché de embeddings de imagen (data/embeddings-imagen/), no Chroma",
+    "variante_id": null,
+    "nota_variante": "el módulo de evaluación dice que la figura es sobre el conjunto indexado de UNA VARIANTE y que el criterio de `culture` se lee de la receta de la variante. No hay variante registrada (espera la API key), así que la membresía se lee del ManifiestoDeSplit —que es su dueño, la regla de qué se versiona— y el criterio de `culture` de config/default.toml. La proyección no depende de la variante: el caché está indexado por (obra, hash de bytes, checkpoint, versión del preprocesado). Lo único a rehacer cuando la variante exista es el panel de `culture`, y sólo si la receta declara otro criterio.",
+    "python": "3.10.12",
+    "umap_learn": "0.5.12",
+    "numpy": "2.2.6",
+    "matplotlib": "3.10.9"
+  },
+  "poblacion": {
+    "nombre": "corpus indexado del split 5b6cba32126fed61",
+    "n": 2605,
+    "no_es": {
+      "universo_normalizado": 5915,
+      "universo_con_imagen_embebido": 5751,
+      "elegibles_con_texto_e_imagen": 2894,
+      "held_out": 289
+    },
+    "nota": "la teoría aplicada § UMAP, el registro de decisiones el criterio de idioma y la tabla de tokens, costo y la figura dicen los tres que la figura es sobre las INDEXADAS. Las 5.751 embebidas serían otra figura y dirían otra cosa.",
+    "verificado": {
+      "dim": 512,
+      "norma_min": 0.9999998072490264,
+      "norma_max": 1.0000001923961885,
+      "D8": "‖v‖ = 1"
+    }
+  },
+  "coloreados": {
+    "tema": {
+      "origen": "derivado del campo `title` del museo, con regex declaradas",
+      "por_que_no_CLIP": "etiquetar el tema con CLIP zero-shot sería circular: etiquetaría los datos con el mismo espacio que la figura evalúa, y los clusters coincidirían con las etiquetas por construcción",
+      "lexico": {
+        "bodegón": "\\bstill[- ]lifes?\\b|\\bstill life\\b",
+        "retrato": "\\bportraits?\\b|\\bself-?portrait\\b",
+        "paisaje": "\\blandscapes?\\b|\\bviews?\\s+(of|from|near|at|on|in|over)\\b|\\bscenery\\b|\\bpanorama\\b|\\bseascape\\b",
+        "desnudo": "\\bnudes?\\b|\\bbathers?\\b",
+        "escena religiosa": "\\bchrist\\b|\\bvirgin\\b|\\bmadonna\\b|\\bcrucifix\\w*\\b|\\bsaints?\\b(?!-)|\\bst\\.\\s|\\bannunciation\\b|\\bnativity\\b|\\bholy\\b|\\bapostles?\\b|\\bbaptist\\b|\\bpiet[aà]\\b|\\baltarpieces?\\b|\\baltars?\\b|\\bbuddh\\w*\\b|\\bbodhisattva\\b|\\bkannon\\b|\\bkrishna\\b|\\bvishnu\\b|\\bshiva\\b|\\bdaoist\\b|\\bjain\\b|\\bdeit\\w+\\b|\\bguanyin\\b|\\bavalokit\\w*\\b|\\bmandala\\b",
+        "flora y fauna": "\\bflowers?\\b|\\bbamboo\\b|\\bpeon\\w+\\b|\\blotus\\b|\\bchrysanthem\\w*\\b|\\borchids?\\b|\\bblossoms?\\b|\\bbouquet\\b|\\bfloral\\b|\\bbirds?\\b|\\bhorses?\\b|\\btigers?\\b|\\bcats?\\b|\\bdogs?\\b|\\bdeer\\b|\\bmonkeys?\\b|\\bcranes?\\b|\\bfish\\b|\\binsects?\\b|\\belephants?\\b"
+      },
+      "precedencia": "el orden del léxico; gana el primer patrón que machea",
+      "cobertura": {
+        "n_etiquetadas": 969,
+        "pct": 37.2,
+        "n_sin_etiquetar": 1636
+      },
+      "n_por_clase": {
+        "bodegón": 30,
+        "retrato": 175,
+        "paisaje": 172,
+        "desnudo": 8,
+        "escena religiosa": 383,
+        "flora y fauna": 201
+      }
+    },
+    "culture": {
+      "criterio_de_normalizacion": "primer_componente_por_coma",
+      "fuente_del_criterio": "config/default.toml § [normalizacion.culture]",
+      "n_etiquetas_en_el_corpus": 101,
+      "agrupamiento_declarado": "top-8 por n + `otras`; sin valor → gris",
+      "top8": {
+        "France": 371,
+        "China": 367,
+        "Japan": 341,
+        "Mughal India": 247,
+        "Italy": 193,
+        "Netherlands": 99,
+        "Northern India": 95,
+        "United States": 93
+      },
+      "n_otras": 788,
+      "n_sin_culture": 11,
+      "cobertura_pct": 99.58,
+      "no_cierra": "el criterio de normalización de culture. Es un corte por frecuencia, no una tabla de sinónimos: China/Chinese, Netherlands/Netherlandish y la India en once etiquetas siguen sin unirse (los hallazgos)."
+    },
+    "year": {
+      "escala": "secuencial de un solo tono, claro→oscuro",
+      "n_con_valor": 2604,
+      "cobertura_pct": 99.96,
+      "sin_valor": [
+        "aic:45753"
+      ],
+      "rango": [
+        -1295,
+        1949
+      ],
+      "rampa_recortada_en": [
+        1119.0,
+        1949.0
+      ],
+      "nota_recorte": "la rampa se recorta en el percentil 1 porque 9 obras anteriores al año 1000 se llevarían el 60 % del gradiente; el panel de tramos no se recorta",
+      "anteriores_al_1000": {
+        "aic:121738": -1295,
+        "aic:14968": 500,
+        "aic:805": -1069,
+        "cma:134607": -300,
+        "cma:134610": -300,
+        "cma:134789": 900,
+        "cma:135836": 960,
+        "cma:138881": 500,
+        "cma:145923": 138
+      }
+    },
+    "style": {
+      "n_con_valor": 567,
+      "cobertura_pct": 21.8,
+      "por_museo": {
+        "aic": 88.9,
+        "cma": 0.0
+      },
+      "n_valores_distintos": 39,
+      "familias_declaradas": {
+        "movimiento": {
+          "n_valores": 13,
+          "n_obras": 222
+        },
+        "período": {
+          "n_valores": 12,
+          "n_obras": 253
+        },
+        "cultura": {
+          "n_valores": 14,
+          "n_obras": 92
+        }
+      },
+      "clasificacion": {
+        "Impressionism": "movimiento",
+        "Post-Impressionism": "movimiento",
+        "Realism": "movimiento",
+        "Renaissance": "movimiento",
+        "Modernism": "movimiento",
+        "Folk Art": "movimiento",
+        "Neoclassicism": "movimiento",
+        "Baroque": "movimiento",
+        "Mannerism": "movimiento",
+        "Hudson River School": "movimiento",
+        "Pre-Raphaelite": "movimiento",
+        "Pointillism": "movimiento",
+        "synthetist": "movimiento",
+        "17th Century": "período",
+        "18th Century": "período",
+        "16th Century": "período",
+        "15th century": "período",
+        "14th century": "período",
+        "13th century": "período",
+        "19th century": "período",
+        "20th Century": "período",
+        "nineteenth century": "período",
+        "sixteenth century": "período",
+        "new kingdom": "período",
+        "third intermediate period": "período",
+        "Japanese (culture or style)": "cultura",
+        "Chinese (culture or style)": "cultura",
+        "Islamic (culture or style)": "cultura",
+        "Indian (South Asian)": "cultura",
+        "South Asian": "cultura",
+        "Himalayan": "cultura",
+        "safavid": "cultura",
+        "saffarid": "cultura",
+        "gondar": "cultura",
+        "teotihuacán": "cultura",
+        "european": "cultura",
+        "dutch": "cultura",
+        "american colonial": "cultura",
+        "Flemish": "cultura"
+      }
+    }
+  },
+  "separacion": {
+    "metrica": "κ del vecino: acuerdo entre la etiqueta de una obra y la de sus k vecinos más cercanos por coseno, normalizado como el κ de Cohen. Medido en el espacio original de 512 dims, no en la proyección.",
+    "k": 10,
+    "por_etiquetado": {
+      "tema (del título)": {
+        "n": 969,
+        "n_clases": 6,
+        "k": 10,
+        "pureza": 0.760061919504644,
+        "azar": 0.2636419073936665,
+        "kappa": 0.6741557091521909,
+        "por_clase": {
+          "escena religiosa": 0.8671018276762402,
+          "retrato": 0.7874285714285715,
+          "flora y fauna": 0.56318407960199,
+          "paisaje": 0.7726744186046511,
+          "bodegón": 0.61,
+          "desnudo": 0.275
+        },
+        "n_por_clase": {
+          "escena religiosa": 383,
+          "flora y fauna": 201,
+          "retrato": 175,
+          "paisaje": 172,
+          "bodegón": 30,
+          "desnudo": 8
+        }
+      },
+      "style (los 39 valores)": {
+        "n": 567,
+        "n_clases": 39,
+        "k": 10,
+        "pureza": 0.4015873015873016,
+        "azar": 0.08547871445397948,
+        "kappa": 0.34565470714504754,
+        "por_clase": {
+          "18th Century": 0.19736842105263158,
+          "16th Century": 0.2636363636363636,
+          "19th century": 0.064,
+          "Impressionism": 0.6972972972972973,
+          "Himalayan": 0.8173913043478261,
+          "sixteenth century": 0.05714285714285714,
+          "17th Century": 0.39,
+          "Chinese (culture or style)": 0.75,
+          "Modernism": 0.2,
+          "15th century": 0.412,
+          "Post-Impressionism": 0.275,
+          "Realism": 0.20384615384615384,
+          "Japanese (culture or style)": 0.7,
+          "nineteenth century": 0.125,
+          "Folk Art": 0.4166666666666667,
+          "safavid": 0.1,
+          "new kingdom": 0.0,
+          "teotihuacán": 0.0,
+          "Renaissance": 0.23809523809523808,
+          "14th century": 0.12,
+          "13th century": 0.1,
+          "Baroque": 0.15,
+          "Pre-Raphaelite": 0.0,
+          "gondar": 0.0,
+          "Indian (South Asian)": 0.0,
+          "synthetist": 0.0,
+          "Mannerism": 0.06666666666666667,
+          "Hudson River School": 0.1,
+          "european": 0.0,
+          "20th Century": 0.0,
+          "Pointillism": 0.0,
+          "Neoclassicism": 0.24,
+          "South Asian": 0.0,
+          "dutch": 0.0,
+          "american colonial": 0.0,
+          "Islamic (culture or style)": 0.0,
+          "third intermediate period": 0.0,
+          "saffarid": 0.0,
+          "Flemish": 0.0
+        },
+        "n_por_clase": {
+          "Impressionism": 111,
+          "17th Century": 80,
+          "18th Century": 38,
+          "16th Century": 33,
+          "Post-Impressionism": 32,
+          "Japanese (culture or style)": 29,
+          "Chinese (culture or style)": 28,
+          "nineteenth century": 28,
+          "Realism": 26,
+          "19th century": 25,
+          "15th century": 25,
+          "Himalayan": 23,
+          "Renaissance": 21,
+          "sixteenth century": 14,
+          "Modernism": 9,
+          "Folk Art": 6,
+          "14th century": 5,
+          "Neoclassicism": 5,
+          "Baroque": 4,
+          "Mannerism": 3,
+          "safavid": 2,
+          "13th century": 2,
+          "Hudson River School": 2,
+          "new kingdom": 1,
+          "teotihuacán": 1,
+          "Pre-Raphaelite": 1,
+          "gondar": 1,
+          "Indian (South Asian)": 1,
+          "synthetist": 1,
+          "european": 1,
+          "20th Century": 1,
+          "Pointillism": 1,
+          "South Asian": 1,
+          "dutch": 1,
+          "american colonial": 1,
+          "Islamic (culture or style)": 1,
+          "third intermediate period": 1,
+          "saffarid": 1,
+          "Flemish": 1
+        }
+      },
+      "style (sólo movimientos)": {
+        "n": 222,
+        "n_clases": 13,
+        "k": 10,
+        "pureza": 0.5869369369369369,
+        "azar": 0.2937915290856468,
+        "kappa": 0.41509755252828434,
+        "por_clase": {
+          "Impressionism": 0.8,
+          "Modernism": 0.23333333333333334,
+          "Post-Impressionism": 0.3,
+          "Realism": 0.3576923076923077,
+          "Folk Art": 0.5,
+          "Renaissance": 0.7142857142857143,
+          "Baroque": 0.225,
+          "Pre-Raphaelite": 0.0,
+          "synthetist": 0.0,
+          "Mannerism": 0.06666666666666667,
+          "Hudson River School": 0.1,
+          "Pointillism": 0.0,
+          "Neoclassicism": 0.24
+        },
+        "n_por_clase": {
+          "Impressionism": 111,
+          "Post-Impressionism": 32,
+          "Realism": 26,
+          "Renaissance": 21,
+          "Modernism": 9,
+          "Folk Art": 6,
+          "Neoclassicism": 5,
+          "Baroque": 4,
+          "Mannerism": 3,
+          "Hudson River School": 2,
+          "Pre-Raphaelite": 1,
+          "synthetist": 1,
+          "Pointillism": 1
+        }
+      },
+      "culture (top-8 + otras)": {
+        "n": 2594,
+        "n_clases": 9,
+        "k": 10,
+        "pureza": 0.5501156515034695,
+        "azar": 0.16839923392586825,
+        "kappa": 0.45901402830546906,
+        "por_clase": {
+          "France": 0.46388140161725067,
+          "Netherlands": 0.2111111111111111,
+          "otras": 0.49200507614213196,
+          "United States": 0.21827956989247313,
+          "Italy": 0.4948186528497409,
+          "China": 0.7307901907356948,
+          "Japan": 0.6741935483870968,
+          "Northern India": 0.3778947368421053,
+          "Mughal India": 0.7955465587044535
+        },
+        "n_por_clase": {
+          "otras": 788,
+          "France": 371,
+          "China": 367,
+          "Japan": 341,
+          "Mughal India": 247,
+          "Italy": 193,
+          "Netherlands": 99,
+          "Northern India": 95,
+          "United States": 93
+        }
+      },
+      "formato (folio vs. no)": {
+        "n": 2605,
+        "n_clases": 2,
+        "k": 10,
+        "pureza": 0.8940499040307102,
+        "azar": 0.685449522512243,
+        "kappa": 0.6631698135844869,
+        "por_clase": {
+          "pintura de caballete": 0.9219465648854962,
+          "folio de manuscrito": 0.7791748526522594
+        },
+        "n_por_clase": {
+          "pintura de caballete": 2096,
+          "folio de manuscrito": 509
+        }
+      },
+      "museo": {
+        "n": 2605,
+        "n_clases": 2,
+        "k": 10,
+        "pureza": 0.7422648752399232,
+        "azar": 0.6299960786741792,
+        "kappa": 0.30342596414507067,
+        "por_clase": {
+          "aic": 0.4329153605015674,
+          "cma": 0.8426029486527707
+        },
+        "n_por_clase": {
+          "cma": 1967,
+          "aic": 638
+        }
+      }
+    },
+    "kappa_en_2d_de_umap": {
+      "tema (del título)": 0.6419216502726227,
+      "style (los 39 valores)": 0.32019830317898396,
+      "style (sólo movimientos)": 0.34748614638651576,
+      "culture (top-8 + otras)": 0.4410275195636115,
+      "formato (folio vs. no)": 0.6136216050030746,
+      "museo": 0.26379366124120057
+    },
+    "cabeza_a_cabeza": {
+      "poblacion": "las 189 obras que tienen tema Y style (todas de AIC)",
+      "tema": {
+        "n": 189,
+        "n_clases": 6,
+        "k": 10,
+        "pureza": 0.7746031746031746,
+        "azar": 0.2960148598446471,
+        "kappa": 0.6798272967138402,
+        "por_clase": {
+          "escena religiosa": 0.9055555555555556,
+          "retrato": 0.7666666666666667,
+          "flora y fauna": 0.5454545454545454,
+          "paisaje": 0.6263157894736842,
+          "bodegón": 0.6666666666666666,
+          "desnudo": 0.275
+        },
+        "n_por_clase": {
+          "escena religiosa": 90,
+          "retrato": 39,
+          "flora y fauna": 22,
+          "paisaje": 19,
+          "bodegón": 15,
+          "desnudo": 4
+        }
+      },
+      "style": {
+        "n": 189,
+        "n_clases": 22,
+        "k": 10,
+        "pureza": 0.2904761904761905,
+        "azar": 0.0854441067207025,
+        "kappa": 0.2241875923190546,
+        "por_clase": {
+          "16th Century": 0.2571428571428571,
+          "Himalayan": 0.6,
+          "sixteenth century": 0.044444444444444446,
+          "18th Century": 0.1,
+          "17th Century": 0.35555555555555557,
+          "Impressionism": 0.28888888888888886,
+          "15th century": 0.42857142857142855,
+          "Realism": 0.0,
+          "nineteenth century": 0.04285714285714286,
+          "Renaissance": 0.28421052631578947,
+          "14th century": 0.12,
+          "13th century": 0.1,
+          "Post-Impressionism": 0.14,
+          "19th century": 0.02,
+          "Japanese (culture or style)": 0.5625,
+          "Mannerism": 0.0,
+          "Neoclassicism": 0.0,
+          "Modernism": 0.13333333333333333,
+          "Chinese (culture or style)": 0.6,
+          "Baroque": 0.0,
+          "safavid": 0.0,
+          "Flemish": 0.0
+        },
+        "n_por_clase": {
+          "17th Century": 36,
+          "16th Century": 21,
+          "15th century": 21,
+          "Renaissance": 19,
+          "18th Century": 11,
+          "Chinese (culture or style)": 11,
+          "sixteenth century": 9,
+          "Impressionism": 9,
+          "Himalayan": 8,
+          "Japanese (culture or style)": 8,
+          "nineteenth century": 7,
+          "14th century": 5,
+          "Post-Impressionism": 5,
+          "19th century": 5,
+          "Realism": 3,
+          "Modernism": 3,
+          "13th century": 2,
+          "Mannerism": 2,
+          "Neoclassicism": 1,
+          "Baroque": 1,
+          "safavid": 1,
+          "Flemish": 1
+        }
+      }
+    },
+    "controles": {
+      "tema_dentro_de_cada_formato": {
+        "folio de manuscrito": {
+          "n": 162,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.7734567901234568,
+          "azar": 0.38900391074304114,
+          "kappa": 0.6292231425702812,
+          "por_clase": {
+            "retrato": 0.375,
+            "escena religiosa": 0.8847826086956522,
+            "paisaje": 0.7538461538461538,
+            "flora y fauna": 0.61875
+          },
+          "n_por_clase": {
+            "escena religiosa": 92,
+            "flora y fauna": 32,
+            "paisaje": 26,
+            "retrato": 12
+          }
+        },
+        "pintura de caballete": {
+          "n": 807,
+          "n_clases": 6,
+          "k": 10,
+          "pureza": 0.7600991325898389,
+          "azar": 0.24796061754929724,
+          "kappa": 0.6809995952228114,
+          "por_clase": {
+            "escena religiosa": 0.8573883161512027,
+            "retrato": 0.7944785276073619,
+            "flora y fauna": 0.5940828402366863,
+            "paisaje": 0.7767123287671233,
+            "bodegón": 0.6133333333333333,
+            "desnudo": 0.275
+          },
+          "n_por_clase": {
+            "escena religiosa": 291,
+            "flora y fauna": 169,
+            "retrato": 163,
+            "paisaje": 146,
+            "bodegón": 30,
+            "desnudo": 8
+          }
+        }
+      },
+      "tema_dentro_de_cada_cultura": {
+        "France": {
+          "n": 92,
+          "n_clases": 6,
+          "k": 10,
+          "pureza": 0.6804347826086956,
+          "azar": 0.20974677496416624,
+          "kappa": 0.5956166868198307,
+          "por_clase": {
+            "escena religiosa": 0.7105263157894737,
+            "retrato": 0.85625,
+            "flora y fauna": 0.17142857142857143,
+            "bodegón": 0.6785714285714286,
+            "desnudo": 0.34285714285714286,
+            "paisaje": 0.6615384615384615
+          },
+          "n_por_clase": {
+            "retrato": 32,
+            "escena religiosa": 19,
+            "bodegón": 14,
+            "paisaje": 13,
+            "flora y fauna": 7,
+            "desnudo": 7
+          }
+        },
+        "China": {
+          "n": 176,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.71875,
+          "azar": 0.3011038961038961,
+          "kappa": 0.5975796710954195,
+          "por_clase": {
+            "retrato": 0.22,
+            "flora y fauna": 0.56,
+            "paisaje": 0.7596774193548387,
+            "escena religiosa": 0.8813559322033898
+          },
+          "n_por_clase": {
+            "paisaje": 62,
+            "escena religiosa": 59,
+            "flora y fauna": 45,
+            "retrato": 10
+          }
+        },
+        "Japan": {
+          "n": 137,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.6751824817518248,
+          "azar": 0.35455130957492487,
+          "kappa": 0.49675702644270747,
+          "por_clase": {
+            "flora y fauna": 0.682089552238806,
+            "paisaje": 0.7581395348837209,
+            "escena religiosa": 0.49444444444444446,
+            "retrato": 0.5888888888888889
+          },
+          "n_por_clase": {
+            "flora y fauna": 67,
+            "paisaje": 43,
+            "escena religiosa": 18,
+            "retrato": 9
+          }
+        },
+        "Mughal India": {
+          "n": 53,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.5660377358490566,
+          "azar": 0.36066763425253995,
+          "kappa": 0.32122587968217925,
+          "por_clase": {
+            "flora y fauna": 0.7517241379310344,
+            "retrato": 0.5272727272727272,
+            "escena religiosa": 0.21428571428571427,
+            "paisaje": 0.15
+          },
+          "n_por_clase": {
+            "flora y fauna": 29,
+            "retrato": 11,
+            "escena religiosa": 7,
+            "paisaje": 6
+          }
+        },
+        "Italy": {
+          "n": 114,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.9070175438596492,
+          "azar": 0.688091911193914,
+          "kappa": 0.7018914883026383,
+          "por_clase": {
+            "escena religiosa": 0.9838709677419355,
+            "retrato": 0.6555555555555556,
+            "paisaje": 0.05,
+            "flora y fauna": 0.0
+          },
+          "n_por_clase": {
+            "escena religiosa": 93,
+            "retrato": 18,
+            "paisaje": 2,
+            "flora y fauna": 1
+          }
+        },
+        "Netherlands": {
+          "n": 47,
+          "n_clases": 5,
+          "k": 10,
+          "pureza": 0.7361702127659574,
+          "azar": 0.23496762257169287,
+          "kappa": 0.6551390568319225,
+          "por_clase": {
+            "escena religiosa": 0.9066666666666666,
+            "retrato": 0.7571428571428571,
+            "bodegón": 0.2,
+            "paisaje": 0.79,
+            "flora y fauna": 0.38
+          },
+          "n_por_clase": {
+            "escena religiosa": 15,
+            "retrato": 14,
+            "paisaje": 10,
+            "flora y fauna": 5,
+            "bodegón": 3
+          }
+        },
+        "Northern India": {
+          "n": 32,
+          "n_clases": 4,
+          "k": 10,
+          "pureza": 0.6,
+          "azar": 0.5786290322580645,
+          "kappa": 0.05071770334928228,
+          "por_clase": {
+            "escena religiosa": 0.7666666666666667,
+            "retrato": 0.1,
+            "flora y fauna": 0.12,
+            "paisaje": 0.0
+          },
+          "n_por_clase": {
+            "escena religiosa": 24,
+            "flora y fauna": 5,
+            "retrato": 2,
+            "paisaje": 1
+          }
+        },
+        "United States": {
+          "n": 16,
+          "n_clases": 6,
+          "k": 10,
+          "pureza": 0.3125,
+          "azar": 0.23333333333333334,
+          "kappa": 0.10326086956521739,
+          "por_clase": {
+            "desnudo": 0.0,
+            "retrato": 0.5142857142857142,
+            "flora y fauna": 0.0,
+            "bodegón": 0.1,
+            "escena religiosa": 0.0,
+            "paisaje": 0.3
+          },
+          "n_por_clase": {
+            "retrato": 7,
+            "paisaje": 4,
+            "bodegón": 2,
+            "desnudo": 1,
+            "flora y fauna": 1,
+            "escena religiosa": 1
+          }
+        }
+      }
+    }
+  },
+  "figuras": {
+    "tema": "artifacts/informes/umap-01-tema.png",
+    "culture": "artifacts/informes/umap-02-culture.png",
+    "year": "artifacts/informes/umap-03-year.png",
+    "style": "artifacts/informes/umap-04-style.png",
+    "separacion": "artifacts/informes/umap-05-separacion.png",
+    "hallazgos": "artifacts/informes/umap-06-hallazgos-no-pedidos.png"
+  }
+}
