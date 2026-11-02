@@ -127,7 +127,7 @@ del set de evaluación**, que es nuestro propio held-out.
 repo que cita documentos internos** —31 identificadores y 26 referencias—. **No es un olvido.**
 
 Cada juicio de anotación lleva el **hash del texto de la rúbrica con la que se juzgó**, y ese hash
-está escrito adentro de **15 artefactos**: el consenso, el κ, la decisión de `A5`, los **cuatro
+está escrito adentro de **15 artefactos**: el consenso, el κ, la decisión del acuerdo entre anotadores, los **cuatro
 aportes de anotación** y los tres archivos del juez. 🔑 **El hash existe exactamente para eso: atar
 cada juicio al instrumento con el que se emitió.**
 

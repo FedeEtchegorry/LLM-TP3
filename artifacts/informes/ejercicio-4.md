@@ -26,7 +26,7 @@ rúbrica `v1` · y un **segundo cuerpo de anotación**, presupuestado aparte: **
 > los títulos del enunciado**, y tres decisiones más.
 >
 > **(1) Cada cifra lleva su población y su artefacto en la misma línea.** Este proyecto registra
-> trece correcciones de cifras publicadas sin su población (los hallazgos, *modo de falla 3*), y el
+> trece correcciones de cifras publicadas sin su población (*modo de falla 3*), y el
 > formato es la mitigación: si una cifra no se puede citar, no entra.
 > **(2) Las limitaciones van en el cuerpo (§6), no en una nota al pie.** el acuerdo entre anotadores compromete
 > *reportar el acuerdo pase lo que pase*, y la anotación por IA eligió la salida *limitación declarada*.
@@ -160,7 +160,7 @@ fusiona por **rango** y el problema desaparece. El barrido lo midió:
 queda en el medio, y la que **ignora el acuerdo entre ramas** es la peor.
 ⚠️ **Y las tres cifras no tienen la misma procedencia, así que van etiquetadas distinto.** El
 **0,727** lo emite `artifacts/informes/tabla-a2-m13.json` (fila `C3`). El **0,682** y el **0,649**
-viven en el bloque `[fusion]` de `config/default.toml` y en los hallazgos: los tres brazos
+viven en el bloque `[fusion]` de `config/default.toml`: los tres brazos
 corrieron y están en disco (`config_id` `ce0910b50e3569e9`, `f954237a74462e66`, `b2f6389c73f7da2e`,
 30 corridas cada uno), pero **la comparación nunca se escribió a un artefacto**. Son medidas, no
 emitidas.
@@ -325,7 +325,7 @@ también negativo).
 🔑 **Por qué existe la sensibilidad, contado y no escondido.** El desempate lo hizo un **tercer
 anotador** que coincide con `ia-claude` en **95 de 133 pares (71 %)**, con `ia-codex` en **29
 (22 %)** y con ninguno en **9 (7 %)** — y en `conceptual_cultural` es **27 de 28, el 96 %**
-(`los hallazgos el desempate`). O sea que **el consenso del tercio disputado es, de hecho, el juicio de uno de
+(` el desempate`). O sea que **el consenso del tercio disputado es, de hecho, el juicio de uno de
 los dos anotadores**. **No hay un tercero neutral disponible** —el proxy de la cátedra sirve solo
 modelos de OpenAI y el otro anotador es de otra familia—, así que **una sensibilidad es lo único
 honesto** que se puede decir de ese tercio. Los 133 disputados son **35,1 % de los 379**, que es
@@ -883,6 +883,33 @@ alcanzaría a los `dato` ni a la `abstencion`.**
 generador **ya está tomando**. El predicado sigue siendo la decisión correcta; lo que cambia es que
 **no es preventivo**, y que **tiene que ser un validador que corra** y no un invariante que se
 cumple por disciplina.
+
+> ### 🔴 Y la magnitud es de `C1`, que es la configuración MENOS afectada: `C4` da el triple
+>
+> la medición anterior midió `C1` —y esta sección lo corrigió sobre esa misma población—, **pero `C1` no es la
+> configuración que este informe publica.** Medido sobre los tres `config_id`, contando las
+> observaciones persistidas que refieren a la imagen de consulta:
+>
+> | configuración | `config_id` | observaciones | 🔴 **refieren a la imagen de consulta** |
+> |---|---|---:|---:|
+> | **C1** | `4443862ae45e62d6` | 148 | **2** (más 2 `dato` con su `ref`) |
+> | **C3** | `7eb0c12e63b95947` | 148 | **0** |
+> | 🔴 **C4** — la que se publica | `4d35057811cf8e2f` | 144 | 🔴 **6** |
+>
+> ⚠️ **Y una de las seis tiene la imagen del usuario como SUJETO gramatical**, que no es una
+> comparación sino una descripción: *"**La imagen que subió la persona** muestra un motivo similar de
+> bambú y ramas, pero en blanco y negro"* (`c09-visual`). 🔑 **Hay una explicación mecánica que vale
+> como hipótesis y no como resultado medido:** `C4` agrega reranking multimodal, así que la imagen de
+> consulta está **más presente** en el contexto del generador. ⚠️ **Si es eso, la exposición crece
+> con la calidad del sistema**, que es la dirección más incómoda posible.
+>
+> 🔴 **Y de acá sale la precisión que vuelve el predicado implementable, porque como está escrito no
+> lo es.** *"Una `observacion` es sobre una obra recuperada"* suena bien y **rechazaría el
+> producto**: `c05`, `c08` y `c09` **son consultas por imagen**, y *"el mismo motivo"* es
+> literalmente lo que preguntan. **La forma que un validador puede exigir es que la imagen de
+> consulta no sea el SUJETO de la afirmación —no que no se mencione— y alcanza a los dos tipos, no
+> sólo a `observacion`.** Eso es el trabajo futuro, y está sin implementar: el código quedó congelado
+> con el commit que se entrega.
 🔑 **Y la causa del `0` vale más que la corrección, porque es nuestro modo de falla dominante en
 estado puro: el `0` salió de buscar un patrón** (*"menciona la imagen"*) **y el texto usa otras tres
 formulaciones** —*en comparación con*, *similar a*, *el mismo que*— (el hallazgo de las formulaciones comparativas). **Un
@@ -1167,12 +1194,12 @@ emita.** Van al orquestador.
    comunes. Solo existen en el registro de hallazgos, **y la abstención está explícitamente
    calculada a mano** —*"no tiene versión por pares comunes en ninguna salida"*—. **Publiqué las
    que sí tienen artefacto**: `1,126 → 1,010` referencias por obra y `103/103` vs `102/103`.
-2. **`did_you_know 72 → 44` obras** del presupuesto de suma cero. Solo en los hallazgos. Lo
+2. **`did_you_know 72 → 44` obras** del presupuesto de suma cero. Solo. Lo
    publiqué porque las otras dos cifras del mismo trío (`142→136`, `128→29`) **sí** están en
    `artifacts/informes/ejercicio-3.md`, y romper el trío habría sido peor — **pero la tercera no
    tiene artefacto y queda dicho acá.**
 3. **Los fragmentos citados por campo** (`description` 177 · `did_you_know` 21 · `citations` 4 ·
-   `exhibitions` 1 · `provenance` 0). Solo en los hallazgos. Publiqué el `128 → 0` y `29 → 0`, que
+   `exhibitions` 1 · `provenance` 0). Solo. Publiqué el `128 → 0` y `29 → 0`, que
    sí están en `ejercicio-3.md`.
 4. ✅ **Resuelta el 1/11, y la dejo dicha porque muestra la forma del arreglo.** El **churn del eje
    de chunking** (1,50 · 1,80 · 1,40 de 5) y el **19,33 %** sin juzgar **ya los emite un
@@ -1186,7 +1213,7 @@ nunca escritas a un artefacto**. El patrón es consistente y conviene nombrarlo:
 construcción de índice son artefactos estructurados; los deltas entre brazos existen solo como
 prosa.** Cualquier cifra que exija unir las corridas de dos brazos está sin emitir.
 
-**Y tres cosas del §5.5 que salen de los hallazgos y no de un artefacto, dichas con esa
+**Y tres cosas del §5.5 que salen de y no de un artefacto, dichas con esa
 etiqueta:** las **tres formulaciones** que explican el `0` de la medición anterior (*en comparación con*, *similar
 a*, *el mismo que*, el hallazgo de las formulaciones comparativas); **que las 2 corridas ad-hoc tienen `entrada` vacía**, verificada una
 por una (el hallazgo de las corridas ad-hoc); y que **las 1.151 corridas son todas del set menos esas dos** —esta última sí
@@ -1196,10 +1223,10 @@ las cifras del §5.5.
 
 ## D. 🔴 Hallazgos sobre el material — van al orquestador
 
-1. 🔴 La cuenta de incidentes de esta revisión no coincide con el registro, y es del mismo tipo que
+1. 🔴 **La cuenta de incidentes del encargo no coincide, y es del mismo tipo que
    los incidentes que cuenta.** Esta revisión afirma **catorce** dos veces (*"la
    dirección cómoda que este proyecto documenta catorce veces"* y *"catorce incidentes de cifras
-   mal publicadas"*). **En los hallazgos el máximo afirmado es trece** —la medición del piso de ruido dice
+   mal publicadas"*). **En el máximo afirmado es trece** —la medición del piso de ruido dice
    *"decimotercera vez que una cifra se corrige al medirla"* y una fila del registro de hallazgos *"las trece veces
    anteriores"*—, y el `catorce` aparece tres veces en el archivo contando **otra cosa** (los 14
    hallazgos de la auditoría de Fase 3, y cuántas cosas reportaron dos sesiones).
@@ -1240,7 +1267,7 @@ las cifras del §5.5.
    conclusión de diseño de ahí.** el diseño de la arquitectura (la fila de la regla de que un dato lleva referencia y el resumen de `§6.1`) dice
    *"hoy no se viola —verificado: **0 de 148** observaciones persistidas mencionan la imagen de
    consulta—, **y por eso entra como guardia y no como arreglo**"*, y la fila **la medición anterior de
-   los hallazgos** repite el `0` con un *"verificado por el orquestador: no es así hoy"*. **Son
+   ** repite el `0` con un *"verificado por el orquestador: no es así hoy"*. **Son
    tres consultas** (§5.5). ⚠️ **el hallazgo de las formulaciones comparativas ya lo corrige más abajo en el mismo archivo**,
    así que la fila la medición anterior quedó **internamente contradicha**; el diseño de la arquitectura no. **No los edité:
    ese registro queda sin corregir.** 🔑 **Y la corrección que importa no es el número: es que la
