@@ -1,0 +1,1451 @@
+{
+  "agrega_a_la_tabla": true,
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C2"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 16,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 6,
+      "embedding": 3,
+      "llm": 1,
+      "retriever": 6
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c2.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "c11634876dc8895c",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C2",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c07-conceptual",
+  "corrida_id": "6373a50f38d5e961-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:155431",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c07-conceptual",
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:147005": [
+        {
+          "artist": "Tibeto-Chinese",
+          "artwork_id": "aic:147005",
+          "chunk_index": 0,
+          "fragment_id": "aic:147005::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/147005",
+          "texto": "This thangka most likely depicts the Arhat Vanavasin. He is seated amidst mountains facing slightly right with a flywhisk in his left hand and his right making a pointing gesture, just as he is described in certain Tibetan liturgical verses. He is surrounded by lush green and blue foliage, and seated beneath a small floating image of White Tara above. Tara appears peaceful, seated on a lotus, with one face and two hands, and holds a lotus with her left hand while making the boon-granting gesture (varada mudra) with her right.\nThe Sixteen Arhats were legendary early Indian disciples of the Buddha Shakyamuni. Although they were not worshipped individually and emerged relatively late as an iconographic group, they became a popular subject in Buddhist art in both Tibet and East Asia. The complete group usually consists of twenty-five figures: the sixteen arhats, the Buddha Shakyamuni, his two attendants Shariputra and Maudgalyayana, the Chinese monk devotee Hvashang and the lay upasaka Dharmatala, and the Four Great King of the cardinal directions, Dhritarashtra, Virudhaka, Virupaksha, and Vaishravana.\nThere are strong Chinese influences evident in the style of this thangka, from the landscape to the use of color and dry line. Its composition and color follow a set originally commissioned by the Yongle Emperor in the early 15th century, which was then copied numerous times in subsequent centuries. Based on the specific coloring, it may also in turn be following versions made during the 16th and 17th century. At the same time, the iconography references Tibetan tradition, particularly in the image of White Tara at the top center of the thangka, and Vanavasin's appearance with flywhisk and pointing gesture follows the description set forth in a Tibetan verse.",
+          "title": "Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three"
+        }
+      ],
+      "cma:151007": [
+        {
+          "artist": null,
+          "artwork_id": "cma:151007",
+          "chunk_index": 0,
+          "fragment_id": "cma:151007::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1982.55",
+          "texto": "This is a portrait study of the monk Seigen (1162–1231). The inscription identifies him and notes that the study is after a portrait in the subtemple Jizō’in at Daigoji. The artist included scars from an illness, and made notations about the colors the clothing should be. Seigen was abbot of Daigoji, one of the most influential Esoteric Buddhist temples in Japanese history.",
+          "title": "Portrait Study of Seigen"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:151007",
+          "chunk_index": 0,
+          "fragment_id": "cma:151007::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1982.55",
+          "texto": "The blotches on the monk's face may have been caused by smallpox.",
+          "title": "Portrait Study of Seigen"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:151007",
+          "chunk_index": 0,
+          "fragment_id": "cma:151007::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1982.55",
+          "texto": "(Shunichi Yabumoto Co., Ltd., Tokyo, Japan,sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait Study of Seigen"
+        }
+      ],
+      "cma:151529": [
+        {
+          "artist": null,
+          "artwork_id": "cma:151529",
+          "chunk_index": 0,
+          "fragment_id": "cma:151529::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1983.75",
+          "texto": "Tanaka collection, Fukui, Japan\n(Shogoro Yabumoto, Amagasaki, Hyōgo Prefecture, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Welcoming Descent of Jizō"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:151529",
+          "chunk_index": 0,
+          "fragment_id": "cma:151529::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1983.75",
+          "texto": "The bodhisattva Jizō—an enlightened being who refuses to become a Buddha in order to aid other beings in their quest for enlightenment—appears as a Buddhist monk carrying a wish-fulfilling jewel and a golden staff topped with rings. He descends with each of his feet balanced atop a lotus, borne by clouds to save a suffering believer who has called out for his help. Jizō is well known among Buddhists for rescuing people from the many Buddhist hells.",
+          "title": "Welcoming Descent of Jizō"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:151529",
+          "chunk_index": 0,
+          "fragment_id": "cma:151529::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1983.75",
+          "texto": "Jizō is well known for rescuing people from the many Buddhist hells.",
+          "title": "Welcoming Descent of Jizō"
+        }
+      ],
+      "cma:153777": [
+        {
+          "artist": "Takebe Sōchō",
+          "artwork_id": "cma:153777",
+          "chunk_index": 0,
+          "fragment_id": "cma:153777::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1987.72.1",
+          "texto": "Though rarely mentioned in official histories, Sōchō was an accomplished painter whose talent is readily apparent to the modern eye. For his compositions he chose traditional Japanese stories or everyday events. This scroll is part of a triptych of paintings converted from the folding screen format into the hanging scroll format.",
+          "title": "Genre Figures"
+        },
+        {
+          "artist": "Takebe Sōchō",
+          "artwork_id": "cma:153777",
+          "chunk_index": 0,
+          "fragment_id": "cma:153777::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1987.72.1",
+          "texto": "(Yanagi Fine Art Shop, Kyoto, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Genre Figures"
+        }
+      ],
+      "cma:79600": [
+        {
+          "artist": "Yōgetsu",
+          "artwork_id": "cma:79600",
+          "chunk_index": 0,
+          "fragment_id": "cma:79600::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2015.491",
+          "texto": "Sugawara Michizane (845–903) was a Kyoto aristocrat who died in exile in Dazaifu in Japan’s southern island of Kyushu, having been slandered at court. His vengeful spirit was later pacified by the construction of shrines in his name. His image was incorporated into the repertoire of Zen Buddhist figure painting, which included bodhisattvas, Daoist immortals, and other enlightened beings. Eminent monk Sakugen Shūryō (1501–1579) inscribed this work, which was painted by monk-painter Yōgetsu of Kyushu, who traveled east to study either in Kyoto or Kamakura. The Chinese-style poem is an ode to Michizane in his guise as the deity Tenjin.",
+          "title": "Portrait of Sugawara Michizane"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay evidencia de que esta obra represente retratos de monjes o sabios en China.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:153777::description::0"
+            ],
+            "texto": "La obra representa escenas de historias tradicionales japonesas o eventos cotidianos, no retratos de monjes o sabios chinos.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No se observa en la imagen ni en la descripción la representación de monjes o sabios chinos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:153777"
+      },
+      {
+        "abstencion": "No hay evidencia de que esta obra sea un retrato de un monje o sabio en China.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:151529::description::0"
+            ],
+            "texto": "La obra representa al bodhisattva Jizō, una figura budista que aparece como monje, conocido por ayudar a los seres en su camino hacia la iluminación.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:151529::provenance::0"
+            ],
+            "texto": "Aunque Jizō es una figura budista importante, la obra es de cultura japonesa, no china.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La imagen muestra un retrato de un monje budista, lo que se ajusta al pedido de retratos de monjes, aunque no en China.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:151529"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:147005::description::0"
+            ],
+            "texto": "La obra representa al Arhat Vanavasin, uno de los dieciséis grandes arhats, discípulos legendarios del Buda Shakyamuni, figuras veneradas en el budismo tibetano y de influencia china.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:147005::description::0"
+            ],
+            "texto": "El estilo muestra fuertes influencias chinas en la composición y el uso del color, siguiendo un modelo originalmente encargado por el emperador Yongle de China.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra es un retrato religioso de un sabio o monje budista, con iconografía que combina tradiciones tibetanas y chinas.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:147005"
+      },
+      {
+        "abstencion": "No hay evidencia de que esta obra represente un retrato de monje o sabio en China.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:79600::description::0"
+            ],
+            "texto": "La obra es un retrato de Sugawara Michizane, un aristócrata japonés que fue incorporado en la pintura zen budista como una figura venerada.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:79600::description::0"
+            ],
+            "texto": "La obra pertenece a la cultura japonesa y no representa a un monje o sabio chino.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato muestra a un sabio o figura venerada, pero no en el contexto chino solicitado.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:79600"
+      },
+      {
+        "abstencion": "No hay evidencia de que esta obra represente un retrato de monje o sabio en China.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:151007::description::0"
+            ],
+            "texto": "La obra es un estudio de retrato del monje Seigen, abad de un importante templo budista japonés.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:151007::description::0"
+            ],
+            "texto": "El retrato es de un monje japonés, no chino.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato muestra detalles realistas como cicatrices, lo que indica un estudio detallado de un monje, aunque no en China.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:151007"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "visual": [
+        {
+          "artwork_id": "cma:153777",
+          "rank": 1,
+          "score": 0.7545595765113831
+        },
+        {
+          "artwork_id": "cma:151529",
+          "rank": 2,
+          "score": 0.7527927160263062
+        },
+        {
+          "artwork_id": "aic:147005",
+          "rank": 3,
+          "score": 0.7524424195289612
+        },
+        {
+          "artwork_id": "cma:79600",
+          "rank": 4,
+          "score": 0.749703586101532
+        },
+        {
+          "artwork_id": "cma:151007",
+          "rank": 5,
+          "score": 0.7440916895866394
+        },
+        {
+          "artwork_id": "cma:140321",
+          "rank": 6,
+          "score": 0.742366373538971
+        },
+        {
+          "artwork_id": "cma:146713",
+          "rank": 7,
+          "score": 0.7410863637924194
+        },
+        {
+          "artwork_id": "cma:147927",
+          "rank": 8,
+          "score": 0.7408258318901062
+        },
+        {
+          "artwork_id": "cma:149079",
+          "rank": 9,
+          "score": 0.7381088733673096
+        },
+        {
+          "artwork_id": "cma:146174",
+          "rank": 10,
+          "score": 0.7366266250610352
+        },
+        {
+          "artwork_id": "cma:160470",
+          "rank": 11,
+          "score": 0.736473560333252
+        },
+        {
+          "artwork_id": "cma:150944",
+          "rank": 12,
+          "score": 0.7354766130447388
+        },
+        {
+          "artwork_id": "cma:161323",
+          "rank": 13,
+          "score": 0.7313166856765747
+        },
+        {
+          "artwork_id": "cma:151480",
+          "rank": 14,
+          "score": 0.7251719832420349
+        },
+        {
+          "artwork_id": "cma:153395",
+          "rank": 15,
+          "score": 0.7239017486572266
+        },
+        {
+          "artwork_id": "cma:160859",
+          "rank": 16,
+          "score": 0.7220763564109802
+        },
+        {
+          "artwork_id": "cma:170786",
+          "rank": 17,
+          "score": 0.7217002511024475
+        },
+        {
+          "artwork_id": "cma:688675",
+          "rank": 18,
+          "score": 0.7215410470962524
+        },
+        {
+          "artwork_id": "cma:152428",
+          "rank": 19,
+          "score": 0.7213990092277527
+        },
+        {
+          "artwork_id": "cma:149943",
+          "rank": 20,
+          "score": 0.7179645895957947
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Chinese portraiture of Buddhist monks and scholars, traditional ink and color on silk, emphasizing spiritual and scholarly attributes in historical Chinese art",
+      "consulta_id": "c07-conceptual",
+      "consulta_visual": "Chinese portrait of a monk in traditional robes seated with scrolls and ritual objects, detailed brushwork, warm tones",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "retratos de monjes y sabios en China",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "1202fc831e1732df",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2125,
+        "tokens_out": 61
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": null,
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c07-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay evidencia de que esta obra represente retratos de monjes o sabios en China.",
+          "artwork_id": "cma:153777",
+          "ficha": {
+            "artist": "Takebe Sōchō",
+            "culture": "Japan",
+            "date_display": "c. 1816",
+            "medium": "hanging scroll; ink and color on paper",
+            "title": "Genre Figures",
+            "year": 1811
+          },
+          "lineas": [
+            "La obra representa escenas de historias tradicionales japonesas o eventos cotidianos, no retratos de monjes o sabios chinos. [1]",
+            "No se observa en la imagen ni en la descripción la representación de monjes o sabios chinos."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Takebe Sōchō",
+              "atribucion": null,
+              "fragment_id": "cma:153777::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1987.72.1",
+              "texto_citado": "Though rarely mentioned in official histories, Sōchō was an accomplished painter whose talent is readily apparent to the modern eye. For his compositions he chose traditional Japanese stories or everyday events. This scroll is part of a triptych of paintings converted from the folding screen format into the hanging scroll format.",
+              "title": "Genre Figures"
+            }
+          ],
+          "score": 0.7545595765113831,
+          "source_url": "https://clevelandart.org/art/1987.72.1"
+        },
+        {
+          "abstencion": "No hay evidencia de que esta obra sea un retrato de un monje o sabio en China.",
+          "artwork_id": "cma:151529",
+          "ficha": {
+            "culture": "Japan",
+            "date_display": "1200s",
+            "medium": "Hanging scroll; ink, color, gold, and cut gold on silk",
+            "title": "Welcoming Descent of Jizō",
+            "year": 1200
+          },
+          "lineas": [
+            "La obra representa al bodhisattva Jizō, una figura budista que aparece como monje, conocido por ayudar a los seres en su camino hacia la iluminación. [1]",
+            "Aunque Jizō es una figura budista importante, la obra es de cultura japonesa, no china. [2]",
+            "La imagen muestra un retrato de un monje budista, lo que se ajusta al pedido de retratos de monjes, aunque no en China."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:151529::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1983.75",
+              "texto_citado": "The bodhisattva Jizō—an enlightened being who refuses to become a Buddha in order to aid other beings in their quest for enlightenment—appears as a Buddhist monk carrying a wish-fulfilling jewel and a golden staff topped with rings. He descends with each of his feet balanced atop a lotus, borne by clouds to save a suffering believer who has called out for his help. Jizō is well known among Buddhists for rescuing people from the many Buddhist hells.",
+              "title": "Welcoming Descent of Jizō"
+            },
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:151529::provenance::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1983.75",
+              "texto_citado": "Tanaka collection, Fukui, Japan\n(Shogoro Yabumoto, Amagasaki, Hyōgo Prefecture, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+              "title": "Welcoming Descent of Jizō"
+            }
+          ],
+          "score": 0.7527927160263062,
+          "source_url": "https://clevelandart.org/art/1983.75"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:147005",
+          "ficha": {
+            "artist": "Tibeto-Chinese",
+            "culture": "Tibet",
+            "date_display": "late 17th/early 18th century",
+            "medium": "Pigment and gold on silk and cotton",
+            "style": "Himalayan",
+            "title": "Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three",
+            "year": 1675
+          },
+          "lineas": [
+            "La obra representa al Arhat Vanavasin, uno de los dieciséis grandes arhats, discípulos legendarios del Buda Shakyamuni, figuras veneradas en el budismo tibetano y de influencia china. [1]",
+            "El estilo muestra fuertes influencias chinas en la composición y el uso del color, siguiendo un modelo originalmente encargado por el emperador Yongle de China. [1]",
+            "La obra es un retrato religioso de un sabio o monje budista, con iconografía que combina tradiciones tibetanas y chinas."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Tibeto-Chinese",
+              "atribucion": "“Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three”, Tibeto-Chinese. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/147005",
+              "fragment_id": "aic:147005::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/147005",
+              "texto_citado": "This thangka most likely depicts the Arhat Vanavasin. He is seated amidst mountains facing slightly right with a flywhisk in his left hand and his right making a pointing gesture, just as he is described in certain Tibetan liturgical verses. He is surrounded by lush green and blue foliage, and seated beneath a small floating image of White Tara above. Tara appears peaceful, seated on a lotus, with one face and two hands, and holds a lotus with her left hand while making the boon-granting gesture (varada mudra) with her right.\nThe Sixteen Arhats were legendary early Indian disciples of the Buddha Shakyamuni. Although they were not worshipped individually and emerged relatively late as an iconographic group, they became a popular subject in Buddhist art in both Tibet and East Asia. The complete group usually consists of twenty-five figures: the sixteen arhats, the Buddha Shakyamuni, his two attendants Shariputra and Maudgalyayana, the Chinese monk devotee Hvashang and the lay upasaka Dharmatala, and the Four Great King of the cardinal directions, Dhritarashtra, Virudhaka, Virupaksha, and Vaishravana.\nThere are strong Chinese influences evident in the style of this thangka, from the landscape to the use of color and dry line. Its composition and color follow a set originally commissioned by the Yongle Emperor in the early 15th century, which was then copied numerous times in subsequent centuries. Based on the specific coloring, it may also in turn be following versions made during the 16th and 17th century. At the same time, the iconography references Tibetan tradition, particularly in the image of White Tara at the top center of the thangka, and Vanavasin's appearance with flywhisk and pointing gesture follows the description set forth in a Tibetan verse.",
+              "title": "Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three"
+            }
+          ],
+          "score": 0.7524424195289612,
+          "source_url": "https://www.artic.edu/artworks/147005"
+        },
+        {
+          "abstencion": "No hay evidencia de que esta obra represente un retrato de monje o sabio en China.",
+          "artwork_id": "cma:79600",
+          "ficha": {
+            "artist": "Yōgetsu",
+            "culture": "Japan",
+            "date_display": "late 1400s–early 1500s",
+            "medium": "hanging scroll; ink and color on paper",
+            "title": "Portrait of Sugawara Michizane",
+            "year": 1475
+          },
+          "lineas": [
+            "La obra es un retrato de Sugawara Michizane, un aristócrata japonés que fue incorporado en la pintura zen budista como una figura venerada. [1]",
+            "La obra pertenece a la cultura japonesa y no representa a un monje o sabio chino. [1]",
+            "El retrato muestra a un sabio o figura venerada, pero no en el contexto chino solicitado."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Yōgetsu",
+              "atribucion": null,
+              "fragment_id": "cma:79600::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2015.491",
+              "texto_citado": "Sugawara Michizane (845–903) was a Kyoto aristocrat who died in exile in Dazaifu in Japan’s southern island of Kyushu, having been slandered at court. His vengeful spirit was later pacified by the construction of shrines in his name. His image was incorporated into the repertoire of Zen Buddhist figure painting, which included bodhisattvas, Daoist immortals, and other enlightened beings. Eminent monk Sakugen Shūryō (1501–1579) inscribed this work, which was painted by monk-painter Yōgetsu of Kyushu, who traveled east to study either in Kyoto or Kamakura. The Chinese-style poem is an ode to Michizane in his guise as the deity Tenjin.",
+              "title": "Portrait of Sugawara Michizane"
+            }
+          ],
+          "score": 0.749703586101532,
+          "source_url": "https://clevelandart.org/art/2015.491"
+        },
+        {
+          "abstencion": "No hay evidencia de que esta obra represente un retrato de monje o sabio en China.",
+          "artwork_id": "cma:151007",
+          "ficha": {
+            "culture": "Japan",
+            "date_display": "1300s",
+            "medium": "hanging scroll; ink and slight color on paper",
+            "title": "Portrait Study of Seigen",
+            "year": 1300
+          },
+          "lineas": [
+            "La obra es un estudio de retrato del monje Seigen, abad de un importante templo budista japonés. [1]",
+            "El retrato es de un monje japonés, no chino. [1]",
+            "El retrato muestra detalles realistas como cicatrices, lo que indica un estudio detallado de un monje, aunque no en China."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:151007::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1982.55",
+              "texto_citado": "This is a portrait study of the monk Seigen (1162–1231). The inscription identifies him and notes that the study is after a portrait in the subtemple Jizō’in at Daigoji. The artist included scars from an illness, and made notations about the colors the clothing should be. Seigen was abbot of Daigoji, one of the most influential Esoteric Buddhist temples in Japanese history.",
+              "title": "Portrait Study of Seigen"
+            }
+          ],
+          "score": 0.7440916895866394,
+          "source_url": "https://clevelandart.org/art/1982.55"
+        }
+      ],
+      "render": "1. **Genre Figures**\n   Takebe Sōchō · c. 1816 · hanging scroll; ink and color on paper\n   Ficha oficial: https://clevelandart.org/art/1987.72.1\n\n   La obra representa escenas de historias tradicionales japonesas o eventos cotidianos, no retratos de monjes o sabios chinos. [1]\n   No se observa en la imagen ni en la descripción la representación de monjes o sabios chinos.\n   No hay evidencia de que esta obra represente retratos de monjes o sabios en China.\n\n   **Fuentes**\n   [1] “Though rarely mentioned in official histories, Sōchō was an accomplished painter whose talent is readily apparent to the modern eye. For his compositions he chose traditional Japanese stories or everyday events. This scroll is part of a triptych of paintings converted from the folding screen format into the hanging scroll format.”\n       https://clevelandart.org/art/1987.72.1 · CC0 1.0\n\n2. **Welcoming Descent of Jizō**\n   1200s · Hanging scroll; ink, color, gold, and cut gold on silk\n   Ficha oficial: https://clevelandart.org/art/1983.75\n\n   La obra representa al bodhisattva Jizō, una figura budista que aparece como monje, conocido por ayudar a los seres en su camino hacia la iluminación. [1]\n   Aunque Jizō es una figura budista importante, la obra es de cultura japonesa, no china. [2]\n   La imagen muestra un retrato de un monje budista, lo que se ajusta al pedido de retratos de monjes, aunque no en China.\n   No hay evidencia de que esta obra sea un retrato de un monje o sabio en China.\n\n   **Fuentes**\n   [1] “The bodhisattva Jizō—an enlightened being who refuses to become a Buddha in order to aid other beings in their quest for enlightenment—appears as a Buddhist monk carrying a wish-fulfilling jewel and a golden staff topped with rings. He descends with each of his feet balanced atop a lotus, borne by clouds to save a suffering believer who has called out for his help. Jizō is well known among Buddhists for rescuing people from the many Buddhist hells.”\n       https://clevelandart.org/art/1983.75 · CC0 1.0\n   [2] “Tanaka collection, Fukui, Japan\n(Shogoro Yabumoto, Amagasaki, Hyōgo Prefecture, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH”\n       https://clevelandart.org/art/1983.75 · CC0 1.0\n\n3. **Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three**\n   Tibeto-Chinese · late 17th/early 18th century · Pigment and gold on silk and cotton · Himalayan\n   Ficha oficial: https://www.artic.edu/artworks/147005\n\n   La obra representa al Arhat Vanavasin, uno de los dieciséis grandes arhats, discípulos legendarios del Buda Shakyamuni, figuras veneradas en el budismo tibetano y de influencia china. [1]\n   El estilo muestra fuertes influencias chinas en la composición y el uso del color, siguiendo un modelo originalmente encargado por el emperador Yongle de China. [1]\n   La obra es un retrato religioso de un sabio o monje budista, con iconografía que combina tradiciones tibetanas y chinas.\n\n   **Fuentes**\n   [1] “This thangka most likely depicts the Arhat Vanavasin. He is seated amidst mountains facing slightly right with a flywhisk in his left hand and his right making a pointing gesture, just as he is described in certain Tibetan liturgical verses. He is surrounded by lush green and blue foliage, and seated beneath a small floating image of White Tara above. Tara appears peaceful, seated on a lotus, with one face and two hands, and holds a lotus with her left hand while making the boon-granting gesture (varada mudra) with her right.\nThe Sixteen Arhats were legendary early Indian disciples of the Buddha Shakyamuni. Although they were not worshipped individually and emerged relatively late as an iconographic group, they became a popular subject in Buddhist art in both Tibet and East Asia. The complete group usually consists of twenty-five figures: the sixteen arhats, the Buddha Shakyamuni, his two attendants Shariputra and Maudgalyayana, the Chinese monk devotee Hvashang and the lay upasaka Dharmatala, and the Four Great King of the cardinal directions, Dhritarashtra, Virudhaka, Virupaksha, and Vaishravana.\nThere are strong Chinese influences evident in the style of this thangka, from the landscape to the use of color and dry line. Its composition and color follow a set originally commissioned by the Yongle Emperor in the early 15th century, which was then copied numerous times in subsequent centuries. Based on the specific coloring, it may also in turn be following versions made during the 16th and 17th century. At the same time, the iconography references Tibetan tradition, particularly in the image of White Tara at the top center of the thangka, and Vanavasin's appearance with flywhisk and pointing gesture follows the description set forth in a Tibetan verse.”\n       https://www.artic.edu/artworks/147005 · CC BY 4.0\n       “Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three”, Tibeto-Chinese. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/147005\n\n4. **Portrait of Sugawara Michizane**\n   Yōgetsu · late 1400s–early 1500s · hanging scroll; ink and color on paper\n   Ficha oficial: https://clevelandart.org/art/2015.491\n\n   La obra es un retrato de Sugawara Michizane, un aristócrata japonés que fue incorporado en la pintura zen budista como una figura venerada. [1]\n   La obra pertenece a la cultura japonesa y no representa a un monje o sabio chino. [1]\n   El retrato muestra a un sabio o figura venerada, pero no en el contexto chino solicitado.\n   No hay evidencia de que esta obra represente un retrato de monje o sabio en China.\n\n   **Fuentes**\n   [1] “Sugawara Michizane (845–903) was a Kyoto aristocrat who died in exile in Dazaifu in Japan’s southern island of Kyushu, having been slandered at court. His vengeful spirit was later pacified by the construction of shrines in his name. His image was incorporated into the repertoire of Zen Buddhist figure painting, which included bodhisattvas, Daoist immortals, and other enlightened beings. Eminent monk Sakugen Shūryō (1501–1579) inscribed this work, which was painted by monk-painter Yōgetsu of Kyushu, who traveled east to study either in Kyoto or Kamakura. The Chinese-style poem is an ode to Michizane in his guise as the deity Tenjin.”\n       https://clevelandart.org/art/2015.491 · CC0 1.0\n\n5. **Portrait Study of Seigen**\n   1300s · hanging scroll; ink and slight color on paper\n   Ficha oficial: https://clevelandart.org/art/1982.55\n\n   La obra es un estudio de retrato del monje Seigen, abad de un importante templo budista japonés. [1]\n   El retrato es de un monje japonés, no chino. [1]\n   El retrato muestra detalles realistas como cicatrices, lo que indica un estudio detallado de un monje, aunque no en China.\n   No hay evidencia de que esta obra represente un retrato de monje o sabio en China.\n\n   **Fuentes**\n   [1] “This is a portrait study of the monk Seigen (1162–1231). The inscription identifies him and notes that the study is after a portrait in the subtemple Jizō’in at Daigoji. The artist included scars from an illness, and made notations about the colors the clothing should be. Seigen was abbot of Daigoji, one of the most influential Esoteric Buddhist temples in Japanese history.”\n       https://clevelandart.org/art/1982.55 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+      "config_id": "c11634876dc8895c",
+      "corrida_id": "6373a50f38d5e961-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:153777",
+      "cma:151529",
+      "aic:147005",
+      "cma:79600",
+      "cma:151007"
+    ]
+  },
+  "fecha": "2026-10-25T22:28:45+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "recuperador_visual",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "generador": 7.3159,
+      "planificador": 0.0006,
+      "recolector_de_evidencia": 0.6935,
+      "recuperador_visual": 0.1788,
+      "renderizador": 0.0006
+    },
+    "segundos_de_la_corrida": 8.1915
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.174,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "embedding_texto": 1
+      },
+      "segundos": 0.648,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.315,
+      "tokens_in": 3113,
+      "tokens_out": 1025
+    },
+    "indice": {
+      "n_items": 30,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "indice": 6
+      },
+      "segundos": 0.048,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.315,
+      "tokens_in": 3113,
+      "tokens_out": 1025
+    },
+    "recolector_de_evidencia": {
+      "n_items": 11,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.692,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.178,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "no_determinan_el_config_id": {
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida"
+    },
+    "configuracion": "C2",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+    "config_id": "c11634876dc8895c",
+    "corrida_id": "6373a50f38d5e961-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

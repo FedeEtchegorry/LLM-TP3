@@ -1,0 +1,1345 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C1"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 15,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 5,
+      "embedding": 3,
+      "llm": 1,
+      "retriever": 6
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "4443862ae45e62d6",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C1",
+      "etapas": [
+        "recuperador_visual",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c02-ambiguo",
+  "corrida_id": "6e35d72823be61ec-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "generador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:111728",
+      "categoria": "ambiguo",
+      "consulta_id": "c02-ambiguo",
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:120163": [
+        {
+          "artist": "Thomas Birch",
+          "artwork_id": "aic:120163",
+          "chunk_index": 0,
+          "fragment_id": "aic:120163::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/120163",
+          "texto": "Major William Boerum Wetmore, New York; Hiram Burlingham, New York; sold at Anderson Galleries, New York, January 11, 1934; French and Company, New York; private collection, Connecticut, to Richard York Gallery, New York, by 1991; sold to the Art Institute of Chicago, 1991.",
+          "title": "Capture of the Tripoli by the Enterprise"
+        },
+        {
+          "artist": "Thomas Birch",
+          "artwork_id": "aic:120163",
+          "chunk_index": 0,
+          "fragment_id": "aic:120163::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/120163",
+          "texto": "At the turn of the 19th century, conflict arose between the United States of America and the North African Barbary State of Tripoli. President Thomas Jefferson refused to continue to pay tribute or ransom to Tripoli to prevent the pirating of American merchant ships sailing in the Mediterranean Sea. Jefferson dispatched the American ship Enterprise to the Tripolitan waters as a sign of resistance just as Tripoli increased its tribute demands and declared war against the United States. Thomas Birch, an early specialist in maritime painting, captured the battle between the Enterprise and a Tripolitan cruiser in the Mediterranean’s dark, violent waters. The break in the clouds sheds light on this conflict and illuminates Birch’s fine details and precise rendering of these ships.",
+          "title": "Capture of the Tripoli by the Enterprise"
+        }
+      ],
+      "aic:244013": [
+        {
+          "artist": "Thomas Birch",
+          "artwork_id": "aic:244013",
+          "chunk_index": 0,
+          "fragment_id": "aic:244013::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/244013",
+          "texto": "Based in Philadelphia, Thomas Birch was a leading marine painter who helped establish the genre in early 19th-century America. Shipwreck near a Rocky Coast is a romantic, imaginative composition that highlights human struggle against the forces of nature: the ship’s sails are torn, its masts lean to one side, and a tiny group of seafarers attempts to flee the disaster. Birch rendered the scene in dramatic detail, yet left the narrative unresolved.",
+          "title": "Shipwreck near a Rocky Coast"
+        },
+        {
+          "artist": "Thomas Birch",
+          "artwork_id": "aic:244013",
+          "chunk_index": 0,
+          "fragment_id": "aic:244013::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/244013",
+          "texto": "Sold, Sotheby Parke-Bernet, New York, April 19–20, 1972, lot 29, as \"Shipwreck\" [illustrated in auction sales cat., p. 22]. J. N. Bartfield Art Galleries, New York; sold to J. Verne Hawn, Shreveport, LA [probably in 1970s, private correspondence, copy in curatorial object file]. Consigned to Richard York Gallery, New York, by April 1981 [illustrated in \"Inaugural Exhibition: Paintings by Americans,\" April 10–May 29, 1981, no. 5]. J. Verne Hawn, Shreveport, LA, to at least May 25, 1989 [illustrated in auction sales cat., \"Important American Paintings, Drawings and Sculpture of the 18th, 19th and 20th Centuries,\" Christie’s, New York, May 25, 1989, lot 8, p. 16; unsold]. With Schwarz Gallery, Philadelphia, by 1992; sold to Richard H. Daniel, January 30, 1992; by descent to his daughter, Karen Daniel (1957–2019), Oak Park, IL, 2015; given to the Art Institute of Chicago, 2018.",
+          "title": "Shipwreck near a Rocky Coast"
+        }
+      ],
+      "cma:148368": [
+        {
+          "artist": null,
+          "artwork_id": "cma:148368",
+          "chunk_index": 0,
+          "fragment_id": "cma:148368::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1975.80",
+          "texto": "-1751 Charles Cavert (1699-1751), Fifth Lord Baltimore\n1751-1771 Frederick Calvert (1731-1771), Sixth Lord Baltimore\n1771-1835 Henry Harford (d. 1771)\n1835-1885 Frederick Paul Harford, Down Place, Windsor, sold, Christie's London, 06/1885\n- Rufus L. Patterson (1872-1943), New York\n[Norton Galleries, New York]\n1968-1975 Mr. and Mrs. Noah L. Butkin, Cleveland, by gift to the Cleveland Museum of Art, 1975",
+          "title": "English Warship Firing a Salute"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:148368",
+          "chunk_index": 0,
+          "fragment_id": "cma:148368::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1975.80",
+          "texto": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.",
+          "title": "English Warship Firing a Salute"
+        }
+      ],
+      "cma:150080": [
+        {
+          "artist": "Victor Schnetz",
+          "artwork_id": "cma:150080",
+          "chunk_index": 0,
+          "fragment_id": "cma:150080::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1980.285",
+          "texto": "Versailles sale, Palais des Congrès, 7 April 1974 (lot 28), La mort d'un général, canvas, 50 x 60 cm, for ff 4,200 to Shepherd Gallery, New York. Bought in November 1976 by Mr. and Mrs. Noah L. Butkin, Cleveland. Bequeathed to the CMA in 1980.",
+          "title": "The Death of General Colbert"
+        },
+        {
+          "artist": "Victor Schnetz",
+          "artwork_id": "cma:150080",
+          "chunk_index": 0,
+          "fragment_id": "cma:150080::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1980.285",
+          "texto": "In 1809, the popular young French military hero General Auguste Colbert died at a battle in Spain. The following year, Schnetz depicted the moment of Colbert's death. This is the study for a much larger painting exhibited at the Paris Salon, but now lost. The exploits of Napoleon and his army were popular subjects for French artists whose work was shown in official exhibitions.",
+          "title": "The Death of General Colbert"
+        }
+      ],
+      "cma:163456": [
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.",
+          "title": "Harbor of Boston, with the City in the Distance"
+        },
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "For a long time, art historians mistakenly thought the artist’s middle name was Hugh.",
+          "title": "Harbor of Boston, with the City in the Distance"
+        },
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "Dr. James H. Armsby, Albany, NY, acquired 1847; Joanna Perry Armsby March, sister of Dr. J.H. Armsby, Albany, NY; Joanna Armsby March Boyd, daughter of Joanna March, Albany, NY; Alden March Boyd, son of Joanna Armsby March Boyd, Santa Barbara, CA; Joanna March Boyd Bard, daugher of Alden March, Santa Barbara, CA; Henry Travers Newton, Jr, Joanna Newton Riccardi, and Georgia Newton Pulos, grandchildren of J.M.B. Bard, Santa Barbara, CA",
+          "title": "Harbor of Boston, with the City in the Distance"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:148368::description::0"
+            ],
+            "texto": "La obra representa barcos de guerra ingleses celebrando el poder en la guerra y el comercio, lo que sugiere una escena activa y posiblemente tensa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena muestra barcos con banderas y actividad naval, lo que no transmite una sensación de tranquilidad sino más bien de poder y acción.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:148368"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:120163::description::0"
+            ],
+            "texto": "La pintura muestra un combate naval entre la Enterprise estadounidense y un crucero tripolitano, en un contexto de guerra y conflicto.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena es dramática y violenta, con aguas oscuras y un combate activo, lo que no se asocia con tranquilidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:120163"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:163456::description::0"
+            ],
+            "texto": "La obra muestra una vista del puerto de Boston en la tarde, con luz difusa reflejándose en el agua, lo que evoca una atmósfera calmada y serena.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La representación del agua y la luz crea una sensación de tranquilidad y reposo, acorde con el pedido de una obra más tranquila.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:163456"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:244013::description::0"
+            ],
+            "texto": "La pintura representa un naufragio con velas rotas y maderos inclinados, mostrando la lucha humana contra la naturaleza.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena es dramática y tensa, con una narrativa de desastre y peligro, lo que no corresponde a una sensación de tranquilidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:244013"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:150080::description::0"
+            ],
+            "texto": "La obra representa el momento de la muerte del general Colbert en una batalla, un tema dramático y bélico.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El tema bélico y la representación de la muerte no transmiten una sensación de tranquilidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:150080"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "visual": [
+        {
+          "artwork_id": "cma:148368",
+          "rank": 1,
+          "score": 0.7041202187538147
+        },
+        {
+          "artwork_id": "aic:120163",
+          "rank": 2,
+          "score": 0.6762416958808899
+        },
+        {
+          "artwork_id": "cma:163456",
+          "rank": 3,
+          "score": 0.6743079423904419
+        },
+        {
+          "artwork_id": "aic:244013",
+          "rank": 4,
+          "score": 0.6677330136299133
+        },
+        {
+          "artwork_id": "cma:150080",
+          "rank": 5,
+          "score": 0.6632885932922363
+        },
+        {
+          "artwork_id": "aic:495",
+          "rank": 6,
+          "score": 0.6480013132095337
+        },
+        {
+          "artwork_id": "cma:118042",
+          "rank": 7,
+          "score": 0.6397562026977539
+        },
+        {
+          "artwork_id": "aic:100060",
+          "rank": 8,
+          "score": 0.6291191577911377
+        },
+        {
+          "artwork_id": "cma:140344",
+          "rank": 9,
+          "score": 0.6282522082328796
+        },
+        {
+          "artwork_id": "aic:4796",
+          "rank": 10,
+          "score": 0.6277022361755371
+        },
+        {
+          "artwork_id": "cma:153388",
+          "rank": 11,
+          "score": 0.6161415576934814
+        },
+        {
+          "artwork_id": "aic:25865",
+          "rank": 12,
+          "score": 0.6111661195755005
+        },
+        {
+          "artwork_id": "aic:181702",
+          "rank": 13,
+          "score": 0.6102365255355835
+        },
+        {
+          "artwork_id": "aic:97910",
+          "rank": 14,
+          "score": 0.6095574498176575
+        },
+        {
+          "artwork_id": "cma:150719",
+          "rank": 15,
+          "score": 0.608414351940155
+        },
+        {
+          "artwork_id": "aic:16370",
+          "rank": 16,
+          "score": 0.6082359552383423
+        },
+        {
+          "artwork_id": "aic:81505",
+          "rank": 17,
+          "score": 0.6043388247489929
+        },
+        {
+          "artwork_id": "aic:238272",
+          "rank": 18,
+          "score": 0.6031526923179626
+        },
+        {
+          "artwork_id": "aic:30361",
+          "rank": 19,
+          "score": 0.6017754673957825
+        },
+        {
+          "artwork_id": "aic:57996",
+          "rank": 20,
+          "score": 0.6002759337425232
+        }
+      ]
+    },
+    "plan": null,
+    "ranking_fusionado": null,
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c02-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:148368",
+          "ficha": {
+            "culture": "Netherlands",
+            "date_display": "1690",
+            "medium": "oil on canvas",
+            "title": "English Warship Firing a Salute",
+            "year": 1690
+          },
+          "lineas": [
+            "La obra representa barcos de guerra ingleses celebrando el poder en la guerra y el comercio, lo que sugiere una escena activa y posiblemente tensa. [1]",
+            "La escena muestra barcos con banderas y actividad naval, lo que no transmite una sensación de tranquilidad sino más bien de poder y acción."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:148368::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1975.80",
+              "texto_citado": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.",
+              "title": "English Warship Firing a Salute"
+            }
+          ],
+          "score": 0.7041202187538147,
+          "source_url": "https://clevelandart.org/art/1975.80"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:120163",
+          "ficha": {
+            "artist": "Thomas Birch",
+            "culture": "Philadelphia",
+            "date_display": "1806–12",
+            "medium": "Oil on canvas",
+            "title": "Capture of the Tripoli by the Enterprise",
+            "year": 1806
+          },
+          "lineas": [
+            "La pintura muestra un combate naval entre la Enterprise estadounidense y un crucero tripolitano, en un contexto de guerra y conflicto. [1]",
+            "La escena es dramática y violenta, con aguas oscuras y un combate activo, lo que no se asocia con tranquilidad."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Thomas Birch",
+              "atribucion": "“Capture of the Tripoli by the Enterprise”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/120163",
+              "fragment_id": "aic:120163::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/120163",
+              "texto_citado": "At the turn of the 19th century, conflict arose between the United States of America and the North African Barbary State of Tripoli. President Thomas Jefferson refused to continue to pay tribute or ransom to Tripoli to prevent the pirating of American merchant ships sailing in the Mediterranean Sea. Jefferson dispatched the American ship Enterprise to the Tripolitan waters as a sign of resistance just as Tripoli increased its tribute demands and declared war against the United States. Thomas Birch, an early specialist in maritime painting, captured the battle between the Enterprise and a Tripolitan cruiser in the Mediterranean’s dark, violent waters. The break in the clouds sheds light on this conflict and illuminates Birch’s fine details and precise rendering of these ships.",
+              "title": "Capture of the Tripoli by the Enterprise"
+            }
+          ],
+          "score": 0.6762416958808899,
+          "source_url": "https://www.artic.edu/artworks/120163"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:163456",
+          "ficha": {
+            "artist": "Fitz Henry Lane",
+            "culture": "United States",
+            "date_display": "c. 1846–47",
+            "medium": "oil on canvas",
+            "title": "Harbor of Boston, with the City in the Distance",
+            "year": 1846
+          },
+          "lineas": [
+            "La obra muestra una vista del puerto de Boston en la tarde, con luz difusa reflejándose en el agua, lo que evoca una atmósfera calmada y serena. [1]",
+            "La representación del agua y la luz crea una sensación de tranquilidad y reposo, acorde con el pedido de una obra más tranquila."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Fitz Henry Lane",
+              "atribucion": null,
+              "fragment_id": "cma:163456::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2004.35",
+              "texto_citado": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.",
+              "title": "Harbor of Boston, with the City in the Distance"
+            }
+          ],
+          "score": 0.6743079423904419,
+          "source_url": "https://clevelandart.org/art/2004.35"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:244013",
+          "ficha": {
+            "artist": "Thomas Birch",
+            "culture": "United States",
+            "date_display": "1833",
+            "medium": "Oil on canvas",
+            "style": "19th century",
+            "title": "Shipwreck near a Rocky Coast",
+            "year": 1833
+          },
+          "lineas": [
+            "La pintura representa un naufragio con velas rotas y maderos inclinados, mostrando la lucha humana contra la naturaleza. [1]",
+            "La escena es dramática y tensa, con una narrativa de desastre y peligro, lo que no corresponde a una sensación de tranquilidad."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Thomas Birch",
+              "atribucion": "“Shipwreck near a Rocky Coast”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/244013",
+              "fragment_id": "aic:244013::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/244013",
+              "texto_citado": "Based in Philadelphia, Thomas Birch was a leading marine painter who helped establish the genre in early 19th-century America. Shipwreck near a Rocky Coast is a romantic, imaginative composition that highlights human struggle against the forces of nature: the ship’s sails are torn, its masts lean to one side, and a tiny group of seafarers attempts to flee the disaster. Birch rendered the scene in dramatic detail, yet left the narrative unresolved.",
+              "title": "Shipwreck near a Rocky Coast"
+            }
+          ],
+          "score": 0.6677330136299133,
+          "source_url": "https://www.artic.edu/artworks/244013"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:150080",
+          "ficha": {
+            "artist": "Victor Schnetz",
+            "culture": "France",
+            "date_display": "c. 1809/1810",
+            "medium": "oil on fabric",
+            "title": "The Death of General Colbert",
+            "year": 1809
+          },
+          "lineas": [
+            "La obra representa el momento de la muerte del general Colbert en una batalla, un tema dramático y bélico. [1]",
+            "El tema bélico y la representación de la muerte no transmiten una sensación de tranquilidad."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Victor Schnetz",
+              "atribucion": null,
+              "fragment_id": "cma:150080::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1980.285",
+              "texto_citado": "In 1809, the popular young French military hero General Auguste Colbert died at a battle in Spain. The following year, Schnetz depicted the moment of Colbert's death. This is the study for a much larger painting exhibited at the Paris Salon, but now lost. The exploits of Napoleon and his army were popular subjects for French artists whose work was shown in official exhibitions.",
+              "title": "The Death of General Colbert"
+            }
+          ],
+          "score": 0.6632885932922363,
+          "source_url": "https://clevelandart.org/art/1980.285"
+        }
+      ],
+      "render": "1. **English Warship Firing a Salute**\n   1690 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1975.80\n\n   La obra representa barcos de guerra ingleses celebrando el poder en la guerra y el comercio, lo que sugiere una escena activa y posiblemente tensa. [1]\n   La escena muestra barcos con banderas y actividad naval, lo que no transmite una sensación de tranquilidad sino más bien de poder y acción.\n\n   **Fuentes**\n   [1] “Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.”\n       https://clevelandart.org/art/1975.80 · CC0 1.0\n\n2. **Capture of the Tripoli by the Enterprise**\n   Thomas Birch · 1806–12 · Oil on canvas\n   Ficha oficial: https://www.artic.edu/artworks/120163\n\n   La pintura muestra un combate naval entre la Enterprise estadounidense y un crucero tripolitano, en un contexto de guerra y conflicto. [1]\n   La escena es dramática y violenta, con aguas oscuras y un combate activo, lo que no se asocia con tranquilidad.\n\n   **Fuentes**\n   [1] “At the turn of the 19th century, conflict arose between the United States of America and the North African Barbary State of Tripoli. President Thomas Jefferson refused to continue to pay tribute or ransom to Tripoli to prevent the pirating of American merchant ships sailing in the Mediterranean Sea. Jefferson dispatched the American ship Enterprise to the Tripolitan waters as a sign of resistance just as Tripoli increased its tribute demands and declared war against the United States. Thomas Birch, an early specialist in maritime painting, captured the battle between the Enterprise and a Tripolitan cruiser in the Mediterranean’s dark, violent waters. The break in the clouds sheds light on this conflict and illuminates Birch’s fine details and precise rendering of these ships.”\n       https://www.artic.edu/artworks/120163 · CC BY 4.0\n       “Capture of the Tripoli by the Enterprise”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/120163\n\n3. **Harbor of Boston, with the City in the Distance**\n   Fitz Henry Lane · c. 1846–47 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/2004.35\n\n   La obra muestra una vista del puerto de Boston en la tarde, con luz difusa reflejándose en el agua, lo que evoca una atmósfera calmada y serena. [1]\n   La representación del agua y la luz crea una sensación de tranquilidad y reposo, acorde con el pedido de una obra más tranquila.\n\n   **Fuentes**\n   [1] “In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.”\n       https://clevelandart.org/art/2004.35 · CC0 1.0\n\n4. **Shipwreck near a Rocky Coast**\n   Thomas Birch · 1833 · Oil on canvas · 19th century\n   Ficha oficial: https://www.artic.edu/artworks/244013\n\n   La pintura representa un naufragio con velas rotas y maderos inclinados, mostrando la lucha humana contra la naturaleza. [1]\n   La escena es dramática y tensa, con una narrativa de desastre y peligro, lo que no corresponde a una sensación de tranquilidad.\n\n   **Fuentes**\n   [1] “Based in Philadelphia, Thomas Birch was a leading marine painter who helped establish the genre in early 19th-century America. Shipwreck near a Rocky Coast is a romantic, imaginative composition that highlights human struggle against the forces of nature: the ship’s sails are torn, its masts lean to one side, and a tiny group of seafarers attempts to flee the disaster. Birch rendered the scene in dramatic detail, yet left the narrative unresolved.”\n       https://www.artic.edu/artworks/244013 · CC BY 4.0\n       “Shipwreck near a Rocky Coast”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/244013\n\n5. **The Death of General Colbert**\n   Victor Schnetz · c. 1809/1810 · oil on fabric\n   Ficha oficial: https://clevelandart.org/art/1980.285\n\n   La obra representa el momento de la muerte del general Colbert en una batalla, un tema dramático y bélico. [1]\n   El tema bélico y la representación de la muerte no transmiten una sensación de tranquilidad.\n\n   **Fuentes**\n   [1] “In 1809, the popular young French military hero General Auguste Colbert died at a battle in Spain. The following year, Schnetz depicted the moment of Colbert's death. This is the study for a much larger painting exhibited at the Paris Salon, but now lost. The exploits of Napoleon and his army were popular subjects for French artists whose work was shown in official exhibitions.”\n       https://clevelandart.org/art/1980.285 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+      "config_id": "4443862ae45e62d6",
+      "corrida_id": "6e35d72823be61ec-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:148368",
+      "aic:120163",
+      "cma:163456",
+      "aic:244013",
+      "cma:150080"
+    ]
+  },
+  "fecha": "2026-10-27T15:13:53+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "generador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "recuperador_visual",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "generador": 7.5793,
+      "recolector_de_evidencia": 0.5605,
+      "recuperador_visual": 0.1647,
+      "renderizador": 0.0008
+    },
+    "segundos_de_la_corrida": 8.3073
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.16,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "embedding_texto": 1
+      },
+      "segundos": 0.517,
+      "tokens_in": 4,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.577,
+      "tokens_in": 3251,
+      "tokens_out": 676
+    },
+    "indice": {
+      "n_items": 31,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "indice": 6
+      },
+      "segundos": 0.046,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.577,
+      "tokens_in": 3251,
+      "tokens_out": 676
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.559,
+      "tokens_in": 4,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.164,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "no_determinan_el_config_id": {
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 los hallazgos: el config_id se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "generador": "explicacion",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida"
+    },
+    "configuracion": "C1",
+    "etapas": [
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+    "config_id": "4443862ae45e62d6",
+    "corrida_id": "6e35d72823be61ec-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

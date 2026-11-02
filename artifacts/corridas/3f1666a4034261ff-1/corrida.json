@@ -1,0 +1,1169 @@
+{
+  "agrega_a_la_tabla": true,
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C1"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 15,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 5,
+      "embedding": 3,
+      "llm": 1,
+      "retriever": 6
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "6d1357d2aa871a22",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C1",
+      "etapas": [
+        "recuperador_visual",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c05-ambiguo",
+  "corrida_id": "3f1666a4034261ff-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "generador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:105600",
+      "categoria": "ambiguo",
+      "consulta_id": "c05-ambiguo",
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:79765": [
+        {
+          "artist": "John Wollaston",
+          "artwork_id": "aic:79765",
+          "chunk_index": 0,
+          "fragment_id": "aic:79765::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/79765",
+          "texto": "Private collection, England. Private collection, United States, by 1953; with Hills Jewelers, Piermont, NY, by Nov. 1953 [this and the following according to Stock Books, 1951-1953, 42–43, box 17, folder 3, Victor D. Spark papers, circa 1830-1983, bulk 1930-1970, Archives of American Art, Smithsonian Institution, https://www.aaa.si.edu/collections/victor-d-spark-papers-7451/subseries-4-2/box-17-folder-4, accessed Oct. 13, 2022]; sold to Victor D. Spark (1898–1991), New York, Hirschl and Adler Gallery, New York, and possibly Graham Gallery, New York, by Nov. 1953 [the sale, divided in 1/3 shares among each of these parties, accompanied another portrait by the same artist, Portrait of a Young Man, 1749/52 (1953.463)]; sold to the Art Institute of Chicago, 1953.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "John Wollaston",
+          "artwork_id": "aic:79765",
+          "chunk_index": 0,
+          "fragment_id": "aic:79765::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/79765",
+          "texto": "An established portrait painter in England, John Wollaston came to the American colonies to ply his trade in 1749. For the next three years, Wollaston worked in New York, executing numerous portraits for area sitters eager to acquire quality likenesses from a skilled, European-trained artist—a rarity in mid-18th-century America. Wollaston rendered his figures with convincing modeling and forms, excelling in the depiction of colorful draperies. In Portrait of a Woman, as in his other works of the time, the artist employed formulaic poses, gestures, and dress, a result, in part, of looking to English sources for portraiture, but also a means of meeting the many requests for commissions. Beginning in 1753, Wollaston painted in Maryland, Pennsylvania, Virginia, and South Carolina.",
+          "title": "Portrait of a Woman"
+        }
+      ],
+      "cma:124080": [
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.",
+          "title": "Portrait of Mary Wise"
+        },
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "The portrait shows Mary in her twenties, with her hair powdered fashionably grey.",
+          "title": "Portrait of Mary Wise"
+        },
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "Mrs. Henry Christopher Wise (née Mary Wathen) [born 1751] by descent to her great-granddaughter, Catherine Waller\nCatherine [1804-1861] and Sir Thomas Wathen Waller, 2nd Bt [1805-1892], by descent to their grandson, Sir Francis Grant Waller\nSir Francis Grant Waller, 4th Bt, sold to Agnew\n(Agnew, London, sold to Duveen)\n(Duveen, through Romer Williams)\n(F. Kleinberger Galleries, New York, NY)\n(Duveen)\nElizabeth Severance Prentiss Allen [1865-1944], Cleveland, OH, bequeathed by her to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of Mary Wise"
+        }
+      ],
+      "cma:173240": [
+        {
+          "artist": "John Smibert",
+          "artwork_id": "cma:173240",
+          "chunk_index": 0,
+          "fragment_id": "cma:173240::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1920.3919",
+          "texto": "family of the sitter\nEmily Hallowell, Mass.\nfamily of the sitter, to Emily Hallowell, Mass.",
+          "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+        },
+        {
+          "artist": "John Smibert",
+          "artwork_id": "cma:173240",
+          "chunk_index": 0,
+          "fragment_id": "cma:173240::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1920.3919",
+          "texto": "The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.",
+          "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+        }
+      ],
+      "cma:95286": [
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "The sitter wears several transparent and translucent white collars that become opaque when layered.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "Dowdswell, London, United Kingdom\n(Durand-Ruel, Paris, France and New York, NY)\nMr. and Mrs. J. H. Wade, Cleveland, 1902, by gift to the Cleveland Museum of Art, 1916.\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.",
+          "title": "Portrait of a Woman"
+        }
+      ],
+      "cma:99428": [
+        {
+          "artist": "Joseph Blackburn",
+          "artwork_id": "cma:99428",
+          "chunk_index": 0,
+          "fragment_id": "cma:99428::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1919.1005",
+          "texto": "Painter Joseph Blackburn worked in Bermuda before moving to the Thirteen Colonies.",
+          "title": "Hannah Wentworth Atkinson"
+        },
+        {
+          "artist": "Joseph Blackburn",
+          "artwork_id": "cma:99428",
+          "chunk_index": 0,
+          "fragment_id": "cma:99428::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1919.1005",
+          "texto": "Posed bolt upright in a billowing satin gown, Hannah Wentworth Atkinson is almost a mannequin for the display of opulent textiles. The wife of the colony of New Hampshire's chief justice and richest man, she found a suitable portrait painter in Joseph Blackburn, who sought to present the fashionable tastes of his sitters.",
+          "title": "Hannah Wentworth Atkinson"
+        },
+        {
+          "artist": "Joseph Blackburn",
+          "artwork_id": "cma:99428",
+          "chunk_index": 0,
+          "fragment_id": "cma:99428::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1919.1005",
+          "texto": "Commissioned by Theodore Atkinson, Sr. (1697–1779) and Hannah Wentworth Atkinson (1700–1769), Portsmouth, NH\nBequeathed to George King Atkinson (1730–1788), Portsmouth, NH\nBequeathed to William King Atkinson (1765–1820), Dover, NH\nFrances Atkinson Freeman (1797–1883), Dover, NH\nMary Wendell Copp Tredick (1811–1896), Nokesville,VA, and Charlotte King Atkinson Copp Wadleigh (1815–1893), Union, NH\nFrancis Freeman Wadleigh (1849–1936), Wakefield, NH\n[Frank W. Bayley, Copley Gallery, Boston, MA]\nPurchased by the Cleveland Museum of Art, Cleveland, OH, in 1919",
+          "title": "Hannah Wentworth Atkinson"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:99428::description::0"
+            ],
+            "texto": "El retrato muestra a Hannah Wentworth Atkinson posando erguida con un vestido de satén que resalta textiles opulentos, reflejando el gusto de la época y la posición social de la retratada.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra presenta una figura femenina con una pose rígida y formal, destacando la elegancia y riqueza del vestuario.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:99428"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:173240::description::0"
+            ],
+            "texto": "El retrato fue realizado por John Smibert, un pintor británico profesional que llegó a las colonias americanas en 1729, marcando un punto crucial en la historia del arte americano.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:173240::description::0"
+            ],
+            "texto": "La figura femenina sigue convenciones británicas en su vestimenta y peinado, con un escote bajo, cuello largo y rizos sinuosos.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La pose y el estilo reflejan una influencia europea clásica, con un enfoque en la representación formal y elegante de la mujer.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:173240"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:124080::description::0"
+            ],
+            "texto": "El retrato muestra a Mary Wise con una expresión modesta y contemplativa, vestida con un conjunto elaborado que incluye un vestido bordado con flores doradas, encajes y perlas.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:124080::description::0"
+            ],
+            "texto": "La composición íntima y el formato ovalado compacto junto con la pose informal de la retratada aportan cercanía y calidez a la obra.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra transmite una sensación de proximidad emocional debido a la expresión y postura natural de la figura.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:124080"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:79765::description::0"
+            ],
+            "texto": "John Wollaston fue un pintor establecido en Inglaterra que trabajó en las colonias americanas entre 1749 y 1752, realizando retratos para clientes que buscaban retratos de calidad.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:79765::description::0"
+            ],
+            "texto": "El artista empleó poses, gestos y vestimentas formulaicas inspiradas en fuentes inglesas para satisfacer la demanda de retratos en las colonias.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra presenta una figura femenina con modelado convincente y un tratamiento detallado de las telas coloridas, lo que aporta realismo y presencia.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:79765"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:95286::did_you_know::0"
+            ],
+            "texto": "El retrato fue realizado por Jan Anthonisz. van Ravesteyn en los años 1620 y presenta a una mujer con varios cuellos blancos transparentes y translúcidos que se vuelven opacos al superponerse.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:95286::description::0"
+            ],
+            "texto": "La obra fue restaurada cuidadosamente, reconstruyendo partes faltantes del encaje y el collar siguiendo la técnica original del artista, pero sin inventar elementos no documentados.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato transmite cercanía a través del detallado tratamiento del rostro y los elementos ornamentales, mostrando una expresión directa y natural.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:95286"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "visual": [
+        {
+          "artwork_id": "cma:99428",
+          "rank": 1,
+          "score": 0.7011936902999878
+        },
+        {
+          "artwork_id": "cma:173240",
+          "rank": 2,
+          "score": 0.701042652130127
+        },
+        {
+          "artwork_id": "cma:124080",
+          "rank": 3,
+          "score": 0.6994558572769165
+        },
+        {
+          "artwork_id": "aic:79765",
+          "rank": 4,
+          "score": 0.6902648210525513
+        },
+        {
+          "artwork_id": "cma:95286",
+          "rank": 5,
+          "score": 0.6886906623840332
+        },
+        {
+          "artwork_id": "cma:109248",
+          "rank": 6,
+          "score": 0.6874582767486572
+        },
+        {
+          "artwork_id": "aic:11003",
+          "rank": 7,
+          "score": 0.6854955554008484
+        },
+        {
+          "artwork_id": "aic:59787",
+          "rank": 8,
+          "score": 0.6837500333786011
+        },
+        {
+          "artwork_id": "aic:61151",
+          "rank": 9,
+          "score": 0.6833847165107727
+        },
+        {
+          "artwork_id": "aic:76166",
+          "rank": 10,
+          "score": 0.6820001006126404
+        },
+        {
+          "artwork_id": "aic:102777",
+          "rank": 11,
+          "score": 0.6818345785140991
+        },
+        {
+          "artwork_id": "cma:95269",
+          "rank": 12,
+          "score": 0.6804561018943787
+        },
+        {
+          "artwork_id": "aic:40388",
+          "rank": 13,
+          "score": 0.677928626537323
+        },
+        {
+          "artwork_id": "cma:103366",
+          "rank": 14,
+          "score": 0.6777498126029968
+        },
+        {
+          "artwork_id": "aic:40599",
+          "rank": 15,
+          "score": 0.6758418679237366
+        },
+        {
+          "artwork_id": "aic:120102",
+          "rank": 16,
+          "score": 0.6739202737808228
+        },
+        {
+          "artwork_id": "aic:105945",
+          "rank": 17,
+          "score": 0.6722561717033386
+        },
+        {
+          "artwork_id": "aic:156072",
+          "rank": 18,
+          "score": 0.6716852784156799
+        },
+        {
+          "artwork_id": "cma:125247",
+          "rank": 19,
+          "score": 0.6690229773521423
+        },
+        {
+          "artwork_id": "cma:147447",
+          "rank": 20,
+          "score": 0.6689579486846924
+        }
+      ]
+    },
+    "plan": null,
+    "ranking_fusionado": null,
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c05-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:99428",
+          "ficha": {
+            "artist": "Joseph Blackburn",
+            "culture": "America",
+            "date_display": "1760",
+            "medium": "oil on canvas",
+            "title": "Hannah Wentworth Atkinson",
+            "year": 1760
+          },
+          "lineas": [
+            "El retrato muestra a Hannah Wentworth Atkinson posando erguida con un vestido de satén que resalta textiles opulentos, reflejando el gusto de la época y la posición social de la retratada. [1]",
+            "La obra presenta una figura femenina con una pose rígida y formal, destacando la elegancia y riqueza del vestuario."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Joseph Blackburn",
+              "atribucion": null,
+              "fragment_id": "cma:99428::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1919.1005",
+              "texto_citado": "Posed bolt upright in a billowing satin gown, Hannah Wentworth Atkinson is almost a mannequin for the display of opulent textiles. The wife of the colony of New Hampshire's chief justice and richest man, she found a suitable portrait painter in Joseph Blackburn, who sought to present the fashionable tastes of his sitters.",
+              "title": "Hannah Wentworth Atkinson"
+            }
+          ],
+          "score": 0.7011936902999878,
+          "source_url": "https://clevelandart.org/art/1919.1005"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:173240",
+          "ficha": {
+            "artist": "John Smibert",
+            "culture": "America",
+            "date_display": "c. 1734",
+            "medium": "oil on canvas",
+            "title": "Portrait of a Woman (Judith Colman Bulfinch?)",
+            "year": 1729
+          },
+          "lineas": [
+            "El retrato fue realizado por John Smibert, un pintor británico profesional que llegó a las colonias americanas en 1729, marcando un punto crucial en la historia del arte americano. [1]",
+            "La figura femenina sigue convenciones británicas en su vestimenta y peinado, con un escote bajo, cuello largo y rizos sinuosos. [1]",
+            "La pose y el estilo reflejan una influencia europea clásica, con un enfoque en la representación formal y elegante de la mujer."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "John Smibert",
+              "atribucion": null,
+              "fragment_id": "cma:173240::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1920.3919",
+              "texto_citado": "The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.",
+              "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+            }
+          ],
+          "score": 0.701042652130127,
+          "source_url": "https://clevelandart.org/art/1920.3919"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:124080",
+          "ficha": {
+            "artist": "Thomas Gainsborough",
+            "culture": "England",
+            "date_display": "c. 1774",
+            "medium": "oil on canvas",
+            "title": "Portrait of Mary Wise",
+            "year": 1773
+          },
+          "lineas": [
+            "El retrato muestra a Mary Wise con una expresión modesta y contemplativa, vestida con un conjunto elaborado que incluye un vestido bordado con flores doradas, encajes y perlas. [1]",
+            "La composición íntima y el formato ovalado compacto junto con la pose informal de la retratada aportan cercanía y calidez a la obra. [1]",
+            "La obra transmite una sensación de proximidad emocional debido a la expresión y postura natural de la figura."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Thomas Gainsborough",
+              "atribucion": null,
+              "fragment_id": "cma:124080::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1944.82",
+              "texto_citado": "Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.",
+              "title": "Portrait of Mary Wise"
+            }
+          ],
+          "score": 0.6994558572769165,
+          "source_url": "https://clevelandart.org/art/1944.82"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:79765",
+          "ficha": {
+            "artist": "John Wollaston",
+            "culture": "United States",
+            "date_display": "1749–52",
+            "medium": "Oil on canvas",
+            "title": "Portrait of a Woman",
+            "year": 1749
+          },
+          "lineas": [
+            "John Wollaston fue un pintor establecido en Inglaterra que trabajó en las colonias americanas entre 1749 y 1752, realizando retratos para clientes que buscaban retratos de calidad. [1]",
+            "El artista empleó poses, gestos y vestimentas formulaicas inspiradas en fuentes inglesas para satisfacer la demanda de retratos en las colonias. [1]",
+            "La obra presenta una figura femenina con modelado convincente y un tratamiento detallado de las telas coloridas, lo que aporta realismo y presencia."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "John Wollaston",
+              "atribucion": "“Portrait of a Woman”, John Wollaston. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/79765",
+              "fragment_id": "aic:79765::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/79765",
+              "texto_citado": "An established portrait painter in England, John Wollaston came to the American colonies to ply his trade in 1749. For the next three years, Wollaston worked in New York, executing numerous portraits for area sitters eager to acquire quality likenesses from a skilled, European-trained artist—a rarity in mid-18th-century America. Wollaston rendered his figures with convincing modeling and forms, excelling in the depiction of colorful draperies. In Portrait of a Woman, as in his other works of the time, the artist employed formulaic poses, gestures, and dress, a result, in part, of looking to English sources for portraiture, but also a means of meeting the many requests for commissions. Beginning in 1753, Wollaston painted in Maryland, Pennsylvania, Virginia, and South Carolina.",
+              "title": "Portrait of a Woman"
+            }
+          ],
+          "score": 0.6902648210525513,
+          "source_url": "https://www.artic.edu/artworks/79765"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:95286",
+          "ficha": {
+            "artist": "Jan Anthonisz. van Ravesteyn",
+            "culture": "Netherlands",
+            "date_display": "1620s",
+            "medium": "oil on wood",
+            "title": "Portrait of a Woman",
+            "year": 1620
+          },
+          "lineas": [
+            "El retrato fue realizado por Jan Anthonisz. van Ravesteyn en los años 1620 y presenta a una mujer con varios cuellos blancos transparentes y translúcidos que se vuelven opacos al superponerse. [1]",
+            "La obra fue restaurada cuidadosamente, reconstruyendo partes faltantes del encaje y el collar siguiendo la técnica original del artista, pero sin inventar elementos no documentados. [2]",
+            "El retrato transmite cercanía a través del detallado tratamiento del rostro y los elementos ornamentales, mostrando una expresión directa y natural."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Jan Anthonisz. van Ravesteyn",
+              "atribucion": null,
+              "fragment_id": "cma:95286::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1916.1055",
+              "texto_citado": "The sitter wears several transparent and translucent white collars that become opaque when layered.",
+              "title": "Portrait of a Woman"
+            },
+            {
+              "artist": "Jan Anthonisz. van Ravesteyn",
+              "atribucion": null,
+              "fragment_id": "cma:95286::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1916.1055",
+              "texto_citado": "How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.",
+              "title": "Portrait of a Woman"
+            }
+          ],
+          "score": 0.6886906623840332,
+          "source_url": "https://clevelandart.org/art/1916.1055"
+        }
+      ],
+      "render": "1. **Hannah Wentworth Atkinson**\n   Joseph Blackburn · 1760 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1919.1005\n\n   El retrato muestra a Hannah Wentworth Atkinson posando erguida con un vestido de satén que resalta textiles opulentos, reflejando el gusto de la época y la posición social de la retratada. [1]\n   La obra presenta una figura femenina con una pose rígida y formal, destacando la elegancia y riqueza del vestuario.\n\n   **Fuentes**\n   [1] “Posed bolt upright in a billowing satin gown, Hannah Wentworth Atkinson is almost a mannequin for the display of opulent textiles. The wife of the colony of New Hampshire's chief justice and richest man, she found a suitable portrait painter in Joseph Blackburn, who sought to present the fashionable tastes of his sitters.”\n       https://clevelandart.org/art/1919.1005 · CC0 1.0\n\n2. **Portrait of a Woman (Judith Colman Bulfinch?)**\n   John Smibert · c. 1734 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1920.3919\n\n   El retrato fue realizado por John Smibert, un pintor británico profesional que llegó a las colonias americanas en 1729, marcando un punto crucial en la historia del arte americano. [1]\n   La figura femenina sigue convenciones británicas en su vestimenta y peinado, con un escote bajo, cuello largo y rizos sinuosos. [1]\n   La pose y el estilo reflejan una influencia europea clásica, con un enfoque en la representación formal y elegante de la mujer.\n\n   **Fuentes**\n   [1] “The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.”\n       https://clevelandart.org/art/1920.3919 · CC0 1.0\n\n3. **Portrait of Mary Wise**\n   Thomas Gainsborough · c. 1774 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1944.82\n\n   El retrato muestra a Mary Wise con una expresión modesta y contemplativa, vestida con un conjunto elaborado que incluye un vestido bordado con flores doradas, encajes y perlas. [1]\n   La composición íntima y el formato ovalado compacto junto con la pose informal de la retratada aportan cercanía y calidez a la obra. [1]\n   La obra transmite una sensación de proximidad emocional debido a la expresión y postura natural de la figura.\n\n   **Fuentes**\n   [1] “Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.”\n       https://clevelandart.org/art/1944.82 · CC0 1.0\n\n4. **Portrait of a Woman**\n   John Wollaston · 1749–52 · Oil on canvas\n   Ficha oficial: https://www.artic.edu/artworks/79765\n\n   John Wollaston fue un pintor establecido en Inglaterra que trabajó en las colonias americanas entre 1749 y 1752, realizando retratos para clientes que buscaban retratos de calidad. [1]\n   El artista empleó poses, gestos y vestimentas formulaicas inspiradas en fuentes inglesas para satisfacer la demanda de retratos en las colonias. [1]\n   La obra presenta una figura femenina con modelado convincente y un tratamiento detallado de las telas coloridas, lo que aporta realismo y presencia.\n\n   **Fuentes**\n   [1] “An established portrait painter in England, John Wollaston came to the American colonies to ply his trade in 1749. For the next three years, Wollaston worked in New York, executing numerous portraits for area sitters eager to acquire quality likenesses from a skilled, European-trained artist—a rarity in mid-18th-century America. Wollaston rendered his figures with convincing modeling and forms, excelling in the depiction of colorful draperies. In Portrait of a Woman, as in his other works of the time, the artist employed formulaic poses, gestures, and dress, a result, in part, of looking to English sources for portraiture, but also a means of meeting the many requests for commissions. Beginning in 1753, Wollaston painted in Maryland, Pennsylvania, Virginia, and South Carolina.”\n       https://www.artic.edu/artworks/79765 · CC BY 4.0\n       “Portrait of a Woman”, John Wollaston. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/79765\n\n5. **Portrait of a Woman**\n   Jan Anthonisz. van Ravesteyn · 1620s · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1916.1055\n\n   El retrato fue realizado por Jan Anthonisz. van Ravesteyn en los años 1620 y presenta a una mujer con varios cuellos blancos transparentes y translúcidos que se vuelven opacos al superponerse. [1]\n   La obra fue restaurada cuidadosamente, reconstruyendo partes faltantes del encaje y el collar siguiendo la técnica original del artista, pero sin inventar elementos no documentados. [2]\n   El retrato transmite cercanía a través del detallado tratamiento del rostro y los elementos ornamentales, mostrando una expresión directa y natural.\n\n   **Fuentes**\n   [1] “The sitter wears several transparent and translucent white collars that become opaque when layered.”\n       https://clevelandart.org/art/1916.1055 · CC0 1.0\n   [2] “How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.”\n       https://clevelandart.org/art/1916.1055 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "be7733cd52dcaa16b6de0c1c9a97fd9054fa29a9",
+      "config_id": "6d1357d2aa871a22",
+      "corrida_id": "3f1666a4034261ff-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:99428",
+      "cma:173240",
+      "cma:124080",
+      "aic:79765",
+      "cma:95286"
+    ]
+  },
+  "fecha": "2026-10-24T12:28:24+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "generador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "recuperador_visual",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "generador": 7.3115,
+      "recolector_de_evidencia": 0.715,
+      "recuperador_visual": 3.6721,
+      "renderizador": 0.0007
+    },
+    "segundos_de_la_corrida": 11.7007
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "segundos": 3.664,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "segundos": 0.654,
+      "tokens_in": 4,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "segundos": 7.311,
+      "tokens_in": 4022,
+      "tokens_out": 1003
+    },
+    "indice": {
+      "n_items": 33,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "segundos": 0.066,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "recuperador_visual",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "generador": "explicacion",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida"
+    },
+    "configuracion": "C1",
+    "etapas": [
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "be7733cd52dcaa16b6de0c1c9a97fd9054fa29a9",
+    "config_id": "6d1357d2aa871a22",
+    "corrida_id": "3f1666a4034261ff-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

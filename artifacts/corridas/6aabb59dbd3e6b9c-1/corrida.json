@@ -1,0 +1,3475 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 72,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 4,
+      "llm": 51,
+      "retriever": 8
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set consulta.n_candidatos"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "6fc42e33b791071d",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 50,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c09-ambiguo",
+  "corrida_id": "6aabb59dbd3e6b9c-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:148382",
+      "categoria": "ambiguo",
+      "consulta_id": "c09-ambiguo",
+      "imagen_hash": "sha256:23a84ea12a0d7fa27a16dbfb9fe8c2829cba6063e5bac4fd09fee6d2f829222e",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "cma:145430": [
+        {
+          "artist": "Peng Xu",
+          "artwork_id": "cma:145430",
+          "chunk_index": 0,
+          "fragment_id": "cma:145430::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1970.80",
+          "texto": "Seasonal paintings, including those depicting flowering plum trees in early spring, furnished scholars’ studios or other interior spaces in the house. \n\nPeng Xu is considered the foremost follower of the famous plum blossom painter Wang Mian (1287–1359) (see CMA 1974.26). The branches are brushed in the same vigorous manner leaving white streaks in the ink indicating the gnarled bark. The delicate blossoms are drawn in fine lines, while a gray wash covers the entire surface, only leaving the flower petals in reserve.",
+          "title": "Ink Plum"
+        },
+        {
+          "artist": "Peng Xu",
+          "artwork_id": "cma:145430",
+          "chunk_index": 0,
+          "fragment_id": "cma:145430::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1970.80",
+          "texto": "Plum trees blossom in the first months of the year; the delicate flowers endure the harsh winter frosts. A popular motif in Chinese ink painting, the plum symbolizes the winter season and is a harbinger of spring.",
+          "title": "Ink Plum"
+        },
+        {
+          "artist": "Peng Xu",
+          "artwork_id": "cma:145430",
+          "chunk_index": 0,
+          "fragment_id": "cma:145430::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1970.80",
+          "texto": "(Yamanaka and Co., Ltd., New York, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Ink Plum"
+        }
+      ],
+      "cma:147906": [
+        {
+          "artist": "Wang Mian",
+          "artwork_id": "cma:147906",
+          "chunk_index": 0,
+          "fragment_id": "cma:147906::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1974.26",
+          "texto": "The plum flourishes in the mild climate of the south, and it was not before the Six Dynasties period (220– 589 CE) that the motif began to be appreciated by southern artists, many of whom had emigrated from the north. \n\nWang Mian from Zhejiang province had failed the civil and military service examinations and later rejected appointments under the Mongol government. Instead, he chose to return home, making a living by selling plum paintings. Few of Wang’s works have survived, but they demonstrate that by his time the ink-plum (momei) genre was fully developed.",
+          "title": "A Prunus in the Moonlight"
+        },
+        {
+          "artist": "Wang Mian",
+          "artwork_id": "cma:147906",
+          "chunk_index": 0,
+          "fragment_id": "cma:147906::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1974.26",
+          "texto": "The painting portrays the plum in the nighttime, as indicated by the tint of the background and the presence of the moon.",
+          "title": "A Prunus in the Moonlight"
+        },
+        {
+          "artist": "Wang Mian",
+          "artwork_id": "cma:147906",
+          "chunk_index": 0,
+          "fragment_id": "cma:147906::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1974.26",
+          "texto": "Qing imperial collection, seals of the Qianlong Emperor, reigned 1736–95\nDong Gao 董誥 [1740–1818]\nMarquis Asano Nagakoto 侯爵 淺野長勲 [1842–1937], Hiroshima, Japan\nYasuda Family 安田家, chief retainer of the Asano Family\n(Mayuyama & Co., Ltd., Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "A Prunus in the Moonlight"
+        }
+      ],
+      "cma:148810": [
+        {
+          "artist": "Shūgetsu Tōkan",
+          "artwork_id": "cma:148810",
+          "chunk_index": 0,
+          "fragment_id": "cma:148810::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1976.59",
+          "texto": "This vague but energetically rendered landscape highlights the brush: the messenger for a moment’s emotional or spiritual state. The painting represents one of many subjects and styles Shugetsu studied and absorbed from the great practitioners of Ming-dynasty China in the late 1400s and early 1500s. The technique of \"flung ink,\" or haboku, disguises purposeful composition as an almost random, distracted series of brushstrokes. Close inspection reveals tonalities and strokes brushed onto a soft, absorbent paper in a range from heavy and wet to crisp ink charges. Not surprisingly, amateur and professional Zen monk-painters favored this \"impressionistic\" style as an exercise in seeing meaningful detail slowly emerge from what at first seems unclear.",
+          "title": "Haboku (Flung-ink) Landscape"
+        },
+        {
+          "artist": "Shūgetsu Tōkan",
+          "artwork_id": "cma:148810",
+          "chunk_index": 0,
+          "fragment_id": "cma:148810::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1976.59",
+          "texto": "Hirayama\nTanaka Gohei\n(Gatodo Gallery Co., Ltd., Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Haboku (Flung-ink) Landscape"
+        }
+      ],
+      "cma:150710": [
+        {
+          "artist": null,
+          "artwork_id": "cma:150710",
+          "chunk_index": 0,
+          "fragment_id": "cma:150710::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1982.138",
+          "texto": "This deceptively simple composition features two upright stalks of bamboo with leafy stems extended to fill the silk. The painter sensitively balanced ink tones and brushstrokes. The leaves that cross in front of other leaves are outlined in clear silk.",
+          "title": "Ink Bamboo"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150710",
+          "chunk_index": 0,
+          "fragment_id": "cma:150710::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1982.138",
+          "texto": "In traditional Chinese culture, bamboo symbolizes a gentleman's virtuous resilience and flexibility.",
+          "title": "Ink Bamboo"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150710",
+          "chunk_index": 0,
+          "fragment_id": "cma:150710::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1982.138",
+          "texto": "(Shogoro Yabumoto, Amagasaki, Hyōgo Prefecture, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Ink Bamboo"
+        }
+      ],
+      "cma:152550": [
+        {
+          "artist": "Wang Shishen",
+          "artwork_id": "cma:152550",
+          "chunk_index": 0,
+          "fragment_id": "cma:152550::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1985.366",
+          "texto": "A native of Anhui province, Wang Shishen was a professional painter who specialized in plum blossoms. He moved to Yangzhou in the late 1720s to seek patrons. Here, the daring composition of a flowering plum branch is balanced through the addition of four poems. Wang’s poems evoke nostalgia for the forgotten Six Dynasties period and the glorious Sui dynasty, during which the Grand Canal was built while Yangzhou was the southern capital of the empire. Other inscriptions in the upper part of the painting allude to the fact that Wang had developed blindness in one eye, probably at the time he conceived this painting.",
+          "title": "Plum Blossoms"
+        },
+        {
+          "artist": "Wang Shishen",
+          "artwork_id": "cma:152550",
+          "chunk_index": 0,
+          "fragment_id": "cma:152550::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1985.366",
+          "texto": "The Kelvin Smith Collection, Cleveland, OH, given by Mrs. Kelvin [Eleanor Armstrong] Smith [1899–1998] to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Plum Blossoms"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:147906::did_you_know::0"
+            ],
+            "texto": "La obra representa un ciruelo en la noche, con un fondo tintado y la presencia de la luna que aportan una atmósfera suave y delicada.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La técnica de tinta sobre seda y el tema del ciruelo, que florece en un clima suave, contribuyen a una sensación de delicadeza en la obra.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:147906"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:145430::description::0"
+            ],
+            "texto": "Las flores delicadas están dibujadas con líneas finas, y un lavado gris cubre la superficie dejando los pétalos en reserva, lo que aporta una sensación de sutileza y delicadeza.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:145430::did_you_know::0"
+            ],
+            "texto": "El motivo del ciruelo, símbolo de la temporada de invierno y precursor de la primavera, es representado con un enfoque en la delicadeza de las flores que resisten las heladas.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La paleta suave y el detalle en las flores transmiten una impresión delicada y refinada.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:145430"
+      },
+      {
+        "abstencion": "No hay información suficiente en los fragmentos para afirmar que la obra es especialmente delicada.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:152550::description::0"
+            ],
+            "texto": "La composición audaz de una rama de ciruelo en flor está equilibrada con la adición de cuatro poemas, lo que aporta una dimensión literaria y nostálgica.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra refleja una técnica profesional especializada en ciruelos, pero no se menciona específicamente un tratamiento delicado en la representación.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:152550"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:150710::description::0"
+            ],
+            "texto": "La composición presenta dos tallos de bambú con hojas que llenan la seda, con un balance sensible de tonos de tinta y pinceladas.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Las hojas que se cruzan están delineadas claramente, lo que puede aportar una sensación de precisión y delicadeza en el trazo.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:150710"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:148810::description::0"
+            ],
+            "texto": "La obra utiliza la técnica de tinta lanzada (haboku), que crea una composición aparentemente aleatoria y difusa, con pinceladas que varían desde cargadas y húmedas hasta nítidas.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El estilo impresionista y la ejecución enérgica sugieren una expresión emocional más que una delicadeza visual tradicional.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:148810"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:145430",
+          "rank": 1,
+          "score": 0.7152062654495239
+        },
+        {
+          "artwork_id": "cma:149109",
+          "rank": 2,
+          "score": 0.6965302228927612
+        },
+        {
+          "artwork_id": "aic:68041",
+          "rank": 3,
+          "score": 0.6852703094482422
+        },
+        {
+          "artwork_id": "cma:150728",
+          "rank": 4,
+          "score": 0.6816753149032593
+        },
+        {
+          "artwork_id": "aic:212492",
+          "rank": 5,
+          "score": 0.648857831954956
+        },
+        {
+          "artwork_id": "cma:152550",
+          "rank": 6,
+          "score": 0.643631100654602
+        },
+        {
+          "artwork_id": "cma:160133",
+          "rank": 7,
+          "score": 0.6417500972747803
+        },
+        {
+          "artwork_id": "cma:132015",
+          "rank": 8,
+          "score": 0.6416245102882385
+        },
+        {
+          "artwork_id": "cma:150710",
+          "rank": 9,
+          "score": 0.6410175561904907
+        },
+        {
+          "artwork_id": "cma:149891",
+          "rank": 10,
+          "score": 0.6387097835540771
+        },
+        {
+          "artwork_id": "cma:79931",
+          "rank": 11,
+          "score": 0.6382879018783569
+        },
+        {
+          "artwork_id": "aic:62536",
+          "rank": 12,
+          "score": 0.636239767074585
+        },
+        {
+          "artwork_id": "cma:148810",
+          "rank": 13,
+          "score": 0.6344552040100098
+        },
+        {
+          "artwork_id": "cma:140155",
+          "rank": 14,
+          "score": 0.6312655806541443
+        },
+        {
+          "artwork_id": "cma:160528",
+          "rank": 15,
+          "score": 0.630048930644989
+        },
+        {
+          "artwork_id": "aic:46487",
+          "rank": 16,
+          "score": 0.6294172406196594
+        },
+        {
+          "artwork_id": "cma:135953",
+          "rank": 17,
+          "score": 0.6274990439414978
+        },
+        {
+          "artwork_id": "cma:160913",
+          "rank": 18,
+          "score": 0.6270720958709717
+        },
+        {
+          "artwork_id": "cma:151970",
+          "rank": 19,
+          "score": 0.6261191368103027
+        },
+        {
+          "artwork_id": "aic:79716",
+          "rank": 20,
+          "score": 0.625987708568573
+        },
+        {
+          "artwork_id": "cma:94983",
+          "rank": 21,
+          "score": 0.6259304285049438
+        },
+        {
+          "artwork_id": "cma:153663",
+          "rank": 22,
+          "score": 0.6216996312141418
+        },
+        {
+          "artwork_id": "cma:132837",
+          "rank": 23,
+          "score": 0.6214184761047363
+        },
+        {
+          "artwork_id": "cma:149880",
+          "rank": 24,
+          "score": 0.6210902333259583
+        },
+        {
+          "artwork_id": "cma:135595",
+          "rank": 25,
+          "score": 0.6208546757698059
+        },
+        {
+          "artwork_id": "aic:75317",
+          "rank": 26,
+          "score": 0.6205283403396606
+        },
+        {
+          "artwork_id": "aic:75361",
+          "rank": 27,
+          "score": 0.6197851300239563
+        },
+        {
+          "artwork_id": "cma:79590",
+          "rank": 28,
+          "score": 0.6191624999046326
+        },
+        {
+          "artwork_id": "cma:155097",
+          "rank": 29,
+          "score": 0.6179648041725159
+        },
+        {
+          "artwork_id": "cma:147906",
+          "rank": 30,
+          "score": 0.6178359985351562
+        },
+        {
+          "artwork_id": "aic:79572",
+          "rank": 31,
+          "score": 0.6175109148025513
+        },
+        {
+          "artwork_id": "aic:46435",
+          "rank": 32,
+          "score": 0.6151373386383057
+        },
+        {
+          "artwork_id": "cma:148237",
+          "rank": 33,
+          "score": 0.6140321493148804
+        },
+        {
+          "artwork_id": "cma:132926",
+          "rank": 34,
+          "score": 0.6136782169342041
+        },
+        {
+          "artwork_id": "aic:198906",
+          "rank": 35,
+          "score": 0.6134897470474243
+        },
+        {
+          "artwork_id": "cma:143462",
+          "rank": 36,
+          "score": 0.6121827960014343
+        },
+        {
+          "artwork_id": "cma:153735",
+          "rank": 37,
+          "score": 0.6118507981300354
+        },
+        {
+          "artwork_id": "cma:153737",
+          "rank": 38,
+          "score": 0.6118507981300354
+        },
+        {
+          "artwork_id": "cma:139746",
+          "rank": 39,
+          "score": 0.6106348037719727
+        },
+        {
+          "artwork_id": "cma:154086",
+          "rank": 40,
+          "score": 0.6095966100692749
+        },
+        {
+          "artwork_id": "cma:79579",
+          "rank": 41,
+          "score": 0.606797456741333
+        },
+        {
+          "artwork_id": "aic:61483",
+          "rank": 42,
+          "score": 0.6059097051620483
+        },
+        {
+          "artwork_id": "cma:95080",
+          "rank": 43,
+          "score": 0.6057048439979553
+        },
+        {
+          "artwork_id": "cma:159726",
+          "rank": 44,
+          "score": 0.6053044199943542
+        },
+        {
+          "artwork_id": "cma:140267",
+          "rank": 45,
+          "score": 0.6037036776542664
+        },
+        {
+          "artwork_id": "cma:130496",
+          "rank": 46,
+          "score": 0.6013727188110352
+        },
+        {
+          "artwork_id": "cma:149958",
+          "rank": 47,
+          "score": 0.6012158393859863
+        },
+        {
+          "artwork_id": "cma:149959",
+          "rank": 48,
+          "score": 0.6012158393859863
+        },
+        {
+          "artwork_id": "cma:149960",
+          "rank": 49,
+          "score": 0.6012158393859863
+        },
+        {
+          "artwork_id": "cma:149961",
+          "rank": 50,
+          "score": 0.6012158393859863
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "aic:46466",
+          "rank": 1,
+          "score": 0.7795262336730957
+        },
+        {
+          "artwork_id": "cma:152831",
+          "rank": 2,
+          "score": 0.7738637328147888
+        },
+        {
+          "artwork_id": "cma:79931",
+          "rank": 3,
+          "score": 0.7726315855979919
+        },
+        {
+          "artwork_id": "cma:149625",
+          "rank": 4,
+          "score": 0.7697162628173828
+        },
+        {
+          "artwork_id": "cma:160133",
+          "rank": 5,
+          "score": 0.7688567042350769
+        },
+        {
+          "artwork_id": "cma:132015",
+          "rank": 6,
+          "score": 0.7664239406585693
+        },
+        {
+          "artwork_id": "cma:159724",
+          "rank": 7,
+          "score": 0.7662147283554077
+        },
+        {
+          "artwork_id": "cma:152439",
+          "rank": 8,
+          "score": 0.7615005373954773
+        },
+        {
+          "artwork_id": "cma:147906",
+          "rank": 9,
+          "score": 0.7598421573638916
+        },
+        {
+          "artwork_id": "cma:159756",
+          "rank": 10,
+          "score": 0.7596482634544373
+        },
+        {
+          "artwork_id": "cma:156792",
+          "rank": 11,
+          "score": 0.7595866918563843
+        },
+        {
+          "artwork_id": "cma:543409",
+          "rank": 12,
+          "score": 0.7591630220413208
+        },
+        {
+          "artwork_id": "cma:143776",
+          "rank": 13,
+          "score": 0.757254958152771
+        },
+        {
+          "artwork_id": "cma:152409",
+          "rank": 14,
+          "score": 0.7570011615753174
+        },
+        {
+          "artwork_id": "cma:130496",
+          "rank": 15,
+          "score": 0.7558873295783997
+        },
+        {
+          "artwork_id": "cma:153412",
+          "rank": 16,
+          "score": 0.7550364136695862
+        },
+        {
+          "artwork_id": "cma:159727",
+          "rank": 17,
+          "score": 0.7543027400970459
+        },
+        {
+          "artwork_id": "cma:151223",
+          "rank": 18,
+          "score": 0.753544270992279
+        },
+        {
+          "artwork_id": "cma:144920",
+          "rank": 19,
+          "score": 0.7535344362258911
+        },
+        {
+          "artwork_id": "cma:148359",
+          "rank": 20,
+          "score": 0.7525815367698669
+        },
+        {
+          "artwork_id": "cma:160138",
+          "rank": 21,
+          "score": 0.7520145177841187
+        },
+        {
+          "artwork_id": "cma:149031",
+          "rank": 22,
+          "score": 0.7517485618591309
+        },
+        {
+          "artwork_id": "cma:135273",
+          "rank": 23,
+          "score": 0.7516976594924927
+        },
+        {
+          "artwork_id": "cma:152827",
+          "rank": 24,
+          "score": 0.7515886425971985
+        },
+        {
+          "artwork_id": "cma:148358",
+          "rank": 25,
+          "score": 0.7510091662406921
+        },
+        {
+          "artwork_id": "cma:147045",
+          "rank": 26,
+          "score": 0.7497135996818542
+        },
+        {
+          "artwork_id": "cma:152412",
+          "rank": 27,
+          "score": 0.7496289014816284
+        },
+        {
+          "artwork_id": "cma:150533",
+          "rank": 28,
+          "score": 0.7496182322502136
+        },
+        {
+          "artwork_id": "aic:75574",
+          "rank": 29,
+          "score": 0.748831033706665
+        },
+        {
+          "artwork_id": "aic:46450",
+          "rank": 30,
+          "score": 0.7483197450637817
+        },
+        {
+          "artwork_id": "cma:132835",
+          "rank": 31,
+          "score": 0.748138964176178
+        },
+        {
+          "artwork_id": "cma:141693",
+          "rank": 32,
+          "score": 0.7472085356712341
+        },
+        {
+          "artwork_id": "cma:145422",
+          "rank": 33,
+          "score": 0.7470042705535889
+        },
+        {
+          "artwork_id": "cma:135836",
+          "rank": 34,
+          "score": 0.7469221949577332
+        },
+        {
+          "artwork_id": "cma:174005",
+          "rank": 35,
+          "score": 0.7459263801574707
+        },
+        {
+          "artwork_id": "cma:152833",
+          "rank": 36,
+          "score": 0.7455708980560303
+        },
+        {
+          "artwork_id": "cma:140445",
+          "rank": 37,
+          "score": 0.7454369068145752
+        },
+        {
+          "artwork_id": "cma:144278",
+          "rank": 38,
+          "score": 0.744970977306366
+        },
+        {
+          "artwork_id": "cma:151028",
+          "rank": 39,
+          "score": 0.7445502877235413
+        },
+        {
+          "artwork_id": "cma:160913",
+          "rank": 40,
+          "score": 0.7444268465042114
+        },
+        {
+          "artwork_id": "cma:137219",
+          "rank": 41,
+          "score": 0.7442417144775391
+        },
+        {
+          "artwork_id": "aic:61483",
+          "rank": 42,
+          "score": 0.743694007396698
+        },
+        {
+          "artwork_id": "cma:132908",
+          "rank": 43,
+          "score": 0.743344783782959
+        },
+        {
+          "artwork_id": "cma:159731",
+          "rank": 44,
+          "score": 0.7429858446121216
+        },
+        {
+          "artwork_id": "cma:151078",
+          "rank": 45,
+          "score": 0.7428765892982483
+        },
+        {
+          "artwork_id": "cma:160948",
+          "rank": 46,
+          "score": 0.7427820563316345
+        },
+        {
+          "artwork_id": "cma:145907",
+          "rank": 47,
+          "score": 0.7424008846282959
+        },
+        {
+          "artwork_id": "cma:161022",
+          "rank": 48,
+          "score": 0.7422827482223511
+        },
+        {
+          "artwork_id": "cma:149606",
+          "rank": 49,
+          "score": 0.7420706748962402
+        },
+        {
+          "artwork_id": "cma:160947",
+          "rank": 50,
+          "score": 0.7417128682136536
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Chinese ink wash painting emphasizing delicate brushwork and subtle depiction of plum blossoms and bamboo in traditional literati style",
+      "consulta_id": "c09-ambiguo",
+      "consulta_visual": "delicate Chinese ink painting of blossoming plum tree with fine branches and subtle bamboo leaves on light background",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:23a84ea12a0d7fa27a16dbfb9fe8c2829cba6063e5bac4fd09fee6d2f829222e",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "más delicado",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "0a95af9f815f9849",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 1801,
+        "tokens_out": 55
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:160133",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 7,
+          "visual": 5
+        },
+        "score_fusionado": 0.03030999
+      },
+      {
+        "artwork_id": "cma:79931",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 11,
+          "visual": 3
+        },
+        "score_fusionado": 0.02995752
+      },
+      {
+        "artwork_id": "cma:132015",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 8,
+          "visual": 6
+        },
+        "score_fusionado": 0.0298574
+      },
+      {
+        "artwork_id": "cma:147906",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 30,
+          "visual": 9
+        },
+        "score_fusionado": 0.02560386
+      },
+      {
+        "artwork_id": "cma:160913",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 18,
+          "visual": 40
+        },
+        "score_fusionado": 0.02282051
+      },
+      {
+        "artwork_id": "cma:130496",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 46,
+          "visual": 15
+        },
+        "score_fusionado": 0.0227673
+      },
+      {
+        "artwork_id": "aic:61483",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 42,
+          "visual": 42
+        },
+        "score_fusionado": 0.01960784
+      },
+      {
+        "artwork_id": "aic:46466",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "cma:145430",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "cma:149109",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "cma:152831",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "aic:68041",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "cma:150728",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "aic:212492",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:152550",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "cma:159724",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:152439",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "cma:150710",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "cma:149891",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:159756",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:156792",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:543409",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:143776",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "cma:148810",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "cma:140155",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "cma:152409",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "cma:160528",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "aic:46487",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:153412",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:135953",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:159727",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:151223",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:144920",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "cma:151970",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:148359",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:160138",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "cma:94983",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "cma:149031",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 22
+        },
+        "score_fusionado": 0.01219512
+      },
+      {
+        "artwork_id": "cma:153663",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.01219512
+      },
+      {
+        "artwork_id": "cma:132837",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "cma:135273",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "cma:149880",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "cma:152827",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "cma:135595",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "cma:148358",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "aic:75317",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "cma:147045",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "aic:75361",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "cma:152412",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "cma:150533",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "cma:79590",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "aic:75574",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 29
+        },
+        "score_fusionado": 0.01123596
+      },
+      {
+        "artwork_id": "cma:155097",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.01123596
+      },
+      {
+        "artwork_id": "aic:46450",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 30
+        },
+        "score_fusionado": 0.01111111
+      },
+      {
+        "artwork_id": "aic:79572",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.01098901
+      },
+      {
+        "artwork_id": "cma:132835",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 31
+        },
+        "score_fusionado": 0.01098901
+      },
+      {
+        "artwork_id": "aic:46435",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "cma:141693",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "cma:145422",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 33
+        },
+        "score_fusionado": 0.01075269
+      },
+      {
+        "artwork_id": "cma:148237",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.01075269
+      },
+      {
+        "artwork_id": "cma:132926",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "cma:135836",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "aic:198906",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:174005",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:143462",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "cma:152833",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "cma:140445",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "cma:153735",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "cma:144278",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "cma:153737",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "cma:139746",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "cma:151028",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "cma:154086",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.01
+      },
+      {
+        "artwork_id": "cma:137219",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "cma:79579",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "cma:132908",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "cma:95080",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "cma:159726",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "cma:159731",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "cma:140267",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "cma:151078",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "cma:160948",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 46
+        },
+        "score_fusionado": 0.00943396
+      },
+      {
+        "artwork_id": "cma:145907",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "cma:149958",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "cma:149959",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.00925926
+      },
+      {
+        "artwork_id": "cma:161022",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 48
+        },
+        "score_fusionado": 0.00925926
+      },
+      {
+        "artwork_id": "cma:149606",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 49
+        },
+        "score_fusionado": 0.00917431
+      },
+      {
+        "artwork_id": "cma:149960",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.00917431
+      },
+      {
+        "artwork_id": "cma:149961",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.00909091
+      },
+      {
+        "artwork_id": "cma:160947",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 50
+        },
+        "score_fusionado": 0.00909091
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:147906",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y la composición, con ramas más finas y menos densas, cumpliendo el pedido de 'más delicado' mientras mantiene el tema del árbol en flor.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2006,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "cma:145430",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y la composición, con ramas finas y sutiles, manteniendo el tema de flores de ciruelo que aparece en la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1915,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:152550",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una representación más delicada y sutil de las ramas y flores en comparación con la primera imagen, manteniendo el estilo tradicional chino que se aprecia en la obra original.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1888,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:150710",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el trazo y la composición respecto a la primera imagen, manteniendo el tema del bambú y la cultura china, cumpliendo bien el pedido de 'más delicado'.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1833,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:148810",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el uso de tinta y espacio vacío, cumpliendo el pedido de 'más delicado', y mantiene el estilo japonés y la composición vertical que no se pide cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 26,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1921,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:160528",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en la pincelada y composición, con un pájaro pequeño y ramas finas, cumpliendo el pedido de 'más delicado' y manteniendo el tema naturalista similar a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 29,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2271,
+          "tokens_out": 60
+        }
+      },
+      {
+        "artwork_id": "cma:153663",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el trazo y composición, con un estilo más sutil y etéreo, manteniendo la temática natural que no se pide cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 42,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1769,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:148358",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el trazo y la composición que la imagen original, con un uso sutil de tinta y menos detalles densos, cumpliendo el pedido de 'más delicado' y manteniendo el estilo japonés y la temática natural.",
+        "n_intentos": 1,
+        "rango_fusionado": 48,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 1840,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "cma:160133",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y detalle de las aves y plantas, cumpliendo el pedido de 'más delicado', y mantiene el estilo tradicional chino que se ve en la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1985,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:79931",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más sencilla y menos recargada que la primera imagen, lo que aporta una sensación más delicada, cumpliendo el pedido. Sin embargo, mantiene la misma temática de bambú y ciruelo, respetando lo que no se pidió cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1889,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "cma:132015",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y la composición que la imagen original, con líneas finas y un estilo más sutil, cumpliendo el pedido de 'más delicado' y manteniendo el estilo tradicional chino.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1874,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:130496",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más simple y con trazos más finos y suaves, lo que aporta delicadeza en comparación con la primera imagen, que es más densa y detallada; cumple el pedido de ser más delicado manteniendo el estilo de pintura china tradicional.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2075,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "aic:46466",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el uso del color y el trazo, con detalles sutiles en las aves y flores, cumpliendo el pedido de 'más delicado' mientras mantiene el estilo chino similar a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3261,
+          "tokens_out": 59
+        }
+      },
+      {
+        "artwork_id": "cma:152831",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y la composición etérea con el dragón entre nubes, cumpliendo el pedido de delicadeza, mientras mantiene el estilo tradicional chino que no se altera respecto a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2045,
+          "tokens_out": 60
+        }
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un árbol con líneas más finas y detalles sutiles en las flores, lo que aporta delicadeza en comparación con la primera imagen; mantiene el estilo tradicional chino, cumpliendo el pedido de 'más delicado' sin perder la esencia.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2415,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "cma:150728",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más sencilla y menos detallada que la imagen original, lo que puede interpretarse como más delicado, pero pierde la complejidad y sutileza de las flores y ramas finas que tiene la primera imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1727,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:159724",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el uso del color y el trazo, con detalles finos en las flores y aves, cumpliendo el pedido de 'más delicado'. Mantiene el estilo tradicional chino y la composición vertical, respetando lo que no se pidió cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1754,
+          "tokens_out": 68
+        }
+      },
+      {
+        "artwork_id": "cma:159756",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el trazo y la atmósfera que la imagen original, cumpliendo el pedido de 'más delicado'. Mantiene un estilo similar de paisaje japonés, por lo que cumple bien con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 21,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2093,
+          "tokens_out": 59
+        }
+      },
+      {
+        "artwork_id": "cma:156792",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el trazo y el uso del color que la primera imagen, cumpliendo el pedido de 'más delicado'. Además, mantiene el estilo japonés y la composición vertical, respetando lo que no se pidió cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 22,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1661,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:159727",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y el uso del espacio que la imagen original, cumpliendo el pedido; además mantiene el tema de árboles y paisaje, respetando lo que no se pidió cambiar.",
+        "n_intentos": 1,
+        "rango_fusionado": 33,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1780,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:151970",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y la composición minimalista, cumpliendo el pedido de 'más delicado', aunque cambia el motivo principal de flores a aves y juncos, manteniendo la sutileza en el estilo.",
+        "n_intentos": 1,
+        "rango_fusionado": 36,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2595,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:149031",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el uso del color y la pincelada suave, cumpliendo el pedido de 'más delicado', y mantiene el estilo tradicional chino que se ve en la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 41,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1736,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:132837",
+        "estado": "puntuado",
+        "justificacion": "La candidata es más delicada en el uso del color y el trazo, con detalles suaves y una atmósfera tranquila, cumpliendo el pedido de 'más delicado'. Mantiene elementos naturales similares, aunque cambia la composición y añade figuras humanas, lo que no contradice el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 43,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2241,
+          "tokens_out": 69
+        }
+      },
+      {
+        "artwork_id": "cma:135273",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más delicada en el trazo y uso del espacio vacío, cumpliendo el pedido de 'más delicado', aunque cambia completamente el motivo visual respecto a la primera imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 44,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1850,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "aic:75317",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata mantiene el estilo chino y la temática floral, pero es más ligera y detallada, lo que puede interpretarse como más delicado, cumpliendo el pedido sin perder la esencia de la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 49,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1343,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "cma:149109",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una obra delicada en su ejecución, pero es mucho más extensa y colorida que la imagen original, que es más sobria y concentrada; cumple a medias con el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 1330,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:152409",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es japonesa y mantiene la temática natural, pero el trazo es más grueso y menos detallado que la primera imagen, por lo que no resulta más delicada, solo cumple parcialmente el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 28,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 1843,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "aic:46487",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura china similar a la imagen original, pero no es más delicada; tiene trazos más gruesos y colores más intensos, por lo que cumple a medias el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 30,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3399,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "cma:148359",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más oscura y menos detallada que la primera, lo que puede interpretarse como menos delicada, por lo que cumple a medias el pedido de ser 'más delicado'.",
+        "n_intentos": 1,
+        "rango_fusionado": 38,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 1793,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:160913",
+        "estado": "puntuado",
+        "justificacion": "La candidata es también una pintura china con elementos naturales, pero no se percibe más delicadeza que en la imagen original; la pincelada es más gruesa y menos sutil, por lo que cumple a medias el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1606,
+          "tokens_out": 64
+        }
+      },
+      {
+        "artwork_id": "aic:68041",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un estilo de pintura en tinta similar y es delicada en su ejecución, pero no mantiene la composición vertical ni la presencia de flores que tiene la primera imagen, por lo que cumple a medias con el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1689,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "aic:212492",
+        "estado": "puntuado",
+        "justificacion": "La candidata es de la misma cultura china que la imagen original, pero no muestra un estilo más delicado, sino más detallado y con colores más oscuros; cumple a medias el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2169,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una obra china que mantiene la cultura y estilo, pero no es más delicada que la imagen original, que tiene trazos más finos y detallados en las ramas y flores.",
+        "n_intentos": 1,
+        "rango_fusionado": 23,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1913,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:543409",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un estilo de tinta más suelto y menos detallado que la primera imagen, pero no transmite una sensación claramente más delicada, sino más expresiva y libre.",
+        "n_intentos": 1,
+        "rango_fusionado": 24,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1979,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "cma:144920",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es también una pintura china en tinta sobre papel, pero no es más delicada que la imagen original; tiene un trazo más grueso y menos detallado en las flores y ramas, por lo que cumple a medias el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 35,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1821,
+          "tokens_out": 66
+        }
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más tenue y sutil en colores, lo que puede interpretarse como más delicado, pero no tiene la misma nitidez y detalle fino que la primera imagen, por lo que cumple a medias el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 37,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3220,
+          "tokens_out": 62
+        }
+      },
+      {
+        "artwork_id": "cma:94983",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es más oscura y con trazos más gruesos, por lo que no resulta más delicada que la imagen original; cumple a medias el pedido porque mantiene el estilo chino y la temática natural, pero no la delicadeza solicitada.",
+        "n_intentos": 1,
+        "rango_fusionado": 40,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2550,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:149880",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra muchos detalles y una composición compleja con muchas aves, pero no transmite una sensación más delicada que la imagen original, que tiene un trazo más sutil y aireado.",
+        "n_intentos": 1,
+        "rango_fusionado": 45,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2084,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:147045",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura china antigua que mantiene el estilo tradicional, pero no transmite una sensación más delicada que la imagen original, que tiene un trazo más fino y detallado en las flores y ramas.",
+        "n_intentos": 1,
+        "rango_fusionado": 50,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 1661,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:61483",
+        "estado": "puntuado",
+        "justificacion": "La candidata no es más delicada que la imagen original; tiene un trazo más denso y detallado que no transmite delicadeza, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3955,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:152439",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un pino con trazos más gruesos y expresivos, menos delicados que la primera imagen, que es más detallada y fina; cumple con la cultura japonesa pero no con el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 1704,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:143776",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura china que corresponde a la cultura de la primera imagen, pero no es más delicada; tiene un trazo más denso y menos sutil, por lo que no cumple con el pedido de ser 'más delicado'.",
+        "n_intentos": 1,
+        "rango_fusionado": 25,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 1739,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:140155",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura china antigua, como la imagen original, pero no es más delicada; tiene un trazo más grueso y denso, por lo que no cumple con el pedido de 'más delicado'.",
+        "n_intentos": 1,
+        "rango_fusionado": 27,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2140,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:153412",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura japonesa que mantiene la cultura, pero no es más delicada que la imagen original; tiene un trazo más grueso y colores más intensos, por lo que no cumple con el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 31,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 1661,
+          "tokens_out": 59
+        }
+      },
+      {
+        "artwork_id": "cma:151223",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura japonesa en tinta y color, pero no es más delicada que la imagen original, que tiene un trazo más fino y detallado; además, la candidata tiene un estilo más expresivo y menos sutil.",
+        "n_intentos": 1,
+        "rango_fusionado": 34,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 1892,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:160138",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es de la misma cultura china, pero no es más delicada que la imagen original; presenta un trazo más denso y menos sutil, por lo que no cumple con el pedido de 'más delicado'.",
+        "n_intentos": 1,
+        "rango_fusionado": 39,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 1999,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:152827",
+        "estado": "puntuado",
+        "justificacion": "La candidata es menos detallada y más expresiva, pero no es más delicada que la imagen original, que tiene trazos finos y detallados; además, no cumple con el pedido de ser más delicado.",
+        "n_intentos": 1,
+        "rango_fusionado": 46,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2050,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:149891",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una obra china con flores, pero no es más delicada visualmente que la imagen original; además, el pedido pide 'más delicado' y esta obra no muestra un trazo ni composición más fina o sutil.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 1325,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:135953",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una pintura china con detalles finos, pero no es más delicada que la imagen original, que muestra un trazo más sutil y detallado en las ramas y flores.",
+        "n_intentos": 1,
+        "rango_fusionado": 32,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 1879,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:135595",
+        "estado": "puntuado",
+        "justificacion": "La candidata es una obra china en tinta sobre papel, pero no muestra la delicadeza en el trazo ni la composición que pide el usuario; es más narrativa y menos sutil que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 47,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 1320,
+          "tokens_out": 51
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c09-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:147906",
+          "ficha": {
+            "artist": "Wang Mian",
+            "culture": "China",
+            "date_display": "1300s",
+            "medium": "Hanging scroll; ink on silk",
+            "title": "A Prunus in the Moonlight",
+            "year": 1300
+          },
+          "lineas": [
+            "La obra representa un ciruelo en la noche, con un fondo tintado y la presencia de la luna que aportan una atmósfera suave y delicada. [1]",
+            "La técnica de tinta sobre seda y el tema del ciruelo, que florece en un clima suave, contribuyen a una sensación de delicadeza en la obra."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Wang Mian",
+              "atribucion": null,
+              "fragment_id": "cma:147906::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1974.26",
+              "texto_citado": "The painting portrays the plum in the nighttime, as indicated by the tint of the background and the presence of the moon.",
+              "title": "A Prunus in the Moonlight"
+            }
+          ],
+          "score": 0.025603864734299518,
+          "source_url": "https://clevelandart.org/art/1974.26"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:145430",
+          "ficha": {
+            "artist": "Peng Xu",
+            "culture": "China",
+            "date_display": "late 1400s–early 1500s",
+            "medium": "hanging scroll, ink on silk",
+            "title": "Ink Plum",
+            "year": 1488
+          },
+          "lineas": [
+            "Las flores delicadas están dibujadas con líneas finas, y un lavado gris cubre la superficie dejando los pétalos en reserva, lo que aporta una sensación de sutileza y delicadeza. [1]",
+            "El motivo del ciruelo, símbolo de la temporada de invierno y precursor de la primavera, es representado con un enfoque en la delicadeza de las flores que resisten las heladas. [2]",
+            "La paleta suave y el detalle en las flores transmiten una impresión delicada y refinada."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Peng Xu",
+              "atribucion": null,
+              "fragment_id": "cma:145430::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1970.80",
+              "texto_citado": "Seasonal paintings, including those depicting flowering plum trees in early spring, furnished scholars’ studios or other interior spaces in the house. \n\nPeng Xu is considered the foremost follower of the famous plum blossom painter Wang Mian (1287–1359) (see CMA 1974.26). The branches are brushed in the same vigorous manner leaving white streaks in the ink indicating the gnarled bark. The delicate blossoms are drawn in fine lines, while a gray wash covers the entire surface, only leaving the flower petals in reserve.",
+              "title": "Ink Plum"
+            },
+            {
+              "artist": "Peng Xu",
+              "atribucion": null,
+              "fragment_id": "cma:145430::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1970.80",
+              "texto_citado": "Plum trees blossom in the first months of the year; the delicate flowers endure the harsh winter frosts. A popular motif in Chinese ink painting, the plum symbolizes the winter season and is a harbinger of spring.",
+              "title": "Ink Plum"
+            }
+          ],
+          "score": 0.01639344262295082,
+          "source_url": "https://clevelandart.org/art/1970.80"
+        },
+        {
+          "abstencion": "No hay información suficiente en los fragmentos para afirmar que la obra es especialmente delicada.",
+          "artwork_id": "cma:152550",
+          "ficha": {
+            "artist": "Wang Shishen",
+            "culture": "China",
+            "date_display": "probably 1739",
+            "medium": "Hanging scroll; ink on paper",
+            "title": "Plum Blossoms",
+            "year": 1739
+          },
+          "lineas": [
+            "La composición audaz de una rama de ciruelo en flor está equilibrada con la adición de cuatro poemas, lo que aporta una dimensión literaria y nostálgica. [1]",
+            "La obra refleja una técnica profesional especializada en ciruelos, pero no se menciona específicamente un tratamiento delicado en la representación."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Wang Shishen",
+              "atribucion": null,
+              "fragment_id": "cma:152550::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1985.366",
+              "texto_citado": "A native of Anhui province, Wang Shishen was a professional painter who specialized in plum blossoms. He moved to Yangzhou in the late 1720s to seek patrons. Here, the daring composition of a flowering plum branch is balanced through the addition of four poems. Wang’s poems evoke nostalgia for the forgotten Six Dynasties period and the glorious Sui dynasty, during which the Grand Canal was built while Yangzhou was the southern capital of the empire. Other inscriptions in the upper part of the painting allude to the fact that Wang had developed blindness in one eye, probably at the time he conceived this painting.",
+              "title": "Plum Blossoms"
+            }
+          ],
+          "score": 0.015151515151515152,
+          "source_url": "https://clevelandart.org/art/1985.366"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:150710",
+          "ficha": {
+            "culture": "China",
+            "date_display": "1200s",
+            "medium": "hanging scroll; ink on silk",
+            "title": "Ink Bamboo",
+            "year": 1200
+          },
+          "lineas": [
+            "La composición presenta dos tallos de bambú con hojas que llenan la seda, con un balance sensible de tonos de tinta y pinceladas. [1]",
+            "Las hojas que se cruzan están delineadas claramente, lo que puede aportar una sensación de precisión y delicadeza en el trazo."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:150710::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1982.138",
+              "texto_citado": "This deceptively simple composition features two upright stalks of bamboo with leafy stems extended to fill the silk. The painter sensitively balanced ink tones and brushstrokes. The leaves that cross in front of other leaves are outlined in clear silk.",
+              "title": "Ink Bamboo"
+            }
+          ],
+          "score": 0.014492753623188406,
+          "source_url": "https://clevelandart.org/art/1982.138"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:148810",
+          "ficha": {
+            "artist": "Shūgetsu Tōkan",
+            "culture": "Japan",
+            "date_display": "c. 1510",
+            "medium": "hanging scroll; ink on paper",
+            "title": "Haboku (Flung-ink) Landscape",
+            "year": 1505
+          },
+          "lineas": [
+            "La obra utiliza la técnica de tinta lanzada (haboku), que crea una composición aparentemente aleatoria y difusa, con pinceladas que varían desde cargadas y húmedas hasta nítidas. [1]",
+            "El estilo impresionista y la ejecución enérgica sugieren una expresión emocional más que una delicadeza visual tradicional."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Shūgetsu Tōkan",
+              "atribucion": null,
+              "fragment_id": "cma:148810::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1976.59",
+              "texto_citado": "This vague but energetically rendered landscape highlights the brush: the messenger for a moment’s emotional or spiritual state. The painting represents one of many subjects and styles Shugetsu studied and absorbed from the great practitioners of Ming-dynasty China in the late 1400s and early 1500s. The technique of \"flung ink,\" or haboku, disguises purposeful composition as an almost random, distracted series of brushstrokes. Close inspection reveals tonalities and strokes brushed onto a soft, absorbent paper in a range from heavy and wet to crisp ink charges. Not surprisingly, amateur and professional Zen monk-painters favored this \"impressionistic\" style as an exercise in seeing meaningful detail slowly emerge from what at first seems unclear.",
+              "title": "Haboku (Flung-ink) Landscape"
+            }
+          ],
+          "score": 0.0136986301369863,
+          "source_url": "https://clevelandart.org/art/1976.59"
+        }
+      ],
+      "render": "1. **A Prunus in the Moonlight**\n   Wang Mian · 1300s · Hanging scroll; ink on silk\n   Ficha oficial: https://clevelandart.org/art/1974.26\n\n   La obra representa un ciruelo en la noche, con un fondo tintado y la presencia de la luna que aportan una atmósfera suave y delicada. [1]\n   La técnica de tinta sobre seda y el tema del ciruelo, que florece en un clima suave, contribuyen a una sensación de delicadeza en la obra.\n\n   **Fuentes**\n   [1] “The painting portrays the plum in the nighttime, as indicated by the tint of the background and the presence of the moon.”\n       https://clevelandart.org/art/1974.26 · CC0 1.0\n\n2. **Ink Plum**\n   Peng Xu · late 1400s–early 1500s · hanging scroll, ink on silk\n   Ficha oficial: https://clevelandart.org/art/1970.80\n\n   Las flores delicadas están dibujadas con líneas finas, y un lavado gris cubre la superficie dejando los pétalos en reserva, lo que aporta una sensación de sutileza y delicadeza. [1]\n   El motivo del ciruelo, símbolo de la temporada de invierno y precursor de la primavera, es representado con un enfoque en la delicadeza de las flores que resisten las heladas. [2]\n   La paleta suave y el detalle en las flores transmiten una impresión delicada y refinada.\n\n   **Fuentes**\n   [1] “Seasonal paintings, including those depicting flowering plum trees in early spring, furnished scholars’ studios or other interior spaces in the house. \n\nPeng Xu is considered the foremost follower of the famous plum blossom painter Wang Mian (1287–1359) (see CMA 1974.26). The branches are brushed in the same vigorous manner leaving white streaks in the ink indicating the gnarled bark. The delicate blossoms are drawn in fine lines, while a gray wash covers the entire surface, only leaving the flower petals in reserve.”\n       https://clevelandart.org/art/1970.80 · CC0 1.0\n   [2] “Plum trees blossom in the first months of the year; the delicate flowers endure the harsh winter frosts. A popular motif in Chinese ink painting, the plum symbolizes the winter season and is a harbinger of spring.”\n       https://clevelandart.org/art/1970.80 · CC0 1.0\n\n3. **Plum Blossoms**\n   Wang Shishen · probably 1739 · Hanging scroll; ink on paper\n   Ficha oficial: https://clevelandart.org/art/1985.366\n\n   La composición audaz de una rama de ciruelo en flor está equilibrada con la adición de cuatro poemas, lo que aporta una dimensión literaria y nostálgica. [1]\n   La obra refleja una técnica profesional especializada en ciruelos, pero no se menciona específicamente un tratamiento delicado en la representación.\n   No hay información suficiente en los fragmentos para afirmar que la obra es especialmente delicada.\n\n   **Fuentes**\n   [1] “A native of Anhui province, Wang Shishen was a professional painter who specialized in plum blossoms. He moved to Yangzhou in the late 1720s to seek patrons. Here, the daring composition of a flowering plum branch is balanced through the addition of four poems. Wang’s poems evoke nostalgia for the forgotten Six Dynasties period and the glorious Sui dynasty, during which the Grand Canal was built while Yangzhou was the southern capital of the empire. Other inscriptions in the upper part of the painting allude to the fact that Wang had developed blindness in one eye, probably at the time he conceived this painting.”\n       https://clevelandart.org/art/1985.366 · CC0 1.0\n\n4. **Ink Bamboo**\n   1200s · hanging scroll; ink on silk\n   Ficha oficial: https://clevelandart.org/art/1982.138\n\n   La composición presenta dos tallos de bambú con hojas que llenan la seda, con un balance sensible de tonos de tinta y pinceladas. [1]\n   Las hojas que se cruzan están delineadas claramente, lo que puede aportar una sensación de precisión y delicadeza en el trazo.\n\n   **Fuentes**\n   [1] “This deceptively simple composition features two upright stalks of bamboo with leafy stems extended to fill the silk. The painter sensitively balanced ink tones and brushstrokes. The leaves that cross in front of other leaves are outlined in clear silk.”\n       https://clevelandart.org/art/1982.138 · CC0 1.0\n\n5. **Haboku (Flung-ink) Landscape**\n   Shūgetsu Tōkan · c. 1510 · hanging scroll; ink on paper\n   Ficha oficial: https://clevelandart.org/art/1976.59\n\n   La obra utiliza la técnica de tinta lanzada (haboku), que crea una composición aparentemente aleatoria y difusa, con pinceladas que varían desde cargadas y húmedas hasta nítidas. [1]\n   El estilo impresionista y la ejecución enérgica sugieren una expresión emocional más que una delicadeza visual tradicional.\n\n   **Fuentes**\n   [1] “This vague but energetically rendered landscape highlights the brush: the messenger for a moment’s emotional or spiritual state. The painting represents one of many subjects and styles Shugetsu studied and absorbed from the great practitioners of Ming-dynasty China in the late 1400s and early 1500s. The technique of \"flung ink,\" or haboku, disguises purposeful composition as an almost random, distracted series of brushstrokes. Close inspection reveals tonalities and strokes brushed onto a soft, absorbent paper in a range from heavy and wet to crisp ink charges. Not surprisingly, amateur and professional Zen monk-painters favored this \"impressionistic\" style as an exercise in seeing meaningful detail slowly emerge from what at first seems unclear.”\n       https://clevelandart.org/art/1976.59 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+      "config_id": "6fc42e33b791071d",
+      "corrida_id": "6aabb59dbd3e6b9c-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:147906",
+      "cma:145430",
+      "cma:152550",
+      "cma:150710",
+      "cma:148810"
+    ]
+  },
+  "fecha": "2026-10-27T14:50:27+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0003,
+      "generador": 8.6871,
+      "planificador": 0.0005,
+      "recolector_de_evidencia": 0.5912,
+      "recuperador_textual": 0.447,
+      "recuperador_visual": 0.381,
+      "renderizador": 0.0007,
+      "reranker": 108.2483
+    },
+    "segundos_de_la_corrida": 118.3577
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.371,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.97,
+      "tokens_in": 44,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.686,
+      "tokens_in": 2619,
+      "tokens_out": 819
+    },
+    "indice": {
+      "n_items": 163,
+      "n_llamadas": 8,
+      "resultados": {
+        "ok": 8
+      },
+      "roles": {
+        "indice": 8
+      },
+      "segundos": 0.074,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 50,
+      "n_llamadas": 50,
+      "resultados": {
+        "ok": 50
+      },
+      "roles": {
+        "reranker": 50
+      },
+      "segundos": 108.119,
+      "tokens_in": 100488,
+      "tokens_out": 2831
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.686,
+      "tokens_in": 2619,
+      "tokens_out": 819
+    },
+    "recolector_de_evidencia": {
+      "n_items": 14,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.59,
+      "tokens_in": 22,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 101,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.446,
+      "tokens_in": 22,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 52,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.38,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 50,
+      "n_llamadas": 50,
+      "resultados": {
+        "ok": 50
+      },
+      "roles": {
+        "reranker": 50
+      },
+      "segundos": 108.119,
+      "tokens_in": 100488,
+      "tokens_out": 2831
+    }
+  },
+  "no_determinan_el_config_id": {
+    "consulta.alfa_congelado": false,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 los hallazgos: el config_id se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 50,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 50,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "degrada": true,
+        "estrategia": "rrf",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion"
+        ],
+        "etapa": "fusionador",
+        "k": 60,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=50, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 50,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+    "config_id": "6fc42e33b791071d",
+    "corrida_id": "6aabb59dbd3e6b9c-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

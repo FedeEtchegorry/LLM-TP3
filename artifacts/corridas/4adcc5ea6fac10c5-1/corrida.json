@@ -1,0 +1,2692 @@
+{
+  "agrega_a_la_tabla": true,
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 42,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 4,
+      "llm": 21,
+      "retriever": 8
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "7f257a8b9a209198",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c04-conceptual",
+  "corrida_id": "4adcc5ea6fac10c5-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:65821",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c04-conceptual",
+      "imagen_hash": "sha256:7742a8a09645aa0bb4398638dff5f6d6c73002f9f7633a18963c03620b5af4b4",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "cma:107357": [
+        {
+          "artist": null,
+          "artwork_id": "cma:107357",
+          "chunk_index": 0,
+          "fragment_id": "cma:107357::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1925.1336",
+          "texto": "One of the first paintings to be published and exhibited as an example of native Indian court painting without foreign stylistic influence, this work emphasizes the expression of mood and emotion rather than pictorial narrative. Through bold contrasting color, suggestive gaze, and poetic trope, the viewer accesses the charged excitement of lovers about to be united with the coming of the monsoon at night.\n\nThe reclining hero admires the alluring form of his beloved who, startled by the lightning and the cry of the peacock, stops and twists around in a dramatic pause that sets off her figure to especially good effect. She raises one hand to feel the first drops of monsoon rain that signal the beginning of the season of lovemaking, when her lover remains at home.",
+          "title": "Madhu Madhavi Ragini"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:107357",
+          "chunk_index": 0,
+          "fragment_id": "cma:107357::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1925.1336",
+          "texto": "Ananda K. Coomaraswamy [1877-1947] sold to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Madhu Madhavi Ragini"
+        }
+      ],
+      "cma:137427": [
+        {
+          "artist": null,
+          "artwork_id": "cma:137427",
+          "chunk_index": 0,
+          "fragment_id": "cma:137427::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1962.279.130.b",
+          "texto": "The medallion pattern of Khujasta’s skirt is a convention of an earlier painting style",
+          "title": "The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:137427",
+          "chunk_index": 0,
+          "fragment_id": "cma:137427::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1962.279.130.b",
+          "texto": "When like a red-turbaned king the sun disappeared under the canopy in the west and like a silver-robed monarch the moon appeared on the throne in the east, Khujasta went to ask Tuti’s permission to leave.\nThe parrot replied that his mistress Khujasta should devote herself to her obligations of propriety, just like the three extraordinary companions of the prince. Her interest piqued, Khujasta asked Tuti to tell her about them. He then launched into a story about the benefits of loyalty and generosity that lasted all night.",
+          "title": "The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:137427",
+          "chunk_index": 0,
+          "fragment_id": "cma:137427::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1962.279.130.b",
+          "texto": "Estate of Breckinridge Long [1881–1958], Bowie, MD\n(Harry Burke Antiques, Philadelphia, PA)\n(Bernard Brown Agency, Milwaukee, WI, sold to the Cleveland Museum of Art. Purchased with funds from Mrs. A. Dean [Helen Wade Greene] Perry)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)"
+        }
+      ],
+      "cma:137785": [
+        {
+          "artist": null,
+          "artwork_id": "cma:137785",
+          "chunk_index": 0,
+          "fragment_id": "cma:137785::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1962.279.300.b",
+          "texto": "The flat planes of bold color were favored by Indian artists before the time of Akbar.",
+          "title": "The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:137785",
+          "chunk_index": 0,
+          "fragment_id": "cma:137785::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1962.279.300.b",
+          "texto": "Against a brightly colored red and green background, Khujasta meets with Tuti the talking parrot. In order to keep her from leaving to visit her lover, the parrot tells Khujasta a moralizing story about four friends who were given magical shells by a wise man.",
+          "title": "The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:137785",
+          "chunk_index": 0,
+          "fragment_id": "cma:137785::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1962.279.300.b",
+          "texto": "Estate of Breckinridge Long [1881–1958], Bowie, MD\n(Harry Burke Antiques, Philadelphia, PA)\n(Bernard Brown Agency, Milwaukee, WI, sold to the Cleveland Museum of Art. Purchased with funds from Mrs. A. Dean [Helen Wade Greene] Perry)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night"
+        }
+      ],
+      "cma:137924": [
+        {
+          "artist": "Gujarati",
+          "artwork_id": "cma:137924",
+          "chunk_index": 0,
+          "fragment_id": "cma:137924::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1962.279.59.a",
+          "texto": "Two white birds wade at the edges of a dark colored lotus pool surrounded by lush green trees. Though the artist is from the western Indian state of Gujarat, many elements reveal a familiarity with Persian painting conventions, such as the arid pink ground with tufts of grass, the overlapping leaves of the trees, and the grassy sward. The water was once silver, which has now tarnished black, and white lines render swirling eddies.",
+          "title": "Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night"
+        },
+        {
+          "artist": "Gujarati",
+          "artwork_id": "cma:137924",
+          "chunk_index": 0,
+          "fragment_id": "cma:137924::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1962.279.59.a",
+          "texto": "The inscription on this page attributes it to the same artist as the previous painting (1962.279.58.a).",
+          "title": "Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night"
+        },
+        {
+          "artist": "Gujarati",
+          "artwork_id": "cma:137924",
+          "chunk_index": 0,
+          "fragment_id": "cma:137924::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1962.279.59.a",
+          "texto": "Estate of Breckinridge Long [1881–1958], Bowie, MD\n(Harry Burke Antiques, Philadelphia, PA)\n(Bernard Brown Agency, Milwaukee, WI, sold to the Cleveland Museum of Art. Purchased with funds from Mrs. A. Dean [Helen Wade Greene] Perry)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night"
+        }
+      ],
+      "cma:438621": [
+        {
+          "artist": null,
+          "artwork_id": "cma:438621",
+          "chunk_index": 0,
+          "fragment_id": "cma:438621::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/2021.12",
+          "texto": "This painting is from the earliest known Jain series made in a Mughal-inspired style.",
+          "title": "Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:438621",
+          "chunk_index": 0,
+          "fragment_id": "cma:438621::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2021.12",
+          "texto": "Dreams foretell important events in Indian literature. In this painting a prince lies half asleep and experiences eight visions, pictured above the reclining figure. At the right, the prince on the throne with the royal umbrella seeks help interpreting the dreams. They predicted the coming of Rishabha, the first Jina, who has been fasting for a full year. The prince then became the first person in the world to give proper alms, or pious offerings, to a Jina.\n \nThis painting is from a group that is recognized as the first Jain manuscript made in the form of a pictorial series, rather than a handwritten manuscript.",
+          "title": "Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:438621",
+          "chunk_index": 0,
+          "fragment_id": "cma:438621::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2021.12",
+          "texto": "Private collection of an Indian physician, possibly Solon, OH, given to his partner\nPrivate collection, Cleveland, OH, consigned by her nieces and nephews to Neue Auction for sale\n(Neue Auctions, Beachwood, OH, February 20, 2021 sale \"A Neue Year-Fine Art & Antiques,\" sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay evidencia en los fragmentos que indique que esta obra utiliza composiciones geométricas.",
+        "afirmaciones": [
+          {
+            "refs": [],
+            "texto": "La obra representa una escena naturalista con aves y un estanque de loto, sin mención de composiciones geométricas.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [
+              "cma:137924::description::0"
+            ],
+            "texto": "El artista es de Gujarat, India occidental, y la obra muestra influencia de la pintura persa, pero no se indica uso de composiciones geométricas.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "cma:137924"
+      },
+      {
+        "abstencion": "No se menciona ni se observa el uso de composiciones geométricas en la obra.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:137785::did_you_know::0"
+            ],
+            "texto": "La obra utiliza planos planos de colores audaces, una técnica favorecida por artistas indios antes de Akbar.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena representa una interacción narrativa entre Khujasta y un loro parlante, sin indicios claros de composiciones geométricas.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:137785"
+      },
+      {
+        "abstencion": "No hay información que indique que esta obra emplea composiciones geométricas.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:438621::did_you_know::0"
+            ],
+            "texto": "La pintura es parte de la primera serie Jain conocida con estilo inspirado en el arte mogol.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra muestra una narrativa con figuras y visiones, sin indicios de composiciones geométricas evidentes.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:438621"
+      },
+      {
+        "abstencion": "No se menciona ni se observa el uso de composiciones geométricas en esta obra.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:137427::did_you_know::0"
+            ],
+            "texto": "El patrón de medallones en la falda de Khujasta es una convención de un estilo pictórico anterior.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena es narrativa y figurativa, sin indicios claros de composiciones geométricas en la pintura.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:137427"
+      },
+      {
+        "abstencion": "No hay evidencia de composiciones geométricas en esta obra.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:107357::description::0"
+            ],
+            "texto": "La obra es un ejemplo temprano de pintura de corte india nativa sin influencia estilística extranjera, enfatizando el estado de ánimo y la emoción.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición se centra en figuras humanas y la expresión emocional, sin indicios de composiciones geométricas.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:107357"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:137951",
+          "rank": 1,
+          "score": 0.5741192698478699
+        },
+        {
+          "artwork_id": "cma:137924",
+          "rank": 2,
+          "score": 0.5650479793548584
+        },
+        {
+          "artwork_id": "cma:137485",
+          "rank": 3,
+          "score": 0.5586602091789246
+        },
+        {
+          "artwork_id": "cma:137785",
+          "rank": 4,
+          "score": 0.5481739640235901
+        },
+        {
+          "artwork_id": "cma:438621",
+          "rank": 5,
+          "score": 0.5230021476745605
+        },
+        {
+          "artwork_id": "cma:170895",
+          "rank": 6,
+          "score": 0.5160038471221924
+        },
+        {
+          "artwork_id": "cma:137427",
+          "rank": 7,
+          "score": 0.5108969211578369
+        },
+        {
+          "artwork_id": "cma:154752",
+          "rank": 8,
+          "score": 0.5085179805755615
+        },
+        {
+          "artwork_id": "cma:107357",
+          "rank": 9,
+          "score": 0.4903219938278198
+        },
+        {
+          "artwork_id": "cma:146199",
+          "rank": 10,
+          "score": 0.4821910262107849
+        },
+        {
+          "artwork_id": "aic:27984",
+          "rank": 11,
+          "score": 0.47877776622772217
+        },
+        {
+          "artwork_id": "cma:170789",
+          "rank": 12,
+          "score": 0.4683331251144409
+        },
+        {
+          "artwork_id": "cma:125580",
+          "rank": 13,
+          "score": 0.46577000617980957
+        },
+        {
+          "artwork_id": "cma:143278",
+          "rank": 14,
+          "score": 0.4646114706993103
+        },
+        {
+          "artwork_id": "cma:170878",
+          "rank": 15,
+          "score": 0.4628976583480835
+        },
+        {
+          "artwork_id": "cma:107360",
+          "rank": 16,
+          "score": 0.4615163207054138
+        },
+        {
+          "artwork_id": "cma:107362",
+          "rank": 17,
+          "score": 0.46149182319641113
+        },
+        {
+          "artwork_id": "cma:137921",
+          "rank": 18,
+          "score": 0.4610694646835327
+        },
+        {
+          "artwork_id": "cma:164466",
+          "rank": 19,
+          "score": 0.46063899993896484
+        },
+        {
+          "artwork_id": "cma:159533",
+          "rank": 20,
+          "score": 0.46022963523864746
+        },
+        {
+          "artwork_id": "cma:155623",
+          "rank": 21,
+          "score": 0.4582895040512085
+        },
+        {
+          "artwork_id": "cma:314466",
+          "rank": 22,
+          "score": 0.4575362205505371
+        },
+        {
+          "artwork_id": "cma:155051",
+          "rank": 23,
+          "score": 0.45692944526672363
+        },
+        {
+          "artwork_id": "cma:136472",
+          "rank": 24,
+          "score": 0.4547450542449951
+        },
+        {
+          "artwork_id": "cma:169252",
+          "rank": 25,
+          "score": 0.454367995262146
+        },
+        {
+          "artwork_id": "cma:163206",
+          "rank": 26,
+          "score": 0.4499916434288025
+        },
+        {
+          "artwork_id": "cma:170814",
+          "rank": 27,
+          "score": 0.44928139448165894
+        },
+        {
+          "artwork_id": "cma:170864",
+          "rank": 28,
+          "score": 0.447301983833313
+        },
+        {
+          "artwork_id": "cma:149083",
+          "rank": 29,
+          "score": 0.446689248085022
+        },
+        {
+          "artwork_id": "cma:146186",
+          "rank": 30,
+          "score": 0.4463816285133362
+        },
+        {
+          "artwork_id": "cma:136477",
+          "rank": 31,
+          "score": 0.44486188888549805
+        },
+        {
+          "artwork_id": "cma:394755",
+          "rank": 32,
+          "score": 0.4391406774520874
+        },
+        {
+          "artwork_id": "cma:117667",
+          "rank": 33,
+          "score": 0.43794476985931396
+        },
+        {
+          "artwork_id": "cma:137897",
+          "rank": 34,
+          "score": 0.4377472996711731
+        },
+        {
+          "artwork_id": "cma:173020",
+          "rank": 35,
+          "score": 0.4370517134666443
+        },
+        {
+          "artwork_id": "cma:137363",
+          "rank": 36,
+          "score": 0.43642282485961914
+        },
+        {
+          "artwork_id": "cma:138011",
+          "rank": 37,
+          "score": 0.4359935522079468
+        },
+        {
+          "artwork_id": "cma:138013",
+          "rank": 38,
+          "score": 0.4359935522079468
+        },
+        {
+          "artwork_id": "cma:152317",
+          "rank": 39,
+          "score": 0.43552494049072266
+        },
+        {
+          "artwork_id": "cma:145966",
+          "rank": 40,
+          "score": 0.4349035620689392
+        },
+        {
+          "artwork_id": "cma:112858",
+          "rank": 41,
+          "score": 0.43456077575683594
+        },
+        {
+          "artwork_id": "aic:79716",
+          "rank": 42,
+          "score": 0.43363308906555176
+        },
+        {
+          "artwork_id": "cma:314500",
+          "rank": 43,
+          "score": 0.43285536766052246
+        },
+        {
+          "artwork_id": "cma:171296",
+          "rank": 44,
+          "score": 0.43234115839004517
+        },
+        {
+          "artwork_id": "cma:137501",
+          "rank": 45,
+          "score": 0.4303063154220581
+        },
+        {
+          "artwork_id": "cma:150844",
+          "rank": 46,
+          "score": 0.4291389584541321
+        },
+        {
+          "artwork_id": "cma:137588",
+          "rank": 47,
+          "score": 0.42815202474594116
+        },
+        {
+          "artwork_id": "cma:160803",
+          "rank": 48,
+          "score": 0.42808520793914795
+        },
+        {
+          "artwork_id": "cma:153737",
+          "rank": 49,
+          "score": 0.4279922842979431
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:143278",
+          "rank": 1,
+          "score": 0.740925669670105
+        },
+        {
+          "artwork_id": "aic:109819",
+          "rank": 2,
+          "score": 0.7267160415649414
+        },
+        {
+          "artwork_id": "cma:160723",
+          "rank": 3,
+          "score": 0.650999903678894
+        },
+        {
+          "artwork_id": "cma:162867",
+          "rank": 4,
+          "score": 0.6391956210136414
+        },
+        {
+          "artwork_id": "cma:147520",
+          "rank": 5,
+          "score": 0.6336164474487305
+        },
+        {
+          "artwork_id": "cma:151973",
+          "rank": 6,
+          "score": 0.6318939924240112
+        },
+        {
+          "artwork_id": "cma:160688",
+          "rank": 7,
+          "score": 0.6278108954429626
+        },
+        {
+          "artwork_id": "cma:84662",
+          "rank": 8,
+          "score": 0.6271235942840576
+        },
+        {
+          "artwork_id": "aic:75068",
+          "rank": 9,
+          "score": 0.6182530522346497
+        },
+        {
+          "artwork_id": "cma:715339",
+          "rank": 10,
+          "score": 0.6177011728286743
+        },
+        {
+          "artwork_id": "cma:150074",
+          "rank": 11,
+          "score": 0.6165754199028015
+        },
+        {
+          "artwork_id": "cma:170848",
+          "rank": 12,
+          "score": 0.6164183020591736
+        },
+        {
+          "artwork_id": "cma:135182",
+          "rank": 13,
+          "score": 0.6154667735099792
+        },
+        {
+          "artwork_id": "aic:65916",
+          "rank": 14,
+          "score": 0.6119548678398132
+        },
+        {
+          "artwork_id": "cma:161673",
+          "rank": 15,
+          "score": 0.6118378639221191
+        },
+        {
+          "artwork_id": "cma:135181",
+          "rank": 16,
+          "score": 0.6117359399795532
+        },
+        {
+          "artwork_id": "cma:151972",
+          "rank": 17,
+          "score": 0.6116998791694641
+        },
+        {
+          "artwork_id": "cma:154263",
+          "rank": 18,
+          "score": 0.6107518672943115
+        },
+        {
+          "artwork_id": "cma:399966",
+          "rank": 19,
+          "score": 0.6088178157806396
+        },
+        {
+          "artwork_id": "cma:135430",
+          "rank": 20,
+          "score": 0.6084171533584595
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Indian geometric abstract painting featuring linear patterns and color blocking, reflecting modernist influences in South Asian art",
+      "consulta_id": "c04-conceptual",
+      "consulta_visual": "Indian geometric composition with intersecting black lines and blocks of white, gray, and red color",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:7742a8a09645aa0bb4398638dff5f6d6c73002f9f7633a18963c03620b5af4b4",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "composiciones geométricas en el arte de la India",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "a269998e56112220",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2399,
+        "tokens_out": 51
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:143278",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 14,
+          "visual": 1
+        },
+        "score_fusionado": 0.02990696
+      },
+      {
+        "artwork_id": "cma:137951",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "aic:109819",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "cma:137924",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "cma:137485",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:160723",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:137785",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "cma:162867",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "cma:147520",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:438621",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:151973",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "cma:170895",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "cma:137427",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:160688",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:154752",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "cma:84662",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "aic:75068",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "cma:107357",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "cma:146199",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:715339",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "aic:27984",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "cma:150074",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "cma:170789",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:170848",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:125580",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "cma:135182",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "aic:65916",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "cma:161673",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "cma:170878",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "cma:107360",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:135181",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:107362",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:151972",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:137921",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:154263",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:164466",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "cma:399966",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "cma:135430",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:159533",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:155623",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "cma:314466",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.01219512
+      },
+      {
+        "artwork_id": "cma:155051",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "cma:136472",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "cma:169252",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "cma:163206",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "cma:170814",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "cma:170864",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "cma:149083",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.01123596
+      },
+      {
+        "artwork_id": "cma:146186",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.01111111
+      },
+      {
+        "artwork_id": "cma:136477",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.01098901
+      },
+      {
+        "artwork_id": "cma:394755",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "cma:117667",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.01075269
+      },
+      {
+        "artwork_id": "cma:137897",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "cma:173020",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:137363",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "cma:138011",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "cma:138013",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "cma:152317",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "cma:145966",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.01
+      },
+      {
+        "artwork_id": "cma:112858",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.00980392
+      },
+      {
+        "artwork_id": "cma:314500",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "cma:171296",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "cma:137501",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "cma:150844",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.00943396
+      },
+      {
+        "artwork_id": "cma:137588",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "cma:160803",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.00925926
+      },
+      {
+        "artwork_id": "cma:153737",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.00917431
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:137924",
+        "estado": "puntuado",
+        "justificacion": "La obra es de India (Mughal India), pero no presenta composiciones geométricas, sino una escena figurativa con texto; por eso cumple poco el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2669,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:137785",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India (Mughal India), pero no presenta composiciones geométricas, sino una escena figurativa con texto; por eso cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2753,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:438621",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India, pero no presenta composiciones geométricas como pide el pedido, sino una escena figurativa y narrativa.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2748,
+          "tokens_out": 40
+        }
+      },
+      {
+        "artwork_id": "cma:137427",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India (Mughal India), pero no presenta composiciones geométricas como pide el pedido, sino una escena figurativa con texto y decoración detallada.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2749,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:107357",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India, pero no presenta composiciones geométricas como pide el pedido, sino una escena figurativa y narrativa.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2830,
+          "tokens_out": 40
+        }
+      },
+      {
+        "artwork_id": "cma:143278",
+        "estado": "puntuado",
+        "justificacion": "La obra cumple con el pedido en cuanto a composiciones geométricas, pero no pertenece al arte de la India, sino a la cultura de los Países Bajos, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3144,
+          "tokens_out": 59
+        }
+      },
+      {
+        "artwork_id": "cma:137951",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India (Mughal India), pero no presenta composiciones geométricas, sino una escena figurativa con arquitectura y personajes; cumple el pedido solo en la cultura mencionada.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2672,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "aic:109819",
+        "estado": "puntuado",
+        "justificacion": "La obra presenta composiciones geométricas, pero no pertenece al arte de la India, sino a la cultura de los Países Bajos, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3021,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:137485",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India (Mughal India), pero no presenta composiciones geométricas, sino una escena figurativa con personajes y un elefante, por lo que cumple el pedido solo de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2767,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:170895",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India (Mughal India), pero no presenta composiciones geométricas, sino un arreglo floral naturalista, por lo que cumple el pedido solo de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2866,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:154752",
+        "estado": "puntuado",
+        "justificacion": "La obra es del arte de la India, pero no presenta composiciones geométricas como pide el pedido, sino una escena figurativa y naturalista.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2823,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:84662",
+        "estado": "puntuado",
+        "justificacion": "La obra no pertenece al arte de la India, sino a la cultura francesa, por lo que no cumple con el requisito cultural del pedido, aunque tiene cierta composición geométrica.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2903,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "cma:146199",
+        "estado": "puntuado",
+        "justificacion": "La obra es de la cultura India, pero no presenta composiciones geométricas como pide el pedido, sino una escena figurativa detallada.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2688,
+          "tokens_out": 38
+        }
+      },
+      {
+        "artwork_id": "cma:160723",
+        "estado": "puntuado",
+        "justificacion": "La obra no pertenece al arte de la India, sino a la cultura china, por lo que no cumple con el requisito cultural del pedido, aunque tenga un patrón geométrico.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3243,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:162867",
+        "estado": "puntuado",
+        "justificacion": "La obra no cumple el pedido porque no presenta composiciones geométricas y además es de cultura china, no india.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2589,
+          "tokens_out": 36
+        }
+      },
+      {
+        "artwork_id": "cma:147520",
+        "estado": "puntuado",
+        "justificacion": "La obra no pertenece al arte de la India, sino a la cultura de Estados Unidos, por lo que no cumple con el requisito cultural del pedido, aunque tenga elementos geométricos.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2920,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:151973",
+        "estado": "puntuado",
+        "justificacion": "La obra no pertenece al arte de la India, sino a la cultura japonesa, y aunque tiene un patrón repetitivo, no presenta composiciones geométricas como pide el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2492,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "cma:160688",
+        "estado": "puntuado",
+        "justificacion": "La obra no cumple con el pedido porque no presenta composiciones geométricas ni pertenece al arte de la India, sino que es una pintura japonesa con representación naturalista de caracoles.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2308,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:75068",
+        "estado": "puntuado",
+        "justificacion": "La obra no cumple el pedido porque es arte japonés, no de la India, y aunque tiene elementos geométricos, no corresponde a la cultura ni al enfoque solicitado.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2139,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "cma:715339",
+        "estado": "puntuado",
+        "justificacion": "La obra no pertenece al arte de la India, sino a la cultura francesa, por lo que no cumple con el requisito cultural del pedido, aunque presenta cierta abstracción geométrica.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2866,
+          "tokens_out": 46
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c04-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay evidencia en los fragmentos que indique que esta obra utiliza composiciones geométricas.",
+          "artwork_id": "cma:137924",
+          "ficha": {
+            "artist": "Gujarati",
+            "culture": "Mughal India",
+            "date_display": "c. 1560",
+            "medium": "gum tempera, ink, and gold on paper",
+            "title": "Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night",
+            "year": 1555
+          },
+          "lineas": [
+            "La obra representa una escena naturalista con aves y un estanque de loto, sin mención de composiciones geométricas.",
+            "El artista es de Gujarat, India occidental, y la obra muestra influencia de la pintura persa, pero no se indica uso de composiciones geométricas. [1]"
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Gujarati",
+              "atribucion": null,
+              "fragment_id": "cma:137924::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1962.279.59.a",
+              "texto_citado": "Two white birds wade at the edges of a dark colored lotus pool surrounded by lush green trees. Though the artist is from the western Indian state of Gujarat, many elements reveal a familiarity with Persian painting conventions, such as the arid pink ground with tufts of grass, the overlapping leaves of the trees, and the grassy sward. The water was once silver, which has now tarnished black, and white lines render swirling eddies.",
+              "title": "Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night"
+            }
+          ],
+          "score": 0.016129032258064516,
+          "source_url": "https://clevelandart.org/art/1962.279.59.a"
+        },
+        {
+          "abstencion": "No se menciona ni se observa el uso de composiciones geométricas en la obra.",
+          "artwork_id": "cma:137785",
+          "ficha": {
+            "culture": "Mughal India",
+            "date_display": "c. 1560",
+            "medium": "gum tempera, ink, and gold on paper",
+            "title": "The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night",
+            "year": 1555
+          },
+          "lineas": [
+            "La obra utiliza planos planos de colores audaces, una técnica favorecida por artistas indios antes de Akbar. [1]",
+            "La escena representa una interacción narrativa entre Khujasta y un loro parlante, sin indicios claros de composiciones geométricas."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:137785::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1962.279.300.b",
+              "texto_citado": "The flat planes of bold color were favored by Indian artists before the time of Akbar.",
+              "title": "The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night"
+            }
+          ],
+          "score": 0.015625,
+          "source_url": "https://clevelandart.org/art/1962.279.300.b"
+        },
+        {
+          "abstencion": "No hay información que indique que esta obra emplea composiciones geométricas.",
+          "artwork_id": "cma:438621",
+          "ficha": {
+            "culture": "Northwestern India",
+            "date_display": "1670–80",
+            "medium": "Gum tempera, ink, silver, and gold on paper",
+            "title": "Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)",
+            "year": 1670
+          },
+          "lineas": [
+            "La pintura es parte de la primera serie Jain conocida con estilo inspirado en el arte mogol. [1]",
+            "La obra muestra una narrativa con figuras y visiones, sin indicios de composiciones geométricas evidentes."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:438621::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2021.12",
+              "texto_citado": "This painting is from the earliest known Jain series made in a Mughal-inspired style.",
+              "title": "Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)"
+            }
+          ],
+          "score": 0.015384615384615385,
+          "source_url": "https://clevelandart.org/art/2021.12"
+        },
+        {
+          "abstencion": "No se menciona ni se observa el uso de composiciones geométricas en esta obra.",
+          "artwork_id": "cma:137427",
+          "ficha": {
+            "culture": "Mughal India",
+            "date_display": "c. 1560",
+            "medium": "gum tempera, ink, and gold on paper",
+            "title": "The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)",
+            "year": 1555
+          },
+          "lineas": [
+            "El patrón de medallones en la falda de Khujasta es una convención de un estilo pictórico anterior. [1]",
+            "La escena es narrativa y figurativa, sin indicios claros de composiciones geométricas en la pintura."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:137427::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1962.279.130.b",
+              "texto_citado": "The medallion pattern of Khujasta’s skirt is a convention of an earlier painting style",
+              "title": "The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)"
+            }
+          ],
+          "score": 0.014925373134328358,
+          "source_url": "https://clevelandart.org/art/1962.279.130.b"
+        },
+        {
+          "abstencion": "No hay evidencia de composiciones geométricas en esta obra.",
+          "artwork_id": "cma:107357",
+          "ficha": {
+            "culture": "Central India",
+            "date_display": "c. 1630–40",
+            "medium": "Gum tempera, ink, and gold on paper",
+            "title": "Madhu Madhavi Ragini",
+            "year": 1625
+          },
+          "lineas": [
+            "La obra es un ejemplo temprano de pintura de corte india nativa sin influencia estilística extranjera, enfatizando el estado de ánimo y la emoción. [1]",
+            "La composición se centra en figuras humanas y la expresión emocional, sin indicios de composiciones geométricas."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "fragment_id": "cma:107357::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1925.1336",
+              "texto_citado": "One of the first paintings to be published and exhibited as an example of native Indian court painting without foreign stylistic influence, this work emphasizes the expression of mood and emotion rather than pictorial narrative. Through bold contrasting color, suggestive gaze, and poetic trope, the viewer accesses the charged excitement of lovers about to be united with the coming of the monsoon at night.\n\nThe reclining hero admires the alluring form of his beloved who, startled by the lightning and the cry of the peacock, stops and twists around in a dramatic pause that sets off her figure to especially good effect. She raises one hand to feel the first drops of monsoon rain that signal the beginning of the season of lovemaking, when her lover remains at home.",
+              "title": "Madhu Madhavi Ragini"
+            }
+          ],
+          "score": 0.014492753623188406,
+          "source_url": "https://clevelandart.org/art/1925.1336"
+        }
+      ],
+      "render": "1. **Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night**\n   Gujarati · c. 1560 · gum tempera, ink, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/1962.279.59.a\n\n   La obra representa una escena naturalista con aves y un estanque de loto, sin mención de composiciones geométricas.\n   El artista es de Gujarat, India occidental, y la obra muestra influencia de la pintura persa, pero no se indica uso de composiciones geométricas. [1]\n   No hay evidencia en los fragmentos que indique que esta obra utiliza composiciones geométricas.\n\n   **Fuentes**\n   [1] “Two white birds wade at the edges of a dark colored lotus pool surrounded by lush green trees. Though the artist is from the western Indian state of Gujarat, many elements reveal a familiarity with Persian painting conventions, such as the arid pink ground with tufts of grass, the overlapping leaves of the trees, and the grassy sward. The water was once silver, which has now tarnished black, and white lines render swirling eddies.”\n       https://clevelandart.org/art/1962.279.59.a · CC0 1.0\n\n2. **The parrot addresses Khujasta at the beginning of the forty-seventh night, from a Tuti-nama (Tales of a Parrot): Forty-seventh Night**\n   c. 1560 · gum tempera, ink, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/1962.279.300.b\n\n   La obra utiliza planos planos de colores audaces, una técnica favorecida por artistas indios antes de Akbar. [1]\n   La escena representa una interacción narrativa entre Khujasta y un loro parlante, sin indicios claros de composiciones geométricas.\n   No se menciona ni se observa el uso de composiciones geométricas en la obra.\n\n   **Fuentes**\n   [1] “The flat planes of bold color were favored by Indian artists before the time of Akbar.”\n       https://clevelandart.org/art/1962.279.300.b · CC0 1.0\n\n3. **Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)**\n   1670–80 · Gum tempera, ink, silver, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/2021.12\n\n   La pintura es parte de la primera serie Jain conocida con estilo inspirado en el arte mogol. [1]\n   La obra muestra una narrativa con figuras y visiones, sin indicios de composiciones geométricas evidentes.\n   No hay información que indique que esta obra emplea composiciones geométricas.\n\n   **Fuentes**\n   [1] “This painting is from the earliest known Jain series made in a Mughal-inspired style.”\n       https://clevelandart.org/art/2021.12 · CC0 1.0\n\n4. **The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)**\n   c. 1560 · gum tempera, ink, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/1962.279.130.b\n\n   El patrón de medallones en la falda de Khujasta es una convención de un estilo pictórico anterior. [1]\n   La escena es narrativa y figurativa, sin indicios claros de composiciones geométricas en la pintura.\n   No se menciona ni se observa el uso de composiciones geométricas en esta obra.\n\n   **Fuentes**\n   [1] “The medallion pattern of Khujasta’s skirt is a convention of an earlier painting style”\n       https://clevelandart.org/art/1962.279.130.b · CC0 1.0\n\n5. **Madhu Madhavi Ragini**\n   c. 1630–40 · Gum tempera, ink, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/1925.1336\n\n   La obra es un ejemplo temprano de pintura de corte india nativa sin influencia estilística extranjera, enfatizando el estado de ánimo y la emoción. [1]\n   La composición se centra en figuras humanas y la expresión emocional, sin indicios de composiciones geométricas.\n   No hay evidencia de composiciones geométricas en esta obra.\n\n   **Fuentes**\n   [1] “One of the first paintings to be published and exhibited as an example of native Indian court painting without foreign stylistic influence, this work emphasizes the expression of mood and emotion rather than pictorial narrative. Through bold contrasting color, suggestive gaze, and poetic trope, the viewer accesses the charged excitement of lovers about to be united with the coming of the monsoon at night.\n\nThe reclining hero admires the alluring form of his beloved who, startled by the lightning and the cry of the peacock, stops and twists around in a dramatic pause that sets off her figure to especially good effect. She raises one hand to feel the first drops of monsoon rain that signal the beginning of the season of lovemaking, when her lover remains at home.”\n       https://clevelandart.org/art/1925.1336 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+      "config_id": "7f257a8b9a209198",
+      "corrida_id": "4adcc5ea6fac10c5-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:137924",
+      "cma:137785",
+      "cma:438621",
+      "cma:137427",
+      "cma:107357"
+    ]
+  },
+  "fecha": "2026-10-25T22:42:36+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0002,
+      "generador": 5.7719,
+      "planificador": 0.0005,
+      "recolector_de_evidencia": 0.7912,
+      "recuperador_textual": 0.8334,
+      "recuperador_visual": 0.0947,
+      "renderizador": 0.0003,
+      "reranker": 35.0863
+    },
+    "segundos_de_la_corrida": 42.5809
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.09,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 1.558,
+      "tokens_in": 38,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.771,
+      "tokens_in": 3250,
+      "tokens_out": 784
+    },
+    "indice": {
+      "n_items": 133,
+      "n_llamadas": 8,
+      "resultados": {
+        "ok": 8
+      },
+      "roles": {
+        "indice": 8
+      },
+      "segundos": 0.068,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 34.979,
+      "tokens_in": 55190,
+      "tokens_out": 945
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.771,
+      "tokens_in": 3250,
+      "tokens_out": 784
+    },
+    "recolector_de_evidencia": {
+      "n_items": 15,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.79,
+      "tokens_in": 19,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 100,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.832,
+      "tokens_in": 19,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.094,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 34.979,
+      "tokens_in": 55190,
+      "tokens_out": 945
+    }
+  },
+  "no_determinan_el_config_id": {
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 50,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "degrada": true,
+        "estrategia": "rrf",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion"
+        ],
+        "etapa": "fusionador",
+        "k": 60,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+    "config_id": "7f257a8b9a209198",
+    "corrida_id": "4adcc5ea6fac10c5-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

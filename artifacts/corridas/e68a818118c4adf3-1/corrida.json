@@ -1,0 +1,3446 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 72,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 4,
+      "llm": 51,
+      "retriever": 8
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set consulta.n_candidatos"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "6fc42e33b791071d",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 50,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c10-ambiguo",
+  "corrida_id": "e68a818118c4adf3-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:67362",
+      "categoria": "ambiguo",
+      "consulta_id": "c10-ambiguo",
+      "imagen_hash": "sha256:424053872427139d3c28f5d26150d79c37b746bff3cdb23af78d0f9df1a093bb",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:12891": [
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "aic:12891",
+          "chunk_index": 0,
+          "fragment_id": "aic:12891::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/12891",
+          "texto": "This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.",
+          "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+        },
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "aic:12891",
+          "chunk_index": 0,
+          "fragment_id": "aic:12891::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/12891",
+          "texto": "Julius H. Weitzner, New York, by 1958 [in his possession when published by Longhi 1958]; sold to the Art Institute, 1961.",
+          "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+        }
+      ],
+      "aic:33249": [
+        {
+          "artist": "Sebastiano Ricci",
+          "artwork_id": "aic:33249",
+          "chunk_index": 0,
+          "fragment_id": "aic:33249::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/33249",
+          "texto": "This painting depicts a scene from the life of Scipio Africanus, the Roman general who defeated Hannibal in the Battle of Zama (in present-day Tunisia) in 202 BCE. Here Scipio demonstrates his leadership by acting with restraint (“continence”) in refusing to hold a woman as a captive of war. According to the story on which the painting is based, the woman’s fiancé, shown kneeling beside her, was a powerful prince who agreed to a military alliance with Scipio in gratitude for his lenience. The theatrical setting and costumes—the invented military helmets, anachronistically dressed characters, fanciful architecture, and gravity-defying drapery, for example— suggest that the artist’s aims were allegorical rather than historical, intended above all to illustrate for viewers the virtues of compassionate diplomacy.",
+          "title": "The Continence of Scipio"
+        },
+        {
+          "artist": "Sebastiano Ricci",
+          "artwork_id": "aic:33249",
+          "chunk_index": 0,
+          "fragment_id": "aic:33249::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/33249",
+          "texto": "Probably Mr. Oliver, Castle Oliver, County Limerick, Ireland, by 1776 [The Continence of Scipio was mentioned with other paintings by Ricci in Arthur Young’s Tour of Ireland (1776-1779); probably by descent to Edith Jane Thomasina Morris of Dunkathal, County Cork,who married Sir George Colthurst of Blarney Castle in 1881 (letter of Margaret Lantry dated 11 November, 2008 and of Sir Charles Colthurst of 8 September 2003 in curatorial file); by descent to Sir Richard St. John Jefferyes Colthurst, 8th Bt., Blarney Castle, Cork, Ireland; sold Sotheby’s, 27 February 1952, lot 141, to David M. Koester, New York. Walter P. Chrysler, Jr., New York, by 1956 [it is referred to, but not included in, the Portland, Oregon, exhibition catalogue]; Colnaghi’s, London, by 1969 [see Colnaghi 1969, no. 18]; sold to AIC, May 1970.",
+          "title": "The Continence of Scipio"
+        }
+      ],
+      "aic:36492": [
+        {
+          "artist": "Francesco de Mura",
+          "artwork_id": "aic:36492",
+          "chunk_index": 0,
+          "fragment_id": "aic:36492::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/36492",
+          "texto": "This painting presents an allegory of the virtue of charity through images of maternal love and sacrifice: a mother nurtures several young children and a pelican feeds her young by drawing blood from her own breast. This work was one of a set of allegories of five virtues intended as decorations set above doors in a palace belonging to the king of Savoy, a region in northwest Italy. Francesco de Mura spent most of his career in Naples but also worked for the king of Savoy in the 1740s, producing paintings in a style that combined grand, calm figures with active drapery. Although it is now rectangular, the canvas shows signs of an earlier curved shape appropriate to a Rococo room decoration.",
+          "title": "Allegory of Charity"
+        },
+        {
+          "artist": "Francesco de Mura",
+          "artwork_id": "aic:36492",
+          "chunk_index": 0,
+          "fragment_id": "aic:36492::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/36492",
+          "texto": "Probably commissioned by Charles Emmanuel III, Turin [see Pinto 1987]. Peretti, Rome, by 1971 [according to Heim Commission Book at the Getty Research Institute]; Heim Gallery, London, 1971; sold to the Art Institute, 1971.",
+          "title": "Allegory of Charity"
+        }
+      ],
+      "cma:134620": [
+        {
+          "artist": "Titian",
+          "artwork_id": "cma:134620",
+          "chunk_index": 0,
+          "fragment_id": "cma:134620::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1957.150",
+          "texto": "Is this painting by Titian?\n\nTitian, the celebrated and prolific 16th-century Venetian artist, and his large workshop painted several versions of this subject. Further research is needed to compare this painting with versions in Milan and Madrid to determine how much of each is by Titian himself, as opposed to being the work of his studio assistants. The Prado Museum in Madrid is often considered to have a copy made from Cleveland’s painting, which is superior in execution but not condition. Despite the damage caused by overcleaning, there are many fine passages, including the bowing white horse, his groom in shadow, and the cradled Christ child.",
+          "title": "Adoration of the Magi"
+        },
+        {
+          "artist": "Titian",
+          "artwork_id": "cma:134620",
+          "chunk_index": 0,
+          "fragment_id": "cma:134620::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1957.150",
+          "texto": "This painting is filled with naturalistic details such as the riders who struggle to keep their horses and mules still and a small dog who urinates on a beam.",
+          "title": "Adoration of the Magi"
+        },
+        {
+          "artist": "Titian",
+          "artwork_id": "cma:134620",
+          "chunk_index": 0,
+          "fragment_id": "cma:134620::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1957.150",
+          "texto": "Walsh Porter (died 1810), upon his death, held in trust by the estate\nEstate of Walsh Porter (unsold, Christie's, London, April 14, 1810, no. 38; unsold, Christie's, London, June 21, 1811, no. 40; sold, Christie's, London, May 6, 1826, no. 7)\nSamuel Rogers (sold, Christie's, London, May 2, 1856, no. 700, to Mr. Ripp);\nHugh A. J. Munro of Novar (1797-1864), upon his death, held in trust by the estate\nEstate of Hugh A. J. Munro of Novar, (unsold, Christie's, London, May 18, 1867, no. 183; sold, Christie's, London, June 1, 1878, no. 121, to C. Butler)\nButler Johnstone, 1881\nWilliam Graham (1817-1885), upon his death, held in trust by the estate\nEstate of William Graham (sold, Christie's, London, April 10, 1886, no. 472)\nJ. Stewart Hodgson (sold, Christie's, London, June 3, 1893, no. 31)\nRalph Brocklebank (sale: Christie's, London, July 7, 1922, no. 112)\nJulius Bohler, Munich\nDurlacher Brothers, London and New York\nArthur Sachs [1880-1975] sold to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Adoration of the Magi"
+        }
+      ],
+      "cma:97169": [
+        {
+          "artist": "Bartholomaeus Spranger",
+          "artwork_id": "cma:97169",
+          "chunk_index": 0,
+          "fragment_id": "cma:97169::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1916.805",
+          "texto": "This painting is a copy of a print by Jan Harmensz Muller (Dutch, 1571–1628), originally based on a painting by Spranger. Spranger often used the iconography of Ceres and Bacchus, two important agricultural deities. Muller's print has the Latin inscription Sine Cerere et Bacchio friget Venus, which translates to \"without Ceres and Bacchus, Venus grows cold.\" The motto indicates that Love, represented by Venus, is impossible without the nourishment of food and drink, as the deities of grain and wine walk hand in hand.",
+          "title": "Ceres and Bacchus"
+        },
+        {
+          "artist": "Bartholomaeus Spranger",
+          "artwork_id": "cma:97169",
+          "chunk_index": 0,
+          "fragment_id": "cma:97169::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1916.805",
+          "texto": "James Jackson Jarves; Mrs. Liberty E. Holden,Cleveland, 1884.Holden Collection, 1916.",
+          "title": "Ceres and Bacchus"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:36492::description::0"
+            ],
+            "texto": "La obra presenta una alegoría de la virtud de la caridad, que está relacionada con la generosidad, mostrando amor maternal y sacrificio, con una madre que alimenta a varios niños y un pelícano que alimenta a sus crías con su propia sangre.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La representación de la caridad a través del cuidado y sacrificio maternal sugiere un fuerte mensaje de generosidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:36492"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:33249::description::0"
+            ],
+            "texto": "La pintura muestra a Escipión Africano actuando con moderación y compasión al no tomar a una mujer como prisionera de guerra, lo que sugiere una virtud de generosidad y diplomacia compasiva.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena representa la generosidad en el sentido de clemencia y respeto hacia otros, lo que puede interpretarse como una forma de generosidad moral.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:33249"
+      },
+      {
+        "abstencion": "No hay suficiente información en los fragmentos para afirmar que esta obra representa o simboliza la generosidad.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:97169::description::0"
+            ],
+            "texto": "La obra representa a Ceres y Baco, deidades agrícolas que simbolizan el alimento y la bebida, elementos necesarios para el amor, según el lema latino que aparece en la obra.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Aunque la obra habla de la importancia del alimento y bebida para el amor, no se menciona ni se observa una representación directa de generosidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:97169"
+      },
+      {
+        "abstencion": "No hay datos suficientes para relacionar esta obra con el concepto de generosidad.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:134620::description::0",
+              "cma:134620::did_you_know::0"
+            ],
+            "texto": "La obra es una pintura atribuida a Tiziano o su taller, con detalles naturalistas y escenas de jinetes y animales, pero no se menciona ninguna temática relacionada con la generosidad.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No se observa en la imagen ni en la descripción una representación clara o alegórica de la generosidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:134620"
+      },
+      {
+        "abstencion": "No hay evidencia suficiente para considerar que esta obra represente la generosidad.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:12891::description::0"
+            ],
+            "texto": "La pintura representa un evento histórico donde el arzobispo Ambrosio se niega a dar la comunión al emperador Teodosio I hasta que haga penitencia pública por una masacre, mostrando una autoridad moral y un acto de justicia.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Aunque la escena implica un acto de justicia y penitencia, no se menciona ni se observa un acto de generosidad en la obra.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:12891"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:125251",
+          "rank": 1,
+          "score": 0.5942126512527466
+        },
+        {
+          "artwork_id": "aic:36492",
+          "rank": 2,
+          "score": 0.5437567234039307
+        },
+        {
+          "artwork_id": "cma:124091",
+          "rank": 3,
+          "score": 0.525351345539093
+        },
+        {
+          "artwork_id": "cma:97181",
+          "rank": 4,
+          "score": 0.5224825739860535
+        },
+        {
+          "artwork_id": "aic:22270",
+          "rank": 5,
+          "score": 0.5217541456222534
+        },
+        {
+          "artwork_id": "aic:154037",
+          "rank": 6,
+          "score": 0.5217094421386719
+        },
+        {
+          "artwork_id": "aic:16495",
+          "rank": 7,
+          "score": 0.5207165479660034
+        },
+        {
+          "artwork_id": "aic:16492",
+          "rank": 8,
+          "score": 0.5180875658988953
+        },
+        {
+          "artwork_id": "aic:16488",
+          "rank": 9,
+          "score": 0.5172731280326843
+        },
+        {
+          "artwork_id": "cma:130982",
+          "rank": 10,
+          "score": 0.516884446144104
+        },
+        {
+          "artwork_id": "cma:97180",
+          "rank": 11,
+          "score": 0.5145297050476074
+        },
+        {
+          "artwork_id": "aic:16151",
+          "rank": 12,
+          "score": 0.5076814293861389
+        },
+        {
+          "artwork_id": "cma:134620",
+          "rank": 13,
+          "score": 0.5057700276374817
+        },
+        {
+          "artwork_id": "aic:16405",
+          "rank": 14,
+          "score": 0.4998340606689453
+        },
+        {
+          "artwork_id": "aic:16362",
+          "rank": 15,
+          "score": 0.4985184669494629
+        },
+        {
+          "artwork_id": "aic:160030",
+          "rank": 16,
+          "score": 0.4967482089996338
+        },
+        {
+          "artwork_id": "cma:150077",
+          "rank": 17,
+          "score": 0.49674737453460693
+        },
+        {
+          "artwork_id": "cma:97167",
+          "rank": 18,
+          "score": 0.4940646290779114
+        },
+        {
+          "artwork_id": "aic:28874",
+          "rank": 19,
+          "score": 0.4938497543334961
+        },
+        {
+          "artwork_id": "cma:153927",
+          "rank": 20,
+          "score": 0.49266600608825684
+        },
+        {
+          "artwork_id": "cma:127571",
+          "rank": 21,
+          "score": 0.4915127754211426
+        },
+        {
+          "artwork_id": "cma:153773",
+          "rank": 22,
+          "score": 0.49086469411849976
+        },
+        {
+          "artwork_id": "aic:12891",
+          "rank": 23,
+          "score": 0.4894440174102783
+        },
+        {
+          "artwork_id": "aic:59847",
+          "rank": 24,
+          "score": 0.48904645442962646
+        },
+        {
+          "artwork_id": "aic:184371",
+          "rank": 25,
+          "score": 0.48819708824157715
+        },
+        {
+          "artwork_id": "cma:146469",
+          "rank": 26,
+          "score": 0.48777323961257935
+        },
+        {
+          "artwork_id": "cma:146724",
+          "rank": 27,
+          "score": 0.48720431327819824
+        },
+        {
+          "artwork_id": "aic:6009",
+          "rank": 28,
+          "score": 0.4840705990791321
+        },
+        {
+          "artwork_id": "cma:140148",
+          "rank": 29,
+          "score": 0.47877979278564453
+        },
+        {
+          "artwork_id": "cma:109029",
+          "rank": 30,
+          "score": 0.4761638641357422
+        },
+        {
+          "artwork_id": "cma:140149",
+          "rank": 31,
+          "score": 0.4756433367729187
+        },
+        {
+          "artwork_id": "aic:51130",
+          "rank": 32,
+          "score": 0.47553008794784546
+        },
+        {
+          "artwork_id": "cma:126768",
+          "rank": 33,
+          "score": 0.4752182960510254
+        },
+        {
+          "artwork_id": "aic:158137",
+          "rank": 34,
+          "score": 0.47483980655670166
+        },
+        {
+          "artwork_id": "aic:120172",
+          "rank": 35,
+          "score": 0.47472894191741943
+        },
+        {
+          "artwork_id": "cma:97136",
+          "rank": 36,
+          "score": 0.4733858108520508
+        },
+        {
+          "artwork_id": "aic:60514",
+          "rank": 37,
+          "score": 0.4729688763618469
+        },
+        {
+          "artwork_id": "cma:142293",
+          "rank": 38,
+          "score": 0.4720175266265869
+        },
+        {
+          "artwork_id": "cma:173641",
+          "rank": 39,
+          "score": 0.4720013737678528
+        },
+        {
+          "artwork_id": "aic:16298",
+          "rank": 40,
+          "score": 0.4711606502532959
+        },
+        {
+          "artwork_id": "aic:23972",
+          "rank": 41,
+          "score": 0.4710147976875305
+        },
+        {
+          "artwork_id": "aic:33249",
+          "rank": 42,
+          "score": 0.4700142741203308
+        },
+        {
+          "artwork_id": "cma:146199",
+          "rank": 43,
+          "score": 0.4690017104148865
+        },
+        {
+          "artwork_id": "aic:61665",
+          "rank": 44,
+          "score": 0.46783673763275146
+        },
+        {
+          "artwork_id": "aic:111456",
+          "rank": 45,
+          "score": 0.46685659885406494
+        },
+        {
+          "artwork_id": "aic:58052",
+          "rank": 46,
+          "score": 0.4667038321495056
+        },
+        {
+          "artwork_id": "aic:16295",
+          "rank": 47,
+          "score": 0.466646671295166
+        },
+        {
+          "artwork_id": "aic:16231",
+          "rank": 48,
+          "score": 0.4665185213088989
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "aic:110663",
+          "rank": 1,
+          "score": 0.698020875453949
+        },
+        {
+          "artwork_id": "aic:15468",
+          "rank": 2,
+          "score": 0.6600296497344971
+        },
+        {
+          "artwork_id": "aic:81505",
+          "rank": 3,
+          "score": 0.6582586765289307
+        },
+        {
+          "artwork_id": "aic:81503",
+          "rank": 4,
+          "score": 0.657632052898407
+        },
+        {
+          "artwork_id": "cma:150082",
+          "rank": 5,
+          "score": 0.6496694684028625
+        },
+        {
+          "artwork_id": "cma:122350",
+          "rank": 6,
+          "score": 0.6421683430671692
+        },
+        {
+          "artwork_id": "cma:110180",
+          "rank": 7,
+          "score": 0.6397520303726196
+        },
+        {
+          "artwork_id": "cma:162496",
+          "rank": 8,
+          "score": 0.6394363045692444
+        },
+        {
+          "artwork_id": "aic:53495",
+          "rank": 9,
+          "score": 0.6393066644668579
+        },
+        {
+          "artwork_id": "cma:107358",
+          "rank": 10,
+          "score": 0.6351796388626099
+        },
+        {
+          "artwork_id": "aic:97910",
+          "rank": 11,
+          "score": 0.6346304416656494
+        },
+        {
+          "artwork_id": "cma:97169",
+          "rank": 12,
+          "score": 0.6322561502456665
+        },
+        {
+          "artwork_id": "aic:59856",
+          "rank": 13,
+          "score": 0.6273135542869568
+        },
+        {
+          "artwork_id": "cma:109973",
+          "rank": 14,
+          "score": 0.6221507787704468
+        },
+        {
+          "artwork_id": "aic:111559",
+          "rank": 15,
+          "score": 0.62123042345047
+        },
+        {
+          "artwork_id": "cma:314453",
+          "rank": 16,
+          "score": 0.6207624077796936
+        },
+        {
+          "artwork_id": "cma:150117",
+          "rank": 17,
+          "score": 0.6201775074005127
+        },
+        {
+          "artwork_id": "cma:117032",
+          "rank": 18,
+          "score": 0.6184335350990295
+        },
+        {
+          "artwork_id": "aic:160030",
+          "rank": 19,
+          "score": 0.6177222728729248
+        },
+        {
+          "artwork_id": "cma:124117",
+          "rank": 20,
+          "score": 0.6172662973403931
+        },
+        {
+          "artwork_id": "cma:97165",
+          "rank": 21,
+          "score": 0.6169251799583435
+        },
+        {
+          "artwork_id": "aic:16488",
+          "rank": 22,
+          "score": 0.6156834363937378
+        },
+        {
+          "artwork_id": "aic:111608",
+          "rank": 23,
+          "score": 0.6152541637420654
+        },
+        {
+          "artwork_id": "aic:81533",
+          "rank": 24,
+          "score": 0.6145681738853455
+        },
+        {
+          "artwork_id": "cma:314469",
+          "rank": 25,
+          "score": 0.6142364740371704
+        },
+        {
+          "artwork_id": "cma:146204",
+          "rank": 26,
+          "score": 0.6133076548576355
+        },
+        {
+          "artwork_id": "aic:16497",
+          "rank": 27,
+          "score": 0.6116300225257874
+        },
+        {
+          "artwork_id": "aic:105466",
+          "rank": 28,
+          "score": 0.6114361882209778
+        },
+        {
+          "artwork_id": "cma:314486",
+          "rank": 29,
+          "score": 0.6095234751701355
+        },
+        {
+          "artwork_id": "cma:148366",
+          "rank": 30,
+          "score": 0.6088537573814392
+        },
+        {
+          "artwork_id": "cma:98252",
+          "rank": 31,
+          "score": 0.608596920967102
+        },
+        {
+          "artwork_id": "cma:314445",
+          "rank": 32,
+          "score": 0.6085122227668762
+        },
+        {
+          "artwork_id": "cma:95264",
+          "rank": 33,
+          "score": 0.6084146499633789
+        },
+        {
+          "artwork_id": "aic:111609",
+          "rank": 34,
+          "score": 0.6079636216163635
+        },
+        {
+          "artwork_id": "cma:97152",
+          "rank": 35,
+          "score": 0.6074269413948059
+        },
+        {
+          "artwork_id": "cma:162518",
+          "rank": 36,
+          "score": 0.6068254709243774
+        },
+        {
+          "artwork_id": "aic:97912",
+          "rank": 37,
+          "score": 0.6066253781318665
+        },
+        {
+          "artwork_id": "aic:214269",
+          "rank": 38,
+          "score": 0.6065266728401184
+        },
+        {
+          "artwork_id": "cma:147523",
+          "rank": 39,
+          "score": 0.6036933660507202
+        },
+        {
+          "artwork_id": "aic:59897",
+          "rank": 40,
+          "score": 0.6036553978919983
+        },
+        {
+          "artwork_id": "aic:149778",
+          "rank": 41,
+          "score": 0.6034421920776367
+        },
+        {
+          "artwork_id": "cma:143769",
+          "rank": 42,
+          "score": 0.6033406257629395
+        },
+        {
+          "artwork_id": "cma:146725",
+          "rank": 43,
+          "score": 0.6032975912094116
+        },
+        {
+          "artwork_id": "cma:146191",
+          "rank": 44,
+          "score": 0.6016664505004883
+        },
+        {
+          "artwork_id": "cma:140344",
+          "rank": 45,
+          "score": 0.600738525390625
+        },
+        {
+          "artwork_id": "aic:16362",
+          "rank": 46,
+          "score": 0.6005836725234985
+        },
+        {
+          "artwork_id": "cma:447779",
+          "rank": 47,
+          "score": 0.6002452969551086
+        },
+        {
+          "artwork_id": "aic:33249",
+          "rank": 48,
+          "score": 0.5998678207397461
+        },
+        {
+          "artwork_id": "cma:95259",
+          "rank": 49,
+          "score": 0.5998241305351257
+        },
+        {
+          "artwork_id": "cma:150035",
+          "rank": 50,
+          "score": 0.5982778072357178
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Spanish Renaissance painting depicting generosity and charity, nobleman on horseback sharing cloak with a poor man, religious and social themes",
+      "consulta_id": "c10-ambiguo",
+      "consulta_visual": "equestrian portrait with a nobleman in armor giving cloak to a poor man, dramatic sky background",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:424053872427139d3c28f5d26150d79c37b746bff3cdb23af78d0f9df1a093bb",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "más generoso",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "430fb39c87f3654a",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 3221,
+        "tokens_out": 57
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "aic:16488",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 9,
+          "visual": 22
+        },
+        "score_fusionado": 0.02668788
+      },
+      {
+        "artwork_id": "aic:160030",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 16,
+          "visual": 19
+        },
+        "score_fusionado": 0.02581612
+      },
+      {
+        "artwork_id": "aic:16362",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 15,
+          "visual": 46
+        },
+        "score_fusionado": 0.0227673
+      },
+      {
+        "artwork_id": "aic:33249",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 42,
+          "visual": 48
+        },
+        "score_fusionado": 0.01906318
+      },
+      {
+        "artwork_id": "aic:110663",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "cma:125251",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "aic:15468",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "aic:36492",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "aic:81505",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:124091",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "aic:81503",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "cma:97181",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "aic:22270",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:150082",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "aic:154037",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "cma:122350",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "aic:16495",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:110180",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "aic:16492",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "cma:162496",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "aic:53495",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "cma:107358",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:130982",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "aic:97910",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "cma:97180",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "aic:16151",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:97169",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "aic:59856",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "cma:134620",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "aic:16405",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "cma:109973",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "aic:111559",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "cma:314453",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:150077",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:150117",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:117032",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:97167",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "aic:28874",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "cma:124117",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:153927",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:127571",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "cma:97165",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "cma:153773",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.01219512
+      },
+      {
+        "artwork_id": "aic:111608",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "aic:59847",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "aic:81533",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "aic:184371",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "cma:314469",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "cma:146204",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "cma:146469",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "aic:16497",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "cma:146724",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "aic:105466",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "aic:6009",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "cma:140148",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.01123596
+      },
+      {
+        "artwork_id": "cma:314486",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 29
+        },
+        "score_fusionado": 0.01123596
+      },
+      {
+        "artwork_id": "cma:109029",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.01111111
+      },
+      {
+        "artwork_id": "cma:148366",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 30
+        },
+        "score_fusionado": 0.01111111
+      },
+      {
+        "artwork_id": "cma:140149",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.01098901
+      },
+      {
+        "artwork_id": "cma:98252",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 31
+        },
+        "score_fusionado": 0.01098901
+      },
+      {
+        "artwork_id": "aic:51130",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "cma:314445",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "cma:126768",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.01075269
+      },
+      {
+        "artwork_id": "cma:95264",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 33
+        },
+        "score_fusionado": 0.01075269
+      },
+      {
+        "artwork_id": "aic:111609",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "aic:158137",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "aic:120172",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:97152",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:162518",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "cma:97136",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "aic:60514",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "aic:97912",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "aic:214269",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "cma:142293",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "cma:147523",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "cma:173641",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "aic:16298",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.01
+      },
+      {
+        "artwork_id": "aic:59897",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 40
+        },
+        "score_fusionado": 0.01
+      },
+      {
+        "artwork_id": "aic:149778",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "aic:23972",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "cma:143769",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 42
+        },
+        "score_fusionado": 0.00980392
+      },
+      {
+        "artwork_id": "cma:146199",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "cma:146725",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "aic:61665",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "cma:146191",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "aic:111456",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "cma:140344",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "aic:58052",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.00943396
+      },
+      {
+        "artwork_id": "aic:16295",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "cma:447779",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "aic:16231",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.00925926
+      },
+      {
+        "artwork_id": "cma:95259",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 49
+        },
+        "score_fusionado": 0.00917431
+      },
+      {
+        "artwork_id": "cma:150035",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 50
+        },
+        "score_fusionado": 0.00909091
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "aic:36492",
+        "estado": "puntuado",
+        "justificacion": "La obra representa la caridad, un concepto relacionado con la generosidad, y muestra una figura femenina dando de comer a niños, lo que cumple con el pedido de ser más generoso. Sin embargo, no hay un cambio explícito respecto a la imagen original, solo un enfoque diferente en la generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3883,
+          "tokens_out": 73
+        }
+      },
+      {
+        "artwork_id": "aic:33249",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con un gesto de entrega o concesión, que puede interpretarse como generosidad, pero no es tan explícita ni evidente como en la imagen original; cumple a medias con el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3579,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:97169",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra dos figuras con una interacción cercana, pero no transmite claramente una actitud más generosa en comparación con la imagen original; cumple parcialmente el pedido pero no lo expresa de forma evidente.",
+        "n_intentos": 1,
+        "rango_fusionado": 27,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3425,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:134620",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra una escena de generosidad clara ni explícita, mientras que el pedido es 'más generoso'. La imagen tiene más personajes y una escena compleja, pero no cumple directamente con el concepto de generosidad que se podría esperar.",
+        "n_intentos": 1,
+        "rango_fusionado": 29,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 4269,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con varias figuras y una interacción que podría interpretarse como generosa, pero no es explícito ni claro que sea más generosa que la imagen original; cumple a medias con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 45,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3497,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "cma:150077",
+        "estado": "puntuado",
+        "justificacion": "La obra no refleja claramente el concepto de 'más generoso' que pide el usuario; además, el pedido no especifica cultura ni época, pero la imagen no transmite generosidad evidente, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 34,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3698,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "aic:16488",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena ni personajes que transmitan generosidad de forma clara, y no guarda relación directa con la imagen original ni con el concepto pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3670,
+          "tokens_out": 42
+        }
+      },
+      {
+        "artwork_id": "aic:15468",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena ni gesto claramente generoso, mientras que el pedido es muy general y no especifica cambios concretos; la obra no refleja generosidad evidente en comparación con la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 4537,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:97181",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena compleja y dramática, pero no refleja claramente el concepto de 'más generoso' que pide el usuario, ni mantiene el enfoque en la interacción directa y personal que sugiere la primera imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3734,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "cma:150082",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra una escena de generosidad clara ni evidente, y no se relaciona directamente con el pedido de ser \"más generoso\"; además, no mantiene elementos de la imagen original que podrían indicar generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3556,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:122350",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena ni figura que sugiera generosidad de manera clara, mientras que el pedido es 'más generoso'; además, la obra es muy diferente en composición y tema a la imagen original, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3373,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "aic:16495",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra una escena claramente generosa ni un gesto explícito de generosidad, por lo que no cumple con el pedido de 'más generoso'. Además, no guarda relación directa con la imagen original en cuanto a contenido o actitud.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3890,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "aic:16492",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena ni gesto claramente generoso, mientras que el pedido es 'más generoso'; además, la imagen no tiene relación directa con la primera ni con el concepto de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3494,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:162496",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra una figura montada a caballo, pero no transmite claramente la idea de ser 'más generosa' en comparación con la imagen original, ni refleja un gesto o símbolo evidente de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3509,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:107358",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra un jinete en un estilo muy diferente y sin elementos que sugieran generosidad, mientras que el pedido es 'más generoso', lo que implica un cambio en la expresión o actitud que no se refleja aquí.",
+        "n_intentos": 1,
+        "rango_fusionado": 22,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3646,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "cma:130982",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra una escena ni gesto claramente asociado a la generosidad, mientras que el pedido es 'más generoso'. Además, no hay elementos evidentes que reflejen generosidad en la imagen, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 23,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3613,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "aic:16405",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra una escena claramente relacionada con la generosidad, que es lo que pide el usuario; además, no tiene relación directa con la imagen original ni mejora el concepto de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 30,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 4147,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:111559",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra una escena generosa ni un gesto de generosidad evidente; además, el pedido es muy general y esta imagen no aporta un cambio claro hacia 'más generoso' respecto a la primera imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 32,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3973,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "cma:314453",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra a un personaje principal a caballo con acompañantes, pero no transmite claramente la idea de 'más generoso' ni refleja una interacción generosa evidente, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 33,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3652,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:150117",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra una escena ni elementos que sugieran generosidad, mientras que el pedido es solo 'más generoso', sin relación clara con la imagen original; cumple de costado porque no aborda el concepto de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 35,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3710,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:117032",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una expresión o gesto claramente generoso, y el pedido es muy general; además, la escena es distinta y no se observa una relación de generosidad evidente en la imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 36,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3684,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:97167",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata es un retrato sobrio y oscuro que no transmite una sensación de generosidad ni abundancia, por lo que no cumple con el pedido de ser \"más generoso\".",
+        "n_intentos": 1,
+        "rango_fusionado": 37,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3650,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:127571",
+        "estado": "puntuado",
+        "justificacion": "La candidata es un retrato individual y no transmite una sensación de generosidad ni interacción con otros, por lo que no cumple con el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 41,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3834,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:153773",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena ni figuras que transmitan generosidad de forma clara, y no tiene relación directa con la imagen original ni con el concepto de 'más generoso' que pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 43,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3528,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "aic:184371",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra una escena generosa ni un gesto de generosidad evidente, por lo que no cumple con el pedido de ser 'más generoso'. Además, la imagen no tiene relación directa con la primera en cuanto a la expresión de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 48,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 4272,
+          "tokens_out": 62
+        }
+      },
+      {
+        "artwork_id": "cma:314469",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena que sugiera generosidad, ni en la expresión ni en la acción, y además es una obra de cultura india que no tiene relación con la imagen original ni con el concepto de generosidad pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 49,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3838,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "aic:160030",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' que podría inferirse de la primera imagen; además, la escena y la interacción entre personajes son muy diferentes y no reflejan generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4187,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "aic:16362",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra ninguna acción o símbolo de generosidad, por lo que no cumple el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3543,
+          "tokens_out": 39
+        }
+      },
+      {
+        "artwork_id": "aic:110663",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de combate violento, que no transmite ni representa generosidad, por lo que no cumple el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3622,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:125251",
+        "estado": "puntuado",
+        "justificacion": "La obra no refleja generosidad ni en la expresión ni en la escena; es un retrato sobrio y estático que no cumple con el pedido de ser más generoso.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3650,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "aic:81505",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' ni con la imagen original; es una escena de caza violenta, que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3572,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:124091",
+        "estado": "puntuado",
+        "justificacion": "La candidata es un retrato sobrio y contenido, no transmite una sensación de generosidad ni abundancia como podría sugerir el pedido 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3602,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "aic:81503",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra ninguna relación con la idea de 'más generoso' ni en la imagen ni en el pedido; además, la escena es violenta y no transmite generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4104,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:22270",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna característica que sugiera generosidad, ni en la expresión ni en la composición; además, es un retrato individual y no tiene relación con la imagen original ni con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3582,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:154037",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' ni en la imagen ni en la ficha; además, es un retrato sin elementos que sugieran generosidad, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3575,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "cma:110180",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' ni visual ni temáticamente, y no mantiene elementos de la primera imagen.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3739,
+          "tokens_out": 39
+        }
+      },
+      {
+        "artwork_id": "aic:53495",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra ninguna relación con el concepto de 'más generoso' ni con la imagen original; además, su temática y estilo son muy diferentes, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 21,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3488,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:97910",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra ningún gesto o símbolo claro de generosidad, ni en la escena ni en la interacción entre personajes; además, el pedido es muy general y esta imagen no refleja esa cualidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 24,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3491,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:97180",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no representa generosidad ni una acción relacionada, es un retrato solemne de un papa, mientras que la imagen original muestra un acto de generosidad evidente.",
+        "n_intentos": 1,
+        "rango_fusionado": 25,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3570,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "aic:16151",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra ninguna expresión ni gesto que sugiera generosidad, a diferencia de la imagen original que implica un acto generoso; además, es un retrato sobrio y cerrado que no cumple con el pedido de ser más generoso.",
+        "n_intentos": 1,
+        "rango_fusionado": 26,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4287,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "aic:59856",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no cumple con el pedido de ser 'más generoso', ya que representa una escena de crucifixión con múltiples figuras pero no transmite generosidad ni tiene relación con la imagen original ni con el concepto solicitado.",
+        "n_intentos": 1,
+        "rango_fusionado": 28,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4361,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:109973",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ningún elemento que sugiera generosidad ni se relaciona con el pedido de manera clara; la imagen es muy diferente en tema y tono a la primera.",
+        "n_intentos": 1,
+        "rango_fusionado": 31,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4368,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "aic:28874",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra ninguna escena ni gesto que sugiera generosidad, ni en la imagen ni en el pedido; por lo tanto, no cumple con la solicitud de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 38,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3576,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:124117",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no refleja generosidad ni en la escena ni en la expresión de los personajes, mientras que el pedido es explícito en buscar algo 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 39,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3553,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:153927",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna característica que sugiera generosidad, ni en la expresión ni en la acción, y además es una figura femenina en un contexto distinto al de la imagen original, por lo que no cumple el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 40,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3693,
+          "tokens_out": 63
+        }
+      },
+      {
+        "artwork_id": "cma:97165",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' que pide el usuario, ni en la imagen ni en el contexto; además, es una escena de carrera, no una representación de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 42,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3441,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "aic:111608",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no representa ni transmite la idea de 'más generoso' que pide el usuario, y además es una escena de batalla que no se relaciona con la imagen original ni con el concepto de generosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 44,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4152,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "aic:59847",
+        "estado": "puntuado",
+        "justificacion": "La obra no muestra ninguna actitud ni gesto que sugiera generosidad, sino más bien violencia y castigo, por lo que no cumple el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 46,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4273,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:81533",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra ninguna relación con el concepto de 'más generoso' ni con la imagen original; es una escena de carreras de caballos que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 47,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3268,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:146204",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata no muestra ninguna indicación clara de generosidad, ni en la escena ni en la interacción entre personajes, por lo que no cumple el pedido de ser 'más generoso'.",
+        "n_intentos": 1,
+        "rango_fusionado": 50,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 4395,
+          "tokens_out": 50
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c10-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "aic:36492",
+          "ficha": {
+            "artist": "Francesco de Mura",
+            "culture": "Italy",
+            "date_display": "c. 1743–44",
+            "medium": "Oil on canvas",
+            "style": "18th Century",
+            "title": "Allegory of Charity",
+            "year": 1738
+          },
+          "lineas": [
+            "La obra presenta una alegoría de la virtud de la caridad, que está relacionada con la generosidad, mostrando amor maternal y sacrificio, con una madre que alimenta a varios niños y un pelícano que alimenta a sus crías con su propia sangre. [1]",
+            "La representación de la caridad a través del cuidado y sacrificio maternal sugiere un fuerte mensaje de generosidad."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Francesco de Mura",
+              "atribucion": "“Allegory of Charity”, Francesco de Mura. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/36492",
+              "fragment_id": "aic:36492::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/36492",
+              "texto_citado": "This painting presents an allegory of the virtue of charity through images of maternal love and sacrifice: a mother nurtures several young children and a pelican feeds her young by drawing blood from her own breast. This work was one of a set of allegories of five virtues intended as decorations set above doors in a palace belonging to the king of Savoy, a region in northwest Italy. Francesco de Mura spent most of his career in Naples but also worked for the king of Savoy in the 1740s, producing paintings in a style that combined grand, calm figures with active drapery. Although it is now rectangular, the canvas shows signs of an earlier curved shape appropriate to a Rococo room decoration.",
+              "title": "Allegory of Charity"
+            }
+          ],
+          "score": 0.016129032258064516,
+          "source_url": "https://www.artic.edu/artworks/36492"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:33249",
+          "ficha": {
+            "artist": "Sebastiano Ricci",
+            "culture": "Italy",
+            "date_display": "c. 1706",
+            "medium": "Oil on canvas",
+            "style": "18th Century",
+            "title": "The Continence of Scipio",
+            "year": 1701
+          },
+          "lineas": [
+            "La pintura muestra a Escipión Africano actuando con moderación y compasión al no tomar a una mujer como prisionera de guerra, lo que sugiere una virtud de generosidad y diplomacia compasiva. [1]",
+            "La escena representa la generosidad en el sentido de clemencia y respeto hacia otros, lo que puede interpretarse como una forma de generosidad moral."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Sebastiano Ricci",
+              "atribucion": "“The Continence of Scipio”, Sebastiano Ricci. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/33249",
+              "fragment_id": "aic:33249::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/33249",
+              "texto_citado": "This painting depicts a scene from the life of Scipio Africanus, the Roman general who defeated Hannibal in the Battle of Zama (in present-day Tunisia) in 202 BCE. Here Scipio demonstrates his leadership by acting with restraint (“continence”) in refusing to hold a woman as a captive of war. According to the story on which the painting is based, the woman’s fiancé, shown kneeling beside her, was a powerful prince who agreed to a military alliance with Scipio in gratitude for his lenience. The theatrical setting and costumes—the invented military helmets, anachronistically dressed characters, fanciful architecture, and gravity-defying drapery, for example— suggest that the artist’s aims were allegorical rather than historical, intended above all to illustrate for viewers the virtues of compassionate diplomacy.",
+              "title": "The Continence of Scipio"
+            }
+          ],
+          "score": 0.01906318082788671,
+          "source_url": "https://www.artic.edu/artworks/33249"
+        },
+        {
+          "abstencion": "No hay suficiente información en los fragmentos para afirmar que esta obra representa o simboliza la generosidad.",
+          "artwork_id": "cma:97169",
+          "ficha": {
+            "artist": "Bartholomaeus Spranger",
+            "culture": "Flanders",
+            "date_display": "1600s",
+            "medium": "oil on canvas",
+            "title": "Ceres and Bacchus",
+            "year": 1600
+          },
+          "lineas": [
+            "La obra representa a Ceres y Baco, deidades agrícolas que simbolizan el alimento y la bebida, elementos necesarios para el amor, según el lema latino que aparece en la obra. [1]",
+            "Aunque la obra habla de la importancia del alimento y bebida para el amor, no se menciona ni se observa una representación directa de generosidad."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Bartholomaeus Spranger",
+              "atribucion": null,
+              "fragment_id": "cma:97169::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1916.805",
+              "texto_citado": "This painting is a copy of a print by Jan Harmensz Muller (Dutch, 1571–1628), originally based on a painting by Spranger. Spranger often used the iconography of Ceres and Bacchus, two important agricultural deities. Muller's print has the Latin inscription Sine Cerere et Bacchio friget Venus, which translates to \"without Ceres and Bacchus, Venus grows cold.\" The motto indicates that Love, represented by Venus, is impossible without the nourishment of food and drink, as the deities of grain and wine walk hand in hand.",
+              "title": "Ceres and Bacchus"
+            }
+          ],
+          "score": 0.013888888888888888,
+          "source_url": "https://clevelandart.org/art/1916.805"
+        },
+        {
+          "abstencion": "No hay datos suficientes para relacionar esta obra con el concepto de generosidad.",
+          "artwork_id": "cma:134620",
+          "ficha": {
+            "artist": "Titian",
+            "culture": "Italy",
+            "date_display": "1500s",
+            "medium": "oil on canvas",
+            "title": "Adoration of the Magi",
+            "year": 1500
+          },
+          "lineas": [
+            "La obra es una pintura atribuida a Tiziano o su taller, con detalles naturalistas y escenas de jinetes y animales, pero no se menciona ninguna temática relacionada con la generosidad. [1] [2]",
+            "No se observa en la imagen ni en la descripción una representación clara o alegórica de la generosidad."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Titian",
+              "atribucion": null,
+              "fragment_id": "cma:134620::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1957.150",
+              "texto_citado": "Is this painting by Titian?\n\nTitian, the celebrated and prolific 16th-century Venetian artist, and his large workshop painted several versions of this subject. Further research is needed to compare this painting with versions in Milan and Madrid to determine how much of each is by Titian himself, as opposed to being the work of his studio assistants. The Prado Museum in Madrid is often considered to have a copy made from Cleveland’s painting, which is superior in execution but not condition. Despite the damage caused by overcleaning, there are many fine passages, including the bowing white horse, his groom in shadow, and the cradled Christ child.",
+              "title": "Adoration of the Magi"
+            },
+            {
+              "artist": "Titian",
+              "atribucion": null,
+              "fragment_id": "cma:134620::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1957.150",
+              "texto_citado": "This painting is filled with naturalistic details such as the riders who struggle to keep their horses and mules still and a small dog who urinates on a beam.",
+              "title": "Adoration of the Magi"
+            }
+          ],
+          "score": 0.0136986301369863,
+          "source_url": "https://clevelandart.org/art/1957.150"
+        },
+        {
+          "abstencion": "No hay evidencia suficiente para considerar que esta obra represente la generosidad.",
+          "artwork_id": "aic:12891",
+          "ficha": {
+            "artist": "Alessandro Magnasco",
+            "culture": "Italy",
+            "date_display": "c. 1705",
+            "medium": "Oil on canvas",
+            "style": "18th Century",
+            "title": "Theodosius Repulsed from the Church by Saint Ambrose",
+            "year": 1700
+          },
+          "lineas": [
+            "La pintura representa un evento histórico donde el arzobispo Ambrosio se niega a dar la comunión al emperador Teodosio I hasta que haga penitencia pública por una masacre, mostrando una autoridad moral y un acto de justicia. [1]",
+            "Aunque la escena implica un acto de justicia y penitencia, no se menciona ni se observa un acto de generosidad en la obra."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Alessandro Magnasco",
+              "atribucion": "“Theodosius Repulsed from the Church by Saint Ambrose”, Alessandro Magnasco. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/12891",
+              "fragment_id": "aic:12891::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/12891",
+              "texto_citado": "This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.",
+              "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+            }
+          ],
+          "score": 0.012048192771084338,
+          "source_url": "https://www.artic.edu/artworks/12891"
+        }
+      ],
+      "render": "1. **Allegory of Charity**\n   Francesco de Mura · c. 1743–44 · Oil on canvas · 18th Century\n   Ficha oficial: https://www.artic.edu/artworks/36492\n\n   La obra presenta una alegoría de la virtud de la caridad, que está relacionada con la generosidad, mostrando amor maternal y sacrificio, con una madre que alimenta a varios niños y un pelícano que alimenta a sus crías con su propia sangre. [1]\n   La representación de la caridad a través del cuidado y sacrificio maternal sugiere un fuerte mensaje de generosidad.\n\n   **Fuentes**\n   [1] “This painting presents an allegory of the virtue of charity through images of maternal love and sacrifice: a mother nurtures several young children and a pelican feeds her young by drawing blood from her own breast. This work was one of a set of allegories of five virtues intended as decorations set above doors in a palace belonging to the king of Savoy, a region in northwest Italy. Francesco de Mura spent most of his career in Naples but also worked for the king of Savoy in the 1740s, producing paintings in a style that combined grand, calm figures with active drapery. Although it is now rectangular, the canvas shows signs of an earlier curved shape appropriate to a Rococo room decoration.”\n       https://www.artic.edu/artworks/36492 · CC BY 4.0\n       “Allegory of Charity”, Francesco de Mura. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/36492\n\n2. **The Continence of Scipio**\n   Sebastiano Ricci · c. 1706 · Oil on canvas · 18th Century\n   Ficha oficial: https://www.artic.edu/artworks/33249\n\n   La pintura muestra a Escipión Africano actuando con moderación y compasión al no tomar a una mujer como prisionera de guerra, lo que sugiere una virtud de generosidad y diplomacia compasiva. [1]\n   La escena representa la generosidad en el sentido de clemencia y respeto hacia otros, lo que puede interpretarse como una forma de generosidad moral.\n\n   **Fuentes**\n   [1] “This painting depicts a scene from the life of Scipio Africanus, the Roman general who defeated Hannibal in the Battle of Zama (in present-day Tunisia) in 202 BCE. Here Scipio demonstrates his leadership by acting with restraint (“continence”) in refusing to hold a woman as a captive of war. According to the story on which the painting is based, the woman’s fiancé, shown kneeling beside her, was a powerful prince who agreed to a military alliance with Scipio in gratitude for his lenience. The theatrical setting and costumes—the invented military helmets, anachronistically dressed characters, fanciful architecture, and gravity-defying drapery, for example— suggest that the artist’s aims were allegorical rather than historical, intended above all to illustrate for viewers the virtues of compassionate diplomacy.”\n       https://www.artic.edu/artworks/33249 · CC BY 4.0\n       “The Continence of Scipio”, Sebastiano Ricci. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/33249\n\n3. **Ceres and Bacchus**\n   Bartholomaeus Spranger · 1600s · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1916.805\n\n   La obra representa a Ceres y Baco, deidades agrícolas que simbolizan el alimento y la bebida, elementos necesarios para el amor, según el lema latino que aparece en la obra. [1]\n   Aunque la obra habla de la importancia del alimento y bebida para el amor, no se menciona ni se observa una representación directa de generosidad.\n   No hay suficiente información en los fragmentos para afirmar que esta obra representa o simboliza la generosidad.\n\n   **Fuentes**\n   [1] “This painting is a copy of a print by Jan Harmensz Muller (Dutch, 1571–1628), originally based on a painting by Spranger. Spranger often used the iconography of Ceres and Bacchus, two important agricultural deities. Muller's print has the Latin inscription Sine Cerere et Bacchio friget Venus, which translates to \"without Ceres and Bacchus, Venus grows cold.\" The motto indicates that Love, represented by Venus, is impossible without the nourishment of food and drink, as the deities of grain and wine walk hand in hand.”\n       https://clevelandart.org/art/1916.805 · CC0 1.0\n\n4. **Adoration of the Magi**\n   Titian · 1500s · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1957.150\n\n   La obra es una pintura atribuida a Tiziano o su taller, con detalles naturalistas y escenas de jinetes y animales, pero no se menciona ninguna temática relacionada con la generosidad. [1] [2]\n   No se observa en la imagen ni en la descripción una representación clara o alegórica de la generosidad.\n   No hay datos suficientes para relacionar esta obra con el concepto de generosidad.\n\n   **Fuentes**\n   [1] “Is this painting by Titian?\n\nTitian, the celebrated and prolific 16th-century Venetian artist, and his large workshop painted several versions of this subject. Further research is needed to compare this painting with versions in Milan and Madrid to determine how much of each is by Titian himself, as opposed to being the work of his studio assistants. The Prado Museum in Madrid is often considered to have a copy made from Cleveland’s painting, which is superior in execution but not condition. Despite the damage caused by overcleaning, there are many fine passages, including the bowing white horse, his groom in shadow, and the cradled Christ child.”\n       https://clevelandart.org/art/1957.150 · CC0 1.0\n   [2] “This painting is filled with naturalistic details such as the riders who struggle to keep their horses and mules still and a small dog who urinates on a beam.”\n       https://clevelandart.org/art/1957.150 · CC0 1.0\n\n5. **Theodosius Repulsed from the Church by Saint Ambrose**\n   Alessandro Magnasco · c. 1705 · Oil on canvas · 18th Century\n   Ficha oficial: https://www.artic.edu/artworks/12891\n\n   La pintura representa un evento histórico donde el arzobispo Ambrosio se niega a dar la comunión al emperador Teodosio I hasta que haga penitencia pública por una masacre, mostrando una autoridad moral y un acto de justicia. [1]\n   Aunque la escena implica un acto de justicia y penitencia, no se menciona ni se observa un acto de generosidad en la obra.\n   No hay evidencia suficiente para considerar que esta obra represente la generosidad.\n\n   **Fuentes**\n   [1] “This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.”\n       https://www.artic.edu/artworks/12891 · CC BY 4.0\n       “Theodosius Repulsed from the Church by Saint Ambrose”, Alessandro Magnasco. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/12891\n"
+    },
+    "sellos": {
+      "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+      "config_id": "6fc42e33b791071d",
+      "corrida_id": "e68a818118c4adf3-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "aic:36492",
+      "aic:33249",
+      "cma:97169",
+      "cma:134620",
+      "aic:12891"
+    ]
+  },
+  "fecha": "2026-10-27T14:56:55+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0003,
+      "generador": 9.8495,
+      "planificador": 0.0038,
+      "recolector_de_evidencia": 0.4915,
+      "recuperador_textual": 0.8756,
+      "recuperador_visual": 0.2708,
+      "renderizador": 0.0007,
+      "reranker": 117.8237
+    },
+    "segundos_de_la_corrida": 129.3189
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.255,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 1.309,
+      "tokens_in": 48,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 9.848,
+      "tokens_in": 4572,
+      "tokens_out": 869
+    },
+    "indice": {
+      "n_items": 159,
+      "n_llamadas": 8,
+      "resultados": {
+        "ok": 8
+      },
+      "roles": {
+        "indice": 8
+      },
+      "segundos": 0.07,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 50,
+      "n_llamadas": 50,
+      "resultados": {
+        "ok": 50
+      },
+      "roles": {
+        "reranker": 50
+      },
+      "segundos": 117.567,
+      "tokens_in": 188753,
+      "tokens_out": 2626
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 9.848,
+      "tokens_in": 4572,
+      "tokens_out": 869
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.491,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 99,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.874,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 52,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.27,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 50,
+      "n_llamadas": 50,
+      "resultados": {
+        "ok": 50
+      },
+      "roles": {
+        "reranker": 50
+      },
+      "segundos": 117.567,
+      "tokens_in": 188753,
+      "tokens_out": 2626
+    }
+  },
+  "no_determinan_el_config_id": {
+    "consulta.alfa_congelado": false,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 los hallazgos: el config_id se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 50,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 50,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "degrada": true,
+        "estrategia": "rrf",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion"
+        ],
+        "etapa": "fusionador",
+        "k": 60,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=50, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 50,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "62b1f1cd9512ab0d5fc2d1861a84044f2d871b0c",
+    "config_id": "6fc42e33b791071d",
+    "corrida_id": "e68a818118c4adf3-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

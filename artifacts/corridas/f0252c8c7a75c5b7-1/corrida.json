@@ -1,0 +1,2356 @@
+{
+  "agrega_a_la_tabla": false,
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 22,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 4,
+      "llm": 1,
+      "retriever": 8
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set consulta.plan_de_falla.reranker"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "d01e6a46e391459f",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {
+        "reranker": "excepcion"
+      },
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c03-ambiguo",
+  "corrida_id": "f0252c8c7a75c5b7-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [
+      {
+        "causa": "falla **inyectada** por `consulta.plan_de_falla` (modo 'excepcion')",
+        "etapa": "reranker",
+        "planificada": true,
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto."
+      }
+    ],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:159270",
+      "categoria": "ambiguo",
+      "consulta_id": "c03-ambiguo",
+      "imagen_hash": "sha256:6eee991cdce5d8a580067f4c35d5c8e8f8381863d9717f73e0d41a7650c0eefa",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:43211": [
+        {
+          "artist": "Emanuel de Witte",
+          "artwork_id": "aic:43211",
+          "chunk_index": 0,
+          "fragment_id": "aic:43211::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/43211",
+          "texto": "Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic’s large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist’s career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration.",
+          "title": "Interior of the Oude Kerk, Delft"
+        },
+        {
+          "artist": "Emanuel de Witte",
+          "artwork_id": "aic:43211",
+          "chunk_index": 0,
+          "fragment_id": "aic:43211::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/43211",
+          "texto": "Gebruder Douwes, Amsterdam [according to Manke 1963]. Karl Haberstock, Berlin [according to email of July 15, 2002 from Lynda McLoed, Christie’s, Haberstock was the consignor of lot 71 at the sale cited below]; sold, Christie’s London, 12 July 1935, lot. 71 for 126 pounds to Charles Duits [see email cited above; though no Christie’s stencil (which would be 137 GC), is now visible, the identity of the picture with lot 71, suspected by Manke 1963, is confirmed by the Duits stockcard at the Getty Research Institute Library, email of July 12, 2002 from Mark Henderson]; sold by W. E. Duits Ltd. to Charles Worcester, Chicago, 1 October 1935 [Duits stockcard cited above]; given to the Art Institute, 1941.",
+          "title": "Interior of the Oude Kerk, Delft"
+        }
+      ],
+      "aic:57049": [
+        {
+          "artist": "Hubert Robert",
+          "artwork_id": "aic:57049",
+          "chunk_index": 0,
+          "fragment_id": "aic:57049::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/57049",
+          "texto": "This painting is one of four depictions of architectural fantasies by Hubert Robert commissioned by the Marquis de Laborde for his elegant country estate at Méréville, south of Paris. It features a grandiose vaulted space that frames an obelisk, with a peristyle, or colonnade, closing off the distance. Through years of study in Italy, Robert absorbed the vocabulary of Classical architecture and sculpture into his own imaginative language. Here, the female ﬁgure in the central niche is based on a ﬁrst-century sculpture that the artist would have seen during his stay in Rome.",
+          "title": "The Obelisk"
+        },
+        {
+          "artist": "Hubert Robert",
+          "artwork_id": "aic:57049",
+          "chunk_index": 0,
+          "fragment_id": "aic:57049::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/57049",
+          "texto": "Commissioned with its pendants (1900.382, 1900.384, 1900.385) by Jean Joseph, marquis de Laborde (died 1794), in 1787 for the Château de Méréville (near Etampes); the château was sold by Mme de Laborde, 1819 [see Simone de Lassus, “Quelques Détails inédits sur Méréville,” Bulletin de la Société de l’histoire de l’art français, année 1976 (1978), p. 286 n. 1]; the château was owned successively by: M. Ters and Mme d’Espagnat (sold 1824); comte de Saint-Roman (sold 1866); duc de Sessa (sold 1868); M. and Mme Beleys (sold 1869); la Société Cail (sold 1874); M. Heddle (sold 1889); Adam Natanson (sold 1890); M. Hériot (sold 1896); Prudent Carpentier (sold 1897, at which time the contents of the house were dispersed and the paintings probably sold) [See Simone de Lassus 1978, cited above; a letter from Bernard Binvel to Susan Wise dated May 5, 1987 states, perhaps erroneously, that Hériot sold the paintings in July of 1896]. M. L. François; sold Galerie George Petit, Paris, June 13, 1900, no. 4, to Durand-Ruel, acting on behalf of the Art Institute, with funds provided by Clarence Buckingham, 1900.",
+          "title": "The Obelisk"
+        }
+      ],
+      "cma:111691": [
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "cma:111691",
+          "chunk_index": 0,
+          "fragment_id": "cma:111691::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1930.22",
+          "texto": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.",
+          "title": "Interior of a Synagogue"
+        },
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "cma:111691",
+          "chunk_index": 0,
+          "fragment_id": "cma:111691::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1930.22",
+          "texto": "Private collection, sold Hotel Drouot, Paris, 1928\nD'Atri Gallery (Paris, France)\nBenno Geiger, 1882-1965 (Vienna, Austria)\nItalico Brass (Venice, Italy), 1870-1943, sold through Harold Parsons to the Cleveland Museum of Art, 1930.\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Interior of a Synagogue"
+        }
+      ],
+      "cma:145450": [
+        {
+          "artist": "Emanuel de Witte",
+          "artwork_id": "cma:145450",
+          "chunk_index": 0,
+          "fragment_id": "cma:145450::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1971.1",
+          "texto": "Although this spacious church interior is largely imaginary, Emanuel de Witte’s precise description of architectural forms convinces us that he depicted an actual place. To create a sense of familiarity, he included some specific architectural features from the Oude Kerk (Old Church) in Amsterdam. In the late 1500s, militant Protestant sects occupied Catholic churches in the Netherlands and stripped them of rich decorations and “idolatrous” images. The resulting spare, whitewashed interiors became a favorite subject of Dutch artists, who were intrigued by the interplay of light and shadow over the unadorned walls, and by the challenge of depicting perspectival space.",
+          "title": "Interior of a Church"
+        },
+        {
+          "artist": "Emanuel de Witte",
+          "artwork_id": "cma:145450",
+          "chunk_index": 0,
+          "fragment_id": "cma:145450::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1971.1",
+          "texto": "In the 1600s, Dutch churches functioned as public gathering places—even dogs were allowed!",
+          "title": "Interior of a Church"
+        },
+        {
+          "artist": "Emanuel de Witte",
+          "artwork_id": "cma:145450",
+          "chunk_index": 0,
+          "fragment_id": "cma:145450::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1971.1",
+          "texto": "Theodor Stroefer [1843-1927], Nürnberg\nFamily of Theodor Stroefer, Nürnberg\n(Julius Böhler, Munich, Stroefer sale, Oct. 28, 1937, no. 122 [13,000 Reichsmarks, sold to Curt Bohnewand)1\nCurt Bohnewand [1888-1966], Berlin and Rottach-Egern, Germany1\n(Kunsthaus Lempertz, Cologne, Bohnewand sale, March 28, 1969, no. 25, probably sold to Schaeffer Galleries)\n(Schaeffer Galleries, New York, NY, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, Ohio",
+          "title": "Interior of a Church"
+        }
+      ],
+      "cma:147938": [
+        {
+          "artist": "Giovanni Paolo Panini",
+          "artwork_id": "cma:147938",
+          "chunk_index": 0,
+          "fragment_id": "cma:147938::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1974.39",
+          "texto": "Created as a temple under the Roman emperor Hadrian around the year AD 125, the Pantheon became a Christian church in 609. Significant restoration took place in the early 1700s, a period of renewed attention to early Christian monuments. The site was a major monument of antiquity, an active church, and its portico, visible through the door, held the most important art fair in the city. Panini shows the complexity of this public space by representing foreign tourists, local churchgoers, Roman nobles, and artists mingling under the dome.",
+          "title": "Interior of the Pantheon, Rome"
+        },
+        {
+          "artist": "Giovanni Paolo Panini",
+          "artwork_id": "cma:147938",
+          "chunk_index": 0,
+          "fragment_id": "cma:147938::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1974.39",
+          "texto": "Panini's depictions of contemporary and ancient Rome were popular with foreigners who visited the city on their Grand Tours.",
+          "title": "Interior of the Pantheon, Rome"
+        },
+        {
+          "artist": "Giovanni Paolo Panini",
+          "artwork_id": "cma:147938",
+          "chunk_index": 0,
+          "fragment_id": "cma:147938::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1974.39",
+          "texto": "Tyrwhitt-Drake (\"Shardeloes,\" Amersham, Buckinghamshire, UK) (sold, Christie’s, London, July 25, 1952, no. 148, to Reder)\n1952 - Reder\nDavid Koetser (New York, New York)\n- 1969 Walter P. Chrysler\n1969 - 1974 Eugene V. Thaw (New York, New York), sold to the Cleveland Museum of Art.",
+          "title": "Interior of the Pantheon, Rome"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:43211::description::0"
+            ],
+            "texto": "La obra representa el interior de una gran iglesia gótica de la República Holandesa, un espacio arquitectónico imponente por su volumen y la luz que explora el artista.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición muestra un espacio amplio y solemne, con elementos suspendidos en el techo y columnas que refuerzan la sensación de altura y grandiosidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:43211"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:147938::description::0"
+            ],
+            "texto": "La pintura muestra el interior del Panteón de Roma, un monumento antiguo y monumental con una gran cúpula que domina el espacio.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La representación incluye una multitud de personas bajo la gran cúpula, lo que añade escala y refuerza la impresión de un espacio público y majestuoso.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:147938"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:145450::description::0"
+            ],
+            "texto": "La obra representa un interior de iglesia amplio y espacioso, aunque en gran parte imaginario, con una arquitectura precisa que sugiere un lugar real.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El espacio es amplio pero la atmósfera es más íntima y menos monumental que en otras obras, con un enfoque en la luz y la perspectiva.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:145450"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:111691::description::0"
+            ],
+            "texto": "La pintura muestra el interior de una sinagoga con un espacio arquitectónico amplio y una multitud de figuras pequeñas y alargadas que llenan el espacio.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Aunque el espacio es amplio, la paleta oscura y la composición con figuras pequeñas crean una atmósfera más misteriosa y menos imponente en términos arquitectónicos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:111691"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:57049::description::0"
+            ],
+            "texto": "La obra presenta un espacio arquitectónico grandioso y fantasioso con una bóveda imponente que enmarca un obelisco, reflejando la influencia de la arquitectura clásica.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición enfatiza la monumentalidad del espacio con columnas y una estructura que cierra la perspectiva, generando una sensación de grandeza y solemnidad.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:57049"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:145450",
+          "rank": 1,
+          "score": 0.5784147381782532
+        },
+        {
+          "artwork_id": "aic:43211",
+          "rank": 2,
+          "score": 0.5589077472686768
+        },
+        {
+          "artwork_id": "cma:146167",
+          "rank": 3,
+          "score": 0.47920310497283936
+        },
+        {
+          "artwork_id": "cma:147938",
+          "rank": 4,
+          "score": 0.4743243455886841
+        },
+        {
+          "artwork_id": "cma:124796",
+          "rank": 5,
+          "score": 0.468503475189209
+        },
+        {
+          "artwork_id": "cma:111691",
+          "rank": 6,
+          "score": 0.4595643877983093
+        },
+        {
+          "artwork_id": "aic:22527",
+          "rank": 7,
+          "score": 0.4549267888069153
+        },
+        {
+          "artwork_id": "cma:170429",
+          "rank": 8,
+          "score": 0.44938361644744873
+        },
+        {
+          "artwork_id": "cma:130377",
+          "rank": 9,
+          "score": 0.4473378658294678
+        },
+        {
+          "artwork_id": "aic:8034",
+          "rank": 10,
+          "score": 0.4424592852592468
+        },
+        {
+          "artwork_id": "cma:159488",
+          "rank": 11,
+          "score": 0.4414597749710083
+        },
+        {
+          "artwork_id": "cma:132367",
+          "rank": 12,
+          "score": 0.438914954662323
+        },
+        {
+          "artwork_id": "aic:16275",
+          "rank": 13,
+          "score": 0.4369547367095947
+        },
+        {
+          "artwork_id": "aic:57049",
+          "rank": 14,
+          "score": 0.43540239334106445
+        },
+        {
+          "artwork_id": "cma:97181",
+          "rank": 15,
+          "score": 0.4342474937438965
+        },
+        {
+          "artwork_id": "aic:21937",
+          "rank": 16,
+          "score": 0.43187057971954346
+        },
+        {
+          "artwork_id": "cma:302194",
+          "rank": 17,
+          "score": 0.4294123649597168
+        },
+        {
+          "artwork_id": "cma:149396",
+          "rank": 18,
+          "score": 0.4276775121688843
+        },
+        {
+          "artwork_id": "cma:144588",
+          "rank": 19,
+          "score": 0.4276360273361206
+        },
+        {
+          "artwork_id": "aic:59971",
+          "rank": 20,
+          "score": 0.42587679624557495
+        },
+        {
+          "artwork_id": "cma:136922",
+          "rank": 21,
+          "score": 0.4257693886756897
+        },
+        {
+          "artwork_id": "aic:76571",
+          "rank": 22,
+          "score": 0.42292118072509766
+        },
+        {
+          "artwork_id": "cma:143776",
+          "rank": 23,
+          "score": 0.42071813344955444
+        },
+        {
+          "artwork_id": "cma:173180",
+          "rank": 24,
+          "score": 0.41946887969970703
+        },
+        {
+          "artwork_id": "cma:153773",
+          "rank": 25,
+          "score": 0.41849398612976074
+        },
+        {
+          "artwork_id": "cma:147696",
+          "rank": 26,
+          "score": 0.41714930534362793
+        },
+        {
+          "artwork_id": "cma:173641",
+          "rank": 27,
+          "score": 0.41621971130371094
+        },
+        {
+          "artwork_id": "cma:81391",
+          "rank": 28,
+          "score": 0.4158586263656616
+        },
+        {
+          "artwork_id": "cma:148862",
+          "rank": 29,
+          "score": 0.4156918525695801
+        },
+        {
+          "artwork_id": "cma:148861",
+          "rank": 30,
+          "score": 0.4156563878059387
+        },
+        {
+          "artwork_id": "aic:57051",
+          "rank": 31,
+          "score": 0.4149235486984253
+        },
+        {
+          "artwork_id": "aic:9672",
+          "rank": 32,
+          "score": 0.4145943522453308
+        },
+        {
+          "artwork_id": "cma:126772",
+          "rank": 33,
+          "score": 0.41400837898254395
+        },
+        {
+          "artwork_id": "aic:61665",
+          "rank": 34,
+          "score": 0.4132709503173828
+        },
+        {
+          "artwork_id": "aic:111670",
+          "rank": 35,
+          "score": 0.41183727979660034
+        },
+        {
+          "artwork_id": "cma:130982",
+          "rank": 36,
+          "score": 0.4116281270980835
+        },
+        {
+          "artwork_id": "cma:122334",
+          "rank": 37,
+          "score": 0.4112684726715088
+        },
+        {
+          "artwork_id": "cma:139532",
+          "rank": 38,
+          "score": 0.41101551055908203
+        },
+        {
+          "artwork_id": "aic:23972",
+          "rank": 39,
+          "score": 0.4097402095794678
+        },
+        {
+          "artwork_id": "cma:130981",
+          "rank": 40,
+          "score": 0.40953540802001953
+        },
+        {
+          "artwork_id": "aic:217534",
+          "rank": 41,
+          "score": 0.4078837037086487
+        },
+        {
+          "artwork_id": "aic:100345",
+          "rank": 42,
+          "score": 0.40717971324920654
+        },
+        {
+          "artwork_id": "aic:16307",
+          "rank": 43,
+          "score": 0.40656936168670654
+        },
+        {
+          "artwork_id": "aic:16309",
+          "rank": 44,
+          "score": 0.40656936168670654
+        },
+        {
+          "artwork_id": "aic:111671",
+          "rank": 45,
+          "score": 0.4055044651031494
+        },
+        {
+          "artwork_id": "aic:11390",
+          "rank": 46,
+          "score": 0.4032858610153198
+        },
+        {
+          "artwork_id": "aic:185651",
+          "rank": 47,
+          "score": 0.40160906314849854
+        },
+        {
+          "artwork_id": "cma:150353",
+          "rank": 48,
+          "score": 0.4014784097671509
+        },
+        {
+          "artwork_id": "aic:12891",
+          "rank": 49,
+          "score": 0.401344895362854
+        },
+        {
+          "artwork_id": "cma:84662",
+          "rank": 50,
+          "score": 0.40085476636886597
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:147938",
+          "rank": 1,
+          "score": 0.6976228356361389
+        },
+        {
+          "artwork_id": "aic:43211",
+          "rank": 2,
+          "score": 0.6837207674980164
+        },
+        {
+          "artwork_id": "cma:148861",
+          "rank": 3,
+          "score": 0.6769796013832092
+        },
+        {
+          "artwork_id": "cma:126772",
+          "rank": 4,
+          "score": 0.6719266772270203
+        },
+        {
+          "artwork_id": "cma:126770",
+          "rank": 5,
+          "score": 0.6660747528076172
+        },
+        {
+          "artwork_id": "aic:57049",
+          "rank": 6,
+          "score": 0.6653774380683899
+        },
+        {
+          "artwork_id": "cma:145450",
+          "rank": 7,
+          "score": 0.656563401222229
+        },
+        {
+          "artwork_id": "cma:148862",
+          "rank": 8,
+          "score": 0.652561366558075
+        },
+        {
+          "artwork_id": "cma:111691",
+          "rank": 9,
+          "score": 0.651239812374115
+        },
+        {
+          "artwork_id": "aic:57048",
+          "rank": 10,
+          "score": 0.6464367508888245
+        },
+        {
+          "artwork_id": "aic:57051",
+          "rank": 11,
+          "score": 0.6342315077781677
+        },
+        {
+          "artwork_id": "cma:126771",
+          "rank": 12,
+          "score": 0.6308903694152832
+        },
+        {
+          "artwork_id": "aic:57050",
+          "rank": 13,
+          "score": 0.6290929913520813
+        },
+        {
+          "artwork_id": "aic:88619",
+          "rank": 14,
+          "score": 0.6079819798469543
+        },
+        {
+          "artwork_id": "cma:151377",
+          "rank": 15,
+          "score": 0.6078660488128662
+        },
+        {
+          "artwork_id": "aic:111610",
+          "rank": 16,
+          "score": 0.6078458428382874
+        },
+        {
+          "artwork_id": "cma:132647",
+          "rank": 17,
+          "score": 0.595454752445221
+        },
+        {
+          "artwork_id": "cma:128391",
+          "rank": 18,
+          "score": 0.593094527721405
+        },
+        {
+          "artwork_id": "aic:144969",
+          "rank": 19,
+          "score": 0.591641902923584
+        },
+        {
+          "artwork_id": "cma:137224",
+          "rank": 20,
+          "score": 0.5900298357009888
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "imposing neoclassical church interior emphasizing monumental architecture, religious setting, 19th-century European ecclesiastical art",
+      "consulta_id": "c03-ambiguo",
+      "consulta_visual": "grand imposing church interior with large columns and vaulted ceiling, detailed architectural elements, warm lighting",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:6eee991cdce5d8a580067f4c35d5c8e8f8381863d9717f73e0d41a7650c0eefa",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "más imponente",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "fc402ac19b5fb506",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2345,
+        "tokens_out": 54
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "aic:43211",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 2,
+          "visual": 2
+        },
+        "score_fusionado": 0.03225806
+      },
+      {
+        "artwork_id": "cma:147938",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 4,
+          "visual": 1
+        },
+        "score_fusionado": 0.03201844
+      },
+      {
+        "artwork_id": "cma:145450",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 1,
+          "visual": 7
+        },
+        "score_fusionado": 0.03131882
+      },
+      {
+        "artwork_id": "cma:111691",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 6,
+          "visual": 9
+        },
+        "score_fusionado": 0.02964427
+      },
+      {
+        "artwork_id": "aic:57049",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 14,
+          "visual": 6
+        },
+        "score_fusionado": 0.02866503
+      },
+      {
+        "artwork_id": "cma:148861",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 30,
+          "visual": 3
+        },
+        "score_fusionado": 0.02698413
+      },
+      {
+        "artwork_id": "cma:126772",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 33,
+          "visual": 4
+        },
+        "score_fusionado": 0.02637769
+      },
+      {
+        "artwork_id": "cma:148862",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 29,
+          "visual": 8
+        },
+        "score_fusionado": 0.02594184
+      },
+      {
+        "artwork_id": "aic:57051",
+        "estrategia": "rrf",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 31,
+          "visual": 11
+        },
+        "score_fusionado": 0.02507352
+      },
+      {
+        "artwork_id": "cma:146167",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:124796",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:126770",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "aic:22527",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:170429",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "cma:130377",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "aic:57048",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "aic:8034",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:159488",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "cma:126771",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "cma:132367",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "aic:16275",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "aic:57050",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "aic:88619",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "cma:151377",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "cma:97181",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "aic:111610",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "aic:21937",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:132647",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:302194",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "cma:128391",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:149396",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "aic:144969",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "cma:144588",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "aic:59971",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:137224",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 20
+        },
+        "score_fusionado": 0.0125
+      },
+      {
+        "artwork_id": "cma:136922",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.01234568
+      },
+      {
+        "artwork_id": "aic:76571",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.01219512
+      },
+      {
+        "artwork_id": "cma:143776",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.01204819
+      },
+      {
+        "artwork_id": "cma:173180",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.01190476
+      },
+      {
+        "artwork_id": "cma:153773",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.01176471
+      },
+      {
+        "artwork_id": "cma:147696",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.01162791
+      },
+      {
+        "artwork_id": "cma:173641",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.01149425
+      },
+      {
+        "artwork_id": "cma:81391",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.01136364
+      },
+      {
+        "artwork_id": "aic:9672",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.01086957
+      },
+      {
+        "artwork_id": "aic:61665",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.0106383
+      },
+      {
+        "artwork_id": "aic:111670",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.01052632
+      },
+      {
+        "artwork_id": "cma:130982",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.01041667
+      },
+      {
+        "artwork_id": "cma:122334",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.01030928
+      },
+      {
+        "artwork_id": "cma:139532",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.01020408
+      },
+      {
+        "artwork_id": "aic:23972",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.01010101
+      },
+      {
+        "artwork_id": "cma:130981",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.01
+      },
+      {
+        "artwork_id": "aic:217534",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.00990099
+      },
+      {
+        "artwork_id": "aic:100345",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.00980392
+      },
+      {
+        "artwork_id": "aic:16307",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.00970874
+      },
+      {
+        "artwork_id": "aic:16309",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.00961538
+      },
+      {
+        "artwork_id": "aic:111671",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.00952381
+      },
+      {
+        "artwork_id": "aic:11390",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.00943396
+      },
+      {
+        "artwork_id": "aic:185651",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.00934579
+      },
+      {
+        "artwork_id": "cma:150353",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.00925926
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.00917431
+      },
+      {
+        "artwork_id": "cma:84662",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.00909091
+      }
+    ],
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c03-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "aic:43211",
+          "ficha": {
+            "artist": "Emanuel de Witte",
+            "culture": "Holland",
+            "date_display": "c. 1680",
+            "medium": "Oil on panel",
+            "style": "17th Century",
+            "title": "Interior of the Oude Kerk, Delft",
+            "year": 1675
+          },
+          "lineas": [
+            "La obra representa el interior de una gran iglesia gótica de la República Holandesa, un espacio arquitectónico imponente por su volumen y la luz que explora el artista. [1]",
+            "La composición muestra un espacio amplio y solemne, con elementos suspendidos en el techo y columnas que refuerzan la sensación de altura y grandiosidad."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Emanuel de Witte",
+              "atribucion": "“Interior of the Oude Kerk, Delft”, Emanuel de Witte. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/43211",
+              "fragment_id": "aic:43211::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/43211",
+              "texto_citado": "Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic’s large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist’s career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration.",
+              "title": "Interior of the Oude Kerk, Delft"
+            }
+          ],
+          "score": 0.03225806451612903,
+          "source_url": "https://www.artic.edu/artworks/43211"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:147938",
+          "ficha": {
+            "artist": "Giovanni Paolo Panini",
+            "culture": "Italy",
+            "date_display": "1747",
+            "medium": "oil on canvas",
+            "title": "Interior of the Pantheon, Rome",
+            "year": 1747
+          },
+          "lineas": [
+            "La pintura muestra el interior del Panteón de Roma, un monumento antiguo y monumental con una gran cúpula que domina el espacio. [1]",
+            "La representación incluye una multitud de personas bajo la gran cúpula, lo que añade escala y refuerza la impresión de un espacio público y majestuoso."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Giovanni Paolo Panini",
+              "atribucion": null,
+              "fragment_id": "cma:147938::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1974.39",
+              "texto_citado": "Created as a temple under the Roman emperor Hadrian around the year AD 125, the Pantheon became a Christian church in 609. Significant restoration took place in the early 1700s, a period of renewed attention to early Christian monuments. The site was a major monument of antiquity, an active church, and its portico, visible through the door, held the most important art fair in the city. Panini shows the complexity of this public space by representing foreign tourists, local churchgoers, Roman nobles, and artists mingling under the dome.",
+              "title": "Interior of the Pantheon, Rome"
+            }
+          ],
+          "score": 0.032018442622950824,
+          "source_url": "https://clevelandart.org/art/1974.39"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:145450",
+          "ficha": {
+            "artist": "Emanuel de Witte",
+            "culture": "Netherlands",
+            "date_display": "c. 1680",
+            "medium": "oil on canvas",
+            "title": "Interior of a Church",
+            "year": 1675
+          },
+          "lineas": [
+            "La obra representa un interior de iglesia amplio y espacioso, aunque en gran parte imaginario, con una arquitectura precisa que sugiere un lugar real. [1]",
+            "El espacio es amplio pero la atmósfera es más íntima y menos monumental que en otras obras, con un enfoque en la luz y la perspectiva."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Emanuel de Witte",
+              "atribucion": null,
+              "fragment_id": "cma:145450::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1971.1",
+              "texto_citado": "Although this spacious church interior is largely imaginary, Emanuel de Witte’s precise description of architectural forms convinces us that he depicted an actual place. To create a sense of familiarity, he included some specific architectural features from the Oude Kerk (Old Church) in Amsterdam. In the late 1500s, militant Protestant sects occupied Catholic churches in the Netherlands and stripped them of rich decorations and “idolatrous” images. The resulting spare, whitewashed interiors became a favorite subject of Dutch artists, who were intrigued by the interplay of light and shadow over the unadorned walls, and by the challenge of depicting perspectival space.",
+              "title": "Interior of a Church"
+            }
+          ],
+          "score": 0.03131881575727918,
+          "source_url": "https://clevelandart.org/art/1971.1"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:111691",
+          "ficha": {
+            "artist": "Alessandro Magnasco",
+            "culture": "Italy",
+            "date_display": "c. 1725–35",
+            "medium": "oil on canvas",
+            "title": "Interior of a Synagogue",
+            "year": 1725
+          },
+          "lineas": [
+            "La pintura muestra el interior de una sinagoga con un espacio arquitectónico amplio y una multitud de figuras pequeñas y alargadas que llenan el espacio. [1]",
+            "Aunque el espacio es amplio, la paleta oscura y la composición con figuras pequeñas crean una atmósfera más misteriosa y menos imponente en términos arquitectónicos."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Alessandro Magnasco",
+              "atribucion": null,
+              "fragment_id": "cma:111691::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1930.22",
+              "texto_citado": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.",
+              "title": "Interior of a Synagogue"
+            }
+          ],
+          "score": 0.02964426877470356,
+          "source_url": "https://clevelandart.org/art/1930.22"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:57049",
+          "ficha": {
+            "artist": "Hubert Robert",
+            "culture": "France",
+            "date_display": "1787",
+            "medium": "Oil on canvas",
+            "style": "Neoclassicism",
+            "title": "The Obelisk",
+            "year": 1787
+          },
+          "lineas": [
+            "La obra presenta un espacio arquitectónico grandioso y fantasioso con una bóveda imponente que enmarca un obelisco, reflejando la influencia de la arquitectura clásica. [1]",
+            "La composición enfatiza la monumentalidad del espacio con columnas y una estructura que cierra la perspectiva, generando una sensación de grandeza y solemnidad."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Hubert Robert",
+              "atribucion": "“The Obelisk”, Hubert Robert. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/57049",
+              "fragment_id": "aic:57049::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/57049",
+              "texto_citado": "This painting is one of four depictions of architectural fantasies by Hubert Robert commissioned by the Marquis de Laborde for his elegant country estate at Méréville, south of Paris. It features a grandiose vaulted space that frames an obelisk, with a peristyle, or colonnade, closing off the distance. Through years of study in Italy, Robert absorbed the vocabulary of Classical architecture and sculpture into his own imaginative language. Here, the female ﬁgure in the central niche is based on a ﬁrst-century sculpture that the artist would have seen during his stay in Rome.",
+              "title": "The Obelisk"
+            }
+          ],
+          "score": 0.028665028665028666,
+          "source_url": "https://www.artic.edu/artworks/57049"
+        }
+      ],
+      "render": "1. **Interior of the Oude Kerk, Delft**\n   Emanuel de Witte · c. 1680 · Oil on panel · 17th Century\n   Ficha oficial: https://www.artic.edu/artworks/43211\n\n   La obra representa el interior de una gran iglesia gótica de la República Holandesa, un espacio arquitectónico imponente por su volumen y la luz que explora el artista. [1]\n   La composición muestra un espacio amplio y solemne, con elementos suspendidos en el techo y columnas que refuerzan la sensación de altura y grandiosidad.\n\n   **Fuentes**\n   [1] “Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic’s large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist’s career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration.”\n       https://www.artic.edu/artworks/43211 · CC BY 4.0\n       “Interior of the Oude Kerk, Delft”, Emanuel de Witte. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/43211\n\n2. **Interior of the Pantheon, Rome**\n   Giovanni Paolo Panini · 1747 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1974.39\n\n   La pintura muestra el interior del Panteón de Roma, un monumento antiguo y monumental con una gran cúpula que domina el espacio. [1]\n   La representación incluye una multitud de personas bajo la gran cúpula, lo que añade escala y refuerza la impresión de un espacio público y majestuoso.\n\n   **Fuentes**\n   [1] “Created as a temple under the Roman emperor Hadrian around the year AD 125, the Pantheon became a Christian church in 609. Significant restoration took place in the early 1700s, a period of renewed attention to early Christian monuments. The site was a major monument of antiquity, an active church, and its portico, visible through the door, held the most important art fair in the city. Panini shows the complexity of this public space by representing foreign tourists, local churchgoers, Roman nobles, and artists mingling under the dome.”\n       https://clevelandart.org/art/1974.39 · CC0 1.0\n\n3. **Interior of a Church**\n   Emanuel de Witte · c. 1680 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1971.1\n\n   La obra representa un interior de iglesia amplio y espacioso, aunque en gran parte imaginario, con una arquitectura precisa que sugiere un lugar real. [1]\n   El espacio es amplio pero la atmósfera es más íntima y menos monumental que en otras obras, con un enfoque en la luz y la perspectiva.\n\n   **Fuentes**\n   [1] “Although this spacious church interior is largely imaginary, Emanuel de Witte’s precise description of architectural forms convinces us that he depicted an actual place. To create a sense of familiarity, he included some specific architectural features from the Oude Kerk (Old Church) in Amsterdam. In the late 1500s, militant Protestant sects occupied Catholic churches in the Netherlands and stripped them of rich decorations and “idolatrous” images. The resulting spare, whitewashed interiors became a favorite subject of Dutch artists, who were intrigued by the interplay of light and shadow over the unadorned walls, and by the challenge of depicting perspectival space.”\n       https://clevelandart.org/art/1971.1 · CC0 1.0\n\n4. **Interior of a Synagogue**\n   Alessandro Magnasco · c. 1725–35 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1930.22\n\n   La pintura muestra el interior de una sinagoga con un espacio arquitectónico amplio y una multitud de figuras pequeñas y alargadas que llenan el espacio. [1]\n   Aunque el espacio es amplio, la paleta oscura y la composición con figuras pequeñas crean una atmósfera más misteriosa y menos imponente en términos arquitectónicos.\n\n   **Fuentes**\n   [1] “The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.”\n       https://clevelandart.org/art/1930.22 · CC0 1.0\n\n5. **The Obelisk**\n   Hubert Robert · 1787 · Oil on canvas · Neoclassicism\n   Ficha oficial: https://www.artic.edu/artworks/57049\n\n   La obra presenta un espacio arquitectónico grandioso y fantasioso con una bóveda imponente que enmarca un obelisco, reflejando la influencia de la arquitectura clásica. [1]\n   La composición enfatiza la monumentalidad del espacio con columnas y una estructura que cierra la perspectiva, generando una sensación de grandeza y solemnidad.\n\n   **Fuentes**\n   [1] “This painting is one of four depictions of architectural fantasies by Hubert Robert commissioned by the Marquis de Laborde for his elegant country estate at Méréville, south of Paris. It features a grandiose vaulted space that frames an obelisk, with a peristyle, or colonnade, closing off the distance. Through years of study in Italy, Robert absorbed the vocabulary of Classical architecture and sculpture into his own imaginative language. Here, the female ﬁgure in the central niche is based on a ﬁrst-century sculpture that the artist would have seen during his stay in Rome.”\n       https://www.artic.edu/artworks/57049 · CC BY 4.0\n       “The Obelisk”, Hubert Robert. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/57049\n"
+    },
+    "sellos": {
+      "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+      "config_id": "d01e6a46e391459f",
+      "corrida_id": "f0252c8c7a75c5b7-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "aic:43211",
+      "cma:147938",
+      "cma:145450",
+      "cma:111691",
+      "aic:57049"
+    ]
+  },
+  "fecha": "2026-10-25T23:22:01+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [
+      "reranker"
+    ],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "fusionador",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0002,
+      "generador": 5.8424,
+      "planificador": 0.0004,
+      "recolector_de_evidencia": 0.4905,
+      "recuperador_textual": 0.4462,
+      "recuperador_visual": 0.1465,
+      "renderizador": 0.0005,
+      "reranker": 0.0
+    },
+    "segundos_de_la_corrida": 6.9291
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_imagen": 2
+      },
+      "segundos": 0.14,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.882,
+      "tokens_in": 50,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.842,
+      "tokens_in": 3973,
+      "tokens_out": 730
+    },
+    "indice": {
+      "n_items": 132,
+      "n_llamadas": 8,
+      "resultados": {
+        "ok": 8
+      },
+      "roles": {
+        "indice": 8
+      },
+      "segundos": 0.058,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.842,
+      "tokens_in": 3973,
+      "tokens_out": 730
+    },
+    "recolector_de_evidencia": {
+      "n_items": 13,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.489,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 101,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.445,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.146,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "no_determinan_el_config_id": {
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de tokens, costo y la figura pide el costo *por etapa* y la atribución de cada llamada a su rol atribuye *por rol, no al nombre de la etapa. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra que la tabla de tokens, costo y la figura publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 50,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "degrada": true,
+        "estrategia": "rrf",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion"
+        ],
+        "etapa": "fusionador",
+        "k": 60,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": null,
+        "muestreo_efectivo": null,
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {
+      "reranker": "excepcion"
+    },
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "309cfb742120cef2273977dc6aa71ff94c85c986",
+    "config_id": "d01e6a46e391459f",
+    "corrida_id": "f0252c8c7a75c5b7-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

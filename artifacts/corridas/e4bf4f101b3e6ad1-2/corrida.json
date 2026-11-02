@@ -1,0 +1,1604 @@
+{
+  "agrega_a_la_tabla": false,
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C3"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 18,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 8,
+      "embedding": 3,
+      "llm": 1,
+      "retriever": 6
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c3.toml",
+    "--set consulta.plan_de_falla.recuperador_textual"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "f1a65d9cc05a7ad2",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": false,
+      "configuracion": "C3",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {
+        "recuperador_textual": "excepcion"
+      },
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "rrf",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/text-embedding-3-small": 0.02
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 50
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c05-visual",
+  "corrida_id": "e4bf4f101b3e6ad1-2",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [
+      {
+        "causa": "falla **inyectada** por `consulta.plan_de_falla` (modo 'excepcion')",
+        "etapa": "recuperador_textual",
+        "planificada": true,
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      }
+    ],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:105600",
+      "categoria": "visual_cromatico",
+      "consulta_id": "c05-visual",
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:61151": [
+        {
+          "artist": "Jacob Eichholtz",
+          "artwork_id": "aic:61151",
+          "chunk_index": 0,
+          "fragment_id": "aic:61151::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/61151",
+          "texto": "Working as a coppersmith in his hometown of Lancaster, Pennsylvania, Jacob Eichholtz aspired to be a portraitist, eventually giving up his metalwork business to focus on painting by 1811. Despite having essentially no formal training in the medium, Eichholtz progressed quickly, becoming one of the leading portrait painters in Philadelphia and nearby areas. These portraits of the family of Benjamin Schaum (1980.742, 1980.744, and 1980.745), a fellow resident and coppersmith in Lancaster, are examples of the artist’s early style. Eichholtz first mastered small, profile portraits like these, typically executed on wooden panels. Later he developed a more sophisticated handling of the figure, rendering larger-scale compositions on canvas of his sitters in three-quarter views.",
+          "title": "Mrs. Benjamin Schaum (Anna Maria Heckensweiler)"
+        },
+        {
+          "artist": "Jacob Eichholtz",
+          "artwork_id": "aic:61151",
+          "chunk_index": 0,
+          "fragment_id": "aic:61151::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/61151",
+          "texto": "Commissioned from the artist by Mr. Benjamin Schaum (about 1765–1814), Lancaster, PA, 1808/10; by descent to his daughter Mrs. Frederick Augustus Hall Muhlenberg (born Elizabeth Schaum?), 1814; by descent to her son Henry Ernestus Muhlenberg; by descent to his daugher Mary E. Muhlenberg; by descent to her niece Mrs. John R. Starkey (born Anne Muhlenberg Kress); by descent to her child McDowell Kress Starkey, by 1954; sold to Edgar William Garbish (1899–1979) and Bernice Chrysler Garbisch (1906–1979), New York, NY and Pokety Farms, MD; by descent to their estate, 1979; given to the Art Institute of Chicago, 1980.",
+          "title": "Mrs. Benjamin Schaum (Anna Maria Heckensweiler)"
+        }
+      ],
+      "cma:109248": [
+        {
+          "artist": "Gilbert Stuart",
+          "artwork_id": "cma:109248",
+          "chunk_index": 0,
+          "fragment_id": "cma:109248::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1927.394.2",
+          "texto": "Born in Rhode Island, Gilbert Stuart studied painting in London under fellow American expatriate Benjamin West (also in this gallery). He achieved great success as a fashionable portrait painter of high society, most famously George and Martha Washington. Here, he portrayed Mary Stuart (born Campbell), the great-granddaughter of Colonel Peter Bard, a New Jersey Supreme Court judge. She married Dr. James Stuart, whose portrait was also painted by Stuart (unrelated to the sitters). Both are shown seated in an Empire chair upholstered in brown brocade. Stuart painted the portrait pair on panel because the British naval blockade during the War of 1812 hindered the import of canvas, the artist’s preference.",
+          "title": "Mary Campbell Stuart"
+        },
+        {
+          "artist": "Gilbert Stuart",
+          "artwork_id": "cma:109248",
+          "chunk_index": 0,
+          "fragment_id": "cma:109248::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1927.394.2",
+          "texto": "family of the sitter, to Mrs. Mary Stuart Hamilton, Washington (1911); (Knoedler, 1911); Charles Harkness, New York.",
+          "title": "Mary Campbell Stuart"
+        }
+      ],
+      "cma:124080": [
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "The portrait shows Mary in her twenties, with her hair powdered fashionably grey.",
+          "title": "Portrait of Mary Wise"
+        },
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.",
+          "title": "Portrait of Mary Wise"
+        },
+        {
+          "artist": "Thomas Gainsborough",
+          "artwork_id": "cma:124080",
+          "chunk_index": 0,
+          "fragment_id": "cma:124080::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1944.82",
+          "texto": "Mrs. Henry Christopher Wise (née Mary Wathen) [born 1751] by descent to her great-granddaughter, Catherine Waller\nCatherine [1804-1861] and Sir Thomas Wathen Waller, 2nd Bt [1805-1892], by descent to their grandson, Sir Francis Grant Waller\nSir Francis Grant Waller, 4th Bt, sold to Agnew\n(Agnew, London, sold to Duveen)\n(Duveen, through Romer Williams)\n(F. Kleinberger Galleries, New York, NY)\n(Duveen)\nElizabeth Severance Prentiss Allen [1865-1944], Cleveland, OH, bequeathed by her to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of Mary Wise"
+        }
+      ],
+      "cma:173240": [
+        {
+          "artist": "John Smibert",
+          "artwork_id": "cma:173240",
+          "chunk_index": 0,
+          "fragment_id": "cma:173240::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1920.3919",
+          "texto": "The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.",
+          "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+        },
+        {
+          "artist": "John Smibert",
+          "artwork_id": "cma:173240",
+          "chunk_index": 0,
+          "fragment_id": "cma:173240::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1920.3919",
+          "texto": "family of the sitter\nEmily Hallowell, Mass.\nfamily of the sitter, to Emily Hallowell, Mass.",
+          "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+        }
+      ],
+      "cma:95286": [
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "The sitter wears several transparent and translucent white collars that become opaque when layered.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Jan Anthonisz. van Ravesteyn",
+          "artwork_id": "cma:95286",
+          "chunk_index": 0,
+          "fragment_id": "cma:95286::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1916.1055",
+          "texto": "Dowdswell, London, United Kingdom\n(Durand-Ruel, Paris, France and New York, NY)\nMr. and Mrs. J. H. Wade, Cleveland, 1902, by gift to the Cleveland Museum of Art, 1916.\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of a Woman"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay información en los fragmentos que indique que esta obra tenga una paleta luminosa o que sea una versión más luminosa del retrato.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:124080::description::0"
+            ],
+            "texto": "El retrato muestra a Mary Wise con un conjunto elaborado que incluye bordados dorados, encajes y perlas, lo que da un aspecto elegante pero no particularmente luminoso.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La paleta de la obra es más bien sobria y oscura, con predominancia de tonos dorados y marrones, sin colores brillantes o luminosos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:124080"
+      },
+      {
+        "abstencion": "No se menciona explícitamente que esta obra sea una versión del retrato original con una paleta más luminosa.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:61151::description::0"
+            ],
+            "texto": "Este retrato es un ejemplo temprano del estilo del artista, ejecutado en panel de madera con una técnica que evolucionó hacia composiciones más sofisticadas.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra presenta colores más claros y un fondo menos oscuro que el retrato original, lo que puede interpretarse como una paleta más luminosa.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:61151"
+      },
+      {
+        "abstencion": "No hay evidencia en los fragmentos que indique que esta obra sea una versión con una paleta más luminosa del retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:109248::description::0"
+            ],
+            "texto": "El retrato fue pintado en panel de madera debido a la escasez de lienzos durante la Guerra de 1812, lo que puede influir en la textura y luminosidad de la obra.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra utiliza tonos cálidos y un fondo marrón que no sugiere una paleta particularmente luminosa en comparación con el retrato original.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:109248"
+      },
+      {
+        "abstencion": "No hay indicios de que esta obra sea una versión con una paleta más luminosa del retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:95286::description::0",
+              "cma:95286::did_you_know::0"
+            ],
+            "texto": "La obra presenta un fondo oscuro y detalles en blanco translúcido que se vuelven opacos al superponerse, lo que no sugiere una paleta luminosa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato tiene un tono general sobrio y oscuro, sin colores brillantes o luminosos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:95286"
+      },
+      {
+        "abstencion": "No se menciona ni se observa que esta obra sea una versión con una paleta más luminosa del retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:173240::description::0"
+            ],
+            "texto": "El retrato sigue convenciones británicas para la representación femenina, con detalles en el vestido y peinado que no indican una paleta particularmente luminosa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra utiliza colores oscuros y un fondo neutro, sin predominancia de tonos claros o luminosos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:173240"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "visual": [
+        {
+          "artwork_id": "cma:124080",
+          "rank": 1,
+          "score": 0.7098429203033447
+        },
+        {
+          "artwork_id": "aic:61151",
+          "rank": 2,
+          "score": 0.7081866264343262
+        },
+        {
+          "artwork_id": "cma:109248",
+          "rank": 3,
+          "score": 0.7062512636184692
+        },
+        {
+          "artwork_id": "cma:95286",
+          "rank": 4,
+          "score": 0.7061668038368225
+        },
+        {
+          "artwork_id": "cma:173240",
+          "rank": 5,
+          "score": 0.6944822072982788
+        },
+        {
+          "artwork_id": "cma:149769",
+          "rank": 6,
+          "score": 0.6926599144935608
+        },
+        {
+          "artwork_id": "aic:120102",
+          "rank": 7,
+          "score": 0.6926493048667908
+        },
+        {
+          "artwork_id": "cma:99428",
+          "rank": 8,
+          "score": 0.6908189058303833
+        },
+        {
+          "artwork_id": "cma:95269",
+          "rank": 9,
+          "score": 0.6883189082145691
+        },
+        {
+          "artwork_id": "aic:105945",
+          "rank": 10,
+          "score": 0.6856920123100281
+        },
+        {
+          "artwork_id": "cma:103366",
+          "rank": 11,
+          "score": 0.6856850385665894
+        },
+        {
+          "artwork_id": "cma:125247",
+          "rank": 12,
+          "score": 0.6851657629013062
+        },
+        {
+          "artwork_id": "aic:76166",
+          "rank": 13,
+          "score": 0.6849632859230042
+        },
+        {
+          "artwork_id": "aic:40599",
+          "rank": 14,
+          "score": 0.6833491921424866
+        },
+        {
+          "artwork_id": "aic:11003",
+          "rank": 15,
+          "score": 0.6826556921005249
+        },
+        {
+          "artwork_id": "aic:105887",
+          "rank": 16,
+          "score": 0.68228679895401
+        },
+        {
+          "artwork_id": "cma:147447",
+          "rank": 17,
+          "score": 0.6784691214561462
+        },
+        {
+          "artwork_id": "aic:59787",
+          "rank": 18,
+          "score": 0.6782814264297485
+        },
+        {
+          "artwork_id": "cma:128365",
+          "rank": 19,
+          "score": 0.6778672933578491
+        },
+        {
+          "artwork_id": "aic:40388",
+          "rank": 20,
+          "score": 0.6778425574302673
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "18th-century European portrait of an elderly woman wearing a lace bonnet and formal attire, emphasizing delicate fabric textures and refined facial features",
+      "consulta_id": "c05-visual",
+      "consulta_visual": "portrait of an elderly woman with lace bonnet and bow, bright and luminous color palette, detailed facial expression, soft lighting",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "el mismo retrato con una paleta más luminosa",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "25492a4426afd42d",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2661,
+        "tokens_out": 62
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:124080",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 1
+        },
+        "score_fusionado": 0.01639344
+      },
+      {
+        "artwork_id": "aic:61151",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 2
+        },
+        "score_fusionado": 0.01612903
+      },
+      {
+        "artwork_id": "cma:109248",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 3
+        },
+        "score_fusionado": 0.01587302
+      },
+      {
+        "artwork_id": "cma:95286",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 4
+        },
+        "score_fusionado": 0.015625
+      },
+      {
+        "artwork_id": "cma:173240",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 5
+        },
+        "score_fusionado": 0.01538462
+      },
+      {
+        "artwork_id": "cma:149769",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 6
+        },
+        "score_fusionado": 0.01515152
+      },
+      {
+        "artwork_id": "aic:120102",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 7
+        },
+        "score_fusionado": 0.01492537
+      },
+      {
+        "artwork_id": "cma:99428",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 8
+        },
+        "score_fusionado": 0.01470588
+      },
+      {
+        "artwork_id": "cma:95269",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 9
+        },
+        "score_fusionado": 0.01449275
+      },
+      {
+        "artwork_id": "aic:105945",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 10
+        },
+        "score_fusionado": 0.01428571
+      },
+      {
+        "artwork_id": "cma:103366",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 11
+        },
+        "score_fusionado": 0.01408451
+      },
+      {
+        "artwork_id": "cma:125247",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 12
+        },
+        "score_fusionado": 0.01388889
+      },
+      {
+        "artwork_id": "aic:76166",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 13
+        },
+        "score_fusionado": 0.01369863
+      },
+      {
+        "artwork_id": "aic:40599",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 14
+        },
+        "score_fusionado": 0.01351351
+      },
+      {
+        "artwork_id": "aic:11003",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 15
+        },
+        "score_fusionado": 0.01333333
+      },
+      {
+        "artwork_id": "aic:105887",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 16
+        },
+        "score_fusionado": 0.01315789
+      },
+      {
+        "artwork_id": "cma:147447",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 17
+        },
+        "score_fusionado": 0.01298701
+      },
+      {
+        "artwork_id": "aic:59787",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 18
+        },
+        "score_fusionado": 0.01282051
+      },
+      {
+        "artwork_id": "cma:128365",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 19
+        },
+        "score_fusionado": 0.01265823
+      },
+      {
+        "artwork_id": "aic:40388",
+        "estrategia": "rrf",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "visual": 20
+        },
+        "score_fusionado": 0.0125
+      }
+    ],
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c05-visual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay información en los fragmentos que indique que esta obra tenga una paleta luminosa o que sea una versión más luminosa del retrato.",
+          "artwork_id": "cma:124080",
+          "ficha": {
+            "artist": "Thomas Gainsborough",
+            "culture": "England",
+            "date_display": "c. 1774",
+            "medium": "oil on canvas",
+            "title": "Portrait of Mary Wise",
+            "year": 1773
+          },
+          "lineas": [
+            "El retrato muestra a Mary Wise con un conjunto elaborado que incluye bordados dorados, encajes y perlas, lo que da un aspecto elegante pero no particularmente luminoso. [1]",
+            "La paleta de la obra es más bien sobria y oscura, con predominancia de tonos dorados y marrones, sin colores brillantes o luminosos."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Thomas Gainsborough",
+              "atribucion": null,
+              "fragment_id": "cma:124080::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1944.82",
+              "texto_citado": "Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.",
+              "title": "Portrait of Mary Wise"
+            }
+          ],
+          "score": 0.01639344262295082,
+          "source_url": "https://clevelandart.org/art/1944.82"
+        },
+        {
+          "abstencion": "No se menciona explícitamente que esta obra sea una versión del retrato original con una paleta más luminosa.",
+          "artwork_id": "aic:61151",
+          "ficha": {
+            "artist": "Jacob Eichholtz",
+            "culture": "Lancaster",
+            "date_display": "1808–10",
+            "medium": "Oil on yellow poplar panel",
+            "title": "Mrs. Benjamin Schaum (Anna Maria Heckensweiler)",
+            "year": 1808
+          },
+          "lineas": [
+            "Este retrato es un ejemplo temprano del estilo del artista, ejecutado en panel de madera con una técnica que evolucionó hacia composiciones más sofisticadas. [1]",
+            "La obra presenta colores más claros y un fondo menos oscuro que el retrato original, lo que puede interpretarse como una paleta más luminosa."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Jacob Eichholtz",
+              "atribucion": "“Mrs. Benjamin Schaum (Anna Maria Heckensweiler)”, Jacob Eichholtz. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/61151",
+              "fragment_id": "aic:61151::description::0",
+              "license": "CC-BY-4.0",
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/61151",
+              "texto_citado": "Working as a coppersmith in his hometown of Lancaster, Pennsylvania, Jacob Eichholtz aspired to be a portraitist, eventually giving up his metalwork business to focus on painting by 1811. Despite having essentially no formal training in the medium, Eichholtz progressed quickly, becoming one of the leading portrait painters in Philadelphia and nearby areas. These portraits of the family of Benjamin Schaum (1980.742, 1980.744, and 1980.745), a fellow resident and coppersmith in Lancaster, are examples of the artist’s early style. Eichholtz first mastered small, profile portraits like these, typically executed on wooden panels. Later he developed a more sophisticated handling of the figure, rendering larger-scale compositions on canvas of his sitters in three-quarter views.",
+              "title": "Mrs. Benjamin Schaum (Anna Maria Heckensweiler)"
+            }
+          ],
+          "score": 0.016129032258064516,
+          "source_url": "https://www.artic.edu/artworks/61151"
+        },
+        {
+          "abstencion": "No hay evidencia en los fragmentos que indique que esta obra sea una versión con una paleta más luminosa del retrato original.",
+          "artwork_id": "cma:109248",
+          "ficha": {
+            "artist": "Gilbert Stuart",
+            "culture": "America",
+            "date_display": "c. 1815",
+            "medium": "oil on wood",
+            "title": "Mary Campbell Stuart",
+            "year": 1810
+          },
+          "lineas": [
+            "El retrato fue pintado en panel de madera debido a la escasez de lienzos durante la Guerra de 1812, lo que puede influir en la textura y luminosidad de la obra. [1]",
+            "La obra utiliza tonos cálidos y un fondo marrón que no sugiere una paleta particularmente luminosa en comparación con el retrato original."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Gilbert Stuart",
+              "atribucion": null,
+              "fragment_id": "cma:109248::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1927.394.2",
+              "texto_citado": "Born in Rhode Island, Gilbert Stuart studied painting in London under fellow American expatriate Benjamin West (also in this gallery). He achieved great success as a fashionable portrait painter of high society, most famously George and Martha Washington. Here, he portrayed Mary Stuart (born Campbell), the great-granddaughter of Colonel Peter Bard, a New Jersey Supreme Court judge. She married Dr. James Stuart, whose portrait was also painted by Stuart (unrelated to the sitters). Both are shown seated in an Empire chair upholstered in brown brocade. Stuart painted the portrait pair on panel because the British naval blockade during the War of 1812 hindered the import of canvas, the artist’s preference.",
+              "title": "Mary Campbell Stuart"
+            }
+          ],
+          "score": 0.015873015873015872,
+          "source_url": "https://clevelandart.org/art/1927.394.2"
+        },
+        {
+          "abstencion": "No hay indicios de que esta obra sea una versión con una paleta más luminosa del retrato original.",
+          "artwork_id": "cma:95286",
+          "ficha": {
+            "artist": "Jan Anthonisz. van Ravesteyn",
+            "culture": "Netherlands",
+            "date_display": "1620s",
+            "medium": "oil on wood",
+            "title": "Portrait of a Woman",
+            "year": 1620
+          },
+          "lineas": [
+            "La obra presenta un fondo oscuro y detalles en blanco translúcido que se vuelven opacos al superponerse, lo que no sugiere una paleta luminosa. [1] [2]",
+            "El retrato tiene un tono general sobrio y oscuro, sin colores brillantes o luminosos."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Jan Anthonisz. van Ravesteyn",
+              "atribucion": null,
+              "fragment_id": "cma:95286::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1916.1055",
+              "texto_citado": "How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.",
+              "title": "Portrait of a Woman"
+            },
+            {
+              "artist": "Jan Anthonisz. van Ravesteyn",
+              "atribucion": null,
+              "fragment_id": "cma:95286::did_you_know::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1916.1055",
+              "texto_citado": "The sitter wears several transparent and translucent white collars that become opaque when layered.",
+              "title": "Portrait of a Woman"
+            }
+          ],
+          "score": 0.015625,
+          "source_url": "https://clevelandart.org/art/1916.1055"
+        },
+        {
+          "abstencion": "No se menciona ni se observa que esta obra sea una versión con una paleta más luminosa del retrato original.",
+          "artwork_id": "cma:173240",
+          "ficha": {
+            "artist": "John Smibert",
+            "culture": "America",
+            "date_display": "c. 1734",
+            "medium": "oil on canvas",
+            "title": "Portrait of a Woman (Judith Colman Bulfinch?)",
+            "year": 1729
+          },
+          "lineas": [
+            "El retrato sigue convenciones británicas para la representación femenina, con detalles en el vestido y peinado que no indican una paleta particularmente luminosa. [1]",
+            "La obra utiliza colores oscuros y un fondo neutro, sin predominancia de tonos claros o luminosos."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "John Smibert",
+              "atribucion": null,
+              "fragment_id": "cma:173240::description::0",
+              "license": "CC0",
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1920.3919",
+              "texto_citado": "The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.",
+              "title": "Portrait of a Woman (Judith Colman Bulfinch?)"
+            }
+          ],
+          "score": 0.015384615384615385,
+          "source_url": "https://clevelandart.org/art/1920.3919"
+        }
+      ],
+      "render": "1. **Portrait of Mary Wise**\n   Thomas Gainsborough · c. 1774 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1944.82\n\n   El retrato muestra a Mary Wise con un conjunto elaborado que incluye bordados dorados, encajes y perlas, lo que da un aspecto elegante pero no particularmente luminoso. [1]\n   La paleta de la obra es más bien sobria y oscura, con predominancia de tonos dorados y marrones, sin colores brillantes o luminosos.\n   No hay información en los fragmentos que indique que esta obra tenga una paleta luminosa o que sea una versión más luminosa del retrato.\n\n   **Fuentes**\n   [1] “Mary’s modest and contemplative demeanor is a counterpoint to a rather elaborate ensemble consisting of a gown embroidered with gold flower sprigs, trimmed with lace and pearls, and tied with a gold sash, as well as a gold-striped veil and a bracelet with eight gold bands. Gainsborough’s compact oval format and the sitter’s informal pose lend this portrait an air of intimacy.”\n       https://clevelandart.org/art/1944.82 · CC0 1.0\n\n2. **Mrs. Benjamin Schaum (Anna Maria Heckensweiler)**\n   Jacob Eichholtz · 1808–10 · Oil on yellow poplar panel\n   Ficha oficial: https://www.artic.edu/artworks/61151\n\n   Este retrato es un ejemplo temprano del estilo del artista, ejecutado en panel de madera con una técnica que evolucionó hacia composiciones más sofisticadas. [1]\n   La obra presenta colores más claros y un fondo menos oscuro que el retrato original, lo que puede interpretarse como una paleta más luminosa.\n   No se menciona explícitamente que esta obra sea una versión del retrato original con una paleta más luminosa.\n\n   **Fuentes**\n   [1] “Working as a coppersmith in his hometown of Lancaster, Pennsylvania, Jacob Eichholtz aspired to be a portraitist, eventually giving up his metalwork business to focus on painting by 1811. Despite having essentially no formal training in the medium, Eichholtz progressed quickly, becoming one of the leading portrait painters in Philadelphia and nearby areas. These portraits of the family of Benjamin Schaum (1980.742, 1980.744, and 1980.745), a fellow resident and coppersmith in Lancaster, are examples of the artist’s early style. Eichholtz first mastered small, profile portraits like these, typically executed on wooden panels. Later he developed a more sophisticated handling of the figure, rendering larger-scale compositions on canvas of his sitters in three-quarter views.”\n       https://www.artic.edu/artworks/61151 · CC BY 4.0\n       “Mrs. Benjamin Schaum (Anna Maria Heckensweiler)”, Jacob Eichholtz. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/61151\n\n3. **Mary Campbell Stuart**\n   Gilbert Stuart · c. 1815 · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1927.394.2\n\n   El retrato fue pintado en panel de madera debido a la escasez de lienzos durante la Guerra de 1812, lo que puede influir en la textura y luminosidad de la obra. [1]\n   La obra utiliza tonos cálidos y un fondo marrón que no sugiere una paleta particularmente luminosa en comparación con el retrato original.\n   No hay evidencia en los fragmentos que indique que esta obra sea una versión con una paleta más luminosa del retrato original.\n\n   **Fuentes**\n   [1] “Born in Rhode Island, Gilbert Stuart studied painting in London under fellow American expatriate Benjamin West (also in this gallery). He achieved great success as a fashionable portrait painter of high society, most famously George and Martha Washington. Here, he portrayed Mary Stuart (born Campbell), the great-granddaughter of Colonel Peter Bard, a New Jersey Supreme Court judge. She married Dr. James Stuart, whose portrait was also painted by Stuart (unrelated to the sitters). Both are shown seated in an Empire chair upholstered in brown brocade. Stuart painted the portrait pair on panel because the British naval blockade during the War of 1812 hindered the import of canvas, the artist’s preference.”\n       https://clevelandart.org/art/1927.394.2 · CC0 1.0\n\n4. **Portrait of a Woman**\n   Jan Anthonisz. van Ravesteyn · 1620s · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1916.1055\n\n   La obra presenta un fondo oscuro y detalles en blanco translúcido que se vuelven opacos al superponerse, lo que no sugiere una paleta luminosa. [1] [2]\n   El retrato tiene un tono general sobrio y oscuro, sin colores brillantes o luminosos.\n   No hay indicios de que esta obra sea una versión con una paleta más luminosa del retrato original.\n\n   **Fuentes**\n   [1] “How do you conserve a painting when portions are missing? \n\nThe mid-treatment image (below) shows the painting after cleaning, when earlier restorations had been removed. In the painting on view, notice how the conservator reconstructed portions of the sitter’s lace collar and elaborate necklace. She re-created missing passages after studying the artist’s technique in other works and carefully emulating his treatment of the remaining lace and elements of the twisting, three-dimensional necklace. Conversely, there was not enough information to reconstruct what was probably another ornament at the back of the sitter’s head, so the decision was made not to speculate and invent something in that space.”\n       https://clevelandart.org/art/1916.1055 · CC0 1.0\n   [2] “The sitter wears several transparent and translucent white collars that become opaque when layered.”\n       https://clevelandart.org/art/1916.1055 · CC0 1.0\n\n5. **Portrait of a Woman (Judith Colman Bulfinch?)**\n   John Smibert · c. 1734 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1920.3919\n\n   El retrato sigue convenciones británicas para la representación femenina, con detalles en el vestido y peinado que no indican una paleta particularmente luminosa. [1]\n   La obra utiliza colores oscuros y un fondo neutro, sin predominancia de tonos claros o luminosos.\n   No se menciona ni se observa que esta obra sea una versión con una paleta más luminosa del retrato original.\n\n   **Fuentes**\n   [1] “The appearance of a professionally trained British painter in the American colonies in 1729 marks a curcial point in the history of American art. Smibert not only imported the skills necessary to convey the impression of substantial, rounded forms in a picture, but his commercial success also inspired others to contemplate careers as painters. Born in Edinburgh and schooled in London and Italy, Smibert attracted numerous clients upon his arrival in Boston. The low bodice, long neck, and sinuous curl of hair in this portrait follow British conventions for depicting women. Research continues as to the identity of the sitter, long thought to be Mrs. Thomas Bulfinch (born Judith Colman, 1707-1765), since that name does not appear in Smibert's recently discovered records.”\n       https://clevelandart.org/art/1920.3919 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "dcba8dd33862ed19b3b08d63ef27abee3351e734",
+      "config_id": "f1a65d9cc05a7ad2",
+      "corrida_id": "e4bf4f101b3e6ad1-2",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:124080",
+      "aic:61151",
+      "cma:109248",
+      "cma:95286",
+      "cma:173240"
+    ]
+  },
+  "fecha": "2026-10-25T20:48:45+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [
+      "recuperador_textual"
+    ],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "fusionador",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0001,
+      "generador": 6.7079,
+      "planificador": 0.0005,
+      "recolector_de_evidencia": 0.5208,
+      "recuperador_textual": 0.0001,
+      "recuperador_visual": 0.1009,
+      "renderizador": 0.0006
+    },
+    "segundos_de_la_corrida": 7.3329
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "segundos": 0.096,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "segundos": 0.469,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "segundos": 6.707,
+      "tokens_in": 3877,
+      "tokens_out": 897
+    },
+    "indice": {
+      "n_items": 32,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "segundos": 0.054,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "no_determinan_el_config_id": {
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://sa-llmproxy.it.itba.edu.ar/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/text-embedding-3-small": 0.02
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 los hallazgos: toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 2,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida"
+    },
+    "configuracion": "C3",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 es los hallazgos**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 50,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "degrada": true,
+        "estrategia": "rrf",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion"
+        ],
+        "etapa": "fusionador",
+        "k": 60,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {
+      "recuperador_textual": "excepcion"
+    },
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "dcba8dd33862ed19b3b08d63ef27abee3351e734",
+    "config_id": "f1a65d9cc05a7ad2",
+    "corrida_id": "e4bf4f101b3e6ad1-2",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
