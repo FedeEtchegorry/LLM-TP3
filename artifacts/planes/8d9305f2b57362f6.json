@@ -1,0 +1,55 @@
+{
+  "artefacto": "PlanDeConsulta",
+  "binding": {
+    "modelo": "openai/gpt-4.1-mini",
+    "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+    "muestreo": {
+      "max_tokens": 300,
+      "seed": 7369,
+      "temperature": 0.1,
+      "top_p": 1.0
+    },
+    "muestreo_efectivo": {
+      "max_tokens": 300,
+      "response_format": {
+        "type": "json_object"
+      },
+      "seed": 7369,
+      "temperature": 0.1,
+      "top_p": 1.0
+    },
+    "prompt_id": "planificador-pre-retrieval-dos-consultas",
+    "rol": "planificador",
+    "version_del_prompt": "2"
+  },
+  "clase_de_identidad": "1/2",
+  "consulta_conceptual": "Renaissance painting depicting a mounted knight and a standing man, emphasizing chiaroscuro and darker tonalities in European historical context",
+  "consulta_id": "c10-visual",
+  "consulta_visual": "knight on white horse with a standing man, dark palette, dramatic lighting, rich textures, detailed armor and fabric",
+  "cumple_pl3": true,
+  "imagen_hash": "sha256:424053872427139d3c28f5d26150d79c37b746bff3cdb23af78d0f9df1a093bb",
+  "imagen_retenida": false,
+  "n_intentos": 1,
+  "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+  "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+  "nota_de_retencion": {
+    "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+    "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+    "procedencia": "set",
+    "retiene_pedido": true
+  },
+  "pedido": "la misma escena con una paleta más oscura",
+  "pedido_retenido": true,
+  "pl3": {
+    "distintas_del_pedido_crudo": true,
+    "distintas_entre_si": true,
+    "no_vacias": true
+  },
+  "plan_id": "8d9305f2b57362f6",
+  "procedencia": "set",
+  "uso": {
+    "tokens_in": 3228,
+    "tokens_out": 61
+  },
+  "version_del_plan": "1"
+}

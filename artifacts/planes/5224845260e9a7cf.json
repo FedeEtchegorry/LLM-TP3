@@ -1,0 +1,55 @@
+{
+  "artefacto": "PlanDeConsulta",
+  "binding": {
+    "modelo": "openai/gpt-4.1-mini",
+    "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+    "muestreo": {
+      "max_tokens": 300,
+      "seed": 7369,
+      "temperature": 0.1,
+      "top_p": 1.0
+    },
+    "muestreo_efectivo": {
+      "max_tokens": 300,
+      "response_format": {
+        "type": "json_object"
+      },
+      "seed": 7369,
+      "temperature": 0.1,
+      "top_p": 1.0
+    },
+    "prompt_id": "planificador-pre-retrieval-dos-consultas",
+    "rol": "planificador",
+    "version_del_prompt": "1"
+  },
+  "clase_de_identidad": "1/2",
+  "consulta_conceptual": "17th-century maritime scene depicting Dutch ships and Arctic whaling activities, Northern European Baroque painting, focusing on exploration and hunting in icy waters",
+  "consulta_id": "a7cd2ed242b37bcf",
+  "consulta_visual": "Night scene with fewer large sailing ships, icy waters, and people on ice floes and small boats under dark sky",
+  "cumple_pl3": true,
+  "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+  "imagen_retenida": false,
+  "n_intentos": 1,
+  "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+  "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+  "nota_de_retencion": {
+    "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+    "por_que": "🔴 el registro de decisiones: **el texto del pedido de un usuario real no se guarda**. El pedido **es ingrediente del `plan_id` y eso no obliga a guardarlo** — es la regla *«no se guarda ≠ no es ingrediente»* de la tabla de identidades, la misma que el plan guarda el hash y no los bytes aplica a los bytes de la imagen. El reuso del reuso del plan al barrer el peso de fusión funciona **por dirección**: el id se computa de las entradas en el momento, no se lee del artefacto.",
+    "procedencia": "ad_hoc",
+    "retiene_pedido": false
+  },
+  "pedido": null,
+  "pedido_retenido": false,
+  "pl3": {
+    "distintas_del_pedido_crudo": true,
+    "distintas_entre_si": true,
+    "no_vacias": true
+  },
+  "plan_id": "5224845260e9a7cf",
+  "procedencia": "ad_hoc",
+  "uso": {
+    "tokens_in": 1539,
+    "tokens_out": 65
+  },
+  "version_del_plan": "1"
+}
