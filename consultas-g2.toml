@@ -1,0 +1,227 @@
+#  Declaración del `SetDeConsultas` — el set de consultas, la evaluación.
+#
+#  🔴 Clase 3: se congela una vez. Corregir después de congelar no edita el
+#  set — autora **otro**, y los juicios del anterior quedan sin con qué
+#  compararse.
+#
+#  Las 10 salieron de la lista corta de 30 (`tp3-consultas candidatas`), que
+#  cubre los 6 períodos, los 2 museos y 28 de las 36 culturas del held-out.
+
+split_id = "5b6cba32126fed61"
+autoria  = "grupo-2"
+estado   = "completo"
+criterio_de_culture = "primer_componente_por_coma"
+
+[revision]
+n_imagenes_revisadas = 30
+como_se_revisaron = "la lista corta de 30 candidatas de `tp3-consultas candidatas` (criterio: cobertura por valor de cada eje — periodo × cultura × tecnica × museo × tiene_artista — semilla 7369), revisadas como hoja de contactos. De las 30 se eligieron 10 para cubrir los tipos que la evaluación pide: paisaje, marina, interior, abstracta, retrato (×3), escena narrativa y motivo botánico. Las 8 culturas que quedaron afuera de la lista corta son valores de 1-2 obras del held-out."
+
+#  ── 01 · paisaje, paleta fría ──────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:109240"
+atributos = ["paisaje", "paleta_fria", "oleo", "rural"]
+
+[[imagenes.consultas]]
+consulta_id = "c01-visual"
+categoria   = "visual_cromatico"
+pedido      = "versiones más cálidas de este paisaje"
+
+[[imagenes.consultas]]
+consulta_id = "c01-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "el mismo paisaje pero pintado en Japón"
+cultura_pedida = { nombre = "Japón", etiquetas = ["Japan"] }
+
+[[imagenes.consultas]]
+consulta_id = "c01-ambiguo"
+categoria   = "ambiguo"
+pedido      = "con más vida"
+
+#  ── 02 · marina, paleta fría ───────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:111728"
+atributos = ["marina", "paleta_fria", "barcos", "hielo"]
+
+[[imagenes.consultas]]
+consulta_id = "c02-visual"
+categoria   = "visual_cromatico"
+pedido      = "la misma escena de agua pero con luz dorada"
+
+[[imagenes.consultas]]
+consulta_id = "c02-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "escenas de agua en la pintura china"
+cultura_pedida = { nombre = "China", etiquetas = ["China", "Chinese", "South China"] }
+
+[[imagenes.consultas]]
+consulta_id = "c02-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más tranquilo"
+
+#  ── 03 · interior arquitectónico, luz cálida ───────────────────────────────
+[[imagenes]]
+artwork_id = "cma:159270"
+atributos = ["interior", "arquitectura", "luz_calida", "simetria"]
+
+[[imagenes.consultas]]
+consulta_id = "c03-visual"
+categoria   = "visual_cromatico"
+pedido      = "el mismo interior pero en tonos fríos"
+
+[[imagenes.consultas]]
+consulta_id = "c03-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "interiores arquitectónicos en la pintura italiana"
+cultura_pedida = { nombre = "Italia", etiquetas = ["Italy", "Northern Italy"] }
+
+[[imagenes.consultas]]
+consulta_id = "c03-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más imponente"
+
+#  ── 04 · abstracta geométrica (la única del held-out) ──────────────────────
+[[imagenes]]
+artwork_id = "aic:65821"
+atributos = ["abstracta", "geometrica", "colores_primarios", "lineas"]
+
+[[imagenes.consultas]]
+consulta_id = "c04-visual"
+categoria   = "visual_cromatico"
+pedido      = "composiciones geométricas pero en tonos tierra"
+
+[[imagenes.consultas]]
+consulta_id = "c04-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "composiciones geométricas en el arte de la India"
+cultura_pedida = { nombre = "la India", etiquetas = ["Mughal India", "Northern India", "Northwestern India", "India", "Eastern India", "Western India", "Central India", "Southern India", "Sultanate India", "British India", "Northwest India"] }
+
+[[imagenes.consultas]]
+consulta_id = "c04-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más ordenado"
+
+#  ── 05 · retrato, fondo oscuro ─────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:105600"
+atributos = ["retrato", "femenino", "fondo_oscuro", "oleo"]
+
+[[imagenes.consultas]]
+consulta_id = "c05-visual"
+categoria   = "visual_cromatico"
+pedido      = "el mismo retrato con una paleta más luminosa"
+
+[[imagenes.consultas]]
+consulta_id = "c05-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "retratos de mujeres en la pintura francesa"
+cultura_pedida = { nombre = "Francia", etiquetas = ["France"] }
+
+[[imagenes.consultas]]
+consulta_id = "c05-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más cercano"
+
+#  ── 06 · retrato, la obra más antigua del set ──────────────────────────────
+[[imagenes]]
+artwork_id = "cma:145925"
+atributos = ["retrato", "frontal", "antiguo", "encaustica"]
+
+[[imagenes.consultas]]
+consulta_id = "c06-visual"
+categoria   = "visual_cromatico"
+pedido      = "el mismo rostro pero con colores más apagados"
+
+[[imagenes.consultas]]
+consulta_id = "c06-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "retratos conmemorativos en Italia"
+cultura_pedida = { nombre = "Italia", etiquetas = ["Italy", "Northern Italy"] }
+
+[[imagenes.consultas]]
+consulta_id = "c06-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más humano"
+
+#  ── 07 · retrato sobre seda, paleta cálida ─────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:155431"
+atributos = ["retrato", "seda", "paleta_calida", "figura_sentada"]
+
+[[imagenes.consultas]]
+consulta_id = "c07-visual"
+categoria   = "visual_cromatico"
+pedido      = "el mismo retrato en tonos más fríos"
+
+[[imagenes.consultas]]
+consulta_id = "c07-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "retratos de monjes y sabios en China"
+cultura_pedida = { nombre = "China", etiquetas = ["China", "Chinese", "South China"] }
+
+[[imagenes.consultas]]
+consulta_id = "c07-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más austero"
+
+#  ── 08 · folio indio, rojo saturado, escena de batalla ─────────────────────
+[[imagenes]]
+artwork_id = "cma:314432"
+atributos = ["folio", "paleta_calida", "saturado", "batalla"]
+
+[[imagenes.consultas]]
+consulta_id = "c08-visual"
+categoria   = "visual_cromatico"
+pedido      = "la misma escena pero con colores apagados"
+
+[[imagenes.consultas]]
+consulta_id = "c08-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "escenas de batalla en la pintura francesa"
+cultura_pedida = { nombre = "Francia", etiquetas = ["France"] }
+
+[[imagenes.consultas]]
+consulta_id = "c08-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más caótico"
+
+#  ── 09 · tinta monocroma, motivo botánico ──────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:148382"
+atributos = ["tinta", "monocromo", "botanico", "papel"]
+
+[[imagenes.consultas]]
+consulta_id = "c09-visual"
+categoria   = "visual_cromatico"
+pedido      = "el mismo motivo pero con color"
+
+[[imagenes.consultas]]
+consulta_id = "c09-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "el mismo tema en la pintura china"
+cultura_pedida = { nombre = "China", etiquetas = ["China", "Chinese", "South China"] }
+
+[[imagenes.consultas]]
+consulta_id = "c09-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más delicado"
+
+#  ── 10 · escena narrativa con jinete ───────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:67362"
+atributos = ["narrativa", "jinete", "religioso", "oleo"]
+
+[[imagenes.consultas]]
+consulta_id = "c10-visual"
+categoria   = "visual_cromatico"
+pedido      = "la misma escena con una paleta más oscura"
+
+[[imagenes.consultas]]
+consulta_id = "c10-conceptual"
+categoria   = "conceptual_cultural"
+pedido      = "escenas con jinetes en el arte mogol"
+cultura_pedida = { nombre = "India mogol", etiquetas = ["Mughal India"] }
+
+[[imagenes.consultas]]
+consulta_id = "c10-ambiguo"
+categoria   = "ambiguo"
+pedido      = "más generoso"
