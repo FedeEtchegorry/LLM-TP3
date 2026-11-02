@@ -100,11 +100,13 @@ argumento, el error te dice cuáles hay y cómo se llaman.
 - **`tp3-validar criterios` necesita `TP3_CONTACTO_AIC` y red** —no una key del proveedor—: uno de
   los criterios resuelve las URLs de las fichas en los museos, y sin ese contacto en el header AIC
   devuelve 403.
-- 🔴 **`tp3-anotar kappa` ESCRIBE: regenera el consenso y el κ, que son artefactos sellados.** Los
-  valores no cambian, pero **el archivo sí**: el inventario de aportes se actualiza y la prosa del
-  encabezado se reescribe, porque el código publicado tiene los identificadores internos
-  reemplazados por prosa. **Si lo corrés, vas a ver los dos archivos modificados en `git status`** —
-  y lo correcto es revertirlos, no commitearlos.
+- ⚠️ **`tp3-anotar kappa` ESCRIBE el consenso y el κ, y la PRIMERA corrida los va a modificar.** No
+  es falta de idempotencia: **correrlo dos veces no mueve nada**, y el comando lo dice —*"ya estaba
+  (mismo contenido: no se reescribió)"*—. Lo que mueve la primera vez son dos cosas, y ninguna
+  cambia un juicio ni un grado: el **cuarto aporte de anotación** existe ahora y no existía cuando
+  el artefacto se escribió, y la **prosa del encabezado** se reescribe porque el código publicado
+  lleva los identificadores internos reemplazados por prosa. 🔑 **Los valores no cambian: el κ sigue
+  dando lo mismo.** Si preferís el artefacto tal como se entregó, revertí esos dos archivos.
 
 ---
 
