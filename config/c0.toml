@@ -1,0 +1,11 @@
+[consulta]
+configuracion = "C0"
+
+alfa = 1.0
+
+alfa_congelado = true
+
+etapas = [
+    "recuperador_visual",
+    "renderizador",
+]
