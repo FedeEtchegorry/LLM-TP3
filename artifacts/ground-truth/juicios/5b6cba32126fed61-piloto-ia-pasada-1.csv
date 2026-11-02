@@ -1,0 +1,56 @@
+# artefacto = "AporteDeAnotador"
+# version_del_aporte = "1"
+# clase_de_identidad = 3
+# identidad = "5b6cba32126fed61-piloto-ia-pasada-1"
+# split_id = "5b6cba32126fed61"
+# rubrica_id = "piloto"
+# anotador = "ia-pasada-1"
+# nota_de_identidad = "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad son TRES ingredientes —split_id + rubrica_id + anotador— y el del medio es la lección más cara del proyecto: sin él, la ronda piloto y la campaña definitiva comparten nombre de archivo y el 'se re-anota' del acuerdo entre anotadores es impagable. El pool_id NO es ingrediente y va acá adentro: un juicio es sobre el par (consulta, obra), no sobre el pool que lo trajo, y eso es lo que vuelve legítima la importación de los 20 del piloto (la evaluación). No se reescribe y no se recalcula (la regla de que un id determina su contenido): refinar la rúbrica deriva OTRO aporte y no borra este."
+# pool_id = "5b6cba32126fed61-piloto"
+# estado_del_pool = "piloto"
+# set_de_consultas = "5b6cba32126fed61-grupo-2"
+# planilla = "planillas/5b6cba32126fed61-piloto-piloto-ia-pasada-1.csv"
+# fecha_de_import = "2026-10-25T18:12:08+00:00"
+# commit = "ec084ddb14580b0979e821f24a6e4646db149b3c"
+#
+# [rubrica]
+# rubrica_id = "piloto"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/piloto.md"
+# hash_del_texto = "300fb59a61bb4566"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 20
+#
+# [conteos.por_grado]
+# grado_0 = 9
+# grado_1 = 9
+# grado_2 = 2
+#
+# [validacion_del_import]
+# requisito = "la política de trazado"
+# pares_comparados_contra = "5b6cba32126fed61-piloto"
+# secuencia_exacta = true
+# nota = "la política de trazado: el conjunto de pares importado es **igual** al exportado para este pool_id, en el **mismo orden** (la columna `fila` es el orden mezclado y es contenido), y cada `consulta_id` resuelve en el set del mismo split (la referencia que resuelve). Sin esto, la procedencia del pool declarada en el aporte era 'garantizado por único camino' y el camino tiene un humano adentro."
+split_id,rubrica_id,anotador,consulta_id,artwork_id,grado,nota
+5b6cba32126fed61,piloto,ia-pasada-1,c04-visual,cma:147520,1,"Tonos tierra sí (fondo de madera y correas marrones), geométrica no: es un trampantojo, no una composición. Media propiedad -> 1. Los naipes verdes y celestes tiran en contra."
+5b6cba32126fed61,piloto,ia-pasada-1,c04-visual,cma:143278,0,"🔑 El 0 del renglón clave de la rúbrica: mismo artista y mismo estilo que la original, y la paleta es rojo/amarillo/azul primarios, justo lo contrario de tonos tierra. Acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,piloto,ia-pasada-1,c04-visual,cma:161673,1,"Tonos tierra clarísimos (oro, ocres, sienas) y mucho más cálida que la original, pero es un paisaje en biombo, no una composición geométrica. Media propiedad -> 1."
+5b6cba32126fed61,piloto,ia-pasada-1,c04-visual,aic:109819,0,"El mismo 0 que la fila 2: Mondrian con primarios. El amarillo es cadmio, no ocre. Geométrica sí, tonos tierra no, y es lo único que el pedido pedía cambiar."
+5b6cba32126fed61,piloto,ia-pasada-1,c04-visual,cma:150074,1,"La más dudosa de las cinco. El fondo de oro es un corrimiento cálido respecto del gris de la original, pero la pintura es tinta gris y tampoco es geométrica. Desempate 1-0 -> 1."
+5b6cba32126fed61,piloto,ia-pasada-1,c06-conceptual,cma:169341,1,"Retrato conmemorativo sí (personaje nombrado y con sus fechas), Italia no (India del noroeste). Media propiedad -> 1: el caso canónico del pedido cultural."
+5b6cba32126fed61,piloto,ia-pasada-1,c06-conceptual,cma:101356,1,"Retrato de busto sí, conmemorativo dudoso (mujer sin identificar), Italia no. 1 por desempate entre 1 y 0."
+5b6cba32126fed61,piloto,ia-pasada-1,c06-conceptual,cma:314500,1,"Retrato de corte de cuerpo entero: la mitad del tema está, la cultura no (India del noroeste). 1."
+5b6cba32126fed61,piloto,ia-pasada-1,c06-conceptual,cma:314448,0,"0, y es exactamente el caso que el grupo agregó a la rúbrica antes de abrir el piloto: le falta `cultura`, pero la mitad que SÍ se ve ya falla. Es una escena de género (mujer sirviendo vino), no un retrato conmemorativo, y por técnica, bordes y serie de inventario es una pintura de álbum india, no italiana. El metadato ausente no la rescata."
+5b6cba32126fed61,piloto,ia-pasada-1,c06-conceptual,cma:142475,1,"La única italiana de las cinco, y el tema no está: es un panel devocional (Cristo en mandorla con dos santos), no un retrato conmemorativo. Media propiedad -> 1."
+5b6cba32126fed61,piloto,ia-pasada-1,c01-ambiguo,cma:134072,2,"LECTURA DE «con más vida» PARA LAS 5 OBRAS DE c01-ambiguo: la obra es cromáticamente más viva que la original, o sea más saturación y más contraste de color. NO la leo como «más figuras» ni como «más luz». || Esta la cumple de sobra: ocres y rojos encendidos y cielo azul contra el gris verdoso apagado de la original, con el mismo género de paisaje rural."
+5b6cba32126fed61,piloto,ia-pasada-1,c01-ambiguo,cma:128392,2,"Verdes mucho más saturados y pincelada vibrante contra el gris verdoso de la original. 2. Con una lectura centrada en la luz y no en el color sería 1, porque es un interior de bosque y es oscuro: la lectura declarada en la fila 11 decide."
+5b6cba32126fed61,piloto,ia-pasada-1,c01-ambiguo,cma:136760,1,"Más clara y aireada que la original, pero no más saturada: sigue siendo una obra pálida y apagada. La propiedad está pero poco -> 1."
+5b6cba32126fed61,piloto,ia-pasada-1,c01-ambiguo,cma:150031,0,"Va en la dirección contraria: más desaturada, más vacía y más gris que la original. 0."
+5b6cba32126fed61,piloto,ia-pasada-1,c01-ambiguo,cma:128371,0,"Casi monocroma en marrones y olivas, menos saturada que la original. El cielo dorado calienta un poco, pero la propiedad pedida no está -> 0."
+5b6cba32126fed61,piloto,ia-pasada-1,c05-ambiguo,cma:99428,0,"LECTURA DE «más cercano» PARA LAS 5 OBRAS DE c05-ambiguo: el encuadre está más cerca de la persona que en la original, o sea la cabeza ocupa más del cuadro y se ve menos cuerpo. NO la leo como «más íntimo» ni como «más reciente». || Esta va al revés: tres cuartos sentada con falda y ventana al paisaje, la cabeza es chiquita en el cuadro. 0."
+5b6cba32126fed61,piloto,ia-pasada-1,c05-ambiguo,cma:95286,1,"Óvalo de busto con la cabeza algo más grande en el cuadro que en la original. El corrimiento está, pero hay que señalarlo con el dedo -> 1. Es la única de las cinco que se mueve en la dirección pedida."
+5b6cba32126fed61,piloto,ia-pasada-1,c05-ambiguo,cma:124080,0,"🔑 El 0 que más dice del piloto entero: mismo artista, mismo óvalo oscuro y misma década que la original, y se aleja en vez de acercarse (medio cuerpo, brazo y chal). Acompaña a la imagen e ignora el pedido, que es lo que el proyecto existe para medir."
+5b6cba32126fed61,piloto,ia-pasada-1,c05-ambiguo,cma:173240,0,"Encuadre equivalente al de la original, no más cercano: muestra más torso. Que no haya cambio en la dirección pedida es 0 y no 1; no estoy dudando entre dos grados."
+5b6cba32126fed61,piloto,ia-pasada-1,c05-ambiguo,aic:79765,0,Tres cuartos sentada con falda ancha y paisaje: el encuadre más lejano de los cinco. 0.

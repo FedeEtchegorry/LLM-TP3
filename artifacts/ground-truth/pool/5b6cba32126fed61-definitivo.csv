@@ -1,0 +1,380 @@
+pool_id,fila,consulta_id,artwork_id,obra,artista,cultura,anio,museo,source_url
+5b6cba32126fed61-definitivo,1,c01-ambiguo,cma:137195,Rest on the Flight into Egypt,Claude Lorrain,France,1640,cma,https://clevelandart.org/art/1962.151
+5b6cba32126fed61-definitivo,2,c01-ambiguo,cma:134072,Sunny Autumn Day,George Inness,United States,1892,cma,https://clevelandart.org/art/1956.578
+5b6cba32126fed61-definitivo,3,c01-ambiguo,aic:97292,Spring in France,Robert William Vonnoh,France,1890,aic,https://www.artic.edu/artworks/97292
+5b6cba32126fed61-definitivo,4,c01-ambiguo,cma:128392,"Edge of the Woods Near L'Hermitage, Pontoise",Camille Pissarro,France,1879,cma,https://clevelandart.org/art/1951.356
+5b6cba32126fed61-definitivo,5,c01-ambiguo,cma:150054,"Landscape at Saint-André, Near Marseilles",Paul Guigou,France,1860,cma,https://clevelandart.org/art/1980.265
+5b6cba32126fed61-definitivo,6,c01-ambiguo,cma:124078,Pond at Ville-d'Avray,Jean Baptiste Camille Corot,France,1865,cma,https://clevelandart.org/art/1944.80
+5b6cba32126fed61-definitivo,7,c01-ambiguo,cma:159501,Landscape with Peasants Dancing,David Teniers,Flanders,1640,cma,https://clevelandart.org/art/1996.271
+5b6cba32126fed61-definitivo,8,c01-ambiguo,cma:136760,"Saint-Mammès, Loing Canal",Alfred Sisley,France,1885,cma,https://clevelandart.org/art/1961.262
+5b6cba32126fed61-definitivo,9,c01-ambiguo,cma:157104,The Seine at Bas-Meudon,Johan Barthold Jongkind,France,1865,cma,https://clevelandart.org/art/1993.236
+5b6cba32126fed61-definitivo,10,c01-ambiguo,cma:150031,The Marl Pit at Mulcent:  Evening,Antoine Chintreuil,France,1857,cma,https://clevelandart.org/art/1980.245
+5b6cba32126fed61-definitivo,11,c01-ambiguo,cma:95275,Willows and Farmhouse at Sainte-Catherine-lès-Arras,Jean Baptiste Camille Corot,France,1871,cma,https://clevelandart.org/art/1916.1047
+5b6cba32126fed61-definitivo,12,c01-ambiguo,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-definitivo,13,c01-ambiguo,aic:6005,The Banks of the Marne in Winter,Camille Pissarro,France,1866,aic,https://www.artic.edu/artworks/6005
+5b6cba32126fed61-definitivo,14,c01-conceptual,cma:134072,Sunny Autumn Day,George Inness,United States,1892,cma,https://clevelandart.org/art/1956.578
+5b6cba32126fed61-definitivo,15,c01-conceptual,cma:157104,The Seine at Bas-Meudon,Johan Barthold Jongkind,France,1865,cma,https://clevelandart.org/art/1993.236
+5b6cba32126fed61-definitivo,16,c01-conceptual,aic:6005,The Banks of the Marne in Winter,Camille Pissarro,France,1866,aic,https://www.artic.edu/artworks/6005
+5b6cba32126fed61-definitivo,17,c01-conceptual,cma:95275,Willows and Farmhouse at Sainte-Catherine-lès-Arras,Jean Baptiste Camille Corot,France,1871,cma,https://clevelandart.org/art/1916.1047
+5b6cba32126fed61-definitivo,18,c01-conceptual,cma:128392,"Edge of the Woods Near L'Hermitage, Pontoise",Camille Pissarro,France,1879,cma,https://clevelandart.org/art/1951.356
+5b6cba32126fed61-definitivo,19,c01-conceptual,cma:159756,Thatched Hut by Water's Edge,,Japan,1500,cma,https://clevelandart.org/art/1997.125
+5b6cba32126fed61-definitivo,20,c01-conceptual,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-definitivo,21,c01-conceptual,cma:150031,The Marl Pit at Mulcent:  Evening,Antoine Chintreuil,France,1857,cma,https://clevelandart.org/art/1980.245
+5b6cba32126fed61-definitivo,22,c01-conceptual,cma:155624,"Vase of Flowers with Grasshopper, Marine Life, and Garden Rock",Okabe Ko,Japan,1880,cma,https://clevelandart.org/art/1990.68
+5b6cba32126fed61-definitivo,23,c01-conceptual,cma:108999,The Building of the Dam,Julian Alden Weir,America,1908,cma,https://clevelandart.org/art/1927.171
+5b6cba32126fed61-definitivo,24,c01-conceptual,cma:147411,Summer Night,Maruyama Ōkyo,Japan,1784,cma,https://clevelandart.org/art/1973.156.1
+5b6cba32126fed61-definitivo,25,c01-conceptual,aic:7634,Landscape of the Four Seasons,Sesson Shukei,Japan,1501,aic,https://www.artic.edu/artworks/7634
+5b6cba32126fed61-definitivo,26,c01-conceptual,cma:173020,Lakeside Retreat,,Japan,1475,cma,https://clevelandart.org/art/2015.514
+5b6cba32126fed61-definitivo,27,c01-visual,cma:150031,The Marl Pit at Mulcent:  Evening,Antoine Chintreuil,France,1857,cma,https://clevelandart.org/art/1980.245
+5b6cba32126fed61-definitivo,28,c01-visual,cma:124078,Pond at Ville-d'Avray,Jean Baptiste Camille Corot,France,1865,cma,https://clevelandart.org/art/1944.80
+5b6cba32126fed61-definitivo,29,c01-visual,aic:64818,Stacks of Wheat (End of Summer),Claude Monet,France,1890,aic,https://www.artic.edu/artworks/64818
+5b6cba32126fed61-definitivo,30,c01-visual,cma:134072,Sunny Autumn Day,George Inness,United States,1892,cma,https://clevelandart.org/art/1956.578
+5b6cba32126fed61-definitivo,31,c01-visual,cma:157104,The Seine at Bas-Meudon,Johan Barthold Jongkind,France,1865,cma,https://clevelandart.org/art/1993.236
+5b6cba32126fed61-definitivo,32,c01-visual,aic:57163,New England Scenery,Thomas Cole,New England,1839,aic,https://www.artic.edu/artworks/57163
+5b6cba32126fed61-definitivo,33,c01-visual,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-definitivo,34,c01-visual,aic:6005,The Banks of the Marne in Winter,Camille Pissarro,France,1866,aic,https://www.artic.edu/artworks/6005
+5b6cba32126fed61-definitivo,35,c01-visual,cma:95275,Willows and Farmhouse at Sainte-Catherine-lès-Arras,Jean Baptiste Camille Corot,France,1871,cma,https://clevelandart.org/art/1916.1047
+5b6cba32126fed61-definitivo,36,c01-visual,cma:128392,"Edge of the Woods Near L'Hermitage, Pontoise",Camille Pissarro,France,1879,cma,https://clevelandart.org/art/1951.356
+5b6cba32126fed61-definitivo,37,c01-visual,cma:150054,"Landscape at Saint-André, Near Marseilles",Paul Guigou,France,1860,cma,https://clevelandart.org/art/1980.265
+5b6cba32126fed61-definitivo,38,c02-ambiguo,cma:148368,English Warship Firing a Salute,,Netherlands,1690,cma,https://clevelandart.org/art/1975.80
+5b6cba32126fed61-definitivo,39,c02-ambiguo,cma:150080,The Death of General Colbert,Victor Schnetz,France,1809,cma,https://clevelandart.org/art/1980.285
+5b6cba32126fed61-definitivo,40,c02-ambiguo,aic:120163,Capture of the Tripoli by the Enterprise,Thomas Birch,Philadelphia,1806,aic,https://www.artic.edu/artworks/120163
+5b6cba32126fed61-definitivo,41,c02-ambiguo,aic:4796,Fishing Boats with Hucksters Bargaining for Fish,Joseph Mallord William Turner,England,1832,aic,https://www.artic.edu/artworks/4796
+5b6cba32126fed61-definitivo,42,c02-ambiguo,aic:16370,Fishing Boats off an Estuary,Jan van Goyen,Netherlands,1633,aic,https://www.artic.edu/artworks/16370
+5b6cba32126fed61-definitivo,43,c02-ambiguo,cma:163456,"Harbor of Boston, with the City in the Distance",Fitz Henry Lane,United States,1846,cma,https://clevelandart.org/art/2004.35
+5b6cba32126fed61-definitivo,44,c02-ambiguo,aic:81535,"Sea View, Calm Weather (Vue de mer, temps calme)",Édouard Manet,France,1864,aic,https://www.artic.edu/artworks/81535
+5b6cba32126fed61-definitivo,45,c02-ambiguo,aic:39691,Nantasket Beach,Emil Carlsen,United States,1876,aic,https://www.artic.edu/artworks/39691
+5b6cba32126fed61-definitivo,46,c02-ambiguo,cma:153388,"View of Bordeaux, from the Quai des Chartrons",Eugène Boudin,France,1874,cma,https://clevelandart.org/art/1986.73
+5b6cba32126fed61-definitivo,47,c02-ambiguo,aic:244013,Shipwreck near a Rocky Coast,Thomas Birch,United States,1833,aic,https://www.artic.edu/artworks/244013
+5b6cba32126fed61-definitivo,48,c02-ambiguo,aic:495,Coast Scene,"Reinier Nooms, called Zeeman",Netherlands,1645,aic,https://www.artic.edu/artworks/495
+5b6cba32126fed61-definitivo,49,c02-ambiguo,cma:118042,The Dock of Deauville,Eugène Boudin,France,1891,cma,https://clevelandart.org/art/1939.165
+5b6cba32126fed61-definitivo,50,c02-conceptual,aic:244013,Shipwreck near a Rocky Coast,Thomas Birch,United States,1833,aic,https://www.artic.edu/artworks/244013
+5b6cba32126fed61-definitivo,51,c02-conceptual,cma:149126,Fisherman's Joy,Qian Gu,China,1572,cma,https://clevelandart.org/art/1977.56
+5b6cba32126fed61-definitivo,52,c02-conceptual,cma:148368,English Warship Firing a Salute,,Netherlands,1690,cma,https://clevelandart.org/art/1975.80
+5b6cba32126fed61-definitivo,53,c02-conceptual,cma:150080,The Death of General Colbert,Victor Schnetz,France,1809,cma,https://clevelandart.org/art/1980.285
+5b6cba32126fed61-definitivo,54,c02-conceptual,cma:163456,"Harbor of Boston, with the City in the Distance",Fitz Henry Lane,United States,1846,cma,https://clevelandart.org/art/2004.35
+5b6cba32126fed61-definitivo,55,c02-conceptual,cma:135953,Greeting the Spring,Wu Bin,China,1600,cma,https://clevelandart.org/art/1959.45
+5b6cba32126fed61-definitivo,56,c02-conceptual,cma:155097,Boating in Moonlight,,Korea,1600,cma,https://clevelandart.org/art/1989.87
+5b6cba32126fed61-definitivo,57,c02-conceptual,cma:149415,Boats at Anchor on West Lake at the City Gate,,China,1150,cma,https://clevelandart.org/art/1978.68
+5b6cba32126fed61-definitivo,58,c02-conceptual,cma:136296,"Dream Journey among Rivers and Mountains, no. 90",Cheng Zhengkui,China,1658,cma,https://clevelandart.org/art/1960.182
+5b6cba32126fed61-definitivo,59,c02-conceptual,cma:140155,The Woodcutter of Luofu,Chen Ruyan,China,1366,cma,https://clevelandart.org/art/1964.156
+5b6cba32126fed61-definitivo,60,c02-conceptual,aic:120163,Capture of the Tripoli by the Enterprise,Thomas Birch,Philadelphia,1806,aic,https://www.artic.edu/artworks/120163
+5b6cba32126fed61-definitivo,61,c02-conceptual,cma:159741,View of Xiao Xiang,Kenkō Shōkei,Japan,1478,cma,https://clevelandart.org/art/1997.113
+5b6cba32126fed61-definitivo,62,c02-conceptual,aic:495,Coast Scene,"Reinier Nooms, called Zeeman",Netherlands,1645,aic,https://www.artic.edu/artworks/495
+5b6cba32126fed61-definitivo,63,c02-visual,aic:244013,Shipwreck near a Rocky Coast,Thomas Birch,United States,1833,aic,https://www.artic.edu/artworks/244013
+5b6cba32126fed61-definitivo,64,c02-visual,cma:153388,"View of Bordeaux, from the Quai des Chartrons",Eugène Boudin,France,1874,cma,https://clevelandart.org/art/1986.73
+5b6cba32126fed61-definitivo,65,c02-visual,cma:163456,"Harbor of Boston, with the City in the Distance",Fitz Henry Lane,United States,1846,cma,https://clevelandart.org/art/2004.35
+5b6cba32126fed61-definitivo,66,c02-visual,aic:181702,A View of Vianen with a Herdsman and Cattle by a River,Aelbert Cuyp,Dordrecht,1638,aic,https://www.artic.edu/artworks/181702
+5b6cba32126fed61-definitivo,67,c02-visual,cma:150080,The Death of General Colbert,Victor Schnetz,France,1809,cma,https://clevelandart.org/art/1980.285
+5b6cba32126fed61-definitivo,68,c02-visual,aic:495,Coast Scene,"Reinier Nooms, called Zeeman",Netherlands,1645,aic,https://www.artic.edu/artworks/495
+5b6cba32126fed61-definitivo,69,c02-visual,aic:4796,Fishing Boats with Hucksters Bargaining for Fish,Joseph Mallord William Turner,England,1832,aic,https://www.artic.edu/artworks/4796
+5b6cba32126fed61-definitivo,70,c02-visual,aic:120163,Capture of the Tripoli by the Enterprise,Thomas Birch,Philadelphia,1806,aic,https://www.artic.edu/artworks/120163
+5b6cba32126fed61-definitivo,71,c02-visual,cma:118042,The Dock of Deauville,Eugène Boudin,France,1891,cma,https://clevelandart.org/art/1939.165
+5b6cba32126fed61-definitivo,72,c02-visual,cma:148368,English Warship Firing a Salute,,Netherlands,1690,cma,https://clevelandart.org/art/1975.80
+5b6cba32126fed61-definitivo,73,c03-ambiguo,aic:57049,The Obelisk,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57049
+5b6cba32126fed61-definitivo,74,c03-ambiguo,cma:147938,"Interior of the Pantheon, Rome",Giovanni Paolo Panini,Italy,1747,cma,https://clevelandart.org/art/1974.39
+5b6cba32126fed61-definitivo,75,c03-ambiguo,cma:111691,Interior of a Synagogue,Alessandro Magnasco,Italy,1725,cma,https://clevelandart.org/art/1930.22
+5b6cba32126fed61-definitivo,76,c03-ambiguo,aic:57048,The Old Temple,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57048
+5b6cba32126fed61-definitivo,77,c03-ambiguo,cma:159488,The Trinity,Hendrik van Balen,Flanders,1615,cma,https://clevelandart.org/art/1996.26
+5b6cba32126fed61-definitivo,78,c03-ambiguo,cma:148862,The Grotto of Posillipo,Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.2
+5b6cba32126fed61-definitivo,79,c03-ambiguo,cma:126770,"Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187
+5b6cba32126fed61-definitivo,80,c03-ambiguo,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-definitivo,81,c03-ambiguo,cma:145450,Interior of a Church,Emanuel de Witte,Netherlands,1675,cma,https://clevelandart.org/art/1971.1
+5b6cba32126fed61-definitivo,82,c03-ambiguo,cma:148861,"The Colonnade of Saint Peter's, Rome, during the Conclave",Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.1
+5b6cba32126fed61-definitivo,83,c03-ambiguo,cma:126772,"Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187.2
+5b6cba32126fed61-definitivo,84,c03-conceptual,cma:148862,The Grotto of Posillipo,Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.2
+5b6cba32126fed61-definitivo,85,c03-conceptual,cma:126772,"Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187.2
+5b6cba32126fed61-definitivo,86,c03-conceptual,cma:126770,"Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187
+5b6cba32126fed61-definitivo,87,c03-conceptual,cma:145450,Interior of a Church,Emanuel de Witte,Netherlands,1675,cma,https://clevelandart.org/art/1971.1
+5b6cba32126fed61-definitivo,88,c03-conceptual,cma:147938,"Interior of the Pantheon, Rome",Giovanni Paolo Panini,Italy,1747,cma,https://clevelandart.org/art/1974.39
+5b6cba32126fed61-definitivo,89,c03-conceptual,aic:57049,The Obelisk,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57049
+5b6cba32126fed61-definitivo,90,c03-conceptual,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-definitivo,91,c03-conceptual,cma:148861,"The Colonnade of Saint Peter's, Rome, during the Conclave",Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.1
+5b6cba32126fed61-definitivo,92,c03-conceptual,cma:111691,Interior of a Synagogue,Alessandro Magnasco,Italy,1725,cma,https://clevelandart.org/art/1930.22
+5b6cba32126fed61-definitivo,93,c03-visual,aic:57049,The Obelisk,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57049
+5b6cba32126fed61-definitivo,94,c03-visual,aic:57051,The Fountains,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57051
+5b6cba32126fed61-definitivo,95,c03-visual,cma:145450,Interior of a Church,Emanuel de Witte,Netherlands,1675,cma,https://clevelandart.org/art/1971.1
+5b6cba32126fed61-definitivo,96,c03-visual,cma:148862,The Grotto of Posillipo,Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.2
+5b6cba32126fed61-definitivo,97,c03-visual,cma:148861,"The Colonnade of Saint Peter's, Rome, during the Conclave",Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.1
+5b6cba32126fed61-definitivo,98,c03-visual,cma:111691,Interior of a Synagogue,Alessandro Magnasco,Italy,1725,cma,https://clevelandart.org/art/1930.22
+5b6cba32126fed61-definitivo,99,c03-visual,cma:126772,"Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187.2
+5b6cba32126fed61-definitivo,100,c03-visual,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-definitivo,101,c03-visual,cma:147938,"Interior of the Pantheon, Rome",Giovanni Paolo Panini,Italy,1747,cma,https://clevelandart.org/art/1974.39
+5b6cba32126fed61-definitivo,102,c04-ambiguo,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-definitivo,103,c04-ambiguo,cma:135182,Chrysanthemums by a Stream,Ogata Kōrin,Japan,1715,cma,https://clevelandart.org/art/1958.206.2
+5b6cba32126fed61-definitivo,104,c04-ambiguo,cma:160723,Eighteen Views of Huzhou,Song Xu,China,1583,cma,https://clevelandart.org/art/1998.78
+5b6cba32126fed61-definitivo,105,c04-ambiguo,aic:56905,Nocturne: Blue and Gold—Southampton Water,James McNeill Whistler,London,1872,aic,https://www.artic.edu/artworks/56905
+5b6cba32126fed61-definitivo,106,c04-ambiguo,cma:715339,Still Life,María Blanchard,France,1911,cma,https://clevelandart.org/art/2026.37
+5b6cba32126fed61-definitivo,107,c04-ambiguo,cma:93234,"On the Beach, No. 3",Maurice Prendergast,America,1915,cma,https://clevelandart.org/art/1926.1653
+5b6cba32126fed61-definitivo,108,c04-ambiguo,cma:161673,Autumn Evening with Full Moon on Musashino Plain,,Japan,1600,cma,https://clevelandart.org/art/2000.4.2
+5b6cba32126fed61-definitivo,109,c04-ambiguo,cma:84662,The Orange Christ,Maurice Denis,France,1889,cma,https://clevelandart.org/art/2020.107
+5b6cba32126fed61-definitivo,110,c04-ambiguo,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-definitivo,111,c04-ambiguo,cma:147520,Card Rack with a Jack of Hearts,John F. Peto,United States,1890,cma,https://clevelandart.org/art/1973.30
+5b6cba32126fed61-definitivo,112,c04-conceptual,cma:137951,"The husband berates his wife for purchasing gravel instead of sugar, from a Tuti-nama (Tales of a Parrot): Eighth Night",,Mughal India,1555,cma,https://clevelandart.org/art/1962.279.70.b
+5b6cba32126fed61-definitivo,113,c04-conceptual,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-definitivo,114,c04-conceptual,cma:147520,Card Rack with a Jack of Hearts,John F. Peto,United States,1890,cma,https://clevelandart.org/art/1973.30
+5b6cba32126fed61-definitivo,115,c04-conceptual,cma:137924,"Landscape with a lotus pool, from a Tuti-nama (Tales of a Parrot), Eighth Night",Gujarati,Mughal India,1555,cma,https://clevelandart.org/art/1962.279.59.a
+5b6cba32126fed61-definitivo,116,c04-conceptual,cma:438621,"Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)",,Northwestern India,1670,cma,https://clevelandart.org/art/2021.12
+5b6cba32126fed61-definitivo,117,c04-conceptual,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-definitivo,118,c04-conceptual,cma:107357,Madhu Madhavi Ragini,,Central India,1625,cma,https://clevelandart.org/art/1925.1336
+5b6cba32126fed61-definitivo,119,c04-conceptual,cma:160723,Eighteen Views of Huzhou,Song Xu,China,1583,cma,https://clevelandart.org/art/1998.78
+5b6cba32126fed61-definitivo,120,c04-conceptual,cma:84662,The Orange Christ,Maurice Denis,France,1889,cma,https://clevelandart.org/art/2020.107
+5b6cba32126fed61-definitivo,121,c04-conceptual,cma:162867,Lineage Portrait of Buddhist Monks,,China,1600,cma,https://clevelandart.org/art/2003.352
+5b6cba32126fed61-definitivo,122,c04-conceptual,aic:75068,Millet Fields under Sun and Moon,,Japan,1601,aic,https://www.artic.edu/artworks/75068
+5b6cba32126fed61-definitivo,123,c04-conceptual,cma:137427,"The Parrot Addresses Khujasta at the Beginning of the Eighteenth Night, from a Tuti-nama (Tales of a Parrot)",,Mughal India,1555,cma,https://clevelandart.org/art/1962.279.130.b
+5b6cba32126fed61-definitivo,124,c04-conceptual,cma:150074,Seventy-Two Peaks Under the Blue Sky with Mount Furong,Matsumura Goshun,Japan,1785,cma,https://clevelandart.org/art/1980.28
+5b6cba32126fed61-definitivo,125,c04-conceptual,cma:137485,"As punishment, the jester’s wife and the Zangi are thrown into fire and the emir’s wife and the mahout are trampled by an elephant, from a Tuti-nama (Tales of a Parrot), Twenty-second Night",,Mughal India,1555,cma,https://clevelandart.org/art/1962.279.158.b
+5b6cba32126fed61-definitivo,126,c04-visual,cma:84662,The Orange Christ,Maurice Denis,France,1889,cma,https://clevelandart.org/art/2020.107
+5b6cba32126fed61-definitivo,127,c04-visual,cma:147520,Card Rack with a Jack of Hearts,John F. Peto,United States,1890,cma,https://clevelandart.org/art/1973.30
+5b6cba32126fed61-definitivo,128,c04-visual,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-definitivo,129,c04-visual,cma:161673,Autumn Evening with Full Moon on Musashino Plain,,Japan,1600,cma,https://clevelandart.org/art/2000.4.2
+5b6cba32126fed61-definitivo,130,c04-visual,cma:160723,Eighteen Views of Huzhou,Song Xu,China,1583,cma,https://clevelandart.org/art/1998.78
+5b6cba32126fed61-definitivo,131,c04-visual,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-definitivo,132,c04-visual,cma:150074,Seventy-Two Peaks Under the Blue Sky with Mount Furong,Matsumura Goshun,Japan,1785,cma,https://clevelandart.org/art/1980.28
+5b6cba32126fed61-definitivo,133,c04-visual,cma:115405,The Pigeon Tower at Bellevue,Paul Cezanne,France,1890,cma,https://clevelandart.org/art/1936.19
+5b6cba32126fed61-definitivo,134,c05-ambiguo,cma:99428,Hannah Wentworth Atkinson,Joseph Blackburn,America,1760,cma,https://clevelandart.org/art/1919.1005
+5b6cba32126fed61-definitivo,135,c05-ambiguo,aic:11390,Portrait of a Noblewoman Dressed in Mourning,Jacopo da Empoli,Italy,1595,aic,https://www.artic.edu/artworks/11390
+5b6cba32126fed61-definitivo,136,c05-ambiguo,cma:95286,Portrait of a Woman,Jan Anthonisz. van Ravesteyn,Netherlands,1620,cma,https://clevelandart.org/art/1916.1055
+5b6cba32126fed61-definitivo,137,c05-ambiguo,cma:109248,Mary Campbell Stuart,Gilbert Stuart,America,1810,cma,https://clevelandart.org/art/1927.394.2
+5b6cba32126fed61-definitivo,138,c05-ambiguo,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-definitivo,139,c05-ambiguo,aic:76166,Phebe Russell Swain Welch,Sheldon Peck,United States,1837,aic,https://www.artic.edu/artworks/76166
+5b6cba32126fed61-definitivo,140,c05-ambiguo,aic:61151,Mrs. Benjamin Schaum (Anna Maria Heckensweiler),Jacob Eichholtz,Lancaster,1808,aic,https://www.artic.edu/artworks/61151
+5b6cba32126fed61-definitivo,141,c05-ambiguo,cma:173240,Portrait of a Woman (Judith Colman Bulfinch?),John Smibert,America,1729,cma,https://clevelandart.org/art/1920.3919
+5b6cba32126fed61-definitivo,142,c05-ambiguo,cma:125247,Portrait of Isabella Brant,Peter Paul Rubens,Flanders,1620,cma,https://clevelandart.org/art/1947.207
+5b6cba32126fed61-definitivo,143,c05-ambiguo,cma:149769,Susanna Anderson Rose,Frederick Sandys,England,1862,cma,https://clevelandart.org/art/1979.81
+5b6cba32126fed61-definitivo,144,c05-ambiguo,cma:95269,Portrait of Jane Hoskyns,George Romney,England,1778,cma,https://clevelandart.org/art/1916.1041
+5b6cba32126fed61-definitivo,145,c05-ambiguo,aic:79765,Portrait of a Woman,John Wollaston,United States,1749,aic,https://www.artic.edu/artworks/79765
+5b6cba32126fed61-definitivo,146,c05-ambiguo,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-definitivo,147,c05-ambiguo,cma:147447,"Portrait of a Woman, possibly Elizabeth Boothby",Cornelis Jonson,England,1619,cma,https://clevelandart.org/art/1973.185
+5b6cba32126fed61-definitivo,148,c05-ambiguo,aic:105887,Portrait of a Young Woman,Aert de Gelder,Netherlands,1685,aic,https://www.artic.edu/artworks/105887
+5b6cba32126fed61-definitivo,149,c05-conceptual,aic:36678,Girl with Cherries,Eva Gonzalès,France,1865,aic,https://www.artic.edu/artworks/36678
+5b6cba32126fed61-definitivo,150,c05-conceptual,cma:122341,Portrait of the Marquise d'Aguirandes,François Hubert Drouais,France,1759,cma,https://clevelandart.org/art/1942.638
+5b6cba32126fed61-definitivo,151,c05-conceptual,cma:109248,Mary Campbell Stuart,Gilbert Stuart,America,1810,cma,https://clevelandart.org/art/1927.394.2
+5b6cba32126fed61-definitivo,152,c05-conceptual,cma:122347,Portrait of a Woman as Diana,Jean-Marc Nattier,France,1752,cma,https://clevelandart.org/art/1942.643
+5b6cba32126fed61-definitivo,153,c05-conceptual,aic:61151,Mrs. Benjamin Schaum (Anna Maria Heckensweiler),Jacob Eichholtz,Lancaster,1808,aic,https://www.artic.edu/artworks/61151
+5b6cba32126fed61-definitivo,154,c05-conceptual,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-definitivo,155,c05-conceptual,cma:173240,Portrait of a Woman (Judith Colman Bulfinch?),John Smibert,America,1729,cma,https://clevelandart.org/art/1920.3919
+5b6cba32126fed61-definitivo,156,c05-conceptual,cma:99428,Hannah Wentworth Atkinson,Joseph Blackburn,America,1760,cma,https://clevelandart.org/art/1919.1005
+5b6cba32126fed61-definitivo,157,c05-conceptual,cma:125951,Portrait of a Woman,Jean-Marc Nattier,France,1743,cma,https://clevelandart.org/art/1948.183
+5b6cba32126fed61-definitivo,158,c05-conceptual,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-definitivo,159,c05-conceptual,cma:95286,Portrait of a Woman,Jan Anthonisz. van Ravesteyn,Netherlands,1620,cma,https://clevelandart.org/art/1916.1055
+5b6cba32126fed61-definitivo,160,c05-conceptual,aic:14594,Portrait of a Woman with a Black Fichu,Édouard Manet,Paris,1873,aic,https://www.artic.edu/artworks/14594
+5b6cba32126fed61-definitivo,161,c05-conceptual,cma:125895,"Portrait of a Woman, probably Aeltje Dircksdr. Pater",Frans Hals,Netherlands,1638,cma,https://clevelandart.org/art/1948.137
+5b6cba32126fed61-definitivo,162,c05-conceptual,cma:95269,Portrait of Jane Hoskyns,George Romney,England,1778,cma,https://clevelandart.org/art/1916.1041
+5b6cba32126fed61-definitivo,163,c05-visual,cma:149769,Susanna Anderson Rose,Frederick Sandys,England,1862,cma,https://clevelandart.org/art/1979.81
+5b6cba32126fed61-definitivo,164,c05-visual,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-definitivo,165,c05-visual,cma:95269,Portrait of Jane Hoskyns,George Romney,England,1778,cma,https://clevelandart.org/art/1916.1041
+5b6cba32126fed61-definitivo,166,c05-visual,cma:109248,Mary Campbell Stuart,Gilbert Stuart,America,1810,cma,https://clevelandart.org/art/1927.394.2
+5b6cba32126fed61-definitivo,167,c05-visual,aic:105887,Portrait of a Young Woman,Aert de Gelder,Netherlands,1685,aic,https://www.artic.edu/artworks/105887
+5b6cba32126fed61-definitivo,168,c05-visual,cma:173240,Portrait of a Woman (Judith Colman Bulfinch?),John Smibert,America,1729,cma,https://clevelandart.org/art/1920.3919
+5b6cba32126fed61-definitivo,169,c05-visual,cma:99428,Hannah Wentworth Atkinson,Joseph Blackburn,America,1760,cma,https://clevelandart.org/art/1919.1005
+5b6cba32126fed61-definitivo,170,c05-visual,cma:95286,Portrait of a Woman,Jan Anthonisz. van Ravesteyn,Netherlands,1620,cma,https://clevelandart.org/art/1916.1055
+5b6cba32126fed61-definitivo,171,c05-visual,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-definitivo,172,c05-visual,cma:147447,"Portrait of a Woman, possibly Elizabeth Boothby",Cornelis Jonson,England,1619,cma,https://clevelandart.org/art/1973.185
+5b6cba32126fed61-definitivo,173,c05-visual,aic:61151,Mrs. Benjamin Schaum (Anna Maria Heckensweiler),Jacob Eichholtz,Lancaster,1808,aic,https://www.artic.edu/artworks/61151
+5b6cba32126fed61-definitivo,174,c06-ambiguo,cma:314500,Royal Woman Holding a Flower,,Northwestern India,1665,cma,https://clevelandart.org/art/2018.194
+5b6cba32126fed61-definitivo,175,c06-ambiguo,cma:169341,Portrait of Maharaja Pratap Singh (1764–1803),Sahib Ram,Northwestern India,1788,cma,https://clevelandart.org/art/2011.207
+5b6cba32126fed61-definitivo,176,c06-ambiguo,cma:314448,A European Woman Pouring Wine into a Cup,,,1700,cma,https://clevelandart.org/art/2018.143
+5b6cba32126fed61-definitivo,177,c06-ambiguo,cma:145923,Funerary Panel of a Man,,Antonine-era Roman Empire,138,cma,https://clevelandart.org/art/1971.135
+5b6cba32126fed61-definitivo,178,c06-ambiguo,cma:131819,A Genoese Lady with Her Child,Anthony van Dyck,Flanders,1623,cma,https://clevelandart.org/art/1954.392
+5b6cba32126fed61-definitivo,179,c06-ambiguo,cma:130163,Young Woman with a Turban,Jacques-Louis David,France,1775,cma,https://clevelandart.org/art/1952.542
+5b6cba32126fed61-definitivo,180,c06-ambiguo,cma:128365,A Young Woman,Gerrit Dou,Netherlands,1640,cma,https://clevelandart.org/art/1951.325
+5b6cba32126fed61-definitivo,181,c06-ambiguo,cma:101356,Oval portrait of a woman in a Chaghtai hat,,India,1735,cma,https://clevelandart.org/art/1920.1967
+5b6cba32126fed61-definitivo,182,c06-ambiguo,aic:864,Portrait of a Man with a Pink,Quentin Massys,Netherlands,1500,aic,https://www.artic.edu/artworks/864
+5b6cba32126fed61-definitivo,183,c06-ambiguo,cma:314479,Drawing of a Man’s Head with an Unusual Turban,,Northwestern India,1770,cma,https://clevelandart.org/art/2018.174
+5b6cba32126fed61-definitivo,184,c06-ambiguo,cma:122336,Saint Catherine,Master of the Holy Blood,Flanders,1515,cma,https://clevelandart.org/art/1942.633.1
+5b6cba32126fed61-definitivo,185,c06-ambiguo,cma:142520,Man Dhata in Yogi Position,,India,1685,cma,https://clevelandart.org/art/1966.27
+5b6cba32126fed61-definitivo,186,c06-ambiguo,cma:162509,"Kartikeya, from a Kalighat album",,Eastern India,1875,cma,https://clevelandart.org/art/2003.151
+5b6cba32126fed61-definitivo,187,c06-conceptual,cma:97156,Portrait of an Old Man,Giulio Campi,Italy,1525,cma,https://clevelandart.org/art/1916.794
+5b6cba32126fed61-definitivo,188,c06-conceptual,cma:169341,Portrait of Maharaja Pratap Singh (1764–1803),Sahib Ram,Northwestern India,1788,cma,https://clevelandart.org/art/2011.207
+5b6cba32126fed61-definitivo,189,c06-conceptual,aic:22270,Lucrezia di Lippo di Iacopo Guidi,Andrea del Sarto,Italy,1525,aic,https://www.artic.edu/artworks/22270
+5b6cba32126fed61-definitivo,190,c06-conceptual,cma:142520,Man Dhata in Yogi Position,,India,1685,cma,https://clevelandart.org/art/1966.27
+5b6cba32126fed61-definitivo,191,c06-conceptual,cma:101356,Oval portrait of a woman in a Chaghtai hat,,India,1735,cma,https://clevelandart.org/art/1920.1967
+5b6cba32126fed61-definitivo,192,c06-conceptual,cma:97155,Portrait of a Couple,,Northern Italy,1580,cma,https://clevelandart.org/art/1916.793
+5b6cba32126fed61-definitivo,193,c06-conceptual,cma:314500,Royal Woman Holding a Flower,,Northwestern India,1665,cma,https://clevelandart.org/art/2018.194
+5b6cba32126fed61-definitivo,194,c06-conceptual,cma:314448,A European Woman Pouring Wine into a Cup,,,1700,cma,https://clevelandart.org/art/2018.143
+5b6cba32126fed61-definitivo,195,c06-conceptual,cma:125251,Portrait of a Prelate,Girolamo da Carpi,Italy,1540,cma,https://clevelandart.org/art/1947.210
+5b6cba32126fed61-definitivo,196,c06-conceptual,cma:137333,Pinnacle with Angel,Niccolò di Segna,Italy,1335,cma,https://clevelandart.org/art/1962.257.1
+5b6cba32126fed61-definitivo,197,c06-conceptual,cma:142475,"Christ in a Mandorla, with the instruments of the Passion, with St. Stephen and St. Lawrence below",Berlinghiero,Italy,1225,cma,https://clevelandart.org/art/1966.237.c
+5b6cba32126fed61-definitivo,198,c06-conceptual,aic:11390,Portrait of a Noblewoman Dressed in Mourning,Jacopo da Empoli,Italy,1595,aic,https://www.artic.edu/artworks/11390
+5b6cba32126fed61-definitivo,199,c06-conceptual,cma:122336,Saint Catherine,Master of the Holy Blood,Flanders,1515,cma,https://clevelandart.org/art/1942.633.1
+5b6cba32126fed61-definitivo,200,c06-conceptual,cma:146469,Portrait of a Woman,Agnolo Bronzino,Italy,1550,cma,https://clevelandart.org/art/1972.121
+5b6cba32126fed61-definitivo,201,c06-visual,cma:314448,A European Woman Pouring Wine into a Cup,,,1700,cma,https://clevelandart.org/art/2018.143
+5b6cba32126fed61-definitivo,202,c06-visual,cma:162509,"Kartikeya, from a Kalighat album",,Eastern India,1875,cma,https://clevelandart.org/art/2003.151
+5b6cba32126fed61-definitivo,203,c06-visual,aic:90437,Monju Dressed in a Robe of Braided Grass (Nawa Monju),,Japan,1410,aic,https://www.artic.edu/artworks/90437
+5b6cba32126fed61-definitivo,204,c06-visual,cma:314500,Royal Woman Holding a Flower,,Northwestern India,1665,cma,https://clevelandart.org/art/2018.194
+5b6cba32126fed61-definitivo,205,c06-visual,cma:150053,Head of an Italian Woman,Jean-Léon Gérôme,France,1847,cma,https://clevelandart.org/art/1980.264
+5b6cba32126fed61-definitivo,206,c06-visual,cma:153395,Kannon,,Japan,1868,cma,https://clevelandart.org/art/1986.8
+5b6cba32126fed61-definitivo,207,c06-visual,cma:169341,Portrait of Maharaja Pratap Singh (1764–1803),Sahib Ram,Northwestern India,1788,cma,https://clevelandart.org/art/2011.207
+5b6cba32126fed61-definitivo,208,c06-visual,cma:142475,"Christ in a Mandorla, with the instruments of the Passion, with St. Stephen and St. Lawrence below",Berlinghiero,Italy,1225,cma,https://clevelandart.org/art/1966.237.c
+5b6cba32126fed61-definitivo,209,c06-visual,cma:142520,Man Dhata in Yogi Position,,India,1685,cma,https://clevelandart.org/art/1966.27
+5b6cba32126fed61-definitivo,210,c06-visual,cma:145923,Funerary Panel of a Man,,Antonine-era Roman Empire,138,cma,https://clevelandart.org/art/1971.135
+5b6cba32126fed61-definitivo,211,c06-visual,cma:101356,Oval portrait of a woman in a Chaghtai hat,,India,1735,cma,https://clevelandart.org/art/1920.1967
+5b6cba32126fed61-definitivo,212,c07-ambiguo,aic:147005,"Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three",Tibeto-Chinese,Tibet,1675,aic,https://www.artic.edu/artworks/147005
+5b6cba32126fed61-definitivo,213,c07-ambiguo,cma:161323,Portrait of Samurai-Official: Hirai KyoseiHirai Kyosei,Tsukioka Settei,Japan,1776,cma,https://clevelandart.org/art/1999.89.1
+5b6cba32126fed61-definitivo,214,c07-ambiguo,cma:141727,Portrait of Duli Xingyi,Kita Genki,Japan,1671,cma,https://clevelandart.org/art/1965.31
+5b6cba32126fed61-definitivo,215,c07-ambiguo,cma:137219,Monk Mending Clothes in the Morning Sun (Chōyō Hotetsuzu),,Japan,1350,cma,https://clevelandart.org/art/1962.163
+5b6cba32126fed61-definitivo,216,c07-ambiguo,cma:147927,"Portrait of Priest Dazhi (1048–1116), Master of Law",Liu Tao,China,1100,cma,https://clevelandart.org/art/1974.29
+5b6cba32126fed61-definitivo,217,c07-ambiguo,cma:153777,Genre Figures,Takebe Sōchō,Japan,1811,cma,https://clevelandart.org/art/1987.72.1
+5b6cba32126fed61-definitivo,218,c07-ambiguo,cma:151529,Welcoming Descent of Jizō,,Japan,1200,cma,https://clevelandart.org/art/1983.75
+5b6cba32126fed61-definitivo,219,c07-ambiguo,cma:140321,Shōtoku Taishi at Sixteen,,Japan,1400,cma,https://clevelandart.org/art/1964.278
+5b6cba32126fed61-definitivo,220,c07-ambiguo,cma:79600,Portrait of Sugawara Michizane,Yōgetsu,Japan,1475,cma,https://clevelandart.org/art/2015.491
+5b6cba32126fed61-definitivo,221,c07-ambiguo,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-definitivo,222,c07-ambiguo,cma:160470,Courtesan Seated on a Bench Enjoying the Evening Cool in Summer,Kamigaki Hōryū,Japan,1615,cma,https://clevelandart.org/art/1998.290
+5b6cba32126fed61-definitivo,223,c07-conceptual,cma:162867,Lineage Portrait of Buddhist Monks,,China,1600,cma,https://clevelandart.org/art/2003.352
+5b6cba32126fed61-definitivo,224,c07-conceptual,cma:153777,Genre Figures,Takebe Sōchō,Japan,1811,cma,https://clevelandart.org/art/1987.72.1
+5b6cba32126fed61-definitivo,225,c07-conceptual,cma:146174,Shakyamuni under the Bodhi Tree,,China,1600,cma,https://clevelandart.org/art/1971.68
+5b6cba32126fed61-definitivo,226,c07-conceptual,cma:145964,Portrait of An Qi,Wang Hui,China,1715,cma,https://clevelandart.org/art/1971.17
+5b6cba32126fed61-definitivo,227,c07-conceptual,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-definitivo,228,c07-conceptual,cma:151529,Welcoming Descent of Jizō,,Japan,1200,cma,https://clevelandart.org/art/1983.75
+5b6cba32126fed61-definitivo,229,c07-conceptual,cma:147927,"Portrait of Priest Dazhi (1048–1116), Master of Law",Liu Tao,China,1100,cma,https://clevelandart.org/art/1974.29
+5b6cba32126fed61-definitivo,230,c07-conceptual,aic:147005,"Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three",Tibeto-Chinese,Tibet,1675,aic,https://www.artic.edu/artworks/147005
+5b6cba32126fed61-definitivo,231,c07-conceptual,cma:150944,Portrait of an Official,,China,1600,cma,https://clevelandart.org/art/1982.35
+5b6cba32126fed61-definitivo,232,c07-conceptual,cma:140321,Shōtoku Taishi at Sixteen,,Japan,1400,cma,https://clevelandart.org/art/1964.278
+5b6cba32126fed61-definitivo,233,c07-conceptual,cma:160470,Courtesan Seated on a Bench Enjoying the Evening Cool in Summer,Kamigaki Hōryū,Japan,1615,cma,https://clevelandart.org/art/1998.290
+5b6cba32126fed61-definitivo,234,c07-conceptual,cma:79600,Portrait of Sugawara Michizane,Yōgetsu,Japan,1475,cma,https://clevelandart.org/art/2015.491
+5b6cba32126fed61-definitivo,235,c07-conceptual,cma:151970,Waterfowl and Reeds,Liang Kai,China,1200,cma,https://clevelandart.org/art/1984.42
+5b6cba32126fed61-definitivo,236,c07-conceptual,cma:146713,White-Robed Guanyin,Zhang Yuehu,China,1275,cma,https://clevelandart.org/art/1972.160
+5b6cba32126fed61-definitivo,237,c07-visual,cma:153777,Genre Figures,Takebe Sōchō,Japan,1811,cma,https://clevelandart.org/art/1987.72.1
+5b6cba32126fed61-definitivo,238,c07-visual,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-definitivo,239,c07-visual,cma:79600,Portrait of Sugawara Michizane,Yōgetsu,Japan,1475,cma,https://clevelandart.org/art/2015.491
+5b6cba32126fed61-definitivo,240,c07-visual,cma:161323,Portrait of Samurai-Official: Hirai KyoseiHirai Kyosei,Tsukioka Settei,Japan,1776,cma,https://clevelandart.org/art/1999.89.1
+5b6cba32126fed61-definitivo,241,c07-visual,aic:147005,"Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three",Tibeto-Chinese,Tibet,1675,aic,https://www.artic.edu/artworks/147005
+5b6cba32126fed61-definitivo,242,c07-visual,cma:141727,Portrait of Duli Xingyi,Kita Genki,Japan,1671,cma,https://clevelandart.org/art/1965.31
+5b6cba32126fed61-definitivo,243,c07-visual,cma:160470,Courtesan Seated on a Bench Enjoying the Evening Cool in Summer,Kamigaki Hōryū,Japan,1615,cma,https://clevelandart.org/art/1998.290
+5b6cba32126fed61-definitivo,244,c07-visual,cma:151529,Welcoming Descent of Jizō,,Japan,1200,cma,https://clevelandart.org/art/1983.75
+5b6cba32126fed61-definitivo,245,c07-visual,cma:161268,Portrait of an Official,,Korea,1800,cma,https://clevelandart.org/art/1999.45
+5b6cba32126fed61-definitivo,246,c07-visual,cma:147927,"Portrait of Priest Dazhi (1048–1116), Master of Law",Liu Tao,China,1100,cma,https://clevelandart.org/art/1974.29
+5b6cba32126fed61-definitivo,247,c07-visual,cma:140321,Shōtoku Taishi at Sixteen,,Japan,1400,cma,https://clevelandart.org/art/1964.278
+5b6cba32126fed61-definitivo,248,c08-ambiguo,cma:154260,"Celebrations of Krishna's Birth, from a Bhagavata Purana",,Northern India,1725,cma,https://clevelandart.org/art/1988.70
+5b6cba32126fed61-definitivo,249,c08-ambiguo,cma:314439,"Krishna Lifts Mount Govardhan, from a Bhagavata Purana",,Central India,1686,cma,https://clevelandart.org/art/2018.134
+5b6cba32126fed61-definitivo,250,c08-ambiguo,cma:125580,"The siege of Arbela in the era of Hulagu Khan, page from a Chingiz-nama (Book of Chingiz Khan) of the Jami al-tavarikh (Compendium of Chronicles) of Rashid al-Din (Persian,1247–1318)",Basavana,Mughal India,1591,cma,https://clevelandart.org/art/1947.502.a
+5b6cba32126fed61-definitivo,251,c08-ambiguo,cma:137485,"As punishment, the jester’s wife and the Zangi are thrown into fire and the emir’s wife and the mahout are trampled by an elephant, from a Tuti-nama (Tales of a Parrot), Twenty-second Night",,Mughal India,1555,cma,https://clevelandart.org/art/1962.279.158.b
+5b6cba32126fed61-definitivo,252,c08-ambiguo,cma:146199,European Costume Scene,,India,1590,cma,https://clevelandart.org/art/1971.89
+5b6cba32126fed61-definitivo,253,c08-ambiguo,cma:677526,"Battle between monkeys and demons, from the “Shangri” Ramayana",,Northern India,1680,cma,https://clevelandart.org/art/2025.9
+5b6cba32126fed61-definitivo,254,c08-ambiguo,cma:314429,"Abduction of Rukmini: Krishna Tied the Hands of Rukma, from a Bhagavata Purana",,Central India,1630,cma,https://clevelandart.org/art/2018.127
+5b6cba32126fed61-definitivo,255,c08-ambiguo,cma:163206,Sindhu Raga,,Northwestern India,1715,cma,https://clevelandart.org/art/2004.110
+5b6cba32126fed61-definitivo,256,c08-ambiguo,cma:314436,"Three Musicians Perform Before a King: Shri Raga, from a Ragamala",,Central India,1640,cma,https://clevelandart.org/art/2018.131
+5b6cba32126fed61-definitivo,257,c08-ambiguo,cma:314447,"Queen Kaikeyi reminds King Dasharatha about the sacrifices of King Bali and King Shivi, folio 39 from the Ayodhya Kanda (Book of Ayodhya) of a Ramayana (Rama's Journey)",,Northwestern India,1700,cma,https://clevelandart.org/art/2018.142
+5b6cba32126fed61-definitivo,258,c08-ambiguo,aic:49195,Maharana Bhim Singh in Procession,Ghasi,India,1815,aic,https://www.artic.edu/artworks/49195
+5b6cba32126fed61-definitivo,259,c08-ambiguo,cma:162494,"Seven Heroes or Warriors Killing Abhimanya, Son of Arjuna",,Eastern India,1875,cma,https://clevelandart.org/art/2003.144
+5b6cba32126fed61-definitivo,260,c08-conceptual,cma:150080,The Death of General Colbert,Victor Schnetz,France,1809,cma,https://clevelandart.org/art/1980.285
+5b6cba32126fed61-definitivo,261,c08-conceptual,aic:110663,The Combat of the Giaour and Hassan,Eugène Delacroix,France,1826,aic,https://www.artic.edu/artworks/110663
+5b6cba32126fed61-definitivo,262,c08-conceptual,aic:49195,Maharana Bhim Singh in Procession,Ghasi,India,1815,aic,https://www.artic.edu/artworks/49195
+5b6cba32126fed61-definitivo,263,c08-conceptual,aic:152851,Sketch for The Revolt of Cairo,Anne-Louis Girodet de Roussy-Trioson,France,1805,aic,https://www.artic.edu/artworks/152851
+5b6cba32126fed61-definitivo,264,c08-conceptual,cma:163206,Sindhu Raga,,Northwestern India,1715,cma,https://clevelandart.org/art/2004.110
+5b6cba32126fed61-definitivo,265,c08-conceptual,cma:314447,"Queen Kaikeyi reminds King Dasharatha about the sacrifices of King Bali and King Shivi, folio 39 from the Ayodhya Kanda (Book of Ayodhya) of a Ramayana (Rama's Journey)",,Northwestern India,1700,cma,https://clevelandart.org/art/2018.142
+5b6cba32126fed61-definitivo,266,c08-conceptual,cma:146184,"Mughal ruler Humayun defeating the Afghans before reconquering India, folio from an Akbar-nama (Book of Akbar) of Abu’l Fazl (Indian, 1551–1602)",,Mughal India,1585,cma,https://clevelandart.org/art/1971.77
+5b6cba32126fed61-definitivo,267,c08-conceptual,cma:145473,The Kiss of Peace and Justice,Laurent de La Hyre,France,1654,cma,https://clevelandart.org/art/1971.102
+5b6cba32126fed61-definitivo,268,c08-conceptual,cma:314439,"Krishna Lifts Mount Govardhan, from a Bhagavata Purana",,Central India,1686,cma,https://clevelandart.org/art/2018.134
+5b6cba32126fed61-definitivo,269,c08-conceptual,cma:314436,"Three Musicians Perform Before a King: Shri Raga, from a Ragamala",,Central India,1640,cma,https://clevelandart.org/art/2018.131
+5b6cba32126fed61-definitivo,270,c08-conceptual,cma:314429,"Abduction of Rukmini: Krishna Tied the Hands of Rukma, from a Bhagavata Purana",,Central India,1630,cma,https://clevelandart.org/art/2018.127
+5b6cba32126fed61-definitivo,271,c08-conceptual,cma:677526,"Battle between monkeys and demons, from the “Shangri” Ramayana",,Northern India,1680,cma,https://clevelandart.org/art/2025.9
+5b6cba32126fed61-definitivo,272,c08-conceptual,cma:314446,"Krishna Quells the Serpent Kaliya, from a Bhagavata Purana",,Northwestern India,1705,cma,https://clevelandart.org/art/2018.141
+5b6cba32126fed61-definitivo,273,c08-conceptual,cma:146726,"General Jean-Baptiste Kléber (Sketch for ""The Battle of the Pyramids"")",Antoine-Jean Gros,France,1830,cma,https://clevelandart.org/art/1972.17.1
+5b6cba32126fed61-definitivo,274,c08-conceptual,cma:146725,"General Jean-Baptiste Kléber and Egyptian Family (Sketches for ""The Battle of the Pyramids"")",Antoine-Jean Gros,France,1830,cma,https://clevelandart.org/art/1972.17
+5b6cba32126fed61-definitivo,275,c08-conceptual,cma:154260,"Celebrations of Krishna's Birth, from a Bhagavata Purana",,Northern India,1725,cma,https://clevelandart.org/art/1988.70
+5b6cba32126fed61-definitivo,276,c08-visual,aic:49195,Maharana Bhim Singh in Procession,Ghasi,India,1815,aic,https://www.artic.edu/artworks/49195
+5b6cba32126fed61-definitivo,277,c08-visual,cma:119007,Princes hunting in a rocky landscape,,India,1580,cma,https://clevelandart.org/art/1940.1197
+5b6cba32126fed61-definitivo,278,c08-visual,cma:314247,Descent of the Ganges,,Northern India,1700,cma,https://clevelandart.org/art/2018.111
+5b6cba32126fed61-definitivo,279,c08-visual,cma:170812,A Mounted Prince Hunting Lion in a Rocky Landscape,Khem Karan,Mughal India,1595,cma,https://clevelandart.org/art/2013.310
+5b6cba32126fed61-definitivo,280,c08-visual,cma:314447,"Queen Kaikeyi reminds King Dasharatha about the sacrifices of King Bali and King Shivi, folio 39 from the Ayodhya Kanda (Book of Ayodhya) of a Ramayana (Rama's Journey)",,Northwestern India,1700,cma,https://clevelandart.org/art/2018.142
+5b6cba32126fed61-definitivo,281,c08-visual,cma:133294,Durga Slaying Mahisha,,Northern India,1825,cma,https://clevelandart.org/art/1955.667
+5b6cba32126fed61-definitivo,282,c08-visual,cma:136475,Durga Slaying Mahisha,,Northern India,1695,cma,https://clevelandart.org/art/1960.51
+5b6cba32126fed61-definitivo,283,c08-visual,cma:314429,"Abduction of Rukmini: Krishna Tied the Hands of Rukma, from a Bhagavata Purana",,Central India,1630,cma,https://clevelandart.org/art/2018.127
+5b6cba32126fed61-definitivo,284,c08-visual,cma:677526,"Battle between monkeys and demons, from the “Shangri” Ramayana",,Northern India,1680,cma,https://clevelandart.org/art/2025.9
+5b6cba32126fed61-definitivo,285,c08-visual,cma:107357,Madhu Madhavi Ragini,,Central India,1625,cma,https://clevelandart.org/art/1925.1336
+5b6cba32126fed61-definitivo,286,c08-visual,cma:154260,"Celebrations of Krishna's Birth, from a Bhagavata Purana",,Northern India,1725,cma,https://clevelandart.org/art/1988.70
+5b6cba32126fed61-definitivo,287,c08-visual,cma:314436,"Three Musicians Perform Before a King: Shri Raga, from a Ragamala",,Central India,1640,cma,https://clevelandart.org/art/2018.131
+5b6cba32126fed61-definitivo,288,c08-visual,cma:314442,The Elephant of Maharana Jai Singh of Mewar (r. 1680–98) Catches a Horse by the Tail,,Northwestern India,1670,cma,https://clevelandart.org/art/2018.137
+5b6cba32126fed61-definitivo,289,c08-visual,cma:314439,"Krishna Lifts Mount Govardhan, from a Bhagavata Purana",,Central India,1686,cma,https://clevelandart.org/art/2018.134
+5b6cba32126fed61-definitivo,290,c08-visual,cma:163206,Sindhu Raga,,Northwestern India,1715,cma,https://clevelandart.org/art/2004.110
+5b6cba32126fed61-definitivo,291,c09-ambiguo,cma:140445,"The Fool's Spring, from Twelve Views of Tiger Hill, Suzhou",Shen Zhou,China,1491,cma,https://clevelandart.org/art/1964.371.2
+5b6cba32126fed61-definitivo,292,c09-ambiguo,cma:145430,Ink Plum,Peng Xu,China,1488,cma,https://clevelandart.org/art/1970.80
+5b6cba32126fed61-definitivo,293,c09-ambiguo,cma:147045,Solitary Colors of the Autumn Woods,Wang Jianzhang,China,1628,cma,https://clevelandart.org/art/1972.68
+5b6cba32126fed61-definitivo,294,c09-ambiguo,cma:159756,Thatched Hut by Water's Edge,,Japan,1500,cma,https://clevelandart.org/art/1997.125
+5b6cba32126fed61-definitivo,295,c09-ambiguo,cma:151223,Autumn in a Mountain Valley,Fujimoto Tesseki,Japan,1862,cma,https://clevelandart.org/art/1983.112
+5b6cba32126fed61-definitivo,296,c09-ambiguo,aic:75574,Song of a Fisherman,Wang Wen,China,1497,aic,https://www.artic.edu/artworks/75574
+5b6cba32126fed61-definitivo,297,c09-ambiguo,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-definitivo,298,c09-ambiguo,cma:130496,Bamboo in the Wind,Puming,China,1250,cma,https://clevelandart.org/art/1953.246
+5b6cba32126fed61-definitivo,299,c09-ambiguo,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-definitivo,300,c09-ambiguo,cma:147906,A Prunus in the Moonlight,Wang Mian,China,1300,cma,https://clevelandart.org/art/1974.26
+5b6cba32126fed61-definitivo,301,c09-ambiguo,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-definitivo,302,c09-ambiguo,cma:148359,Bamboo in Wind,Genga,Japan,1500,cma,https://clevelandart.org/art/1975.71.2
+5b6cba32126fed61-definitivo,303,c09-ambiguo,cma:152826,Lu Tong and Servant,Min Zhen,China,1788,cma,https://clevelandart.org/art/1985.71.2
+5b6cba32126fed61-definitivo,304,c09-ambiguo,cma:149625,Paintings after Ancient Masters: An Ancient Tree,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.20
+5b6cba32126fed61-definitivo,305,c09-ambiguo,cma:132015,The Poet Lin Bu Wandering in the Moonlight,Du Jin,China,1460,cma,https://clevelandart.org/art/1954.582
+5b6cba32126fed61-definitivo,306,c09-ambiguo,cma:152831,Dragon amid Clouds,Min Zhen,China,1788,cma,https://clevelandart.org/art/1985.71.7
+5b6cba32126fed61-definitivo,307,c09-ambiguo,cma:152550,Plum Blossoms,Wang Shishen,China,1739,cma,https://clevelandart.org/art/1985.366
+5b6cba32126fed61-definitivo,308,c09-conceptual,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-definitivo,309,c09-conceptual,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-definitivo,310,c09-conceptual,cma:145430,Ink Plum,Peng Xu,China,1488,cma,https://clevelandart.org/art/1970.80
+5b6cba32126fed61-definitivo,311,c09-conceptual,cma:149625,Paintings after Ancient Masters: An Ancient Tree,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.20
+5b6cba32126fed61-definitivo,312,c09-conceptual,aic:46487,"Plum, Pine, and Bamboo",Xugu,China,1824,aic,https://www.artic.edu/artworks/46487
+5b6cba32126fed61-definitivo,313,c09-conceptual,cma:159756,Thatched Hut by Water's Edge,,Japan,1500,cma,https://clevelandart.org/art/1997.125
+5b6cba32126fed61-definitivo,314,c09-conceptual,cma:147045,Solitary Colors of the Autumn Woods,Wang Jianzhang,China,1628,cma,https://clevelandart.org/art/1972.68
+5b6cba32126fed61-definitivo,315,c09-conceptual,cma:148359,Bamboo in Wind,Genga,Japan,1500,cma,https://clevelandart.org/art/1975.71.2
+5b6cba32126fed61-definitivo,316,c09-conceptual,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-definitivo,317,c09-conceptual,cma:140445,"The Fool's Spring, from Twelve Views of Tiger Hill, Suzhou",Shen Zhou,China,1491,cma,https://clevelandart.org/art/1964.371.2
+5b6cba32126fed61-definitivo,318,c09-conceptual,cma:79579,Landscape,Narihide,Japan,1500,cma,https://clevelandart.org/art/2015.470
+5b6cba32126fed61-definitivo,319,c09-conceptual,cma:149661,Orchid Pavilion Gathering,Soga Shōhaku,Japan,1777,cma,https://clevelandart.org/art/1979.53
+5b6cba32126fed61-definitivo,320,c09-conceptual,cma:160913,Three Purities,Zhang Xiong,China,1878,cma,https://clevelandart.org/art/1999.193
+5b6cba32126fed61-definitivo,321,c09-conceptual,cma:147906,A Prunus in the Moonlight,Wang Mian,China,1300,cma,https://clevelandart.org/art/1974.26
+5b6cba32126fed61-definitivo,322,c09-conceptual,cma:132015,The Poet Lin Bu Wandering in the Moonlight,Du Jin,China,1460,cma,https://clevelandart.org/art/1954.582
+5b6cba32126fed61-definitivo,323,c09-conceptual,cma:152831,Dragon amid Clouds,Min Zhen,China,1788,cma,https://clevelandart.org/art/1985.71.7
+5b6cba32126fed61-definitivo,324,c09-conceptual,cma:156792,Night Mooring at Maple Bridge,Ike Taiga,Japan,1750,cma,https://clevelandart.org/art/1992.386
+5b6cba32126fed61-definitivo,325,c09-visual,cma:159724,Yellow Chrysanthemums and Red Osmanthus in the Style of Wang Yuan,Shen Zhou,China,1468,cma,https://clevelandart.org/art/1997.100
+5b6cba32126fed61-definitivo,326,c09-visual,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-definitivo,327,c09-visual,cma:147045,Solitary Colors of the Autumn Woods,Wang Jianzhang,China,1628,cma,https://clevelandart.org/art/1972.68
+5b6cba32126fed61-definitivo,328,c09-visual,cma:149661,Orchid Pavilion Gathering,Soga Shōhaku,Japan,1777,cma,https://clevelandart.org/art/1979.53
+5b6cba32126fed61-definitivo,329,c09-visual,cma:149109,"Flowers of Four Seasons, with Poems",Wang Guxiang,China,1531,cma,https://clevelandart.org/art/1977.4
+5b6cba32126fed61-definitivo,330,c09-visual,cma:145430,Ink Plum,Peng Xu,China,1488,cma,https://clevelandart.org/art/1970.80
+5b6cba32126fed61-definitivo,331,c09-visual,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-definitivo,332,c09-visual,cma:148359,Bamboo in Wind,Genga,Japan,1500,cma,https://clevelandart.org/art/1975.71.2
+5b6cba32126fed61-definitivo,333,c09-visual,cma:159756,Thatched Hut by Water's Edge,,Japan,1500,cma,https://clevelandart.org/art/1997.125
+5b6cba32126fed61-definitivo,334,c09-visual,cma:132837,"Album of Seasonal Landscapes, Leaf A (previous leaf 4)",Xiao Yuncong,China,1668,cma,https://clevelandart.org/art/1955.302.4
+5b6cba32126fed61-definitivo,335,c09-visual,cma:140445,"The Fool's Spring, from Twelve Views of Tiger Hill, Suzhou",Shen Zhou,China,1491,cma,https://clevelandart.org/art/1964.371.2
+5b6cba32126fed61-definitivo,336,c09-visual,cma:160913,Three Purities,Zhang Xiong,China,1878,cma,https://clevelandart.org/art/1999.193
+5b6cba32126fed61-definitivo,337,c09-visual,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-definitivo,338,c09-visual,cma:150533,Casually Created on a Spring Day,Murase Taiitsu,Japan,1825,cma,https://clevelandart.org/art/1981.86
+5b6cba32126fed61-definitivo,339,c09-visual,cma:132015,The Poet Lin Bu Wandering in the Moonlight,Du Jin,China,1460,cma,https://clevelandart.org/art/1954.582
+5b6cba32126fed61-definitivo,340,c09-visual,cma:152826,Lu Tong and Servant,Min Zhen,China,1788,cma,https://clevelandart.org/art/1985.71.2
+5b6cba32126fed61-definitivo,341,c09-visual,cma:149625,Paintings after Ancient Masters: An Ancient Tree,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.20
+5b6cba32126fed61-definitivo,342,c10-ambiguo,aic:15468,Saint George and the Dragon,Bernat Martorell,Spain,1434,aic,https://www.artic.edu/artworks/15468
+5b6cba32126fed61-definitivo,343,c10-ambiguo,cma:150082,Heaven and Hell,Octave Tassaert,France,1845,cma,https://clevelandart.org/art/1980.287
+5b6cba32126fed61-definitivo,344,c10-ambiguo,aic:81503,Arab Horseman Attacked by a Lion,Eugène Delacroix,France,1849,aic,https://www.artic.edu/artworks/81503
+5b6cba32126fed61-definitivo,345,c10-ambiguo,aic:36492,Allegory of Charity,Francesco de Mura,Italy,1738,aic,https://www.artic.edu/artworks/36492
+5b6cba32126fed61-definitivo,346,c10-ambiguo,aic:16495,Rinaldo and the Magus of Ascalon,Giovanni Battista Tiepolo,Italy,1742,aic,https://www.artic.edu/artworks/16495
+5b6cba32126fed61-definitivo,347,c10-ambiguo,aic:16492,Armida Abandoned by Rinaldo,Giovanni Battista Tiepolo,Italy,1742,aic,https://www.artic.edu/artworks/16492
+5b6cba32126fed61-definitivo,348,c10-ambiguo,aic:160030,The Ecstasy of Saint Francis,Giovanni Baglione,Italy,1601,aic,https://www.artic.edu/artworks/160030
+5b6cba32126fed61-definitivo,349,c10-ambiguo,cma:97181,Preparation for the Crucifixion,,Northern Italy,1600,cma,https://clevelandart.org/art/1916.816
+5b6cba32126fed61-definitivo,350,c10-ambiguo,aic:16499,Jesus Mocked by the Soldiers,Édouard Manet,France,1865,aic,https://www.artic.edu/artworks/16499
+5b6cba32126fed61-definitivo,351,c10-ambiguo,aic:81505,Lion Hunt,Eugène Delacroix,France,1860,aic,https://www.artic.edu/artworks/81505
+5b6cba32126fed61-definitivo,352,c10-ambiguo,cma:97169,Ceres and Bacchus,Bartholomaeus Spranger,Flanders,1600,cma,https://clevelandart.org/art/1916.805
+5b6cba32126fed61-definitivo,353,c10-ambiguo,cma:125251,Portrait of a Prelate,Girolamo da Carpi,Italy,1540,cma,https://clevelandart.org/art/1947.210
+5b6cba32126fed61-definitivo,354,c10-ambiguo,cma:122350,Tarquinius Priscus Entering Rome,Jacopo del Sellaio,Italy,1465,cma,https://clevelandart.org/art/1942.646
+5b6cba32126fed61-definitivo,355,c10-ambiguo,aic:110663,The Combat of the Giaour and Hassan,Eugène Delacroix,France,1826,aic,https://www.artic.edu/artworks/110663
+5b6cba32126fed61-definitivo,356,c10-conceptual,cma:97169,Ceres and Bacchus,Bartholomaeus Spranger,Flanders,1600,cma,https://clevelandart.org/art/1916.805
+5b6cba32126fed61-definitivo,357,c10-conceptual,cma:170783,"Hunting with falcons in a landscape; verso: Calligraphy of Chaghatai Turkish poems in praise of wine, Sultan Muhammad Nur (Persian, c. 1472–1536) and Mirza Muhammad (probably Persian, active c. 1520s)",Abd al-Samad,Mughal India,1553,cma,https://clevelandart.org/art/2013.292
+5b6cba32126fed61-definitivo,358,c10-conceptual,cma:170784,Hunting with falcons in a landscape (recto),Abd al-Samad,Mughal India,1553,cma,https://clevelandart.org/art/2013.292.a
+5b6cba32126fed61-definitivo,359,c10-conceptual,cma:122350,Tarquinius Priscus Entering Rome,Jacopo del Sellaio,Italy,1465,cma,https://clevelandart.org/art/1942.646
+5b6cba32126fed61-definitivo,360,c10-conceptual,aic:15468,Saint George and the Dragon,Bernat Martorell,Spain,1434,aic,https://www.artic.edu/artworks/15468
+5b6cba32126fed61-definitivo,361,c10-conceptual,cma:314453,Equestrian Portrait of Maharana Raj Singh II of Mewar (r. 1755–62),,Northwestern India,1754,cma,https://clevelandart.org/art/2018.148
+5b6cba32126fed61-definitivo,362,c10-conceptual,aic:81505,Lion Hunt,Eugène Delacroix,France,1860,aic,https://www.artic.edu/artworks/81505
+5b6cba32126fed61-definitivo,363,c10-conceptual,cma:125580,"The siege of Arbela in the era of Hulagu Khan, page from a Chingiz-nama (Book of Chingiz Khan) of the Jami al-tavarikh (Compendium of Chronicles) of Rashid al-Din (Persian,1247–1318)",Basavana,Mughal India,1591,cma,https://clevelandart.org/art/1947.502.a
+5b6cba32126fed61-definitivo,364,c10-conceptual,cma:314469,Prince Mathu Singh of Jatoli on a Blue Horse Riding to Udaipur,,Northwestern India,1710,cma,https://clevelandart.org/art/2018.164
+5b6cba32126fed61-definitivo,365,c10-conceptual,aic:49195,Maharana Bhim Singh in Procession,Ghasi,India,1815,aic,https://www.artic.edu/artworks/49195
+5b6cba32126fed61-definitivo,366,c10-conceptual,aic:110663,The Combat of the Giaour and Hassan,Eugène Delacroix,France,1826,aic,https://www.artic.edu/artworks/110663
+5b6cba32126fed61-definitivo,367,c10-conceptual,cma:146191,The Emperor Alamgir (reigned 1658–1707) on Horseback,,India,1685,cma,https://clevelandart.org/art/1971.81
+5b6cba32126fed61-definitivo,368,c10-conceptual,cma:150082,Heaven and Hell,Octave Tassaert,France,1845,cma,https://clevelandart.org/art/1980.287
+5b6cba32126fed61-definitivo,369,c10-visual,aic:81503,Arab Horseman Attacked by a Lion,Eugène Delacroix,France,1849,aic,https://www.artic.edu/artworks/81503
+5b6cba32126fed61-definitivo,370,c10-visual,aic:16499,Jesus Mocked by the Soldiers,Édouard Manet,France,1865,aic,https://www.artic.edu/artworks/16499
+5b6cba32126fed61-definitivo,371,c10-visual,aic:81505,Lion Hunt,Eugène Delacroix,France,1860,aic,https://www.artic.edu/artworks/81505
+5b6cba32126fed61-definitivo,372,c10-visual,aic:15468,Saint George and the Dragon,Bernat Martorell,Spain,1434,aic,https://www.artic.edu/artworks/15468
+5b6cba32126fed61-definitivo,373,c10-visual,cma:97169,Ceres and Bacchus,Bartholomaeus Spranger,Flanders,1600,cma,https://clevelandart.org/art/1916.805
+5b6cba32126fed61-definitivo,374,c10-visual,aic:30901,The Denial of Saint Peter,Hendrick Terbrugghen,Netherlands,1621,aic,https://www.artic.edu/artworks/30901
+5b6cba32126fed61-definitivo,375,c10-visual,cma:150082,Heaven and Hell,Octave Tassaert,France,1845,cma,https://clevelandart.org/art/1980.287
+5b6cba32126fed61-definitivo,376,c10-visual,aic:110663,The Combat of the Giaour and Hassan,Eugène Delacroix,France,1826,aic,https://www.artic.edu/artworks/110663
+5b6cba32126fed61-definitivo,377,c10-visual,aic:53495,A Witches' Sabbath,Cornelis Saftleven,Holland,1640,aic,https://www.artic.edu/artworks/53495
+5b6cba32126fed61-definitivo,378,c10-visual,cma:125251,Portrait of a Prelate,Girolamo da Carpi,Italy,1540,cma,https://clevelandart.org/art/1947.210
+5b6cba32126fed61-definitivo,379,c10-visual,cma:97181,Preparation for the Crucifixion,,Northern Italy,1600,cma,https://clevelandart.org/art/1916.816

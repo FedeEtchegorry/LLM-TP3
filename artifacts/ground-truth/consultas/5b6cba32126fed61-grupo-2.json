@@ -1,0 +1,964 @@
+{
+  "artefacto": "SetDeConsultas",
+  "autoria": "grupo-2",
+  "clase_de_identidad": 3,
+  "config_id": "326198f2581cc566",
+  "configuracion_resuelta": {
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "text-embedding-3-small"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "rutas": {
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    }
+  },
+  "conteos": {
+    "n_consultas": 30,
+    "n_imagenes": 10,
+    "n_pedidos_culturales": 10,
+    "por_categoria": {
+      "ambiguo": 10,
+      "conceptual_cultural": 10,
+      "visual_cromatico": 10
+    }
+  },
+  "criterio_de_culture": "primer_componente_por_coma",
+  "estado": "completo",
+  "identidad": "5b6cba32126fed61-grupo-2",
+  "imagenes": [
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_109240.jpg",
+      "artwork_id": "cma:109240",
+      "atributos": [
+        "paisaje",
+        "paleta_fria",
+        "oleo",
+        "rural"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c01-visual",
+          "es_ejemplo": false,
+          "pedido": "versiones más cálidas de este paisaje"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c01-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "Japan"
+            ],
+            "n": 341,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "Japan": 341
+            },
+            "nombre": "Japón",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 341 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "el mismo paisaje pero pintado en Japón"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c01-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "con más vida"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:4ba1a411e0bea2e1ab694abafbff09fa834b112792bc612f05ac3605fc6efd55",
+      "procedencia": {
+        "artist": "Alexander H. Wyant",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_109240.jpg",
+        "culture_normalizada": [
+          "America"
+        ],
+        "date_display": "c. 1890",
+        "media_license": "CC0",
+        "medium": "oil on canvas",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/1927.389",
+        "title": "Arkville Landscape",
+        "year": 1889
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/aic_111728.jpg",
+      "artwork_id": "aic:111728",
+      "atributos": [
+        "marina",
+        "paleta_fria",
+        "barcos",
+        "hielo"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c02-visual",
+          "es_ejemplo": false,
+          "pedido": "la misma escena de agua pero con luz dorada"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c02-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "China",
+              "Chinese",
+              "South China"
+            ],
+            "n": 369,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "China": 367,
+              "Chinese": 1,
+              "South China": 1
+            },
+            "nombre": "China",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 369 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "escenas de agua en la pintura china"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c02-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más tranquilo"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "procedencia": {
+        "artist": "Abraham Storck",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/aic_111728.jpg",
+        "culture_normalizada": [
+          "Holland"
+        ],
+        "date_display": "c. 1695",
+        "media_license": "CC0",
+        "medium": "Oil on canvas",
+        "museum": "aic",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://www.artic.edu/artworks/111728",
+        "title": "The Dutch Whaling Fleet",
+        "year": 1685
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_159270.jpg",
+      "artwork_id": "cma:159270",
+      "atributos": [
+        "interior",
+        "arquitectura",
+        "luz_calida",
+        "simetria"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c03-visual",
+          "es_ejemplo": false,
+          "pedido": "el mismo interior pero en tonos fríos"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c03-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "Italy",
+              "Northern Italy"
+            ],
+            "n": 195,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "Italy": 193,
+              "Northern Italy": 2
+            },
+            "nombre": "Italia",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 195 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "interiores arquitectónicos en la pintura italiana"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c03-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más imponente"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:6eee991cdce5d8a580067f4c35d5c8e8f8381863d9717f73e0d41a7650c0eefa",
+      "procedencia": {
+        "artist": "Heinrich Hansen",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_159270.jpg",
+        "culture_normalizada": [
+          "Denmark"
+        ],
+        "date_display": "c. 1850s",
+        "media_license": "CC0",
+        "medium": "oil on fabric",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/1995.66",
+        "title": "The Slotskirken of Christiansborg, Copenhagen",
+        "year": 1850
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/aic_65821.jpg",
+      "artwork_id": "aic:65821",
+      "atributos": [
+        "abstracta",
+        "geometrica",
+        "colores_primarios",
+        "lineas"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c04-visual",
+          "es_ejemplo": false,
+          "pedido": "composiciones geométricas pero en tonos tierra"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c04-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "Mughal India",
+              "Northern India",
+              "Northwestern India",
+              "India",
+              "Eastern India",
+              "Western India",
+              "Central India",
+              "Southern India",
+              "Sultanate India",
+              "British India",
+              "Northwest India"
+            ],
+            "n": 619,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "British India": 1,
+              "Central India": 14,
+              "Eastern India": 61,
+              "India": 67,
+              "Mughal India": 247,
+              "Northern India": 95,
+              "Northwest India": 1,
+              "Northwestern India": 83,
+              "Southern India": 6,
+              "Sultanate India": 2,
+              "Western India": 42
+            },
+            "nombre": "la India",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 619 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "composiciones geométricas en el arte de la India"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c04-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más ordenado"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:7742a8a09645aa0bb4398638dff5f6d6c73002f9f7633a18963c03620b5af4b4",
+      "procedencia": {
+        "artist": "Piet Mondrian",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/aic_65821.jpg",
+        "culture_normalizada": [
+          "Netherlands"
+        ],
+        "date_display": "1935",
+        "media_license": "CC0",
+        "medium": "Oil on canvas",
+        "museum": "aic",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://www.artic.edu/artworks/65821",
+        "title": "Composition (No. 1) Gray-Red",
+        "year": 1935
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/aic_105600.jpg",
+      "artwork_id": "aic:105600",
+      "atributos": [
+        "retrato",
+        "femenino",
+        "fondo_oscuro",
+        "oleo"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c05-visual",
+          "es_ejemplo": false,
+          "pedido": "el mismo retrato con una paleta más luminosa"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c05-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "France"
+            ],
+            "n": 371,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "France": 371
+            },
+            "nombre": "Francia",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 371 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "retratos de mujeres en la pintura francesa"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c05-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más cercano"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "procedencia": {
+        "artist": "Thomas Gainsborough",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/aic_105600.jpg",
+        "culture_normalizada": [
+          "England"
+        ],
+        "date_display": "c. 1777–79",
+        "media_license": "CC0",
+        "medium": "Oil on canvas",
+        "museum": "aic",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://www.artic.edu/artworks/105600",
+        "title": "Sarah Dupont",
+        "year": 1772
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_145925.jpg",
+      "artwork_id": "cma:145925",
+      "atributos": [
+        "retrato",
+        "frontal",
+        "antiguo",
+        "encaustica"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c06-visual",
+          "es_ejemplo": false,
+          "pedido": "el mismo rostro pero con colores más apagados"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c06-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "Italy",
+              "Northern Italy"
+            ],
+            "n": 195,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "Italy": 193,
+              "Northern Italy": 2
+            },
+            "nombre": "Italia",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 195 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "retratos conmemorativos en Italia"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c06-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más humano"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:b9b23f8cbc1703a2552f2b3b2e1163d1fa45537af9000fd5b313e5b98c6d7898",
+      "procedencia": {
+        "artist": null,
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_145925.jpg",
+        "culture_normalizada": [
+          "Egypt"
+        ],
+        "date_display": "c. 25–37 CE",
+        "media_license": "CC0",
+        "medium": "encaustic on linden wood",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/1971.137",
+        "title": "Funerary Portrait of a Young Girl",
+        "year": 25
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_155431.jpg",
+      "artwork_id": "cma:155431",
+      "atributos": [
+        "retrato",
+        "seda",
+        "paleta_calida",
+        "figura_sentada"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c07-visual",
+          "es_ejemplo": false,
+          "pedido": "el mismo retrato en tonos más fríos"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c07-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "China",
+              "Chinese",
+              "South China"
+            ],
+            "n": 369,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "China": 367,
+              "Chinese": 1,
+              "South China": 1
+            },
+            "nombre": "China",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 369 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "retratos de monjes y sabios en China"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c07-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más austero"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "procedencia": {
+        "artist": null,
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_155431.jpg",
+        "culture_normalizada": [
+          "Korea"
+        ],
+        "date_display": "1700s",
+        "media_license": "CC0",
+        "medium": "hanging scroll; ink, color, and gold on silk",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/1990.16",
+        "title": "Portrait of the Great Master Yeongwoldang Eungjin",
+        "year": 1700
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_314432.jpg",
+      "artwork_id": "cma:314432",
+      "atributos": [
+        "folio",
+        "paleta_calida",
+        "saturado",
+        "batalla"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c08-visual",
+          "es_ejemplo": false,
+          "pedido": "la misma escena pero con colores apagados"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c08-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "France"
+            ],
+            "n": 371,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "France": 371
+            },
+            "nombre": "Francia",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 371 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "escenas de batalla en la pintura francesa"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c08-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más caótico"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:c5c4d8c30b79c5754ea4e35d42bfb70110f9154f09bed22e92986ee225eebf9e",
+      "procedencia": {
+        "artist": null,
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_314432.jpg",
+        "culture_normalizada": [
+          "Central India"
+        ],
+        "date_display": "c. 1640",
+        "media_license": "CC0",
+        "medium": "gum tempera, ink, and gold on paper",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/2018.128",
+        "title": "The Goddess Annihilates the Demon Raktabija, from a Devi-Mahatmya",
+        "year": 1630
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/cma_148382.jpg",
+      "artwork_id": "cma:148382",
+      "atributos": [
+        "tinta",
+        "monocromo",
+        "botanico",
+        "papel"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c09-visual",
+          "es_ejemplo": false,
+          "pedido": "el mismo motivo pero con color"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c09-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "China",
+              "Chinese",
+              "South China"
+            ],
+            "n": 369,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "China": 367,
+              "Chinese": 1,
+              "South China": 1
+            },
+            "nombre": "China",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 369 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "el mismo tema en la pintura china"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c09-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más delicado"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:23a84ea12a0d7fa27a16dbfb9fe8c2829cba6063e5bac4fd09fee6d2f829222e",
+      "procedencia": {
+        "artist": "Yamamoto Baiitsu",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/cma_148382.jpg",
+        "culture_normalizada": [
+          "Japan"
+        ],
+        "date_display": "1834",
+        "media_license": "CC0",
+        "medium": "hanging scroll; ink on silk",
+        "museum": "cma",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://clevelandart.org/art/1975.93",
+        "title": "Plums, Bamboo, and Orchid",
+        "year": 1834
+      }
+    },
+    {
+      "archivo": "artifacts/ground-truth/consultas/imagenes/aic_67362.jpg",
+      "artwork_id": "aic:67362",
+      "atributos": [
+        "narrativa",
+        "jinete",
+        "religioso",
+        "oleo"
+      ],
+      "consultas": [
+        {
+          "categoria": "visual_cromatico",
+          "consulta_id": "c10-visual",
+          "es_ejemplo": false,
+          "pedido": "la misma escena con una paleta más oscura"
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "consulta_id": "c10-conceptual",
+          "cultura_pedida": {
+            "criterio_de_culture": "primer_componente_por_coma",
+            "etiquetas": [
+              "Mughal India"
+            ],
+            "n": 247,
+            "n_poblacion": 2605,
+            "n_por_etiqueta": {
+              "Mughal India": 247
+            },
+            "nombre": "India mogol",
+            "nota": "cultura_pedida es un **conjunto declarado de etiquetas** del vocabulario normalizado. El `n` es el tamaño de la **unión de obras** (la suma de `n_por_etiqueta` da 247 y el solapamiento es 0: una obra con dos etiquetas del grupo cuenta una vez). La población va al lado del número porque una cifra sin su población es el modo de falla 3 del proyecto. **Y el agrupamiento es evidencia del criterio de normalización de culture, que sigue abierto.**",
+            "poblacion": "corpus indexado del split 5b6cba32126fed61"
+          },
+          "es_ejemplo": false,
+          "pedido": "escenas con jinetes en el arte mogol"
+        },
+        {
+          "categoria": "ambiguo",
+          "consulta_id": "c10-ambiguo",
+          "es_ejemplo": false,
+          "pedido": "más generoso"
+        }
+      ],
+      "es_ejemplo": false,
+      "imagen_hash": "sha256:424053872427139d3c28f5d26150d79c37b746bff3cdb23af78d0f9df1a093bb",
+      "procedencia": {
+        "artist": "Domenico Theotokópoulos, called El Greco",
+        "catalogo_id": "e10c4e4f9cce0e74",
+        "copiada_de": "data/imagenes/aic_67362.jpg",
+        "culture_normalizada": [
+          "Greece"
+        ],
+        "date_display": "c. 1597–c. 1600",
+        "media_license": "CC0",
+        "medium": "Oil on canvas",
+        "museum": "aic",
+        "nota": "El `imagen_hash` de arriba es el `hash_bytes` del registro canónico y el de la copia versionada: se verifican iguales al autorar y la copia se re-verifica al leer (el set de consultas).",
+        "source_url": "https://www.artic.edu/artworks/67362",
+        "title": "Saint Martin and the Beggar",
+        "year": 1592
+      }
+    }
+  ],
+  "nota_de_conteos": "`por_categoria` es lo que la tabla de ablación desglosa y el delta por categoría de pedido usa para el delta C3−C2. Los tres conteos del split (~2.880 / 2.605 / 289) **no se copian acá**: son del `ManifiestoDeSplit` (la regla de qué se versiona), y lo que este artefacto cita es su `split_id`.",
+  "nota_de_criterio_de_culture": "el vocabulario único de culture por set: el set declara el vocabulario en el que se autoraron las `cultura_pedida`. **No es ingrediente del id** (la tabla de identidades): si entrara, cambiar el criterio de normalización de culture renombraría el set y desanclaría las 30 consultas por un cambio de vocabulario. La coherencia del par (set, variante) se chequea **al generar el informe** —con la identificación de variantes hay variantes coexistentes y cada una trae su criterio en su receta—, y cuando no valida, la cobertura cultural del resultado no se computa para esa variante: es una restricción de alcance declarada, no un invariante gratis (el set de consultas).",
+  "nota_de_declaracion": "**La declaración no se guarda aparte, y es a propósito.** Lo de arriba ya es un **superconjunto** de lo que la persona escribió —mismo texto, más el `imagen_hash`, el `n` computado y la procedencia—, así que una copia cruda del TOML sería el mismo texto dos veces en el mismo archivo, que es el modo de falla 1 del proyecto en miniatura (los cortes que quedaron en duda, duda 10). Lo que vuelve seguro no guardarla es que **nada se descarta en silencio**: la declaración rechaza toda clave que no vaya a terminar acá. Y el TOML es entonces un borrador que se puede tirar: lo irreproducible —el texto de los pedidos, los atributos, las etiquetas— está adentro **por valor**, que es el mismo criterio con el que la `RevisiónDeExplicaciones` copia las 25 explicaciones (la tabla de identidades).",
+  "nota_de_estado": "El `estado` va **adentro y no en la identidad**, igual que el del `Pool` (la tabla de identidades, recuadro 📌): pasar de `plantilla` a `completo` es **autorar otro set con otra `autoría`**, que es lo único que la clase 3 permite. Un set `plantilla` no es usable para medir y lo dice.",
+  "nota_de_identidad": "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad es `split_id` + `autoría`, y la `autoría` **la asigna una persona**: es lo que vuelve alcanzable el costo que el set de consultas declara —si cambia el criterio de normalización de culture y hay que **re-autorar** las `cultura_pedida`, mismo split + otra autoría = **otro artefacto**, y ni los 30 `consulta_id` ni los ~540 juicios se mueven—. El criterio de `culture` y el `variante_id` **no** son ingredientes: el primero va adentro (si entrara, cambiar el criterio de normalización renombraría el set) y la coherencia del par (set, variante) se chequea al generar el informe (el vocabulario único de culture por set). No se reescribe y no se recalcula (la regla de que un id determina su contenido): solo cambia autorando **otro**.",
+  "procedencia": {
+    "capas_de_configuracion": [
+      "config/default.toml"
+    ],
+    "catalogo_id": "e10c4e4f9cce0e74",
+    "commit": "321dda869d72519d236092aeb6a1bd775ebfe82f",
+    "declaracion_en": "consultas-g2.toml",
+    "fecha_de_autoria": "2026-10-24T02:02:43+00:00",
+    "vocabulario_de_culture": {
+      "criterio": "primer_componente_por_coma",
+      "n_etiquetas_distintas": 101,
+      "n_obras_sin_culture": 11,
+      "n_poblacion": 2605,
+      "poblacion": "corpus indexado del split 5b6cba32126fed61"
+    }
+  },
+  "revision": {
+    "como_se_revisaron": "la lista corta de 30 candidatas de `tp3-consultas candidatas` (criterio: cobertura por valor de cada eje — periodo × cultura × tecnica × museo × tiene_artista — semilla 7369), revisadas como hoja de contactos. De las 30 se eligieron 10 para cubrir los tipos que la evaluación pide: paisaje, marina, interior, abstracta, retrato (×3), escena narrativa y motivo botánico. Las 8 culturas que quedaron afuera de la lista corta son valores de 1-2 obras del held-out.",
+    "n_held_out": 289,
+    "n_imagenes_elegidas": 10,
+    "n_imagenes_revisadas": 30,
+    "nota": "el set de consultas, punto 2: se etiquetan **las imágenes que se revisan para elegir las 10**, no las 289 del held-out, y el artefacto registra cuántas se miraron. Es lo que vuelve auditable el *'elegidas para cubrir variedad'* de la evaluación."
+  },
+  "split_id": "5b6cba32126fed61",
+  "version_del_set": "1"
+}

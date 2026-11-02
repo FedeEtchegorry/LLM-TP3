@@ -1,0 +1,1410 @@
+{
+  "artefacto": "RetrievalDelEstudioSecundario",
+  "churn_del_top5_contra_c3": {
+    "C3-ampliado": {
+      "churn_medio_global": 0.267,
+      "consultas_con_top5_identico": 24,
+      "n_consultas": 30,
+      "por_categoria": [
+        {
+          "categoria": "visual_cromatico",
+          "churn_medio_del_top5": 0.0,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "churn_medio_del_top5": 0.6,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        },
+        {
+          "categoria": "ambiguo",
+          "churn_medio_del_top5": 0.2,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        }
+      ]
+    },
+    "C3-ciego": {
+      "churn_medio_global": 1.567,
+      "consultas_con_top5_identico": 4,
+      "n_consultas": 30,
+      "por_categoria": [
+        {
+          "categoria": "visual_cromatico",
+          "churn_medio_del_top5": 1.5,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        },
+        {
+          "categoria": "conceptual_cultural",
+          "churn_medio_del_top5": 1.8,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        },
+        {
+          "categoria": "ambiguo",
+          "churn_medio_del_top5": 1.4,
+          "cobertura_cultural_media_a": null,
+          "cobertura_cultural_media_b": null,
+          "delta_de_cobertura": null,
+          "n_consultas": 10
+        }
+      ]
+    }
+  },
+  "composicion_del_ground_truth_por_fila": {
+    "nota": "🔴 **La población restringida NO restringe igual a las tres filas, y eso acota la sensibilidad.** La restricción del desempate saca los pares que resolvió el tercer anotador; los **31 juicios nuevos no pasaron por ese filtro** —no hay con quién acordar cuando el anotador es uno— así que **sobreviven a la restricción por construcción**. El brazo ciego tiene 29 de sus 150 ítems ahí, y C3 ninguno: en la tabla restringida el ciego conserva más ítems con grado que C3 (`pct_items_sin_grado` 36,67 % contra 39,33 %) **por el protocolo y no por el sistema**. ⚠️ **Entonces la fila `b_restringida` de los brazos no es la misma clase de sensibilidad que la de C0–C4**, y el cambio de orden hay que leerlo con esto al lado.",
+    "por_fila": {
+      "C3": {
+        "acuerdo": 91,
+        "anotador-unico": 0,
+        "desempate": 59,
+        "n_items_del_top5": 150,
+        "pct_de_anotador_unico": 0.0,
+        "pct_que_depende_del_desempate": 39.33,
+        "sin_grado": 0
+      },
+      "C3-ampliado": {
+        "acuerdo": 88,
+        "anotador-unico": 3,
+        "desempate": 59,
+        "n_items_del_top5": 150,
+        "pct_de_anotador_unico": 2.0,
+        "pct_que_depende_del_desempate": 39.33,
+        "sin_grado": 0
+      },
+      "C3-ciego": {
+        "acuerdo": 66,
+        "anotador-unico": 29,
+        "desempate": 55,
+        "n_items_del_top5": 150,
+        "pct_de_anotador_unico": 19.33,
+        "pct_que_depende_del_desempate": 36.67,
+        "sin_grado": 0
+      }
+    }
+  },
+  "es_una_lectura": true,
+  "ground_truth": {
+    "c3_publicada_vs_recomputada": {
+      "nota": "El control de la decisión de arriba: la fila C3 recomputada sobre el ground truth extendido contra la que `tabla-a2-m13.json` publica. Si difieren, es porque alguno de los 31 juicios nuevos **entró al ranking ideal** de su consulta; el top-5 de C3 no cambia.",
+      "publicada": {
+        "a_completa_cero": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c05-ambiguo"
+          ],
+          "mrr": 0.7583,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 29,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 0,
+          "ndcg_at_5_sobre_definidas": 0.5533,
+          "ndcg_at_5_sobre_todas": 0.5348,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.5933,
+          "p_at_5_estricta": 0.32,
+          "pct_items_sin_grado": 0.0,
+          "poblacion_del_ground_truth": "completa",
+          "politica_de_sin_grado": "cero"
+        },
+        "b_restringida_cero": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c04-ambiguo",
+            "c05-ambiguo",
+            "c07-visual",
+            "c10-ambiguo"
+          ],
+          "mrr": 0.5472,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 26,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 59,
+          "ndcg_at_5_sobre_definidas": 0.4663,
+          "ndcg_at_5_sobre_todas": 0.4041,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.4267,
+          "p_at_5_estricta": 0.2133,
+          "pct_items_sin_grado": 39.33,
+          "poblacion_del_ground_truth": "restringida",
+          "politica_de_sin_grado": "cero"
+        },
+        "b_restringida_condensada": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c04-ambiguo",
+            "c05-ambiguo",
+            "c07-visual",
+            "c10-ambiguo"
+          ],
+          "mrr": 0.7111,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 26,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 59,
+          "ndcg_at_5_sobre_definidas": 0.5356,
+          "ndcg_at_5_sobre_todas": 0.4642,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.4267,
+          "p_at_5_estricta": 0.2133,
+          "pct_items_sin_grado": 39.33,
+          "poblacion_del_ground_truth": "restringida",
+          "politica_de_sin_grado": "condensada"
+        }
+      },
+      "recomputada": {
+        "a_completa_cero": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c05-ambiguo"
+          ],
+          "fila": "C3",
+          "mrr": 0.7583,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 29,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 0,
+          "ndcg_at_5_sobre_definidas": 0.5491,
+          "ndcg_at_5_sobre_todas": 0.5308,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.5933,
+          "p_at_5_estricta": 0.32,
+          "pct_items_sin_grado": 0.0,
+          "poblacion_del_ground_truth": "completa",
+          "politica_de_sin_grado": "cero",
+          "por_categoria": {
+            "ambiguo": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [
+                "c05-ambiguo"
+              ],
+              "mrr": 0.675,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 9,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 0,
+              "ndcg_at_5_sobre_definidas": 0.5162,
+              "ndcg_at_5_sobre_todas": 0.4646,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.48,
+              "p_at_5_estricta": 0.36,
+              "pct_items_sin_grado": 0.0,
+              "poblacion_del_ground_truth": "completa",
+              "politica_de_sin_grado": "cero"
+            },
+            "conceptual_cultural": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [],
+              "mrr": 0.9,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 10,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 0,
+              "ndcg_at_5_sobre_definidas": 0.6476,
+              "ndcg_at_5_sobre_todas": 0.6476,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.84,
+              "p_at_5_estricta": 0.34,
+              "pct_items_sin_grado": 0.0,
+              "poblacion_del_ground_truth": "completa",
+              "politica_de_sin_grado": "cero"
+            },
+            "visual_cromatico": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [],
+              "mrr": 0.7,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 10,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 0,
+              "ndcg_at_5_sobre_definidas": 0.4802,
+              "ndcg_at_5_sobre_todas": 0.4802,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.46,
+              "p_at_5_estricta": 0.26,
+              "pct_items_sin_grado": 0.0,
+              "poblacion_del_ground_truth": "completa",
+              "politica_de_sin_grado": "cero"
+            }
+          }
+        },
+        "b_restringida_cero": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c04-ambiguo",
+            "c05-ambiguo",
+            "c07-visual",
+            "c10-ambiguo"
+          ],
+          "fila": "C3",
+          "mrr": 0.5472,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 26,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 59,
+          "ndcg_at_5_sobre_definidas": 0.4454,
+          "ndcg_at_5_sobre_todas": 0.386,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.4267,
+          "p_at_5_estricta": 0.2133,
+          "pct_items_sin_grado": 39.33,
+          "poblacion_del_ground_truth": "restringida",
+          "politica_de_sin_grado": "cero",
+          "por_categoria": {
+            "ambiguo": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [
+                "c04-ambiguo",
+                "c05-ambiguo",
+                "c10-ambiguo"
+              ],
+              "mrr": 0.4,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 7,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 23,
+              "ndcg_at_5_sobre_definidas": 0.4406,
+              "ndcg_at_5_sobre_todas": 0.3084,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.28,
+              "p_at_5_estricta": 0.26,
+              "pct_items_sin_grado": 46.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "cero"
+            },
+            "conceptual_cultural": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [],
+              "mrr": 0.8,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 10,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 13,
+              "ndcg_at_5_sobre_definidas": 0.5663,
+              "ndcg_at_5_sobre_todas": 0.5663,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.74,
+              "p_at_5_estricta": 0.24,
+              "pct_items_sin_grado": 26.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "cero"
+            },
+            "visual_cromatico": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [
+                "c07-visual"
+              ],
+              "mrr": 0.4417,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 9,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 23,
+              "ndcg_at_5_sobre_definidas": 0.3147,
+              "ndcg_at_5_sobre_todas": 0.2833,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.26,
+              "p_at_5_estricta": 0.14,
+              "pct_items_sin_grado": 46.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "cero"
+            }
+          }
+        },
+        "b_restringida_condensada": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "consultas_sin_ndcg_definido": [
+            "c04-ambiguo",
+            "c05-ambiguo",
+            "c07-visual",
+            "c10-ambiguo"
+          ],
+          "fila": "C3",
+          "mrr": 0.7111,
+          "n_consultas": 30,
+          "n_consultas_con_ndcg_definido": 26,
+          "n_items_del_top5": 150,
+          "n_items_sin_grado": 59,
+          "ndcg_at_5_sobre_definidas": 0.5102,
+          "ndcg_at_5_sobre_todas": 0.4422,
+          "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+          "p_at_5": 0.4267,
+          "p_at_5_estricta": 0.2133,
+          "pct_items_sin_grado": 39.33,
+          "poblacion_del_ground_truth": "restringida",
+          "politica_de_sin_grado": "condensada",
+          "por_categoria": {
+            "ambiguo": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [
+                "c04-ambiguo",
+                "c05-ambiguo",
+                "c10-ambiguo"
+              ],
+              "mrr": 0.45,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 7,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 23,
+              "ndcg_at_5_sobre_definidas": 0.4726,
+              "ndcg_at_5_sobre_todas": 0.3308,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.28,
+              "p_at_5_estricta": 0.26,
+              "pct_items_sin_grado": 46.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "condensada"
+            },
+            "conceptual_cultural": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [],
+              "mrr": 1.0,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 10,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 13,
+              "ndcg_at_5_sobre_definidas": 0.6312,
+              "ndcg_at_5_sobre_todas": 0.6312,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.74,
+              "p_at_5_estricta": 0.24,
+              "pct_items_sin_grado": 26.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "condensada"
+            },
+            "visual_cromatico": {
+              "config_id": "ce0910b50e3569e9",
+              "configuracion": "C3",
+              "consultas_sin_ndcg_definido": [
+                "c07-visual"
+              ],
+              "mrr": 0.6833,
+              "n_consultas": 10,
+              "n_consultas_con_ndcg_definido": 9,
+              "n_items_del_top5": 50,
+              "n_items_sin_grado": 23,
+              "ndcg_at_5_sobre_definidas": 0.4051,
+              "ndcg_at_5_sobre_todas": 0.3646,
+              "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+              "p_at_5": 0.26,
+              "p_at_5_estricta": 0.14,
+              "pct_items_sin_grado": 46.0,
+              "poblacion_del_ground_truth": "restringida",
+              "politica_de_sin_grado": "condensada"
+            }
+          }
+        }
+      }
+    },
+    "poblaciones": {
+      "completa": {
+        "archivo": "artifacts/ground-truth/consenso-5b6cba32126fed61-definitivo-v1.csv + artifacts/ground-truth/juicios/5b6cba32126fed61-v1-ia-incremental.csv",
+        "n_filas_del_consenso": 410,
+        "n_filas_sin_grado": 0,
+        "n_pares_con_grado": 410,
+        "poblacion": "completa",
+        "pool_id": "5b6cba32126fed61-definitivo + 5b6cba32126fed61-secundario-incremental",
+        "por_resolucion": {
+          "acuerdo": 246,
+          "anotador-unico": 31,
+          "desempate": 133
+        },
+        "resoluciones_conservadas": [
+          "acuerdo",
+          "desempate",
+          "anotador-unico"
+        ],
+        "rubrica_id": "v1"
+      },
+      "restringida": {
+        "archivo": "artifacts/ground-truth/consenso-5b6cba32126fed61-definitivo-v1.csv + artifacts/ground-truth/juicios/5b6cba32126fed61-v1-ia-incremental.csv",
+        "n_filas_del_consenso": 410,
+        "n_filas_sin_grado": 0,
+        "n_pares_con_grado": 277,
+        "poblacion": "restringida",
+        "pool_id": "5b6cba32126fed61-definitivo + 5b6cba32126fed61-secundario-incremental",
+        "por_resolucion": {
+          "acuerdo": 246,
+          "anotador-unico": 31,
+          "desempate": 133
+        },
+        "resoluciones_conservadas": [
+          "acuerdo",
+          "anotador-unico"
+        ],
+        "rubrica_id": "v1"
+      }
+    },
+    "por_que_se_extiende_el_consenso_entero": "🔴 **El `IDCG` de `nDCG@5` se computa sobre la población del ground truth**, y por eso las tres filas se miden contra **la misma**: el consenso entero (379) más los 31 nuevos. Si los brazos se midieran contra los 197 pares de su propio pool y C3 contra los 379 del suyo, el ideal por consulta del primero saldría de ~6,6 pares juzgados y el del segundo de ~12,6 — y los brazos publicarían un nDCG más alto **por el recorte del pool y no por el sistema**. Es el modo de falla 3 del proyecto adentro del denominador de la métrica titular."
+  },
+  "hito": "el estudio secundario de retrieval",
+  "items_del_top5_sin_juzgar": {
+    "por_fila": {
+      "C3": {
+        "contra_el_pool_definitivo": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": true,
+          "lectura": "**0 por construcción**: esta configuración formó el pool, así que todo par de su top-5 está adentro por definición. El 0 no dice que la comparación se sostenga: dice que la pregunta no aplica.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 0,
+          "n_sin_juzgar": 0,
+          "pct_sin_juzgar": 0.0,
+          "pool_id": "5b6cba32126fed61-definitivo",
+          "sin_juzgar_por_consulta": {}
+        },
+        "contra_el_pool_incremental": {
+          "config_id": "ce0910b50e3569e9",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": false,
+          "lectura": "**Número real.** Esta configuración **no** formó el pool, así que sus ítems sí pueden estar sin juzgar — y por la convención de TREC que la evaluación adopta, un ítem sin juzgar **cuenta como no relevante**, o sea que su nDCG@5 estaría **subestimado** y hay que decirlo.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 5,
+          "n_sin_juzgar": 5,
+          "pct_sin_juzgar": 3.33,
+          "pool_id": "5b6cba32126fed61-secundario-incremental",
+          "sin_juzgar_por_consulta": {
+            "c03-conceptual": 3,
+            "c06-conceptual": 1,
+            "c07-conceptual": 1
+          }
+        }
+      },
+      "C3-ampliado": {
+        "contra_el_pool_definitivo": {
+          "config_id": "1721cc6229bdc506",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": false,
+          "lectura": "**Número real.** Esta configuración **no** formó el pool, así que sus ítems sí pueden estar sin juzgar — y por la convención de TREC que la evaluación adopta, un ítem sin juzgar **cuenta como no relevante**, o sea que su nDCG@5 estaría **subestimado** y hay que decirlo.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 3,
+          "n_sin_juzgar": 3,
+          "pct_sin_juzgar": 2.0,
+          "pool_id": "5b6cba32126fed61-definitivo",
+          "sin_juzgar_por_consulta": {
+            "c03-conceptual": 2,
+            "c04-ambiguo": 1
+          }
+        },
+        "contra_el_pool_incremental": {
+          "config_id": "1721cc6229bdc506",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": true,
+          "lectura": "**0 por construcción**: esta configuración formó el pool, así que todo par de su top-5 está adentro por definición. El 0 no dice que la comparación se sostenga: dice que la pregunta no aplica.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 0,
+          "n_sin_juzgar": 0,
+          "pct_sin_juzgar": 0.0,
+          "pool_id": "5b6cba32126fed61-secundario-incremental",
+          "sin_juzgar_por_consulta": {}
+        }
+      },
+      "C3-ciego": {
+        "contra_el_pool_definitivo": {
+          "config_id": "8a93b26113b4ad73",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": false,
+          "lectura": "**Número real.** Esta configuración **no** formó el pool, así que sus ítems sí pueden estar sin juzgar — y por la convención de TREC que la evaluación adopta, un ítem sin juzgar **cuenta como no relevante**, o sea que su nDCG@5 estaría **subestimado** y hay que decirlo.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 24,
+          "n_sin_juzgar": 29,
+          "pct_sin_juzgar": 19.33,
+          "pool_id": "5b6cba32126fed61-definitivo",
+          "sin_juzgar_por_consulta": {
+            "c01-ambiguo": 2,
+            "c01-visual": 1,
+            "c02-conceptual": 1,
+            "c03-conceptual": 3,
+            "c03-visual": 1,
+            "c04-ambiguo": 2,
+            "c04-conceptual": 2,
+            "c04-visual": 2,
+            "c05-ambiguo": 2,
+            "c05-conceptual": 1,
+            "c05-visual": 1,
+            "c06-visual": 1,
+            "c07-ambiguo": 1,
+            "c07-conceptual": 1,
+            "c08-ambiguo": 2,
+            "c08-conceptual": 2,
+            "c08-visual": 1,
+            "c10-conceptual": 1,
+            "c10-visual": 2
+          }
+        },
+        "contra_el_pool_incremental": {
+          "config_id": "8a93b26113b4ad73",
+          "configuracion": "C3",
+          "estado_del_pool": "congelado",
+          "formo_el_pool": true,
+          "lectura": "**0 por construcción**: esta configuración formó el pool, así que todo par de su top-5 está adentro por definición. El 0 no dice que la comparación se sostenga: dice que la pregunta no aplica.",
+          "n_items_del_top5": 150,
+          "n_obras_distintas_sin_juzgar": 0,
+          "n_sin_juzgar": 0,
+          "pct_sin_juzgar": 0.0,
+          "pool_id": "5b6cba32126fed61-secundario-incremental",
+          "sin_juzgar_por_consulta": {}
+        }
+      }
+    },
+    "tautologia_de_mp_3": "🔴 **El `%` sin juzgar de los dos brazos contra el pool incremental es `0` POR CONSTRUCCIÓN, y decirlo es obligatorio.** Es la tautología del pool apareciendo por **segunda vez**: la primera fueron las cinco filas que formaron el pool definitivo; ésta es un pool que **se derivó para cubrir a estos dos brazos**, así que todo par de su top-5 está adentro por definición. **Ese 0 no dice que la comparación se sostenga: dice que la pregunta no aplica.** El número que sí mide algo es el otro: contra el pool **definitivo**, el brazo ampliado tenía **3/150 = 2,00 %** sin juzgar y el ciego **29/150 = 19,33 %** — y ése era el hallazgo (el conteo del pool incremental), no esto.",
+    "y_c3_tambien_es_tautologia": "⚠️ Y el `0` de la fila **C3** contra el pool definitivo es la **misma** tautología por el otro lado: C3 formó ese pool. Las tres filas publican `0` y ninguno de los tres ceros es evidencia."
+  },
+  "juicios": {
+    "el_par_contado_dos_veces": [
+      "c03-conceptual",
+      "cma:146167"
+    ],
+    "nota": "🔴 **Son dos cuentas correctas con dos poblaciones distintas, y confundirlas es el modo de falla 3 del proyecto.** *Por brazo*, sumando los dos top-5 de 150: **268 reusados + 32 nuevos = 300**, y es la cuenta que el estudio secundario declaró. *Por par distinto*, que es lo que **cuesta anotación**: el pool incremental tiene **197** ítems —los dos brazos comparten 103 pares—, de los cuales **166 reusan grado** y **31 son nuevos**. La diferencia entre 32 y 31 es **un par que los dos brazos traen y nadie había juzgado** (`c03-conceptual` · `cma:146167`), que la suma por brazo cuenta dos veces. ⚠️ **Un juicio es sobre el par, no sobre el pool —ni el brazo— que lo trajo** (la evaluación, precisión del 2026-10-12), así que **el trabajo de anotación son 31 y el `%` sin juzgar de cada brazo se cuenta sobre sus propios 150.**",
+    "nuevos_por_brazo": 32,
+    "pares_distintos_del_pool_incremental": 197,
+    "pares_distintos_nuevos": 31,
+    "pares_distintos_que_reusan_juicio": 166,
+    "por_grado_del_anotador_unico": {
+      "grado_0": 11,
+      "grado_1": 16,
+      "grado_2": 4
+    },
+    "reusados_del_consenso_definitivo_por_brazo": 268
+  },
+  "limitacion_de_un_solo_anotador": "las métricas de retrieval de los dos brazos secundarios descansan sobre 268 juicios del ground truth principal —con su κ medido y su limitación declarada— más 32 juicios de un solo anotador, sin κ propio.",
+  "llamadas_al_proxy": 0,
+  "lo_que_no_se_puede_concluir": [
+    "🔴 **Nada sobre el eje de campos de `knowledge` con `n = 3`.** Tres ítems nuevos sobre 150 **no mueven un `nDCG` de forma interpretable**, y cualquier delta `C3-ampliado − C3` que se lea acá está dominado por los 147 pares que las dos filas comparten. ⚠️ **Y eso es un resultado en sí:** el brazo ampliado **casi no cambia el top-5** —el churn medio y las consultas con top-5 idéntico están en `churn_del_top5_contra_c3`—, que es consistente con el hallazgo de `provenance`: `provenance` es el **39 %** del índice congelado y **nunca se cita**, así que agregar `exhibitions` y `citations` agranda el índice sin mover lo que se recupera.",
+    "🔴 **Del brazo ciego, el hallazgo ya era el 19,33 %** (el conteo del pool incremental): cambia el conjunto a juzgar en 29 ítems de 150. Lo único que esto agrega es **si ese cambio mejora o empeora**, y es una sola cifra sobre 30 consultas con un ground truth de un anotador en su parte nueva.",
+    "🔴 **Las dos mitades del estudio secundario no miden lo mismo.** la mitad de generación del estudio secundario y el brazo de chunking del estudio secundario midieron **generación** (groundedness, precisión de cita, licencias mezcladas); esto mide **retrieval**. **No se promedian ni se suman.**",
+    "⚠️ **El `0 %` sin juzgar no sostiene la comparación** (ver `items_del_top5_sin_juzgar.tautologia_de_mp_3`).",
+    "⚠️ **Ningún κ.** Los 31 juicios nuevos son de un anotador: no hay acuerdo que medir sobre ellos, y el κ de `v1` que el informe publica es el de la campaña definitiva, sobre otros pares y otros anotadores. Pegarle el κ del acuerdo entre anotadores a estas filas sería prestarle a un número la credencial de otro.",
+    "⚠️ **El piso de ruido de los dos brazos está SIN MEDIR.** El `0,000` exacto es de `ce0910b50e3569e9` (la medición del piso de ruido); los brazos no tienen dos ordinales. Que la cadena sea la misma acota por **inclusión**, no por medición — y la variante **sí** cambia lo que el índice devuelve, que es el eje que se está midiendo.",
+    "🔴 **Y no se puede decir que el brazo ciego empeore el retrieval**: el signo del delta contra C3 **se da vuelta** entre las dos poblaciones del ground truth (ver `orden_de_las_filas.lectura`)."
+  ],
+  "lo_que_si_se_puede_decir": [
+    "✅ **El eje de campos de `knowledge` casi no mueve el top-5, y está medido:** churn medio **0,267 de 5** y top-5 **idéntico en 24 de 30** consultas. 🔑 Y es una afirmación y no un empate, porque el piso de ruido de C3 es **0,000 exacto** (la medición del piso de ruido): el eje **sí** mueve algo —8 cambios de ítem en 30 consultas— pero casi nada. Es consistente con el hallazgo de `provenance` (*`provenance` es el 39 % del índice y nunca se cita*) y con que agregar `exhibitions` y `citations` agrande el índice sin cambiar lo que se recupera.",
+    "✅ **El eje de chunking sí mueve el top-5, y mucho más:** churn medio **1,567 de 5** y top-5 idéntico en **4 de 30**. **5,9× el churn del otro eje.** Eso confirma del lado del retrieval lo que el conteo del pool incremental había contado del lado del pool (29 ítems sin juzgar contra 3), y es la mitad del estudio secundario que **sí** tiene tamaño de efecto.",
+    "✅ **Y el `%` de ítems sin juzgar contra el pool definitivo es la cifra interpretable de las dos**: 2,00 % y 19,33 %. A diferencia del 0 % contra el pool incremental, ése **no** es tautológico: esos dos brazos no formaron el pool definitivo."
+  ],
+  "no_comparable_con_la_tabla_c0_c4": "⚠️ **Estas métricas NO son comparables en pie de igualdad con la tabla C0–C4.** Van en su **propia sección** del informe, con la frase de arriba. El ground truth principal lo produjeron dos anotadores de proveedores distintos más un desempate (la anotación por IA); los 32 juicios que faltaban los puso **un solo anotador** (`ia-incremental`), y un κ no existe sobre un anotador.",
+  "nota_de_que_es": "🔴 **La mitad de *retrieval* del estudio secundario.** la mitad de generación del estudio secundario midió el eje de campos de `knowledge` y el brazo de chunking del estudio secundario el de chunking, los dos **del lado de la generación**; esto mide los mismos dos ejes **del lado del retrieval**, con el ground truth extendido por **pooling incremental** (`la evaluación § El pool se congela`). ⚠️ **Las dos mitades NO miden lo mismo y no se promedian ni se suman**: aquello es groundedness, precisión de cita y licencias; esto es calidad de ranking.",
+  "orden_de_las_filas": {
+    "a_completa_cero": [
+      "C3-ampliado",
+      "C3",
+      "C3-ciego"
+    ],
+    "b_restringida_cero": [
+      "C3-ampliado",
+      "C3-ciego",
+      "C3"
+    ],
+    "el_orden_cambia_entre_poblaciones": true,
+    "lectura": "🔴 **El orden CAMBIA, y eso es el resultado del brazo ciego.** Sobre el consenso **completo** el ciego queda último y por debajo de C3 (nDCG@5 0,4903 contra 0,5308, Δ = −0,0405); sobre los pares **de acuerdo** queda por encima (0,3895 contra 0,3860, Δ = +0,0035) y el signo se da vuelta. **Entonces NO se puede afirmar que el chunking ciego empeore el retrieval**: la afirmación depende de los 133 pares que resolvió el tercer anotador, que el desempate midió concentrados (71 % / 22 %). Es la sensibilidad del orden a la población un nivel más abajo, y con el confundidor extra de `composicion_del_ground_truth_por_fila`. ✅ **Lo que sobrevive a las dos poblaciones: el brazo ampliado queda primero en las dos** — por +0,0107 y por +0,0038, los dos dentro de lo que `n = 3` no puede sostener (ver `lo_que_no_se_puede_concluir`).",
+    "nota": "🔑 Lo que se compara es **la tupla de orden** y no los deltas: el piso de ruido de C3 se midió en **0,000 exacto** (top-5 idéntico en los 30 pares con dos ordinales), que es por qué la mitad de generación del estudio secundario y el brazo de chunking del estudio secundario eligieron C3 y por qué toda diferencia contra esta fila es señal y no ruido. ⚠️ **Pero el piso medido es el de `ce0910b50e3569e9`**, no el de los dos brazos: ninguno de los dos tiene dos ordinales, así que su piso **está sin medir** y lo que hay es el argumento de inclusión de cadenas (la cadena es la misma de C3 sobre otra variante). `medido` ≠ `acotado_por_inclusión` (la medición del piso de ruido)."
+  },
+  "procedencia": {
+    "aporte_nuevo": "5b6cba32126fed61-v1-ia-incremental",
+    "commit": "ca18ea200646b280dbbb4b74e08aba2185507441",
+    "config_ids": {
+      "C3": "ce0910b50e3569e9",
+      "C3-ampliado": "1721cc6229bdc506",
+      "C3-ciego": "8a93b26113b4ad73"
+    },
+    "consenso_reusado": "consenso-5b6cba32126fed61-definitivo-v1.csv",
+    "medido_por": "una sesión de IA",
+    "pool_incremental": "5b6cba32126fed61-secundario-incremental",
+    "rubrica": "v1",
+    "tabla_comparada": "artifacts/informes/tabla-a2-m13.json"
+  },
+  "tablas": {
+    "a_completa_cero": {
+      "C3": {
+        "config_id": "ce0910b50e3569e9",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c05-ambiguo"
+        ],
+        "fila": "C3",
+        "mrr": 0.7583,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 29,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 0,
+        "ndcg_at_5_sobre_definidas": 0.5491,
+        "ndcg_at_5_sobre_todas": 0.5308,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.5933,
+        "p_at_5_estricta": 0.32,
+        "pct_items_sin_grado": 0.0,
+        "poblacion_del_ground_truth": "completa",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c05-ambiguo"
+            ],
+            "mrr": 0.675,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.5162,
+            "ndcg_at_5_sobre_todas": 0.4646,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.48,
+            "p_at_5_estricta": 0.36,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.9,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.6476,
+            "ndcg_at_5_sobre_todas": 0.6476,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.84,
+            "p_at_5_estricta": 0.34,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.7,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.4802,
+            "ndcg_at_5_sobre_todas": 0.4802,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.46,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      },
+      "C3-ampliado": {
+        "config_id": "1721cc6229bdc506",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c05-ambiguo"
+        ],
+        "fila": "C3-ampliado",
+        "mrr": 0.775,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 29,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 0,
+        "ndcg_at_5_sobre_definidas": 0.5602,
+        "ndcg_at_5_sobre_todas": 0.5415,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.6,
+        "p_at_5_estricta": 0.3333,
+        "pct_items_sin_grado": 0.0,
+        "poblacion_del_ground_truth": "completa",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c05-ambiguo"
+            ],
+            "mrr": 0.675,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.5324,
+            "ndcg_at_5_sobre_todas": 0.4792,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.5,
+            "p_at_5_estricta": 0.38,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.95,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.6651,
+            "ndcg_at_5_sobre_todas": 0.6651,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.84,
+            "p_at_5_estricta": 0.36,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.7,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.4802,
+            "ndcg_at_5_sobre_todas": 0.4802,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.46,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      },
+      "C3-ciego": {
+        "config_id": "8a93b26113b4ad73",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c05-ambiguo"
+        ],
+        "fila": "C3-ciego",
+        "mrr": 0.6817,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 29,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 0,
+        "ndcg_at_5_sobre_definidas": 0.5072,
+        "ndcg_at_5_sobre_todas": 0.4903,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.5933,
+        "p_at_5_estricta": 0.3133,
+        "pct_items_sin_grado": 0.0,
+        "poblacion_del_ground_truth": "completa",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c05-ambiguo"
+            ],
+            "mrr": 0.5033,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.4333,
+            "ndcg_at_5_sobre_todas": 0.3899,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.48,
+            "p_at_5_estricta": 0.32,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.9,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.6141,
+            "ndcg_at_5_sobre_todas": 0.6141,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.82,
+            "p_at_5_estricta": 0.32,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.6417,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 0,
+            "ndcg_at_5_sobre_definidas": 0.4668,
+            "ndcg_at_5_sobre_todas": 0.4668,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.48,
+            "p_at_5_estricta": 0.3,
+            "pct_items_sin_grado": 0.0,
+            "poblacion_del_ground_truth": "completa",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      }
+    },
+    "b_restringida_cero": {
+      "C3": {
+        "config_id": "ce0910b50e3569e9",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3",
+        "mrr": 0.5472,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 59,
+        "ndcg_at_5_sobre_definidas": 0.4454,
+        "ndcg_at_5_sobre_todas": 0.386,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.4267,
+        "p_at_5_estricta": 0.2133,
+        "pct_items_sin_grado": 39.33,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.4,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.4406,
+            "ndcg_at_5_sobre_todas": 0.3084,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.8,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 13,
+            "ndcg_at_5_sobre_definidas": 0.5663,
+            "ndcg_at_5_sobre_todas": 0.5663,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 26.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.4417,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.3147,
+            "ndcg_at_5_sobre_todas": 0.2833,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.26,
+            "p_at_5_estricta": 0.14,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      },
+      "C3-ampliado": {
+        "config_id": "1721cc6229bdc506",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3-ampliado",
+        "mrr": 0.5539,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 59,
+        "ndcg_at_5_sobre_definidas": 0.4497,
+        "ndcg_at_5_sobre_todas": 0.3898,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.4267,
+        "p_at_5_estricta": 0.22,
+        "pct_items_sin_grado": 39.33,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.4,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.4431,
+            "ndcg_at_5_sobre_todas": 0.3102,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.82,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 13,
+            "ndcg_at_5_sobre_definidas": 0.5759,
+            "ndcg_at_5_sobre_todas": 0.5759,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 26.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.4417,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.3147,
+            "ndcg_at_5_sobre_todas": 0.2833,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.26,
+            "p_at_5_estricta": 0.14,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      },
+      "C3-ciego": {
+        "config_id": "8a93b26113b4ad73",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3-ciego",
+        "mrr": 0.5333,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 55,
+        "ndcg_at_5_sobre_definidas": 0.4494,
+        "ndcg_at_5_sobre_todas": 0.3895,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.44,
+        "p_at_5_estricta": 0.2267,
+        "pct_items_sin_grado": 36.67,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "cero",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.3333,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 22,
+            "ndcg_at_5_sobre_definidas": 0.3985,
+            "ndcg_at_5_sobre_todas": 0.279,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 44.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "conceptual_cultural": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 0.825,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 12,
+            "ndcg_at_5_sobre_definidas": 0.5522,
+            "ndcg_at_5_sobre_todas": 0.5522,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 24.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          },
+          "visual_cromatico": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.4417,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 21,
+            "ndcg_at_5_sobre_definidas": 0.3747,
+            "ndcg_at_5_sobre_todas": 0.3372,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.3,
+            "p_at_5_estricta": 0.2,
+            "pct_items_sin_grado": 42.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "cero"
+          }
+        }
+      }
+    },
+    "b_restringida_condensada": {
+      "C3": {
+        "config_id": "ce0910b50e3569e9",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3",
+        "mrr": 0.7111,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 59,
+        "ndcg_at_5_sobre_definidas": 0.5102,
+        "ndcg_at_5_sobre_todas": 0.4422,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.4267,
+        "p_at_5_estricta": 0.2133,
+        "pct_items_sin_grado": 39.33,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "condensada",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.45,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.4726,
+            "ndcg_at_5_sobre_todas": 0.3308,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "conceptual_cultural": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 1.0,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 13,
+            "ndcg_at_5_sobre_definidas": 0.6312,
+            "ndcg_at_5_sobre_todas": 0.6312,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 26.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "visual_cromatico": {
+            "config_id": "ce0910b50e3569e9",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.6833,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.4051,
+            "ndcg_at_5_sobre_todas": 0.3646,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.26,
+            "p_at_5_estricta": 0.14,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          }
+        }
+      },
+      "C3-ampliado": {
+        "config_id": "1721cc6229bdc506",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3-ampliado",
+        "mrr": 0.7111,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 59,
+        "ndcg_at_5_sobre_definidas": 0.5155,
+        "ndcg_at_5_sobre_todas": 0.4468,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.4267,
+        "p_at_5_estricta": 0.22,
+        "pct_items_sin_grado": 39.33,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "condensada",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.45,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.48,
+            "ndcg_at_5_sobre_todas": 0.336,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "conceptual_cultural": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 1.0,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 13,
+            "ndcg_at_5_sobre_definidas": 0.6397,
+            "ndcg_at_5_sobre_todas": 0.6397,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.26,
+            "pct_items_sin_grado": 26.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "visual_cromatico": {
+            "config_id": "1721cc6229bdc506",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.6833,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 23,
+            "ndcg_at_5_sobre_definidas": 0.4051,
+            "ndcg_at_5_sobre_todas": 0.3646,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.26,
+            "p_at_5_estricta": 0.14,
+            "pct_items_sin_grado": 46.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          }
+        }
+      },
+      "C3-ciego": {
+        "config_id": "8a93b26113b4ad73",
+        "configuracion": "C3",
+        "consultas_sin_ndcg_definido": [
+          "c04-ambiguo",
+          "c05-ambiguo",
+          "c07-visual",
+          "c10-ambiguo"
+        ],
+        "fila": "C3-ciego",
+        "mrr": 0.675,
+        "n_consultas": 30,
+        "n_consultas_con_ndcg_definido": 26,
+        "n_items_del_top5": 150,
+        "n_items_sin_grado": 55,
+        "ndcg_at_5_sobre_definidas": 0.516,
+        "ndcg_at_5_sobre_todas": 0.4472,
+        "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+        "p_at_5": 0.44,
+        "p_at_5_estricta": 0.2267,
+        "pct_items_sin_grado": 36.67,
+        "poblacion_del_ground_truth": "restringida",
+        "politica_de_sin_grado": "condensada",
+        "por_categoria": {
+          "ambiguo": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c04-ambiguo",
+              "c05-ambiguo",
+              "c10-ambiguo"
+            ],
+            "mrr": 0.35,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 7,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 22,
+            "ndcg_at_5_sobre_definidas": 0.4207,
+            "ndcg_at_5_sobre_todas": 0.2945,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.28,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 44.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "conceptual_cultural": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [],
+            "mrr": 1.0,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 10,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 12,
+            "ndcg_at_5_sobre_definidas": 0.6144,
+            "ndcg_at_5_sobre_todas": 0.6144,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.74,
+            "p_at_5_estricta": 0.24,
+            "pct_items_sin_grado": 24.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          },
+          "visual_cromatico": {
+            "config_id": "8a93b26113b4ad73",
+            "configuracion": "C3",
+            "consultas_sin_ndcg_definido": [
+              "c07-visual"
+            ],
+            "mrr": 0.675,
+            "n_consultas": 10,
+            "n_consultas_con_ndcg_definido": 9,
+            "n_items_del_top5": 50,
+            "n_items_sin_grado": 21,
+            "ndcg_at_5_sobre_definidas": 0.4808,
+            "ndcg_at_5_sobre_todas": 0.4328,
+            "nota_del_ndcg": "🔴 **Dos promedios, un numerador.** `sobre_definidas` divide por las consultas donde `IDCG > 0`; `sobre_todas` divide por todas y cuenta 0 las indefinidas, que es lo que la **decisión del acuerdo entre anotadores** declara para `c05-ambiguo` (*«no aporta a nDCG@5 y sí al denominador»*). El informe tiene que decir cuál publica.",
+            "p_at_5": 0.3,
+            "p_at_5_estricta": 0.2,
+            "pct_items_sin_grado": 42.0,
+            "poblacion_del_ground_truth": "restringida",
+            "politica_de_sin_grado": "condensada"
+          }
+        }
+      }
+    }
+  },
+  "version": "1"
+}

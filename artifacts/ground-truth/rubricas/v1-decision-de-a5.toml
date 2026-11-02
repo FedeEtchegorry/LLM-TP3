@@ -1,0 +1,103 @@
+#  Decisión de `A5` sobre la rúbrica `v1` — clase 3, la escribe el grupo
+#
+#  κ medido = 0.4749763043048048 < 0.6, así que `mission.md A5` pide elegir **una de
+#  dos** y este archivo es dónde queda elegida:
+#
+#    · "refinada"              → derivar OTRA rúbrica y re-anotar. ⚠️ NO autoriza
+#                                a exportar con esta: la salida se ejerce
+#                                exportando con la refinada (`--rubrica …`).
+#    · "limitacion_declarada"  → reportarlo como limitación explícita. Autoriza a
+#                                exportar, y el texto de abajo **va al informe**.
+#
+#  🔴 Mientras este archivo no exista, `tp3-anotar exportar` **falla** con esta
+#  rúbrica: es `MP-2`, y lo que impide es gastar anotación bajo un instrumento
+#  cuyo propio κ dice que es ambiguo — que es, literalmente, lo que la ronda
+#  piloto existe para no hacer.
+
+rubrica_id     = "v1"
+salida         = "limitacion_declarada"
+
+#  ── La medición que se está decidiendo. La emite el pipeline: no se
+#     transcribe a mano, y si se re-mide o se edita el texto de la rúbrica, esta
+#     decisión **deja de cubrir** y el chequeo vuelve a bloquear (MP-2, M5-5).
+kappa_leido    = 0.4749763043048048
+pool_del_kappa = "5b6cba32126fed61-definitivo"
+hash_del_texto = "8e4c96749314a579"
+
+decidida_por   = "el orquestador, bajo la delegacion vigente del grupo (docs/07 D15 y D17: el grupo decidio que ningun humano anota y delego el como). NO la leyeron ni la firmaron los integrantes, y eso se declara igual que en D15"
+fecha          = "2026-10-31"
+
+#  ── Si `salida = "refinada"`: cuál es la rúbrica derivada ──────────────────
+# refinada_en  = "v2"
+
+#  ── Si `salida = "limitacion_declarada"`: EL PÁRRAFO DEL INFORME ───────────
+#
+#     No es una nota al pie: `A5` compromete *reportarlo como limitación
+#     explícita*, así que esto es lo que se publica. Decí qué significa el
+#     número, sobre qué población se midió y qué NO se puede concluir del
+#     ground truth construido con este instrumento.
+limitacion = """
+El kappa de Cohen entre los dos anotadores de IA sobre el pool congelado da **0,475**
+(379 pares; po = 0,649, pe = 0,332), por debajo del umbral de 0,6 que A5 fija. Se
+reporta como limitacion explicita, y lo que sigue es lo que el numero significa.
+
+**Se publica estratificado, porque el instrumento se pre-juzga a si mismo en una
+parte del pool.** La rubrica v1 declara que ningun ejemplo usa un pedido del set
+"a proposito: si la rubrica pre-juzga un par, el kappa mide la rubrica". Cruzando
+los 30 pedidos contra su texto, **8 aparecen textuales** --y en c09-visual el
+ejemplo no es analogo sino el caso mismo: tinta monocroma de bambu, que es la
+imagen original de esa consulta--. Son **110 de los 379 items, el 29 %**.
+
+  | estrato                      |   n |  kappa |
+  |------------------------------|----:|-------:|
+  | todos                        | 379 |  0,475 |
+  | pre-juzgado                  | 110 |  0,570 |
+  | **limpio (autoritativo)**    | 269 |  0,435 |
+
+El estrato pre-juzgado da **+0,135 mas alto** que el limpio, lo que confirma la
+contaminacion con una medicion en vez de con un argumento. **El kappa autoritativo
+es 0,435 sobre 269 items y 22 consultas**, con las tres categorias representadas.
+
+**Y el resultado no es el kappa agregado: es el kappa por categoria.**
+
+  | categoria (estrato limpio) |   n |  kappa |
+  |----------------------------|----:|-------:|
+  | conceptual_cultural        |  83 | *0,810* |
+  | visual_cromatico           |  86 |  0,249 |
+  | ambiguo                    | 100 |  0,228 |
+
+**La rubrica no es ambigua: es precisa exactamente donde se la refino, y esta
+ausente donde no.** Un factor 3,5 entre categorias no es ruido. La causa esta
+medida: el piloto fueron 20 juicios sobre 4 consultas, y las reglas se afinaron
+sobre lo que ahi aparecio --los pedidos culturales--. Para los otros dos tipos la
+rubrica fija el criterio y no el umbral, y los dos anotadores lo completaron
+distinto: uno fijo siete umbrales medidos (luminancia media, croma en CIELAB,
+"con color" = pigmento aplicado y no croma del archivo) y el otro declaro no haber
+fijado ninguno y haber llevado lo incierto a 1. Se ve en la distribucion: 153 unos
+contra 104.
+
+**Y la causa del 0,228 en ambiguo esta contada.** La rubrica deriva la lectura de
+un pedido ambiguo con una escalera de cuatro escalones, y de las 10 lecturas
+derivadas **3 convergen y 7 divergen, 2 de ellas invertidas** --cada anotador
+conservo la lectura que el otro descarto--. El cuarto escalon, que es un corte
+arbitrario por orden alfabetico y existe para garantizar convergencia, **no fija el
+vocabulario del eje**: un anotador llego a el dos veces y el otro ninguna.
+
+**QUE NO SE PUEDE CONCLUIR DEL GROUND TRUTH CONSTRUIDO CON ESTE INSTRUMENTO.**
+(1) No se puede afirmar acuerdo inter-humano: no hay anotadores humanos (D17), y
+este kappa es inter-modelo entre dos familias, con una sola frontera de proveedor
+cruzada --un anotador comparte proveedor con el reranker del pipeline--.
+(2) No se puede leer la fila nDCG@5 del tercio "ambiguo" como medida de relevancia:
+sobre esos items mide acuerdo con una convencion declarada, porque los pedidos son
+comparativos sin eje objetivo por construccion.
+(3) No se puede comparar el kappa de este pool con el 0,419 del piloto: aquel eran
+dos pasadas de la misma sesion sobre 20 pares, o sea auto-consistencia.
+(4) Una consulta (c05-ambiguo) salio con varianza cero --15 de 15 en grado 0--: no
+aporta a nDCG@5 y si al denominador.
+
+**Por que se declara en vez de refinarse.** A5 da las dos salidas y refinar costaria
+descartar los 379 x 2 juicios ya producidos y re-anotar bajo una v2 afinada
+*despues* de ver que categorias fallaron. El hallazgo de arriba es mas valioso que
+un kappa mas alto obtenido asi, y es publicable tal como esta: el instrumento
+funciona donde fue construido y no extrapola.
+"""

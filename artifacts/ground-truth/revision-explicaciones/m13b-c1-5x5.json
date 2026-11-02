@@ -1,0 +1,2031 @@
+{
+ "artefacto": "RevisiónDeExplicaciones",
+ "designacion": "m13b-c1-5x5",
+ "identidad": "m13b-c1-5x5",
+ "clase_de_identidad": 3,
+ "autoria": "m13b",
+ "estado": "completo",
+ "version_de_la_revision": "1",
+ "nota_de_identidad": "Clase 3 (la tabla de identidades): ancla de trabajo de anotación, identidad = **una designación declarada**. No se reescribe y no se recalcula: revisar de nuevo es autorar **otra** designación. El `config_id` y el `variante_id` de las corridas de origen van **adentro** como procedencia, no en la identidad, porque las corridas son clase 2 y no se reproducen.",
+ "procedencia": {
+  "commit": "d0ea89b80674c04c8060f6550a99a10bd4b04a1b",
+  "split_id": "5b6cba32126fed61",
+  "set_de_consultas": "artifacts/ground-truth/consultas/5b6cba32126fed61-grupo-2.json",
+  "config_id": "4443862ae45e62d6",
+  "configuracion": "C1",
+  "variante_id": "c3274567371ff42b",
+  "corrida_ids": {
+   "c02-conceptual": "741ec5641728b34a-1",
+   "c03-visual": "a2b517ea3aea5b1a-1",
+   "c06-ambiguo": "d0a9d25b8e3f1aad-1",
+   "c09-conceptual": "07d7cb12b5dd7fe1-1",
+   "c10-visual": "6618567b004daa93-1"
+  },
+  "binding_del_generador": {
+   "modelo": "openai/gpt-4.1-mini",
+   "prompt_id": "generador-es-afirmaciones-tipadas",
+   "version_del_prompt": "2",
+   "reintentos": 2,
+   "muestreo": {
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "seed": 7369,
+    "max_tokens": 1500
+   }
+  },
+  "evidencia": {
+   "n_fragmentos_por_obra": 3,
+   "orden": "por_similitud_al_pedido"
+  },
+  "llamadas_al_proxy": 0,
+  "nota_de_presupuesto": "la decisión de presupuesto: el tope está agotado. Esta revisión se hizo **leyendo artefactos ya persistidos** y las imágenes del corpus en `data/imagenes/`. Cero llamadas.",
+  "nota_del_texto_por_valor": "Las 25 explicaciones van **copiadas adentro** con sus afirmaciones, sus referencias y la evidencia que tenían disponible (la tabla de identidades, deuda el contrato de la salida citada): las corridas son clase 2, no van al repo y no se reproducen, así que anclar el veredicto a un `corrida_id` sería el camino de anotación/ por una cuarta puerta."
+ },
+ "criterio_de_la_muestra": {
+  "tamano": "5 consultas × 5 obras = 25 explicaciones (el criterio de honestidad, el módulo de evaluación). No se movió: moverlo sería elegir la vara después de ver el resultado.",
+  "por_que_C1": [
+   "**C1 = v1**, el RAG base 'completo y honesto' que el pipeline base completo y andando verifica, que es el brazo del que se predica la regla de honestidad como propiedad del producto.",
+   "El `binding` del generador es **byte-idéntico en C1, C2, C3 y C4** (mismo modelo, mismo `prompt_id`, misma `version_del_prompt = 2`, mismo muestreo con `seed = 7369`) y la evidencia también (3 fragmentos por obra, mismo orden): el instrumento que el criterio de honestidad mide **no cambia con el brazo**, así que elegir C1 no sesga la medición de honestidad — sólo cambia qué obras se explican.",
+   "Las **148 observaciones** de la medición anterior son exactamente las de C1 ordinal 1 (150 obras / 148 observaciones): revisar C1 permite **re-verificar la medición anterior sobre su propia población**, no sobre una parecida."
+  ],
+  "criterio_de_las_5_consultas": [
+   "1 · **Las tres categorías representadas** (requisito del diseño de la muestra). Reparto **2 `conceptual_cultural` + 2 `visual_cromatico` + 1 `ambiguo`**.",
+   "2 · **El singleton va a `ambiguo`** por una razón declarada antes de leer ninguna afirmación: es la única categoría cuyo pedido («más humano», «con más vida») **no nombra ningún hecho que un fragmento de museo pueda confirmar o desmentir**, así que es donde los ejes 2 y 3 tienen menos material por obra. Las otras dos lo estresan: `conceptual_cultural` produce la mayor densidad de `dato` citado y `visual_cromatico` es donde la observación de paleta es falsable contra la imagen.",
+   "3 · **5 imágenes de consulta distintas** (c02, c03, c06, c09, c10), no varios pedidos de la misma imagen: la muestra cubre 5 de las 10 imágenes del held-out y **las 25 obras resultan todas distintas**.",
+   "4 · **Los dos museos, con citas a `description` de AIC** (`license = CC-BY-4.0`): si no, la verificación del criterio de atribución sobre la muestra sería vacía, y el criterio de atribución es uno de los tres consumidores de este artefacto.",
+   "5 · **Abstenciones en los dos extremos**: 2 consultas con 5/5 obras abstenidas (c02-conceptual, c03-visual), 2 con 0/5 (c06-ambiguo, c09-conceptual) y 1 intermedia (c10-visual, 2/5).",
+   "6 · **Elegidas sobre metadatos, no sobre contenido**: categoría, museo, licencia y conteo de abstenciones — todo visible sin leer una sola afirmación. ⚠️ Declaro la excepción: al inferir el esquema de los artefactos leí antes las afirmaciones de `c01-ambiguo` y `c01-conceptual`, y **por eso c01 quedó fuera de la muestra**."
+  ],
+  "nota_de_TA_1": "el registro de hallazgos estratifica el κ porque la `Rúbrica v1` pre-juzga 8 de los 30 pedidos. **No aplica acá**: la rúbrica interpreta juicios de relevancia y no entra en el prompt del generador. De las 5 elegidas, `c09-conceptual` comparte imagen con `c09-visual` (que sí está en el estrato pre-juzgado) pero es otro pedido y otra corrida.",
+  "composicion": {
+   "c02-conceptual": {
+    "categoria": "conceptual_cultural",
+    "pedido": "escenas de agua en la pintura china",
+    "imagen_de_consulta": "aic:111728",
+    "abstenciones": 5
+   },
+   "c03-visual": {
+    "categoria": "visual_cromatico",
+    "pedido": "el mismo interior pero en tonos fríos",
+    "imagen_de_consulta": "cma:159270",
+    "abstenciones": 5
+   },
+   "c06-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más humano",
+    "imagen_de_consulta": "cma:145925",
+    "abstenciones": 0
+   },
+   "c09-conceptual": {
+    "categoria": "conceptual_cultural",
+    "pedido": "el mismo tema en la pintura china",
+    "imagen_de_consulta": "cma:148382",
+    "abstenciones": 0
+   },
+   "c10-visual": {
+    "categoria": "visual_cromatico",
+    "pedido": "la misma escena con una paleta más oscura",
+    "imagen_de_consulta": "aic:67362",
+    "abstenciones": 2
+   }
+  },
+  "cobertura": {
+   "n_obras": 25,
+   "n_obras_distintas": 25,
+   "museos": {
+    "cma": 18,
+    "aic": 7
+   },
+   "n_obras_con_abstencion": 12,
+   "n_imagenes_de_consulta": 5
+  }
+ },
+ "criterio_de_revision": {
+  "unidad": "**La afirmación, no la corrida** (el descarte contado de afirmaciones). Los tres ejes se cuentan por separado porque son tres fallas distintas.",
+  "eje_1_clasificacion": "¿la regla de que un dato lleva referencia tipó bien? Un **dato de museo** lleva su `ref`; una **observación visual** va marcada como propia. Se cuentan tres fallas distintas: (A) observación disfrazada de dato citado; (B) dato de museo presentado como observación propia —pierde la verificabilidad—; (C) **conocimiento general del modelo** presentado como observación propia, que no es ninguna de las dos cosas que la regla de que un dato lleva referencia tiene.",
+  "eje_2_la_cita_se_sostiene": "Sobre las afirmaciones `dato`: **¿el fragmento dice lo que la afirmación dice que dice?** No es el conteo de referencias colgadas (que el fragmento exista). Tres grados: **sostiene** · **sostiene parcialmente** (alguna cláusula no está en el fragmento) · **no sostiene**. Se publican los tres: un único umbral perdería la distinción entre sobre-alcance y cita que no respalda nada.",
+  "eje_3_la_observacion_es_defendible": "Sobre las observaciones que hacen una **aserción visual verificable**, mirando la imagen de la obra recuperada en `data/imagenes/`. Tres grados: **defendible** · **discutible** (un observador razonable podría sostenerla, la impresión dominante la contradice) · **falsa a la vista**. Una observación puede ser discutible y seguir siendo honesta; lo que no puede es ser falsa a la vista.",
+  "por_que_8_observaciones_no_entran_al_eje_3": "No hacen ninguna aserción sobre lo visible: 5 son conocimiento general (falla C), 2 son hechos biográficos del museo y 1 es una afirmación sobre el texto del fragmento. **Que no se puedan juzgar a la vista es el hallazgo**, no una limitación del método."
+ },
+ "conteos": {
+  "n_explicaciones": 25,
+  "n_afirmaciones": 51,
+  "n_afirmaciones_dato": 27,
+  "n_afirmaciones_observacion": 24,
+  "eje_1_clasificacion": {
+   "n": 51,
+   "bien_clasificadas": 39,
+   "mal_clasificadas": 12,
+   "observacion_disfrazada_de_dato_citado": 1,
+   "dato_de_museo_como_observacion_propia": 6,
+   "conocimiento_general_como_observacion_propia": 5,
+   "de_las_dato_como_observacion_forzadas_por_el_contrato": 2,
+   "de_las_dato_como_observacion_no_forzadas": 4
+  },
+  "eje_2_la_cita_se_sostiene": {
+   "n": 27,
+   "sostiene": 20,
+   "sostiene_parcialmente": 4,
+   "no_sostiene": 3
+  },
+  "eje_3_la_observacion_es_defendible": {
+   "n_observaciones": 24,
+   "n_con_asercion_visual_verificable": 16,
+   "n_sin_asercion_visual": 8,
+   "defendible": 12,
+   "discutible": 2,
+   "falsa_a_la_vista": 2
+  }
+ },
+ "verificaciones_automaticas": {
+  "P3_a_referencias_colgadas": {
+   "n_referencias": 27,
+   "n_colgadas": 0,
+   "nota": "Confirma el umbral duro del conteo de referencias colgadas sobre la muestra. Es independiente del eje 2: las 3 citas que **no sostienen** apuntan a fragmentos que existen y fueron recuperados."
+  },
+  "P8_contrato_de_idioma": {
+   "n_explicaciones": 25,
+   "en_espanol": 25,
+   "n_citas": 25,
+   "citas_textuales_en_ingles_sin_traducir": 25,
+   "byte_a_byte_contra_el_fragmento": 25,
+   "nota": "25/25. No se encontró ninguna cita traducida (el contrato de la salida citada, las obligaciones de la cita)."
+  },
+  "P4_atribucion_CC_BY": {
+   "n_refs_CC_BY_4_0": 7,
+   "con_atribucion": 7,
+   "sin_atribucion": 0,
+   "n_refs_CC0": 18,
+   "con_atribucion_no_exigida": 0,
+   "nota": "7/7. Las 7 son `description` de AIC y las 7 llevan título, artista, museo, «Texto bajo CC BY 4.0» y URL."
+  },
+  "SA1_forma": {
+   "n_afirmaciones": 51,
+   "dato_con_refs_vacias": 0,
+   "observacion_con_refs": 0,
+   "explicaciones_cuyo_artwork_id_no_esta_en_el_top5": 0,
+   "nota": "El bicondicional `dato ⟺ refs ≠ ∅` se cumple 51/51. ⚠️ Que la **forma** se cumpla 51/51 y la **clasificación** falle 12/51 es justamente por qué la revisión humana necesita muestra humana: la regla de que un dato lleva referencia es verificable como forma y no como semántica."
+  },
+  "SA5": {
+   "n_afirmaciones_descartadas_por_sa5": 0
+  },
+  "SA6_reportado_aparte_por_DB_4": {
+   "n_afirmaciones_mal_formadas": 0,
+   "nota": "una afirmación mal formada no tiene `ref` y la clave del artefacto es `n_afirmaciones_descartadas_por_sa5`. **No se metió en ese conteo y no se renombró nada**: va en esta clave propia, al lado. En las 5 corridas no apareció ninguna — los 51 tipos son `dato` u `observacion`."
+  }
+ },
+ "antecedente_M4_3": {
+  "lo_que_dice_M4_3": "«0 de 148 observaciones persistidas mencionan la imagen de consulta; todas cuelgan de un `artwork_id` del corpus» — y por eso la regla de que un dato lleva referencia declara su segunda cláusula **como guardia y no como arreglo** (la cadena de la licencia).",
+  "sobre_las_25": {
+   "n_observaciones": 24,
+   "mencionan_la_imagen_de_consulta": 0,
+   "veredicto": "CONFIRMADO en la muestra. Ninguna de las 24 observaciones de las 25 explicaciones menciona ni compara contra la imagen de consulta."
+  },
+  "sobre_las_148_que_M4_3_midio": {
+   "n_observaciones": 148,
+   "mencionan_la_imagen_de_consulta": 2,
+   "veredicto": "🔴 **REFUTADO.** No son 0 de 148: son **2 de 148**, en la misma población, el mismo `config_id` y los mismos artefactos que la medición anterior midió.",
+   "casos": [
+    {
+     "consulta_id": "c05-visual",
+     "artwork_id": "aic:61151",
+     "tipo": "observacion",
+     "texto": "La paleta de la obra parece más clara y luminosa en comparación con la imagen original, con tonos más suaves y una iluminación que resalta el rostro y la vestimenta.",
+     "por_que": "Contrapone explícitamente «la obra» a «**la imagen original**»: es una observación comparativa contra la imagen que subió el usuario, que es lo que la segunda cláusula de la regla de que un dato lleva referencia prohíbe. Y la `abstencion` de la misma obra lo confirma: «no hay evidencia textual..., **pero visualmente la paleta es más luminosa**»."
+    },
+    {
+     "consulta_id": "c08-visual",
+     "artwork_id": "cma:314439",
+     "tipo": "observacion",
+     "texto": "Los colores en la imagen original son vivos y saturados, con un uso destacado de tonos brillantes para representar la escena dramática.",
+     "por_que": "El **sujeto** de la observación es la imagen de consulta, no la obra recuperada — más grave que una comparación. ⚠️ Admite una lectura benigna («la pintura original» frente a una reproducción), y la declaro: es el caso probable, no el seguro. El seguro es `aic:61151`."
+    }
+   ],
+   "consecuencia": "El ⚠️ de la cadena de la licencia —«hoy no se viola... y por eso entra como guardia y no como arreglo»— **no se sostiene**. La segunda cláusula de la regla de que un dato lleva referencia es un **arreglo**: cierra un camino que el modelo ya está tomando. El predicado sigue siendo la decisión correcta; lo que cambia es que no es preventivo."
+  },
+  "alcance_que_M4_3_no_cubria": {
+   "nota": "la medición anterior contó **observaciones**. Pero la salida al usuario tiene otros dos campos de texto libre que también se persisten y que la regla de que un dato lleva referencia **no tipa**: las afirmaciones `dato` y el string `abstencion`. Medidos sobre C1: 2 `dato` y 1 `abstencion` más refieren a la imagen de consulta. El predicado que la regla de que un dato lleva referencia declara, escrito sobre `observacion`, **no alcanzaría a ninguno de los tres**.",
+   "C1_por_campo": {
+    "observacion": 2,
+    "dato": 2,
+    "abstencion": 1,
+    "total": 5
+   },
+   "ejemplo_peor": {
+    "consulta_id": "c09-visual",
+    "artwork_id": "cma:147045",
+    "tipo": "dato",
+    "texto": "El motivo muestra un paisaje con árboles y dos caballeros frente a una choza, con indicios de estación otoñal, diferente al motivo de bambú y flores de la imagen proporcionada.",
+    "por_que": "**Describe el contenido de la imagen del usuario** («bambú y flores») y va tipado `dato` **con su `ref`**: la comparación contra la imagen de consulta se le presenta al usuario como respaldada por el museo."
+   }
+  },
+  "en_los_otros_brazos": {
+   "nota": "Fuera de C1 el fenómeno es mayor y más explícito. Conteo de textos persistidos que refieren a la imagen de consulta, por brazo (ordinal 1, 30 consultas, los tres campos):",
+   "C1": 5,
+   "C2": 8,
+   "C3": 10,
+   "C4": 10,
+   "total": 33,
+   "casos_mas_claros": [
+    {
+     "brazo": "C2",
+     "consulta_id": "c09-visual",
+     "artwork_id": "aic:46466",
+     "tipo": "observacion",
+     "texto": "El motivo de pájaros y flores es similar al motivo de la imagen subida, que muestra un árbol de ciruelo en flor, pero aquí con color y mayor espontaneidad en la pincelada."
+    },
+    {
+     "brazo": "C3",
+     "consulta_id": "c01-conceptual",
+     "artwork_id": "cma:173020",
+     "tipo": "observacion",
+     "texto": "El paisaje es montañoso con agua en primer plano y nubes y niebla en la distancia, lo que puede asemejarse a un paisaje natural, aunque no es el mismo paisaje que el de la imagen proporcionada, que muestra un camino y árboles en un entorno más llano."
+    }
+   ],
+   "por_que_importa": "Los dos **describen el contenido de la imagen que subió el usuario** dentro de un artefacto versionado en el repo."
+  }
+ },
+ "hallazgo_de_retencion": {
+  "titular": "🔴 La política de retención se implementa **vaciando campos de la entrada** y nada depura el **texto generado**, que viaja en el mismo artefacto y reproduce lo que los campos vaciados tenían.",
+  "lo_que_se_declara": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): «**no se persiste nada de un tercero**». En cada corrida: `retencion.imagen = false`, `retencion.pedido = false`, `entrada.pedido = null`, `entrada.imagen_retenida = false`, `entrada.pedido_retenido = false`.",
+  "fuga_1_la_imagen": {
+   "n_textos_persistidos_que_refieren_a_la_imagen_de_consulta": 33,
+   "por_brazo": {
+    "C1": 5,
+    "C2": 8,
+    "C3": 10,
+    "C4": 10
+   },
+   "de_los_cuales_describen_su_contenido": "al menos 4 (c09-visual «árbol de ciruelo en flor» en C2/C3/C4; c01-conceptual «un camino y árboles en un entorno más llano» en C3)"
+  },
+  "fuga_2_el_pedido": {
+   "n_textos_que_reproducen_el_pedido_VERBATIM": 56,
+   "por_brazo": {
+    "C1": 15,
+    "C2": 15,
+    "C3": 12,
+    "C4": 14
+   },
+   "ejemplo": "C2 · c09-visual · aic:46466 — «... lo que responde al pedido de **'el mismo motivo pero con color'**», con el pedido entre comillas simples adentro del artefacto, mientras `entrada.pedido = null` en la misma corrida.",
+   "por_que_importa": "El pedido es el texto del usuario. Vaciar `entrada.pedido` y dejarlo escrito 56 veces en la salida no cumple «no se persiste nada de un tercero»: lo mueve de un campo declarado a prosa no declarada."
+  },
+  "nota": "No es un hallazgo del criterio de honestidad y no entra en los tres conteos. Sale de leer los mismos artefactos y toca una decisión **cerrada** (el registro de decisiones), así que se reporta. **No lo corregí ahí ni en el registro interno.**"
+ },
+ "hallazgos_de_diseno": [
+  {
+   "id": "RE-1",
+   "titular": "la regla de que un dato lleva referencia tiene dos tipos y el generador produce **tres clases de afirmación**.",
+   "detalle": "5 de las 24 observaciones de la muestra —las **cinco** de `c09-conceptual`— no son observaciones de la imagen ni datos de museo: son **conocimiento general del modelo** («el dragón es un motivo clásico en la pintura china»). la regla de que un dato lleva referencia define `observacion` como afirmación del modelo **sobre la imagen** (paleta, pincelada, composición), así que tiparlas así le dice al usuario «el modelo miró la obra y vio esto», que es falso. Como el bicondicional `dato ⟺ refs ≠ ∅` no deja otra salida, todo lo que no tiene cita cae en `observacion`.",
+   "consecuencia": "La métrica «separación observación / dato» de `la evaluación §D` mide un corte binario sobre una población de tres clases: el `%` de observaciones «correctamente presentadas como propias» sale alto sin distinguir la observación visual de la enciclopedia."
+  },
+  {
+   "id": "RE-2",
+   "titular": "La `ficha` no es evidencia citable, y eso **empuja datos de museo al tipo `observacion`**.",
+   "detalle": "`artist`, `culture`, `year`, `medium` se renderizan en la ficha pero no son fragmentos de `knowledge`, así que no tienen `fragment_id`. Por la regla de que un dato lleva referencia, una afirmación que descansa en ellos no puede ser `dato`. **2 de las 6 fallas de tipo B de la muestra están forzadas por esto** (la nacionalidad del artista en `cma:163456` y `aic:120163`).",
+   "consecuencia": "Parte de la revisión humana no mide al modelo: mide una frontera del esquema de evidencia. Conviene publicar las dos cifras —**6** mal tipadas, de las cuales **2 forzadas por el contrato** y **4 no**— y no una sola."
+  },
+  {
+   "id": "RE-3",
+   "titular": "🔴 Las otras **4** no están forzadas: el fragmento estaba en la evidencia y ya citado por otra afirmación de la misma obra.",
+   "detalle": "`cma:111691` («**se menciona** que hay destellos de luz»), `cma:169341` («el perfil y el rizo distintivo en la nuca»), `aic:110663` («colores primarios brillantes ... pincelada suelta ... dinamismo») y `aic:495`. En los tres primeros el texto es traducción del fragmento que la afirmación `dato` vecina cita con [1].",
+   "consecuencia": "Es la falla que el criterio de honestidad existe para medir, en la dirección que se mira menos: no inventa, **desacredita**. Un dato verificable vuelve al usuario como opinión del modelo."
+  },
+  {
+   "id": "RE-4",
+   "titular": "La `description` de museo a menudo no describe lo representado, y la cita se cae por ahí.",
+   "detalle": "Las 3 citas que **no sostienen** tienen la misma forma. `cma:152831` («Dragon amid Clouds»): el fragmento es la **biografía de Min Zhen** y no menciona dragón ni nubes. `cma:148862` («The Grotto of Posillipo»): su `description` es **byte a byte idéntica** (1015 caracteres) a la de `cma:148861` y describe la Columnata de San Pedro — CMA publica un texto curatorial único para el par. `aic:43211`: el fragmento no menciona tono alguno.",
+   "consecuencia": "Confirma el delta por categoría de pedido del lado de la generación: el texto de museo es mayormente procedencia y biografía. Y separa limpiamente el conteo de referencias colgadas de la cita que respalda la afirmación: en los tres casos **el fragmento existe y fue recuperado** (0 colgadas) y **no dice lo que la afirmación dice que dice**."
+  },
+  {
+   "id": "RE-5",
+   "titular": "El campo `abstencion` y el texto de las afirmaciones **se contradicen** sobre si la obra cumple el pedido.",
+   "detalle": "En `c10-visual`, `cma:97169` y `cma:150082` tienen `abstencion = null` y sin embargo sus observaciones concluyen «no corresponde a una paleta más oscura» y «no se observa una paleta particularmente oscura». El veredicto negativo está en una afirmación y el campo que existe para registrarlo está vacío.",
+   "consecuencia": "el descarte contado de afirmaciones puso la abstención para que «el hueco silencioso no vaya en el único contrato que es la salida al usuario». El campo no es índice confiable de «el modelo dijo que no», así que la métrica **abstención correcta** de `la evaluación §D` no se puede computar leyéndolo solo."
+  },
+  {
+   "id": "RE-6",
+   "titular": "Las observaciones se **infieren del asunto** más que de la imagen, y el hedge lo delata.",
+   "detalle": "«La paleta **probablemente** incluye tonos neutros y terrosos **propios de la arquitectura antigua**» (`cma:148861`, y la gemela en `cma:148862`). Acierta. Pero el razonamiento es desde el tema del fragmento, no desde el píxel — y en `c03-visual` y `c10-visual` el mismo camino produce las **2 observaciones falsas a la vista**, las dos sobre paleta, las dos en la categoría `visual_cromatico`.",
+   "consecuencia": "Las 2 falsas y las 2 discutibles del eje 3 son **4 de 4 sobre paleta** y **todas en `visual_cromatico`**. Si la observación visual se infiere del texto, la categoría que depende de mirar es exactamente donde el sistema no mira."
+  }
+ ],
+ "casos_para_el_informe": [
+  {
+   "prioridad": 1,
+   "consulta_id": "c03-visual",
+   "artwork_id": "aic:43211",
+   "titulo": "Interior of the Oude Kerk, Delft — Emanuel de Witte, c. 1680 (AIC)",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "titular": "🔴 La única obra que **falla los tres ejes a la vez**, y la falla le cuesta al sistema la mejor obra de su propio top-5.",
+   "afirmacion_1": "[dato] [1] «La obra representa un interior de iglesia con luz y sombra, con decoración mínima y **tonos cálidos** propios del óleo sobre panel del siglo XVII en Holanda.»",
+   "afirmacion_2": "[observacion] «La paleta de colores es **cálida, con predominancia de tonos marrones y amarillentos**, no se observan tonos fríos predominantes.»",
+   "fragmento_citado": "«Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic's large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist's career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration.»",
+   "eje_1": "**Falla.** «tonos cálidos» es una observación de paleta —la definición misma de `observacion` en la regla de que un dato lleva referencia— tipada `dato` y firmada con [1]. Es la falla canónica que el criterio de honestidad existe para medir.",
+   "eje_2": "**No sostiene.** El fragmento respalda «decoración mínima» («are the only decoration») y «luz y sombra» («light, shade, and volume»), y **no menciona tono ni color en ningún lado**.",
+   "eje_3": "**Falsa a la vista.** El interior es de piedra **gris-blanca** con sombras **azul-grisáceas** y luz fría; los cálidos (candelabro dorado, púlpito de madera) son acentos minoritarios.",
+   "por_que_es_el_mejor_caso": "La misma afirmación de paleta aparece **dos veces en la misma explicación**, una mal tipada como `dato` citado y otra bien tipada como `observacion`: el generador sabe cuál es el tipo correcto y no lo aplica de forma estable. Y la consecuencia es medible: el pedido pedía **tonos fríos**, `aic:43211` es **la obra más fría del top-5**, y el sistema se **abstuvo** sobre ella («No hay información en los fragmentos que indique que esta obra utiliza tonos fríos») apoyado en una observación falsa. La falla de honestidad **degradó la respuesta**, no sólo su justificación."
+  },
+  {
+   "prioridad": 2,
+   "consulta_id": "c10-visual",
+   "artwork_id": "cma:97169",
+   "titulo": "Ceres and Bacchus — Bartholomaeus Spranger, s. XVII (CMA)",
+   "pedido": "la misma escena con una paleta más oscura",
+   "titular": "🔴 La observación falsa más verificable: un detalle concreto que simplemente no está.",
+   "afirmacion": "[observacion] «La paleta de esta obra es **relativamente clara y luminosa**, con colores vivos y **un fondo azul brillante**, por lo que no corresponde a una paleta más oscura.»",
+   "eje_3": "**Falsa a la vista.** La obra es oscura y apagada: fondo pardo-negro con follaje en sombra, carnes terrosas, verdes oliva. **No hay fondo azul brillante** — el único azulado es un paño pálido sobre la figura femenina.",
+   "por_que_importa": "Es falsable sin discusión de gusto: «fondo azul brillante» es un hecho sobre el píxel. Y es la segunda vez que una observación de paleta falsa **invierte la respuesta al pedido**: el usuario pidió una paleta más oscura, ésta es una obra oscura, y la explicación le dice que no lo es. 🔑 Nótese además que `abstencion = null`: el veredicto negativo viaja en la observación y el campo que existe para registrarlo quedó vacío (`RE-5`)."
+  },
+  {
+   "prioridad": 3,
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:169341",
+   "titulo": "Portrait of Maharaja Pratap Singh — Sahib Ram, c. 1793 (CMA)",
+   "pedido": "más humano",
+   "titular": "🔑 **Defendible y discutible a la vez** — la frontera exacta entre *honesto* y *correcto*.",
+   "afirmacion": "[observacion] «Aunque estilizado, el retrato muestra rasgos personales y simbólicos que humanizan al personaje, como **el perfil y el rizo distintivo en la nuca**.»",
+   "fragmento": "«... this portrait is recognizable as an image of Singh because of his **profile** and the **distinctive curl of hair at the nape of his neck**.» — y lo cita `[1]` la afirmación `dato` vecina, en la misma obra.",
+   "como_observacion": "**Defendible, y verdadera.** Miré la imagen: el perfil estricto y el rizo negro junto a la oreja están ahí, visibles y bien descritos.",
+   "como_clasificacion": "**Mal tipada.** Es texto del museo, traducido, verificable y **ya citado dos renglones arriba**. Devolverlo sin su cita le quita al usuario exactamente lo que `los criterios de entrega los tres ciclos de vida.1` promete: poder decidir si confiar, afirmación por afirmación.",
+   "por_que_es_el_caso_mas_informativo": "Las dos lecturas son correctas y no se cancelan. Si el eje 3 se mirara solo, pasa. Si el eje 1 se mirara solo, falla. **Por eso los tres conteos van separados**: mezclarlos habría hecho desaparecer este caso en cualquiera de las dos direcciones."
+  },
+  {
+   "prioridad": 4,
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:152831",
+   "titulo": "Dragon amid Clouds — Min Zhen, 1788 (CMA)",
+   "pedido": "el mismo tema en la pintura china",
+   "titular": "La afirmación es **verdadera** y su cita **no la respalda**: la distancia entre el conteo de referencias colgadas y la cita que respalda la afirmación, en una línea.",
+   "afirmacion": "[dato] [1] «La obra es una pintura china de **un dragón entre nubes**, un motivo tradicional en la pintura china.»",
+   "fragmento_citado": "«Min Zhen, who was orphaned at age 12 and developed an eccentric personality, was trained by Tang Yin ... It is not clear whether he ever resided in Yangzhou ... This album demonstrates Min's versatility and mature style in the last years of his life.»",
+   "eje_2": "**No sostiene.** El fragmento es la **biografía del artista** y no menciona dragón, ni nubes, ni motivo alguno. El dragón sale del **título** y «china» de `ficha.culture`.",
+   "verificado_en_la_imagen": "La imagen **sí** muestra un dragón entre nubes en tinta monocroma. La afirmación es correcta.",
+   "por_que_importa": "el conteo de referencias colgadas da **0 colgadas** y tiene razón: el fragmento existe y fue recuperado. la cita que respalda la afirmación es otra pregunta y acá da **no**. Un usuario que siga `[1]` para verificar «un dragón entre nubes» llega a un texto sobre la orfandad de Min Zhen. Es el modo de falla que el delta por categoría de pedido anticipa —la `description` de museo es biografía y procedencia— **llegando hasta la cita**."
+  },
+  {
+   "prioridad": 5,
+   "consulta_id": "c03-visual",
+   "artwork_id": "cma:148862",
+   "titulo": "The Grotto of Posillipo — Hubert Robert, c. 1769 (CMA)",
+   "titular": "El corpus cita la obra equivocada, y no hay forma de verlo desde el conteo de referencias colgadas.",
+   "afirmacion": "[dato] [1] «La obra representa **la Gruta de Posillipo** con elementos arquitectónicos clásicos y una interpretación imaginativa del artista.»",
+   "hecho_medido": "`cma:148862::description::0` es **byte a byte idéntico** a `cma:148861::description::0` (1015 caracteres) y su texto dice «**Interior of the Colonnade of St. Peter's** is based on a drawing dated 1758». CMA publica un único texto curatorial para el par de óvalos.",
+   "eje_2": "**No sostiene**: el fragmento describe otra obra.",
+   "por_que_importa": "La afirmación es verdadera (la imagen muestra el túnel abovedado) y la falla es **del dato, no del modelo**. Pero la cita que respalda la afirmación la cuenta igual, y debe: desde el lado del usuario, seguir `[1]` lleva a la ficha de otra pintura. ⚠️ Y es **detectable automáticamente**: dos `description` idénticas con distinto `artwork_id` es una consulta sobre `knowledge`, no una revisión humana."
+  },
+  {
+   "prioridad": 6,
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "aic:244013",
+   "titulo": "Shipwreck near a Rocky Coast — Thomas Birch, 1833 (AIC)",
+   "titular": "El patrón más repetido: la cláusula que **contesta el pedido** se suelda adentro de un `dato` citado.",
+   "afirmacion": "[dato] [1] «El artista es estadounidense y la obra pertenece al género marino americano del siglo XIX, **sin relación con la pintura china**.»",
+   "eje_2": "**Parcial.** «helped establish the genre in early 19th-century America» respalda la segunda cláusula; «**sin relación con la pintura china**» no está en el fragmento, y «el artista es estadounidense» sólo se apoya en «Based in Philadelphia».",
+   "por_que_importa": "El existencial negativo que contesta el pedido **no tiene dónde ir**: en las otras cuatro obras de la misma consulta viaja como `observacion` sin cita (y entonces un dato de `ficha` queda sin verificar) y acá viaja **adentro de un `dato` citado** (y entonces la cita firma algo que no dice). **La misma frase, dos tipos distintos, en la misma corrida.** No es inconsistencia del modelo: es que la regla de que un dato lleva referencia no tiene lugar para una afirmación sobre la **ausencia** de evidencia.",
+   "nota_honesto_vs_correcto": "«El artista es estadounidense» es honesto —el museo ancla a Birch en Philadelphia— y **discutible como hecho**: Birch nació en Inglaterra. En `aic:120163` la misma afirmación aparece como `observacion` sin cita. Honesto no implica correcto, y acá se ven las dos cosas separadas."
+  }
+ ],
+ "lo_que_no_cerro_del_diseno": [
+  "**la regla de que un dato lleva referencia no tiene dónde poner dos clases de afirmación que el generador produce igual**: el conocimiento general del modelo (5 de 24 observaciones) y la afirmación sobre la **ausencia** de evidencia («no es una pintura china»). Las dos terminan en `observacion`, que la regla de que un dato lleva referencia define como afirmación sobre la imagen. la revisión humana las cuenta como aciertos.",
+  "**La `ficha` no es citable**, así que `dato ⟺ refs ≠ ∅` obliga a tipar como observación propia hechos que el museo publica (2 de 6 casos). La métrica mide, en esa fracción, el esquema de evidencia y no al modelo.",
+  "**La métrica «abstención correcta» de `la evaluación §D` no es computable** leyendo el campo `abstencion`: en 2 de las 25 el veredicto negativo está en el texto de una afirmación y el campo está en `null` (`RE-5`).",
+  "** sigue abierto en el esquema**: la afirmación mal formada registrada y contada no apareció en estas 5 corridas, así que la clave `n_afirmaciones_mal_formadas` que agregué **al lado** (sin renombrar nada) vale 0. Si aparece en otra muestra, el artefacto ya tiene dónde ponerla; `estado.afirmaciones_descartadas` de la corrida sigue sin poder representarla.",
+  "**La promesa de retención (el registro de decisiones) se verifica sobre campos de entrada y no sobre el texto de salida**, y el texto de salida la incumple: 33 textos refieren a la imagen de consulta y 56 reproducen el pedido verbatim. Es una decisión cerrada que los artefactos contradicen; va al orquestador, no la toqué.",
+  "**la cadena de la licencia afirma «0 de 148» como hecho verificado** y sobre esa base califica la segunda cláusula de la regla de que un dato lleva referencia de guardia preventiva. Son **2 de 148**: la cláusula es un arreglo. El renglón queda sin corregir."
+ ],
+ "obras": [
+  {
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "cma:148368",
+   "rango": 1,
+   "ficha": {
+    "culture": "Netherlands",
+    "date_display": "1690",
+    "medium": "oil on canvas",
+    "title": "English Warship Firing a Salute",
+    "year": 1690
+   },
+   "source_url": "https://clevelandart.org/art/1975.80",
+   "abstencion": "No hay indicios de que esta obra sea una escena de agua en la pintura china.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un barco de guerra inglés disparando una salva, con énfasis en la marina real y sus grandes barcos.",
+     "refs": [
+      "cma:148368::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "parcial",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "El fragmento respalda «énfasis en la marina real y sus grandes barcos» («Royal Navy's massive ships»), pero NO dice que la obra represente un buque disparando una salva: eso sale del TÍTULO, que es otro campo y no el fragmento citado. Contenido museístico (tipo correcto), cita con sobre-alcance."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Se observa agua en la escena, ya que los barcos están en el mar, pero no es una pintura china ni se menciona ninguna relación con la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«Se observa agua en la escena, los barcos están en el mar» es verificable en la imagen y es cierto. La cola «no es una pintura china» es un existencial negativo sobre la evidencia: no hay fragmento que citar para una ausencia, así que `observacion` es el único tipo disponible. Honesto."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:148368::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:148368::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade."
+    },
+    {
+     "fragment_id": "cma:148368::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "-1751 Charles Cavert (1699-1751), Fifth Lord Baltimore\n1751-1771 Frederick Calvert (1731-1771), Sixth Lord Baltimore\n1771-1835 Henry Harford (d. 1771)\n1835-1885 Frederick Paul Harford, Down Place, Windsor, sold, Christie's London, 06/1885\n- Rufus L. Patterson (1872-1943), New York\n[Norton Galleries, New York]\n1968-1975 Mr. and Mrs. Noah L. Butkin, Cleveland, by gift to the Cleveland Museum of Art, 1975"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "cma:163456",
+   "rango": 2,
+   "ficha": {
+    "artist": "Fitz Henry Lane",
+    "culture": "United States",
+    "date_display": "c. 1846–47",
+    "medium": "oil on canvas",
+    "title": "Harbor of Boston, with the City in the Distance",
+    "year": 1846
+   },
+   "source_url": "https://clevelandart.org/art/2004.35",
+   "abstencion": "No se trata de una escena de agua en la pintura china.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura muestra una vista del puerto de Boston con reflejos de luz sobre el agua, destacando la calidad del agua y la presencia de barcos.",
+     "refs": [
+      "cma:163456::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«reflejos de luz sobre el agua» = «sunlight reflecting off water»; «presencia de barcos» = «ships». Respaldo pleno."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la escena incluye agua y barcos, la obra es de un artista estadounidense y no está relacionada con la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": true,
+     "motivo": "«la obra es de un artista estadounidense» es dato de museo (`ficha.culture = United States`) presentado como observación propia: pierde la verificabilidad. FORZADA por el contrato: la `ficha` no es evidencia citable, así que por la regla de que un dato lleva referencia (`dato ⟺ refs ≠ ∅`) el modelo no podía tiparlo `dato`. La parte visual («la escena incluye agua y barcos») sí es defendible a la vista."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:163456::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:163456::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester."
+    },
+    {
+     "fragment_id": "cma:163456::did_you_know::0",
+     "section": "did_you_know",
+     "license": "CC0",
+     "texto": "For a long time, art historians mistakenly thought the artist’s middle name was Hugh."
+    },
+    {
+     "fragment_id": "cma:163456::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Dr. James H. Armsby, Albany, NY, acquired 1847; Joanna Perry Armsby March, sister of Dr. J.H. Armsby, Albany, NY; Joanna Armsby March Boyd, daughter of Joanna March, Albany, NY; Alden March Boyd, son of Joanna Armsby March Boyd, Santa Barbara, CA; Joanna March Boyd Bard, daugher of Alden March, Santa Barbara, CA; Henry Travers Newton, Jr, Joanna Newton Riccardi, and Georgia Newton Pulos, grandchildren of J.M.B. Bard, Santa Barbara, CA"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "aic:120163",
+   "rango": 3,
+   "ficha": {
+    "artist": "Thomas Birch",
+    "culture": "Philadelphia",
+    "date_display": "1806–12",
+    "medium": "Oil on canvas",
+    "title": "Capture of the Tripoli by the Enterprise",
+    "year": 1806
+   },
+   "source_url": "https://www.artic.edu/artworks/120163",
+   "abstencion": "No corresponde a escenas de agua en la pintura china.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un combate naval entre barcos estadounidenses y tripolitanos en el mar Mediterráneo, con agua y barcos como elementos centrales.",
+     "refs": [
+      "aic:120163::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«combate naval entre barcos estadounidenses y tripolitanos en el Mediterráneo» está literal en el fragmento."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La pintura es de un artista estadounidense y no tiene relación con la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": true,
+     "motivo": "«La pintura es de un artista estadounidense»: dato de `ficha.culture = Philadelphia` como observación propia. FORZADA (no está en ningún fragmento de la evidencia). Y además es DISCUTIBLE como hecho: Thomas Birch nació en Inglaterra; el museo lo ancla a Philadelphia. Honesto, no necesariamente correcto. Sin aserción visual: no entra al eje 3."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:120163::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Capture of the Tripoli by the Enterprise”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/120163",
+     "texto_citado": "At the turn of the 19th century, conflict arose between the United States of America and the North African Barbary State of Tripoli. President Thomas Jefferson refused to continue to pay tribute or ransom to Tripoli to prevent the pirating of American merchant ships sailing in the Mediterranean Sea. Jefferson dispatched the American ship Enterprise to the Tripolitan waters as a sign of resistance just as Tripoli increased its tribute demands and declared war against the United States. Thomas Birch, an early specialist in maritime painting, captured the battle between the Enterprise and a Tripolitan cruiser in the Mediterranean’s dark, violent waters. The break in the clouds sheds light on this conflict and illuminates Birch’s fine details and precise rendering of these ships."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:120163::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Major William Boerum Wetmore, New York; Hiram Burlingham, New York; sold at Anderson Galleries, New York, January 11, 1934; French and Company, New York; private collection, Connecticut, to Richard York Gallery, New York, by 1991; sold to the Art Institute of Chicago, 1991."
+    },
+    {
+     "fragment_id": "aic:120163::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "At the turn of the 19th century, conflict arose between the United States of America and the North African Barbary State of Tripoli. President Thomas Jefferson refused to continue to pay tribute or ransom to Tripoli to prevent the pirating of American merchant ships sailing in the Mediterranean Sea. Jefferson dispatched the American ship Enterprise to the Tripolitan waters as a sign of resistance just as Tripoli increased its tribute demands and declared war against the United States. Thomas Birch, an early specialist in maritime painting, captured the battle between the Enterprise and a Tripolitan cruiser in the Mediterranean’s dark, violent waters. The break in the clouds sheds light on this conflict and illuminates Birch’s fine details and precise rendering of these ships."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "aic:244013",
+   "rango": 4,
+   "ficha": {
+    "artist": "Thomas Birch",
+    "culture": "United States",
+    "date_display": "1833",
+    "medium": "Oil on canvas",
+    "style": "19th century",
+    "title": "Shipwreck near a Rocky Coast",
+    "year": 1833
+   },
+   "source_url": "https://www.artic.edu/artworks/244013",
+   "abstencion": "No es una escena de agua en la pintura china.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra muestra un naufragio cerca de una costa rocosa, con detalles dramáticos del mar y la lucha humana contra la naturaleza.",
+     "refs": [
+      "aic:244013::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«Shipwreck near a Rocky Coast ... human struggle against the forces of nature ... dramatic detail» está en el fragmento."
+    },
+    {
+     "n": 2,
+     "tipo": "dato",
+     "texto": "El artista es estadounidense y la obra pertenece al género marino americano del siglo XIX, sin relación con la pintura china.",
+     "refs": [
+      "aic:244013::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "parcial",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "El fragmento respalda «género marino americano del siglo XIX» («helped establish the genre in early 19th-century America»), pero «sin relación con la pintura china» NO está en el fragmento y viaja ADENTRO de un `dato` citado: el lector que sigue [1] no encuentra respaldo para parte de lo que [1] firma. Y «el artista es estadounidense» el fragmento sólo lo apoya como «Based in Philadelphia»."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:244013::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Shipwreck near a Rocky Coast”, Thomas Birch. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/244013",
+     "texto_citado": "Based in Philadelphia, Thomas Birch was a leading marine painter who helped establish the genre in early 19th-century America. Shipwreck near a Rocky Coast is a romantic, imaginative composition that highlights human struggle against the forces of nature: the ship’s sails are torn, its masts lean to one side, and a tiny group of seafarers attempts to flee the disaster. Birch rendered the scene in dramatic detail, yet left the narrative unresolved."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:244013::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "Based in Philadelphia, Thomas Birch was a leading marine painter who helped establish the genre in early 19th-century America. Shipwreck near a Rocky Coast is a romantic, imaginative composition that highlights human struggle against the forces of nature: the ship’s sails are torn, its masts lean to one side, and a tiny group of seafarers attempts to flee the disaster. Birch rendered the scene in dramatic detail, yet left the narrative unresolved."
+    },
+    {
+     "fragment_id": "aic:244013::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Sold, Sotheby Parke-Bernet, New York, April 19–20, 1972, lot 29, as \"Shipwreck\" [illustrated in auction sales cat., p. 22]. J. N. Bartfield Art Galleries, New York; sold to J. Verne Hawn, Shreveport, LA [probably in 1970s, private correspondence, copy in curatorial object file]. Consigned to Richard York Gallery, New York, by April 1981 [illustrated in \"Inaugural Exhibition: Paintings by Americans,\" April 10–May 29, 1981, no. 5]. J. Verne Hawn, Shreveport, LA, to at least May 25, 1989 [illustrated in auction sales cat., \"Important American Paintings, Drawings and Sculpture of the 18th, 19th and 20th Centuries,\" Christie’s, New York, May 25, 1989, lot 8, p. 16; unsold]. With Schwarz Gallery, Philadelphia, by 1992; sold to Richard H. Daniel, January 30, 1992; by descent to his daughter, Karen Daniel (1957–2019), Oak Park, IL, 2015; given to the Art Institute of Chicago, 2018."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "artwork_id": "aic:495",
+   "rango": 5,
+   "ficha": {
+    "artist": "Reinier Nooms, called Zeeman",
+    "culture": "Netherlands",
+    "date_display": "c. 1655",
+    "medium": "Oil on canvas",
+    "style": "17th Century",
+    "title": "Coast Scene",
+    "year": 1645
+   },
+   "source_url": "https://www.artic.edu/artworks/495",
+   "abstencion": "No corresponde a escenas de agua en la pintura china.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura representa una escena costera con barcos de pesca holandeses sobre un mar tranquilo y un cielo amplio.",
+     "refs": [
+      "aic:495::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«herring busses ... glassy sea ... expansive sky» respalda barcos de pesca, mar tranquilo y cielo amplio."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La obra es de un artista neerlandés del siglo XVII y no tiene relación con la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": false,
+     "motivo": "«artista neerlandés del siglo XVII» es dato de `ficha` y el fragmento citado por el pipeline base completo y andando habla de «The Dutch Republic's pride in its successful maritime endeavors»: era citable y no se citó. NO forzada."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:495::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Coast Scene”, Reinier Nooms, called Zeeman. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/495",
+     "texto_citado": "The Dutch Republic’s pride in its successful maritime endeavors like fishing, shipbuilding, and foreign trade contributed to the great popularity of marine paintings like this one. Such coastal scenes were one of the most popular landscape genres on the market. Here, the fishing vessels used to catch herring, called herring busses, float atop a glassy sea that stretches to meet the low horizon, disappearing into the expansive sky full of billowing clouds. Atop the ships’ tall masts, Dutch flags flutter in the wind."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:495::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "The Dutch Republic’s pride in its successful maritime endeavors like fishing, shipbuilding, and foreign trade contributed to the great popularity of marine paintings like this one. Such coastal scenes were one of the most popular landscape genres on the market. Here, the fishing vessels used to catch herring, called herring busses, float atop a glassy sea that stretches to meet the low horizon, disappearing into the expansive sky full of billowing clouds. Atop the ships’ tall masts, Dutch flags flutter in the wind."
+    },
+    {
+     "fragment_id": "aic:495::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Presumably Prince Anatole Demidoff, Villa San Donato, near Florence (died 1870); by descent to his nephew Prince Paul Demidoff (died 1885) and later to Paul Demidoff’s widow, Helen Troubetskoi, Pratolino, near Florence [the picture’s inclusion in the Demidoff collection according to a letter from Durand-Ruel to Charles L. Hutchinson dated July 29, 1890, Art Institute archives]; included in the group of 13 paintings from the Demidoff collection sold to trustees of the Art Institute through Durand-Ruel, Paris in 1890, as van de Capelle; purchase price reimbursed by Byron L. Smith, 1890."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "artwork_id": "aic:43211",
+   "rango": 1,
+   "ficha": {
+    "artist": "Emanuel de Witte",
+    "culture": "Holland",
+    "date_display": "c. 1680",
+    "medium": "Oil on panel",
+    "style": "17th Century",
+    "title": "Interior of the Oude Kerk, Delft",
+    "year": 1675
+   },
+   "source_url": "https://www.artic.edu/artworks/43211",
+   "abstencion": "No hay información en los fragmentos que indique que esta obra utiliza tonos fríos en el interior representado.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un interior de iglesia con luz y sombra, con decoración mínima y tonos cálidos propios del óleo sobre panel del siglo XVII en Holanda.",
+     "refs": [
+      "aic:43211::description::0"
+     ],
+     "veredicto_clasificacion": "falla_A",
+     "veredicto_cita": "no_sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "🔴 EL CASO CANÓNICO DE el criterio de honestidad. «tonos cálidos» es una observación de paleta —exactamente lo que la regla de que un dato lleva referencia define como `observacion`— tipada `dato` y firmada con [1]. El fragmento citado habla de iglesias góticas, luz/sombra/volumen y de que los paneles genealógicos «are the only decoration»: NO menciona tono ni color. La misma afirmación de paleta reaparece dos renglones abajo, correctamente tipada como `observacion`: la explicación se contradice a sí misma en el tipo."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de colores es cálida, con predominancia de tonos marrones y amarillentos, no se observan tonos fríos predominantes.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "falsa",
+     "forzada_por_el_contrato": null,
+     "motivo": "🔴 FALSA A LA VISTA. «paleta cálida, predominancia de tonos marrones y amarillentos, no se observan tonos fríos predominantes»: la obra es un interior de piedra gris-blanca con sombras azul-grisáceas y luz fría; los acentos cálidos (candelabro dorado, púlpito) son minoritarios. Y es CONSECUENTE: el pedido es «el mismo interior pero en tonos fríos», esta obra es la más fría del top-5, y el sistema se abstuvo sobre ella apoyado en esta observación falsa."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:43211::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Interior of the Oude Kerk, Delft”, Emanuel de Witte. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/43211",
+     "texto_citado": "Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic’s large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist’s career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:43211::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "Having been stripped of their images and whitewashed by Protestant reformers in the 16th century, the Dutch Republic’s large Gothic churches offered a compelling subject for artists. Emanuel de Witte was one of a small group of painters who specialized in explorations of the light, shade, and volume particular to church interiors. In this painting, executed late in the artist’s career, the organ and genealogical panels honoring the dead (suspended from the ceiling and affixed to the columns) are the only decoration."
+    },
+    {
+     "fragment_id": "aic:43211::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Gebruder Douwes, Amsterdam [according to Manke 1963]. Karl Haberstock, Berlin [according to email of July 15, 2002 from Lynda McLoed, Christie’s, Haberstock was the consignor of lot 71 at the sale cited below]; sold, Christie’s London, 12 July 1935, lot. 71 for 126 pounds to Charles Duits [see email cited above; though no Christie’s stencil (which would be 137 GC), is now visible, the identity of the picture with lot 71, suspected by Manke 1963, is confirmed by the Duits stockcard at the Getty Research Institute Library, email of July 12, 2002 from Mark Henderson]; sold by W. E. Duits Ltd. to Charles Worcester, Chicago, 1 October 1935 [Duits stockcard cited above]; given to the Art Institute, 1941."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "artwork_id": "cma:148861",
+   "rango": 2,
+   "ficha": {
+    "artist": "Hubert Robert",
+    "culture": "France",
+    "date_display": "c.1769",
+    "medium": "oil on canvas",
+    "title": "The Colonnade of Saint Peter's, Rome, during the Conclave",
+    "year": 1764
+   },
+   "source_url": "https://clevelandart.org/art/1976.97.1",
+   "abstencion": "No hay datos específicos que indiquen que el interior está pintado en tonos fríos.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una arquitectura clásica italiana con columnas y elementos antiguos, basada en un dibujo de 1758.",
+     "refs": [
+      "cma:148861::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«based on a drawing dated 1758», «classical architectural subjects», «aging the condition of the columns» respaldan la afirmación."
+    },
+    {
+     "n": 2,
+     "tipo": "dato",
+     "texto": "La escena incluye elementos arquitectónicos envejecidos y un soldado con armadura romana, lo que sugiere una atmósfera histórica y clásica.",
+     "refs": [
+      "cma:148861::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«aging the condition of the columns and including a soldier dressed in ancient Roman armor»: respaldo casi literal."
+    },
+    {
+     "n": 3,
+     "tipo": "observacion",
+     "texto": "La paleta de colores probablemente incluye tonos neutros y terrosos propios de la arquitectura antigua, pero no se especifica el uso de tonos fríos.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«tonos neutros y terrosos» es correcto a la vista (marrones, ocres, grises). ⚠️ Pero el «probablemente... propios de la arquitectura antigua» delata que el modelo INFIERE del asunto en vez de MIRAR: acierta, y el modo de llegar no es observación. Honesto y correcto, por un camino que no es el que la regla de que un dato lleva referencia supone."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:148861::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Hubert Robert studied and worked in Italy from 1754–65. Upon returning to Paris, he entered the Royal Academy as an architectural painter and full member in 1766. His time in Italy would prove to be influential and classical architectural subjects would dominate his subsequent oeuvre. Interior of the Colonnade of St. Peter's is based on a drawing dated 1758, the same year that Pope Clement XIII Rezzonico was elected. Given his interest in classical subjects, Robert has antiquated his subject by aging the condition of the columns and including a soldier dressed in ancient Roman armor. Similarly, Robert imaginatively portrays the Grotto of Posillipo. Measuring over 2000 feet in length, this tunnel was carved from the volcanic rock by ancient Romans to connect Naples with Pozzuoli. While this passageway was improved by repaving and reinforcing the arches during the reign of Charles III of Naples (1734–59), this structure was never the grand tunnel Robert depicts with coffered vaults and engaged columns."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:148861::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Hubert Robert studied and worked in Italy from 1754–65. Upon returning to Paris, he entered the Royal Academy as an architectural painter and full member in 1766. His time in Italy would prove to be influential and classical architectural subjects would dominate his subsequent oeuvre. Interior of the Colonnade of St. Peter's is based on a drawing dated 1758, the same year that Pope Clement XIII Rezzonico was elected. Given his interest in classical subjects, Robert has antiquated his subject by aging the condition of the columns and including a soldier dressed in ancient Roman armor. Similarly, Robert imaginatively portrays the Grotto of Posillipo. Measuring over 2000 feet in length, this tunnel was carved from the volcanic rock by ancient Romans to connect Naples with Pozzuoli. While this passageway was improved by repaving and reinforcing the arches during the reign of Charles III of Naples (1734–59), this structure was never the grand tunnel Robert depicts with coffered vaults and engaged columns."
+    },
+    {
+     "fragment_id": "cma:148861::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Denis-Pierre Papillon de la Ferte\nMarius Paulme (sold, Paris, Galerie Georges Petit, November 22, 1923, lots 76 and 77, to Henri Boudonneau)\n1923 - 1949 Henri Boudonneau (Paris, France), by inheritance to his son, Rene Boudonneau, 1949\n1949 - 1961 Rene Boudonneau, by inheritance to his wife, Mme S. A. Boudonneau, 1961\n1961 - 1974 Mme S. A. Boudonneau (Geneva, Switzerland) (sold, Christie's, London, December 13, 1974, lot 146, to Gallerie Cailleux\n1974 - 1976 Gallery Cailleux (Paris, France) sold to the Cleveland Museum of Art, 1976."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "artwork_id": "cma:147938",
+   "rango": 3,
+   "ficha": {
+    "artist": "Giovanni Paolo Panini",
+    "culture": "Italy",
+    "date_display": "1747",
+    "medium": "oil on canvas",
+    "title": "Interior of the Pantheon, Rome",
+    "year": 1747
+   },
+   "source_url": "https://clevelandart.org/art/1974.39",
+   "abstencion": "No hay información en los fragmentos que indique que esta obra utiliza tonos fríos en el interior representado.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa el interior del Panteón de Roma, un espacio arquitectónico complejo con múltiples figuras y luz natural bajo la cúpula.",
+     "refs": [
+      "cma:147938::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "parcial",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«complejidad ... mingling under the dome» respalda espacio complejo y múltiples figuras bajo la cúpula; «luz natural» NO está en el fragmento (sí es verdad en la imagen: el óculo con cielo). Sobre-alcance de cita sobre contenido verdadero."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El uso de luz natural y la representación de un espacio abierto sugiere una paleta que puede incluir tonos neutros y cálidos, pero no se menciona específicamente el uso de tonos fríos.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«tonos neutros y cálidos» es correcto: ocres, columnas doradas, grises cálidos."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:147938::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Created as a temple under the Roman emperor Hadrian around the year AD 125, the Pantheon became a Christian church in 609. Significant restoration took place in the early 1700s, a period of renewed attention to early Christian monuments. The site was a major monument of antiquity, an active church, and its portico, visible through the door, held the most important art fair in the city. Panini shows the complexity of this public space by representing foreign tourists, local churchgoers, Roman nobles, and artists mingling under the dome."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:147938::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Created as a temple under the Roman emperor Hadrian around the year AD 125, the Pantheon became a Christian church in 609. Significant restoration took place in the early 1700s, a period of renewed attention to early Christian monuments. The site was a major monument of antiquity, an active church, and its portico, visible through the door, held the most important art fair in the city. Panini shows the complexity of this public space by representing foreign tourists, local churchgoers, Roman nobles, and artists mingling under the dome."
+    },
+    {
+     "fragment_id": "cma:147938::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Tyrwhitt-Drake (\"Shardeloes,\" Amersham, Buckinghamshire, UK) (sold, Christie’s, London, July 25, 1952, no. 148, to Reder)\n1952 - Reder\nDavid Koetser (New York, New York)\n- 1969 Walter P. Chrysler\n1969 - 1974 Eugene V. Thaw (New York, New York), sold to the Cleveland Museum of Art."
+    },
+    {
+     "fragment_id": "cma:147938::did_you_know::0",
+     "section": "did_you_know",
+     "license": "CC0",
+     "texto": "Panini's depictions of contemporary and ancient Rome were popular with foreigners who visited the city on their Grand Tours."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "artwork_id": "cma:148862",
+   "rango": 4,
+   "ficha": {
+    "artist": "Hubert Robert",
+    "culture": "France",
+    "date_display": "c. 1769",
+    "medium": "oil on canvas",
+    "title": "The Grotto of Posillipo",
+    "year": 1764
+   },
+   "source_url": "https://clevelandart.org/art/1976.97.2",
+   "abstencion": "No hay datos que indiquen que el interior está pintado en tonos fríos.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa la Gruta de Posillipo con elementos arquitectónicos clásicos y una interpretación imaginativa del artista.",
+     "refs": [
+      "cma:148862::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "no_sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "🔴 EL FRAGMENTO CITADO DESCRIBE OTRA OBRA. `cma:148862::description::0` es BYTE A BYTE IDÉNTICO a `cma:148861::description::0` (1015 caracteres) y su texto dice «Interior of the Colonnade of St. Peter's is based on a drawing dated 1758»: no menciona la Gruta de Posillipo. La afirmación es VERDADERA (la imagen muestra el túnel abovedado) y su cita no la respalda. La falla es del corpus —CMA publica un único texto curatorial para el par— no del modelo; pero la cita que respalda la afirmación la cuenta igual, y es la diferencia entre el conteo de referencias colgadas (el fragmento existe: 0 colgadas) y la cita que respalda la afirmación (dice lo que la afirmación dice que dice: no)."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El artista utiliza una representación idealizada y antigua, probablemente con tonos terrosos y neutros, sin indicación de predominancia de tonos fríos.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«tonos terrosos y neutros» es correcto a la vista. Mismo hedge «probablemente» que en cma:148861."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:148862::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Hubert Robert studied and worked in Italy from 1754–65. Upon returning to Paris, he entered the Royal Academy as an architectural painter and full member in 1766. His time in Italy would prove to be influential and classical architectural subjects would dominate his subsequent oeuvre. Interior of the Colonnade of St. Peter's is based on a drawing dated 1758, the same year that Pope Clement XIII Rezzonico was elected. Given his interest in classical subjects, Robert has antiquated his subject by aging the condition of the columns and including a soldier dressed in ancient Roman armor. Similarly, Robert imaginatively portrays the Grotto of Posillipo. Measuring over 2000 feet in length, this tunnel was carved from the volcanic rock by ancient Romans to connect Naples with Pozzuoli. While this passageway was improved by repaving and reinforcing the arches during the reign of Charles III of Naples (1734–59), this structure was never the grand tunnel Robert depicts with coffered vaults and engaged columns."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:148862::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Hubert Robert studied and worked in Italy from 1754–65. Upon returning to Paris, he entered the Royal Academy as an architectural painter and full member in 1766. His time in Italy would prove to be influential and classical architectural subjects would dominate his subsequent oeuvre. Interior of the Colonnade of St. Peter's is based on a drawing dated 1758, the same year that Pope Clement XIII Rezzonico was elected. Given his interest in classical subjects, Robert has antiquated his subject by aging the condition of the columns and including a soldier dressed in ancient Roman armor. Similarly, Robert imaginatively portrays the Grotto of Posillipo. Measuring over 2000 feet in length, this tunnel was carved from the volcanic rock by ancient Romans to connect Naples with Pozzuoli. While this passageway was improved by repaving and reinforcing the arches during the reign of Charles III of Naples (1734–59), this structure was never the grand tunnel Robert depicts with coffered vaults and engaged columns."
+    },
+    {
+     "fragment_id": "cma:148862::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Denis-Pierre Papillon de la Ferte\nMarius Paulme (sold, Paris, Galerie Georges Petit, November 22, 1923, nos. 76 and 77, to Henri Boudonneau)\nHenri Boudonneau, Paris, until 1949\nRene Boudonneau (son of Henri), until 1961\nMme S. A. Boudonneau (wife of Rene), Geneva (sold, Christie's, London, December 13, 1974, no. 146 [pair], to Gallerie Cailleux)\nGallerie Cailleux, Paris, sold to the Cleveland Museum of Art, 1976."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "artwork_id": "cma:111691",
+   "rango": 5,
+   "ficha": {
+    "artist": "Alessandro Magnasco",
+    "culture": "Italy",
+    "date_display": "c. 1725–35",
+    "medium": "oil on canvas",
+    "title": "Interior of a Synagogue",
+    "year": 1725
+   },
+   "source_url": "https://clevelandart.org/art/1930.22",
+   "abstencion": "No se especifica que el interior esté pintado en tonos fríos.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa el interior de una sinagoga con una paleta oscura y apagada, con tonos terrosos y un uso expresivo de la luz.",
+     "refs": [
+      "cma:111691::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«a dark, muted palette of earthy tones» y «Flashes of light dash across the surface» están literales. 🔑 CONTRAEJEMPLO ÚTIL: acá una afirmación de PALETA sí es un `dato` legítimo, porque el museo describe la paleta. El tipo no es arbitrario — compárese con aic:43211 el pipeline base completo y andando, donde el museo no la describe y la misma clase de afirmación tipada `dato` es una falla."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la paleta es oscura y con tonos apagados, se menciona que hay destellos de luz que podrían aportar cierta frescura, pero no se indica que predominen tonos fríos.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": false,
+     "motivo": "🔴 «SE MENCIONA que hay destellos de luz»: la afirmación cita explícitamente el texto del museo («Flashes of light dash across the surface») y va tipada `observacion` con `refs = []` — mientras el pipeline base completo y andando, en la misma obra, cita ese mismo fragmento. NO forzada: la cita estaba disponible. Es un dato verificable devuelto al usuario como opinión del modelo."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:111691::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:111691::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown."
+    },
+    {
+     "fragment_id": "cma:111691::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Private collection, sold Hotel Drouot, Paris, 1928\nD'Atri Gallery (Paris, France)\nBenno Geiger, 1882-1965 (Vienna, Austria)\nItalico Brass (Venice, Italy), 1870-1943, sold through Harold Parsons to the Cleveland Museum of Art, 1930.\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:314500",
+   "rango": 1,
+   "ficha": {
+    "culture": "Northwestern India",
+    "date_display": "c. 1670s–80s",
+    "medium": "gum tempera and gold on paper",
+    "title": "Royal Woman Holding a Flower",
+    "year": 1665
+   },
+   "source_url": "https://clevelandart.org/art/2018.194",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato sigue el modelo formal del retrato imperial Mughal, con un cuidado detallado en el sombreado del rostro de una mujer real y en las texturas lujosas de sus ropas, lo que aporta una representación humana y detallada.",
+     "refs": [
+      "cma:314500::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "Paráfrasis fiel de «Following the model of formal imperial Mughal court portraiture ... lavished care on shading the face of a royal woman and ... her luxurious textiles». La cola evaluativa («aporta una representación humana») es del modelo y contesta el pedido."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La expresión y el detalle en el rostro, junto con los elementos naturales como las flores en su cabello, contribuyen a una sensación de humanidad en la obra.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«las flores en su cabello» es visible en la imagen (ramitas prendidas en el rodete) y además está en el fragmento. Observación legítima que coincide con el dato: no es falla."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:314500::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Following the model of formal imperial Mughal court portraiture, the artist has lavished care on shading the face of a royal woman and the distinctive qualities of her luxurious textiles. Details have been exquisitely rendered, including the fringe of her pink shawl with its lotus vine border and the sprigs of flowers tucked in her hair."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:314500::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Following the model of formal imperial Mughal court portraiture, the artist has lavished care on shading the face of a royal woman and the distinctive qualities of her luxurious textiles. Details have been exquisitely rendered, including the fringe of her pink shawl with its lotus vine border and the sprigs of flowers tucked in her hair."
+    },
+    {
+     "fragment_id": "cma:314500::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Catherine Glynn Benkaim and Barbara Timmer, Beverly Hills, CA, partial sale and gift to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    },
+    {
+     "fragment_id": "cma:314500::did_you_know::0",
+     "section": "did_you_know",
+     "license": "CC0",
+     "texto": "The flowering plants on the ground echo the lush vegetation of the Qur'anic paradise."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:314448",
+   "rango": 2,
+   "ficha": {
+    "date_display": "c. 1710–20",
+    "medium": "gum tempera and gold on paper",
+    "title": "A European Woman Pouring Wine into a Cup",
+    "year": 1700
+   },
+   "source_url": "https://clevelandart.org/art/2018.143",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La mujer está representada en un acto cotidiano, vertiendo vino, con una mirada que sugiere una actitud casi furtiva, lo que añade un aspecto humano y narrativo a la imagen.",
+     "refs": [
+      "cma:314448::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«looks sharply, almost surreptitiously, to one side as she pours wine» respalda la afirmación entera. ⚠️ Nota de corpus: la imagen publicada es un busto y NO muestra el acto de verter vino — el desajuste es entre el texto del museo y su propia imagen, no de la explicación."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La combinación de elementos europeos e indios en su vestimenta y joyería refleja una identidad compleja y humana, con influencias culturales mixtas.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "La mezcla europeo/indio es visible: boina verde-rosa de corte europeo sobre joyería india (collares de perlas, aro, ornamento frontal). ⚠️ `ficha.culture` de esta obra es `None`: un campo canónico vacío que el pre y postprocesamiento medido debería contar."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:314448::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "A woman looks sharply, almost surreptitiously, to one side as she pours wine from a red glass bottle. She has long and curly tresses and a green beret inspired by European styles, though she wears Indian jewelry. Images loosely based on prints that made their way to India from Europe were in vogue in Rajasthan during the 18th century."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:314448::did_you_know::0",
+     "section": "did_you_know",
+     "license": "CC0",
+     "texto": "The black-and-white coloration and shading of her face indicate that this painting was made to look like a colored etching."
+    },
+    {
+     "fragment_id": "cma:314448::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "A woman looks sharply, almost surreptitiously, to one side as she pours wine from a red glass bottle. She has long and curly tresses and a green beret inspired by European styles, though she wears Indian jewelry. Images loosely based on prints that made their way to India from Europe were in vogue in Rajasthan during the 18th century."
+    },
+    {
+     "fragment_id": "cma:314448::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "(Terence McInerney, New York, NY, sold to Catherine Glynn Benkaim)\nCatherine Glynn Benkaim and Barbara Timmer, Beverly Hills, CA, partial sale and gift to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:169341",
+   "rango": 3,
+   "ficha": {
+    "artist": "Sahib Ram",
+    "culture": "Northwestern India",
+    "date_display": "c. 1793",
+    "medium": "Colored ink drawing",
+    "title": "Portrait of Maharaja Pratap Singh (1764–1803)",
+    "year": 1788
+   },
+   "source_url": "https://clevelandart.org/art/2011.207",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato es altamente estilizado pero reconocible como la imagen del Maharaja Pratap Singh, con detalles específicos como la marca en la frente que indica su devoción religiosa.",
+     "refs": [
+      "cma:169341::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«the mark on his forehead testifies to this affiliation. Though highly stylized, this portrait is recognizable as an image of Singh» está literal."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque estilizado, el retrato muestra rasgos personales y simbólicos que humanizan al personaje, como el perfil y el rizo distintivo en la nuca.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": false,
+     "motivo": "🔑 DEFENDIBLE Y DISCUTIBLE A LA VEZ, y es el caso más fino de la muestra. «el perfil y el rizo distintivo en la nuca» es paráfrasis directa del fragmento («because of his profile and the distinctive curl of hair at the nape of his neck») que el pipeline base completo y andando ya cita — NO forzada, la cita estaba ahí. Como OBSERVACIÓN es impecable: el perfil estricto y el rizo negro junto a la oreja se ven en la imagen. Como TIPO está mal: es texto de museo verificable devuelto sin su cita. La regla distingue honesto de correcto y acá el modelo es correcto y deshonesto en el tipo."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:169341::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Maharaja Pratap Singh came to the throne in the princely state of Jaipur in 1778 at the age of 14, about 15 years before this portrait was painted. He was a poet and patron of the arts known for commissioning the famous “Palace of the Winds” in Jaipur. At his court he maintained an atelier of about 50 painters, among whom was a Muslim master, Sah ib Ram, to whom this painting is attributed.\n\nPratap Singh was a devotee of the Hindu god Krishna, and the mark on his forehead testifies to this affiliation. Though highly stylized, this portrait is recognizable as an image of Singh because of his profile and the distinctive curl of hair at the nape of his neck."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:169341::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "(Doris Wiener Gallery, New York, NY, sold to Paul F. Walter)\nPaul F. Walter, New York\n(Sotheby's, 2002 sale, sold to Dr. Norman Zaworski)\nDr. Norman Zaworski [1920–2013], Cleveland, OH, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    },
+    {
+     "fragment_id": "cma:169341::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Maharaja Pratap Singh came to the throne in the princely state of Jaipur in 1778 at the age of 14, about 15 years before this portrait was painted. He was a poet and patron of the arts known for commissioning the famous “Palace of the Winds” in Jaipur. At his court he maintained an atelier of about 50 painters, among whom was a Muslim master, Sah ib Ram, to whom this painting is attributed.\n\nPratap Singh was a devotee of the Hindu god Krishna, and the mark on his forehead testifies to this affiliation. Though highly stylized, this portrait is recognizable as an image of Singh because of his profile and the distinctive curl of hair at the nape of his neck."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:162509",
+   "rango": 4,
+   "ficha": {
+    "culture": "Eastern India",
+    "date_display": "c. 1890",
+    "medium": "Gum tempera, graphite, ink, and tin on paper",
+    "title": "Kartikeya, from a Kalighat album",
+    "year": 1875
+   },
+   "source_url": "https://clevelandart.org/art/2003.151",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa a Kartikeya, un dios, con elementos de moda contemporánea de la época, integrando normas sociales bengalíes con imágenes tradicionales.",
+     "refs": [
+      "cma:162509::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«Prince Albert hairstyle and buckled European shoes ... integrates prevailing Bengali social mores with traditional images and themes» respalda la afirmación."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La representación de un dios con características de dandy y elementos modernos puede interpretarse como una humanización o actualización del personaje divino.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "El predicado «dandy» viene del fragmento, pero el acto dominante es una interpretación propia y marcada («puede interpretarse como una humanización»). Honesto."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:162509::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Here Kartikeya, god of war and son of Shiva and Parvati, born to annihilate the demon Taraka, is provocatively depicted as a dandy. Sitting astride his vehicle, the peacock, Kartikeya has a Prince Albert hairstyle and buckled European shoes. Fashionably draping his shawl, Karitkeya’s backdrop is a halo created by the peacock’s tail. The painting integrates prevailing Bengali social mores with traditional images and themes."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:162509::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "William E. Ward [1922–2004], Solon, OH, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    },
+    {
+     "fragment_id": "cma:162509::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Here Kartikeya, god of war and son of Shiva and Parvati, born to annihilate the demon Taraka, is provocatively depicted as a dandy. Sitting astride his vehicle, the peacock, Kartikeya has a Prince Albert hairstyle and buckled European shoes. Fashionably draping his shawl, Karitkeya’s backdrop is a halo created by the peacock’s tail. The painting integrates prevailing Bengali social mores with traditional images and themes."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "artwork_id": "cma:142520",
+   "rango": 5,
+   "ficha": {
+    "culture": "India",
+    "date_display": "c. 1690–1700",
+    "medium": "Gum tempera and ink on paper",
+    "title": "Man Dhata in Yogi Position",
+    "year": 1685
+   },
+   "source_url": "https://clevelandart.org/art/1966.27",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato muestra a Raja Mandhata en una postura de práctica yogui, enfocándose en un momento espiritual y corporal poco convencional para un retrato de gobernante.",
+     "refs": [
+      "cma:142520::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«An unconventional ruler portrait depicts Raja Mandhata ... engaged in yogic practice» está literal."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La imagen refleja una dimensión humana profunda al mostrar al rey en un acto de meditación y control del cuerpo, más allá de su rol político.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "La postura de meditación con piernas cruzadas es visible. Interpretación marcada como propia."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:142520::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "An unconventional ruler portrait depicts Raja Mandhata of Nurpur (reigned 1661/1667–1700) engaged in yogic practice, raising his breath to pierce the three knots (ghranti) of the subtle body. The knots, which are located at the base of the spine, the heart, and between the eyebrows, are identified, respectively, with the deities Brahma, Vishnu, and Rudra (Shiva). \n \n This rare image of the ghranti points to the key role that kings played in creating yoga’s visual culture."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:142520::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Dr. Stella Kramrisch [1896–1993], Philadelphia, PA, sold to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    },
+    {
+     "fragment_id": "cma:142520::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "An unconventional ruler portrait depicts Raja Mandhata of Nurpur (reigned 1661/1667–1700) engaged in yogic practice, raising his breath to pierce the three knots (ghranti) of the subtle body. The knots, which are located at the base of the spine, the heart, and between the eyebrows, are identified, respectively, with the deities Brahma, Vishnu, and Rudra (Shiva). \n \n This rare image of the ghranti points to the key role that kings played in creating yoga’s visual culture."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:149661",
+   "rango": 1,
+   "ficha": {
+    "artist": "Soga Shōhaku",
+    "culture": "Japan",
+    "date_display": "1777",
+    "medium": "hanging scroll; ink on silk",
+    "title": "Orchid Pavilion Gathering",
+    "year": 1777
+   },
+   "source_url": "https://clevelandart.org/art/1979.53",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura representa una reunión famosa que tuvo lugar en China en el año 353 d.C. para celebrar el Festival de la Purificación de Primavera, un tema chino histórico y cultural.",
+     "refs": [
+      "cma:149661::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«a famous gathering that took place in China in AD 353 to celebrate the Spring Purification Festival» está literal."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema es chino, aunque la obra fue realizada por un artista japonés, lo que muestra la influencia y la representación del mismo tema en la pintura china y japonesa.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_C",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "Ni dato de museo citado ni observación sobre la imagen: es conocimiento general del modelo más `ficha.artist`. la regla de que un dato lleva referencia no tiene un tercer tipo donde ponerlo."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:149661::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "This painting depicts a famous gathering that took place in China in AD 353 to celebrate the Spring Purification Festival, also known as the Double Third Festival, as it takes place on the third day of the third lunar month. The host invited everyone to the Orchid Pavilion to compose poetry and drink wine. Guests floated wine cups down a nearby creek, and where they landed, people had to drink the wine and compose a poem."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:149661::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "This painting depicts a famous gathering that took place in China in AD 353 to celebrate the Spring Purification Festival, also known as the Double Third Festival, as it takes place on the third day of the third lunar month. The host invited everyone to the Orchid Pavilion to compose poetry and drink wine. Guests floated wine cups down a nearby creek, and where they landed, people had to drink the wine and compose a poem."
+    },
+    {
+     "fragment_id": "cma:149661::did_you_know::0",
+     "section": "did_you_know",
+     "license": "CC0",
+     "texto": "The Buddhist temple Bairinji in Kurume City, Fukuoka prefecture, Japan, and the National Gallery of Victoria in Melbourne, Australia, own compositions by the same artist on the same theme."
+    },
+    {
+     "fragment_id": "cma:149661::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "(Toyobi, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:148359",
+   "rango": 2,
+   "ficha": {
+    "artist": "Genga",
+    "culture": "Japan",
+    "date_display": "early 1500s",
+    "medium": "hanging scroll; ink on silk",
+    "title": "Bamboo in Wind",
+    "year": 1500
+   },
+   "source_url": "https://clevelandart.org/art/1975.71.2",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "Las pinturas de bambú y rocas en tinta sobre seda reflejan un estilo y tema común en la pintura del Este Asiático, incluyendo China, aunque la autoría exacta es incierta entre Corea y Japón.",
+     "refs": [
+      "cma:148359::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«East Asian paintings from China, Korea, and Japan», «the rocks and bamboo clusters», «either Korean authorship or influence upon a Japanese painter»: respaldo pleno, incluida la incertidumbre de autoría."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema del bambú es recurrente en la pintura china, por lo que esta obra puede relacionarse con el mismo tema en la pintura china aunque su origen sea japonés o coreano.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_C",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«El tema del bambú es recurrente en la pintura china» es conocimiento general, no observación de la imagen."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:148359::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "East Asian paintings from China, Korea, and Japan were frequently conceived as sets of multiple images. These sets might have been composed for specific palace or temple rooms, or to portray a specific theme, such as the four seasons. Over time, the original intent of such sets is often lost through damage, changes in ownership, or a variety of other reasons. \n\nThe identity of the artist can also be lost, but then, sometimes, retrieved. This pair of ink paintings has traditionally been labeled as Japanese and attributed to the 16th-century painter Genga. Since there are no seals or signature of the artist on the painting, this attribution was based on comparisons of brush style with paintings known to be by Genga. More recent study indicates that while the 16th century is an appropriate time frame for the pair, the precise cultural identity of the artist is not certain after all. The dark, eccentric shapes of the rocks and bamboo clusters and the dramatic tonal contrasts evident throughout the composition point to either Korean authorship or influence upon a Japanese painter of the period."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:148359::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "East Asian paintings from China, Korea, and Japan were frequently conceived as sets of multiple images. These sets might have been composed for specific palace or temple rooms, or to portray a specific theme, such as the four seasons. Over time, the original intent of such sets is often lost through damage, changes in ownership, or a variety of other reasons. \n\nThe identity of the artist can also be lost, but then, sometimes, retrieved. This pair of ink paintings has traditionally been labeled as Japanese and attributed to the 16th-century painter Genga. Since there are no seals or signature of the artist on the painting, this attribution was based on comparisons of brush style with paintings known to be by Genga. More recent study indicates that while the 16th century is an appropriate time frame for the pair, the precise cultural identity of the artist is not certain after all. The dark, eccentric shapes of the rocks and bamboo clusters and the dramatic tonal contrasts evident throughout the composition point to either Korean authorship or influence upon a Japanese painter of the period."
+    },
+    {
+     "fragment_id": "cma:148359::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "(Sotheby Parke Bernet, Inc., New York, NY)\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:147045",
+   "rango": 3,
+   "ficha": {
+    "artist": "Wang Jianzhang",
+    "culture": "China",
+    "date_display": "first half 1600s",
+    "medium": "hanging scroll; ink and color on satin",
+    "title": "Solitary Colors of the Autumn Woods",
+    "year": 1628
+   },
+   "source_url": "https://clevelandart.org/art/1972.68",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra es una pintura china que representa un paisaje otoñal con dos caballeros y hace referencia a un texto daoísta chino, mostrando un tema cultural y literario chino.",
+     "refs": [
+      "cma:147045::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«Two gentlemen stand outside a thatched hut ... early autumn ... refers to a chapter called 'Autumn Water' from Zhuangzi»: respaldo pleno. La afirmación mejor citada de la muestra."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema de la naturaleza y la reflexión filosófica es común en la pintura china, por lo que esta obra representa un tema típico de la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_C",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«El tema de la naturaleza y la reflexión filosófica es común en la pintura china»: conocimiento general."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:147045::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Two gentlemen stand outside a thatched hut in a dense forest; some trees have bare branches indicating that the season is early autumn. Wang Jianzhang’s inscribed poem refers to a chapter called “Autumn Water” from Zhuangzi, a famous Daoist text written in the 3rd century BC: \"Cold frost falls on the fences, / Solitary colors scatter the maples. / Reciting the chapter of “The Autumn Water,” / I cannot still the emotion in my old heart.\" Wang Jianzhang lived through the collapse of the Ming dynasty (1368–1644) and the rise of the Qing dynasty (1644–1911), when China was governed by the Manchus, an ethnic people from Manchuria who were traditionally viewed as “barbarians” by the Chinese. The poetic reference to Zhuangzi’s “Autumn Water” seems to discreetly convey Wang’s feelings about his country being taken over. “Autumn Water” was about learning to take steps in the foreign way, but not acquiring a foreign tongue. Perhaps Wang was lamenting his conflicted situation. For survival he had to adapt to the new political and social climate, while still trying to maintain his own identity and Chinese traditions."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:147045::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Two gentlemen stand outside a thatched hut in a dense forest; some trees have bare branches indicating that the season is early autumn. Wang Jianzhang’s inscribed poem refers to a chapter called “Autumn Water” from Zhuangzi, a famous Daoist text written in the 3rd century BC: \"Cold frost falls on the fences, / Solitary colors scatter the maples. / Reciting the chapter of “The Autumn Water,” / I cannot still the emotion in my old heart.\" Wang Jianzhang lived through the collapse of the Ming dynasty (1368–1644) and the rise of the Qing dynasty (1644–1911), when China was governed by the Manchus, an ethnic people from Manchuria who were traditionally viewed as “barbarians” by the Chinese. The poetic reference to Zhuangzi’s “Autumn Water” seems to discreetly convey Wang’s feelings about his country being taken over. “Autumn Water” was about learning to take steps in the foreign way, but not acquiring a foreign tongue. Perhaps Wang was lamenting his conflicted situation. For survival he had to adapt to the new political and social climate, while still trying to maintain his own identity and Chinese traditions."
+    },
+    {
+     "fragment_id": "cma:147045::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "(Shogoro Yabumoto, Hyogo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:79579",
+   "rango": 4,
+   "ficha": {
+    "artist": "Narihide",
+    "culture": "Japan",
+    "date_display": "1500s",
+    "medium": "hanging scroll; ink on paper",
+    "title": "Landscape",
+    "year": 1500
+   },
+   "source_url": "https://clevelandart.org/art/2015.470",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura incluye imágenes de las Ocho Vistas de los ríos Xiao y Xiang, un tema clásico de la pintura china que fue adoptado por artistas japoneses.",
+     "refs": [
+      "cma:79579::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "parcial",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«imagery from the Eight Views of the Xiao and Xiang Rivers» está literal; «un tema clásico de la pintura china que fue adoptado por artistas japoneses» NO está en el fragmento (es conocimiento general, cierto, soldado a un `dato` citado)."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la obra es japonesa, el tema es directamente tomado de la pintura china, mostrando el mismo tema en la pintura china y su influencia en Japón.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_C",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "Conocimiento general sobre la circulación del tema, no observación de la imagen."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:79579::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "This composition includes imagery from the Eight Views of the Xiao and Xiang Rivers. Scanning the composition from top to bottom, at least six of the views are discernible: night rain over Xiao and Xiang, evening bell from a mist-shrouded temple, returning sails off a distant shore, geese descending to a sandbar, mountain village in clearing mist, and sunset glow over a fishing village. Inside the painting’s box is a document with a long inscription by prominent calligrapher, collector, and connoisseur Maeda Kōsetsu (1841–1916) discussing the painting’s subject and the matter of the painter’s biography—he appears to have been a Kano school artist, but his precise identity is unclear."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:79579::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "This composition includes imagery from the Eight Views of the Xiao and Xiang Rivers. Scanning the composition from top to bottom, at least six of the views are discernible: night rain over Xiao and Xiang, evening bell from a mist-shrouded temple, returning sails off a distant shore, geese descending to a sandbar, mountain village in clearing mist, and sunset glow over a fishing village. Inside the painting’s box is a document with a long inscription by prominent calligrapher, collector, and connoisseur Maeda Kōsetsu (1841–1916) discussing the painting’s subject and the matter of the painter’s biography—he appears to have been a Kano school artist, but his precise identity is unclear."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "artwork_id": "cma:152831",
+   "rango": 5,
+   "ficha": {
+    "artist": "Min Zhen",
+    "culture": "China",
+    "date_display": "1788",
+    "medium": "album leaf, ink on paper",
+    "title": "Dragon amid Clouds",
+    "year": 1788
+   },
+   "source_url": "https://clevelandart.org/art/1985.71.7",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra es una pintura china de un dragón entre nubes, un motivo tradicional en la pintura china.",
+     "refs": [
+      "cma:152831::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "no_sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "🔴 EL FRAGMENTO ES LA BIOGRAFÍA DEL ARTISTA. `cma:152831::description::0` habla de Min Zhen —huérfano a los 12, formado por Tang Yin, una década en Beijing, estilo cercano a Huang Shen— y NO menciona dragón, nubes ni motivo alguno. La afirmación es VERDADERA (la imagen muestra un dragón entre nubes, y el título lo dice) y su cita no la respalda. Es el modo de falla que el delta por categoría de pedido anticipa del lado del texto: la `description` de museo es a menudo biografía o procedencia, no descripción de lo representado."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema del dragón en la pintura china es un motivo clásico y emblemático, por lo que esta obra representa un tema típico de la pintura china.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_C",
+     "veredicto_cita": null,
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«El dragón es un motivo clásico y emblemático en la pintura china»: conocimiento general."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:152831::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "Min Zhen, who was orphaned at age 12 and developed an eccentric personality, was trained by Tang Yin (1682–1756), a writer, playwright, and superintendent of the imperial porcelain workshops in Jingdezhen. The connection to him may have enabled Min to stay in Beijing for a decade from around 1773. It is not clear whether he ever resided in Yangzhou, but his style is in many instances reminiscent of that of Yangzhou artist Huang Shen. This album demonstrates Min’s versatility and mature style in the last years of his life."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:152831::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Daili Shanren 戴笠山人 [active late 1700s]\nNi Yun 倪耘 [d. 1864]\nYan Shiqing 顏世清 [1873–1929]\nXu Xiaopu 徐小圃 [1887–1961]\nDing Nianxian 丁念先 [1906–1969]\n(Eskenazi Ltd., London, England, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH"
+    },
+    {
+     "fragment_id": "cma:152831::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "Min Zhen, who was orphaned at age 12 and developed an eccentric personality, was trained by Tang Yin (1682–1756), a writer, playwright, and superintendent of the imperial porcelain workshops in Jingdezhen. The connection to him may have enabled Min to stay in Beijing for a decade from around 1773. It is not clear whether he ever resided in Yangzhou, but his style is in many instances reminiscent of that of Yangzhou artist Huang Shen. This album demonstrates Min’s versatility and mature style in the last years of his life."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "artwork_id": "cma:97169",
+   "rango": 1,
+   "ficha": {
+    "artist": "Bartholomaeus Spranger",
+    "culture": "Flanders",
+    "date_display": "1600s",
+    "medium": "oil on canvas",
+    "title": "Ceres and Bacchus",
+    "year": 1600
+   },
+   "source_url": "https://clevelandart.org/art/1916.805",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa a Ceres y Baco, dos deidades agrícolas, y está basada en una estampa de Jan Harmensz Muller que a su vez se basa en una pintura de Spranger.",
+     "refs": [
+      "cma:97169::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«a copy of a print by Jan Harmensz Muller, originally based on a painting by Spranger ... Ceres and Bacchus, two important agricultural deities»: respaldo pleno."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de esta obra es relativamente clara y luminosa, con colores vivos y un fondo azul brillante, por lo que no corresponde a una paleta más oscura.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "falsa",
+     "forzada_por_el_contrato": null,
+     "motivo": "🔴 FALSA A LA VISTA, en dos cláusulas. La obra es oscura y apagada —fondo pardo-negro, carnes terrosas, verdes oliva— y NO tiene «un fondo azul brillante»: el único azulado es un paño pálido sobre la figura femenina. Ni «paleta relativamente clara y luminosa» ni «fondo azul brillante» se sostienen. Y es consecuente: el pedido es «la misma escena con una paleta más oscura» y la observación falsa se usa para concluir «no corresponde a una paleta más oscura» sobre una obra que sí es oscura."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:97169::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "This painting is a copy of a print by Jan Harmensz Muller (Dutch, 1571–1628), originally based on a painting by Spranger. Spranger often used the iconography of Ceres and Bacchus, two important agricultural deities. Muller's print has the Latin inscription Sine Cerere et Bacchio friget Venus, which translates to \"without Ceres and Bacchus, Venus grows cold.\" The motto indicates that Love, represented by Venus, is impossible without the nourishment of food and drink, as the deities of grain and wine walk hand in hand."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:97169::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "This painting is a copy of a print by Jan Harmensz Muller (Dutch, 1571–1628), originally based on a painting by Spranger. Spranger often used the iconography of Ceres and Bacchus, two important agricultural deities. Muller's print has the Latin inscription Sine Cerere et Bacchio friget Venus, which translates to \"without Ceres and Bacchus, Venus grows cold.\" The motto indicates that Love, represented by Venus, is impossible without the nourishment of food and drink, as the deities of grain and wine walk hand in hand."
+    },
+    {
+     "fragment_id": "cma:97169::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "James Jackson Jarves; Mrs. Liberty E. Holden,Cleveland, 1884.Holden Collection, 1916."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "artwork_id": "cma:150082",
+   "rango": 2,
+   "ficha": {
+    "artist": "Octave Tassaert",
+    "culture": "France",
+    "date_display": "c. 1850",
+    "medium": "oil on fabric",
+    "title": "Heaven and Hell",
+    "year": 1845
+   },
+   "source_url": "https://clevelandart.org/art/1980.287",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura muestra la lucha entre el bien y el mal por el alma de una joven, con figuras como un ángel, Satanás y San Miguel en la composición.",
+     "refs": [
+      "cma:150082::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«the struggle between good and evil for the soul of a young woman ... an angel ... Satan ... Saint Michael» está literal."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La escena es dramática y compleja, pero no se menciona ni se observa una paleta particularmente oscura en la descripción ni en la imagen.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "discutible",
+     "forzada_por_el_contrato": null,
+     "motivo": "🔑 DISCUTIBLE, no falsa. «no se observa una paleta particularmente oscura ... en la imagen»: la obra es mayormente oscura (dos tercios inferiores en pardos y negros, pozos de fuego, demonios), pero tiene un registro superior luminoso con arco dorado y nubes claras. Un observador razonable puede defender «no particularmente oscura» por el contraste; la impresión tonal dominante contradice la afirmación. Queda del lado honesto: el modelo marca la observación como propia y no inventa una cita."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "cma:150082::description::0",
+     "license": "CC0",
+     "atribucion": null,
+     "texto_citado": "This painting focuses upon the struggle between good and evil for the soul of a young woman. Looking out at the viewer, she is shown in the upper center of the composition, immediately below an angel and directly above Satan. At the upper right Saint Michael—holding scales for weighing the goodness of souls—admits the blessed to Heaven. Below, the Damned struggle to avoid the fiery pits of Hell and the demons that will torment them for eternity. At the time Tassaert painted this work, France was undergoing considerable political upheaval. In 1848, the country was wracked by a civil war between royalist and republican forces. Tassaert himself believed strongly in the Republic, and probably intended the young woman—caught between the sensual, worldly temptations of royalist excesses and the noble, pure ideals of the Republic—to personify the country of France."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "cma:150082::description::0",
+     "section": "description",
+     "license": "CC0",
+     "texto": "This painting focuses upon the struggle between good and evil for the soul of a young woman. Looking out at the viewer, she is shown in the upper center of the composition, immediately below an angel and directly above Satan. At the upper right Saint Michael—holding scales for weighing the goodness of souls—admits the blessed to Heaven. Below, the Damned struggle to avoid the fiery pits of Hell and the demons that will torment them for eternity. At the time Tassaert painted this work, France was undergoing considerable political upheaval. In 1848, the country was wracked by a civil war between royalist and republican forces. Tassaert himself believed strongly in the Republic, and probably intended the young woman—caught between the sensual, worldly temptations of royalist excesses and the noble, pure ideals of the Republic—to personify the country of France."
+    },
+    {
+     "fragment_id": "cma:150082::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Georges Martin du Nord, Paris, France\n(Shepherd Gallery, New York, NY)\n(Shepherd Gallery, New York, NY, May 1977, sold to Mr. and Mrs. Noah L. Butkin)\nMr. Noah L. Butkin, Cleveland, OH by bequest to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH"
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "artwork_id": "aic:110663",
+   "rango": 3,
+   "ficha": {
+    "artist": "Eugène Delacroix",
+    "culture": "France",
+    "date_display": "1826",
+    "medium": "Oil on canvas",
+    "style": "19th century",
+    "title": "The Combat of the Giaour and Hassan",
+    "year": 1826
+   },
+   "source_url": "https://www.artic.edu/artworks/110663",
+   "abstencion": "No hay información suficiente para afirmar que esta obra presenta una paleta más oscura en comparación con la escena solicitada.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una escena violenta inspirada en un poema romántico de Lord Byron, con dos figuras centrales enfrentadas en combate.",
+     "refs": [
+      "aic:110663::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«took inspiration from 'The Giaour', a poem ... by Lord Byron ... Delacroix mirrored the two central figures» respalda la afirmación."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Delacroix utiliza colores primarios brillantes y una pincelada suelta que crea dinamismo, lo que implica una paleta más luminosa que oscura.",
+     "refs": [],
+     "veredicto_clasificacion": "falla_B",
+     "veredicto_cita": null,
+     "veredicto_observacion": "discutible",
+     "forzada_por_el_contrato": false,
+     "motivo": "🔴 Doble. TIPO: «colores primarios brillantes», «pincelada suelta», «dinamismo» son traducción del fragmento que el pipeline base completo y andando ya cita («his use of shimmering primary hues, while the loose handling of paint creates the sense of dynamism») — dato de museo devuelto como observación propia, NO forzada. VISTA: la conclusión propia («implica una paleta más luminosa que oscura») es discutible: la obra lee oscura —cielo tormentoso, suelo pardo, caballos negros— con acentos brillantes. La parte citada del museo es defendible; la inferencia que el modelo le agrega, no."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:110663::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“The Combat of the Giaour and Hassan”, Eugène Delacroix. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/110663",
+     "texto_citado": "For this frenetic scene, Eugène Delacroix took inspiration from “The Giaour,” a poem in a popular series of romantic tales by the celebrated English poet Lord Byron. Giaour is a derogatory Turkish word for a Christian or non-Muslim applied here to the warrior at left clad in swirling white drapery. Amid a violent struggle, the Giaour is avenging the death of his lover at the hands of his opponent. Delacroix mirrored the two central figures and their horses as the Giaour is about to strike the fatal blow against the faceless Turk Hassan. The artist’s mastery of color is exemplified by his use of shimmering primary hues, while the loose handling of paint creates the sense of dynamism Delacroix was so capable of executing.\nThis painting reflects Delacroix’s sustained engagement with Orientalism, the artistic representation of non-European people and places, especially North Africa, Asia, and the Middle East. Delacroix was among the first European artists to travel to Africa when he visited Morocco in 1832, shortly after he completed this painting. Widespread in the nineteenth century, Orientalism was regularly leveraged to reinforce French colonial enterprises through often fantastical, violent, or erotic depictions of the customs and cultures of faraway locales."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:110663::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "For this frenetic scene, Eugène Delacroix took inspiration from “The Giaour,” a poem in a popular series of romantic tales by the celebrated English poet Lord Byron. Giaour is a derogatory Turkish word for a Christian or non-Muslim applied here to the warrior at left clad in swirling white drapery. Amid a violent struggle, the Giaour is avenging the death of his lover at the hands of his opponent. Delacroix mirrored the two central figures and their horses as the Giaour is about to strike the fatal blow against the faceless Turk Hassan. The artist’s mastery of color is exemplified by his use of shimmering primary hues, while the loose handling of paint creates the sense of dynamism Delacroix was so capable of executing.\nThis painting reflects Delacroix’s sustained engagement with Orientalism, the artistic representation of non-European people and places, especially North Africa, Asia, and the Middle East. Delacroix was among the first European artists to travel to Africa when he visited Morocco in 1832, shortly after he completed this painting. Widespread in the nineteenth century, Orientalism was regularly leveraged to reinforce French colonial enterprises through often fantastical, violent, or erotic depictions of the customs and cultures of faraway locales."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "artwork_id": "aic:16499",
+   "rango": 4,
+   "ficha": {
+    "artist": "Édouard Manet",
+    "culture": "France",
+    "date_display": "1865",
+    "medium": "Oil on canvas",
+    "style": "Realism",
+    "title": "Jesus Mocked by the Soldiers",
+    "year": 1865
+   },
+   "source_url": "https://www.artic.edu/artworks/16499",
+   "abstencion": null,
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "Manet representa a Jesús burlado por soldados romanos, con un enfoque realista y una paleta que enfatiza la materialidad y la vulnerabilidad humana.",
+     "refs": [
+      "aic:16499::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«Manet depicted Jesus ... The Roman soldiers ... emphasizing his vulnerability and human physicality ... color palette create a sense of materiality»: respaldo pleno."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de la obra es más oscura y sobria, con tonos apagados y un tratamiento que enfatiza la crudeza y el dramatismo de la escena.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«paleta más oscura y sobria, con tonos apagados» es exacto: fondo negro, ocres y grises apagados, carnes pálidas. Observación propia, verdadera y bien tipada. Y es la única obra del top-5 sobre la que el sistema NO se abstiene, coherentemente con el pedido."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:16499::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Jesus Mocked by the Soldiers”, Édouard Manet. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/16499",
+     "texto_citado": "Throughout his career Édouard Manet managed to shock and confound the public with his bold technique and unorthodox approach to subject matter. The most startling feature of this painting is that he painted it at all. Following the advent of the Realist movement, which grounded art in the here and now, avant-garde artists in France did not pursue religious themes. While Manet was primarily a painter of secular subjects, he was also interested in art history, which led him on at least two occasions to depict the biblical narratives that had compelled artists for many centuries. This work might also have been inspired by the popular 1863 biography Vie de Jésus (Life of Jesus) by the French philosopher and historian Joseph-Ernest Renan, a controversial work that emphasized Christ’s humanity.\nHere, Manet depicted Jesus at the end of his life, beaten and awaiting cruciﬁxion. The Roman soldiers force him to don a crown of thorns and proffer a reed “scepter” and purple cloak, all intended to ridicule him as “King of the Jews,” a title bestowed ironically by his tormenters. Manet transformed this sacred narrative into a gritty drama that marries realism with theatricality. He presented Jesus frontally, emphasizing his vulnerability and human physicality. Jesus seems exhausted and limp. The canvas’s visible brushstrokes and color palette create a sense of materiality that further evokes a palpable, unidealized Christ, who notably lacks a halo. Is he a holy being emanating divine light or a real man posing under a studio spotlight? The painting caused a scandal in its own time for precisely this ambiguity."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:16499::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "Throughout his career Édouard Manet managed to shock and confound the public with his bold technique and unorthodox approach to subject matter. The most startling feature of this painting is that he painted it at all. Following the advent of the Realist movement, which grounded art in the here and now, avant-garde artists in France did not pursue religious themes. While Manet was primarily a painter of secular subjects, he was also interested in art history, which led him on at least two occasions to depict the biblical narratives that had compelled artists for many centuries. This work might also have been inspired by the popular 1863 biography Vie de Jésus (Life of Jesus) by the French philosopher and historian Joseph-Ernest Renan, a controversial work that emphasized Christ’s humanity.\nHere, Manet depicted Jesus at the end of his life, beaten and awaiting cruciﬁxion. The Roman soldiers force him to don a crown of thorns and proffer a reed “scepter” and purple cloak, all intended to ridicule him as “King of the Jews,” a title bestowed ironically by his tormenters. Manet transformed this sacred narrative into a gritty drama that marries realism with theatricality. He presented Jesus frontally, emphasizing his vulnerability and human physicality. Jesus seems exhausted and limp. The canvas’s visible brushstrokes and color palette create a sense of materiality that further evokes a palpable, unidealized Christ, who notably lacks a halo. Is he a holy being emanating divine light or a real man posing under a studio spotlight? The painting caused a scandal in its own time for precisely this ambiguity."
+    },
+    {
+     "fragment_id": "aic:16499::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Estate of the artist, Paris, 1883 [the inventory lists the painting as no. 17 as Le Christ insulté par les soldats]; by descent to Léon Leenhoff, Paris, 1883; sold to Boussod et Valadon, Paris, May 31, 1893, for 3,500 francs [this and the following per dealer’s stock book 13, no. 23074, as Les Christ insulté par les Soldats, published online at http://www.getty.edu/research/tools/digital_collections/goupil_cie/books.html]; sold to Jean-Baptiste Faure (d. 1914), Paris, April 14, 1894, for 8,000 francs; partially sold to Durand-Ruel, Paris, April 17, 1894 [per Durand-Ruel, Paris, stock book (no. 3006); copy of archival reference in curatorial object file]; partially transferred from Durand-Ruel, Paris, to Durand-Ruel, New York, October 23, 1911 [this and the following per Durand-Ruel, New York, stock books (no. 3461, as Ecce homo, le Christ insulté par les soldats, 1865); copy of archival reference in curatorial object file]; sold to James Deering (d. 1925), Chicago, October 23, 1911, for $44,000; bequeathed to the Art Institute of Chicago, 1925."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "artwork_id": "aic:81505",
+   "rango": 5,
+   "ficha": {
+    "artist": "Eugène Delacroix",
+    "culture": "France",
+    "date_display": "1860–61",
+    "medium": "Oil on canvas",
+    "style": "nineteenth century",
+    "title": "Lion Hunt",
+    "year": 1860
+   },
+   "source_url": "https://www.artic.edu/artworks/81505",
+   "abstencion": "No hay evidencia suficiente para afirmar que esta obra presenta una paleta más oscura en la misma escena.",
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una cacería de leones inspirada en la experiencia de Delacroix en Argelia, con una composición teatral y detallada.",
+     "refs": [
+      "aic:81505::description::0"
+     ],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": "sostiene",
+     "veredicto_observacion": null,
+     "forzada_por_el_contrato": null,
+     "motivo": "«joined a diplomatic envoy to French-colonized Algeria ... theatrical intensity» respalda la afirmación."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la escena es intensa, la paleta no se describe ni se observa como particularmente oscura, sino que combina colores vivos y contrastes fuertes.",
+     "refs": [],
+     "veredicto_clasificacion": "bien",
+     "veredicto_cita": null,
+     "veredicto_observacion": "defendible",
+     "forzada_por_el_contrato": null,
+     "motivo": "«combina colores vivos y contrastes fuertes» y «no particularmente oscura» es defendible: clave tonal media-cálida con acentos rojos y azules fuertes."
+    }
+   ],
+   "referencias": [
+    {
+     "n": 1,
+     "fragment_id": "aic:81505::description::0",
+     "license": "CC-BY-4.0",
+     "atribucion": "“Lion Hunt”, Eugène Delacroix. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/81505",
+     "texto_citado": "In 1832 Eugène Delacroix joined a diplomatic envoy to French-colonized Algeria. The sights and experiences from this six-month journey fueled the rest of his career, lending his canvases an illusion of accuracy that his less-traveled competitors lacked. The artist expressed in his journals from abroad his admiration for Arab culture, even characterizing it as superior to that of post-revolutionary France. Nevertheless, in paintings like this he catered to violent European fantasies about the Arab world. Having never witnessed a lion hunt, Delacroix skillfully synthesized studies of landscapes, Islamic costume, and zoo animals to bring this narrative to life with theatrical intensity."
+    }
+   ],
+   "evidencia_disponible": [
+    {
+     "fragment_id": "aic:81505::description::0",
+     "section": "description",
+     "license": "CC-BY-4.0",
+     "texto": "In 1832 Eugène Delacroix joined a diplomatic envoy to French-colonized Algeria. The sights and experiences from this six-month journey fueled the rest of his career, lending his canvases an illusion of accuracy that his less-traveled competitors lacked. The artist expressed in his journals from abroad his admiration for Arab culture, even characterizing it as superior to that of post-revolutionary France. Nevertheless, in paintings like this he catered to violent European fantasies about the Arab world. Having never witnessed a lion hunt, Delacroix skillfully synthesized studies of landscapes, Islamic costume, and zoo animals to bring this narrative to life with theatrical intensity."
+    },
+    {
+     "fragment_id": "aic:81505::provenance::0",
+     "section": "provenance",
+     "license": "CC0",
+     "texto": "Possibly sold from the artist to Vaisse for 2,500 francs [this and the following information according to Johnson 1989]. Comte d’Aquila; his sale, February 21-22, 1868, lot 7, sold for 14,505 francs. Faure, Paris, 1885 [according to Robaut 1885; see also catalogue of 1892 sale citied below]. R. Austin Robertson, New York; his estate sale, New York, American Art Association, April 7, 1892, lot 147 (ill.); sold for 13,000 francs to Mr. and Mrs. Potter Palmer, Chicago; bequeathed to the Art Institute, 1922."
+    }
+   ]
+  }
+ ]
+}

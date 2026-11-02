@@ -1,0 +1,196 @@
+# artefacto = "AporteDeAnotador"
+# version_del_aporte = "1"
+# clase_de_identidad = 3
+# identidad = "5b6cba32126fed61-v1-ia-tercero"
+# split_id = "5b6cba32126fed61"
+# rubrica_id = "v1"
+# anotador = "ia-tercero"
+# nota_de_identidad = "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad son TRES ingredientes —split_id + rubrica_id + anotador— y el del medio es la lección más cara del proyecto: sin él, la ronda piloto y la campaña definitiva comparten nombre de archivo y el 'se re-anota' del acuerdo entre anotadores es impagable. El pool_id NO es ingrediente y va acá adentro: un juicio es sobre el par (consulta, obra), no sobre el pool que lo trajo, y eso es lo que vuelve legítima la importación de los 20 del piloto (la evaluación). No se reescribe y no se recalcula (la regla de que un id determina su contenido): refinar la rúbrica deriva OTRO aporte y no borra este."
+# pool_id = "5b6cba32126fed61-definitivo"
+# estado_del_pool = "congelado"
+# set_de_consultas = "5b6cba32126fed61-grupo-2"
+# planilla = "planillas/5b6cba32126fed61-definitivo-v1-ia-tercero.csv"
+# fecha_de_import = "2026-10-31T12:43:48+00:00"
+# commit = "90625aaa2d462677cebb4a1a30272152ac8b39c9"
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 133
+#
+# [conteos.por_grado]
+# grado_0 = 70
+# grado_1 = 22
+# grado_2 = 41
+#
+# [alcance]
+# alcance = "desempate"
+# declarado_por = "**derivado** del consenso en disco (`consenso-5b6cba32126fed61-definitivo-v1.csv`): la planilla no trae la columna `alcance`, así que el alcance se dedujo de los pares `sin_consenso` y **se dice cuál se eligió** en vez de suponerlo"
+# n_en_alcance = 133
+# n_items_del_pool = 379
+# n_fuera_del_alcance = 246
+# pareja_del_kappa = ["ia-claude", "ia-codex"]
+# razon = "el tercer anotador,: el tercer anotador es el **desempate** y juzga *solo los pares sin consenso* — un juicio suyo, no una corrección del consenso ajeno. El subconjunto son los 133 pares que `consenso-5b6cba32126fed61-definitivo-…csv` declara `sin_consenso`, y la pareja del κ (['ia-claude', 'ia-codex']) no cambia: este aporte **no entra al κ**."
+# nota = "La política de trazado compromete lo importado ES lo exportado*, NO *todas las filas tienen grado* — son propiedades distintas. El conjunto de pares se comparó contra el pool entero (la política de trazado); el conjunto de filas **llenas** se comparó contra este alcance, ni más ni menos. El alcance parcial es el desempate del tercer anotador, y vale solo para un anotador que NO es de la pareja del κ: sin esa guardia, una planilla a medio llenar de un anotador principal haría que el κ se compute sobre menos pares en silencio (modo de falla 3)."
+#
+# [validacion_del_import]
+# requisito = "la política de trazado"
+# pares_comparados_contra = "5b6cba32126fed61-definitivo"
+# secuencia_exacta = true
+# nota = "la política de trazado: el conjunto de pares importado es **igual** al exportado para este pool_id, en el **mismo orden** (la columna `fila` es el orden mezclado y es contenido), y cada `consulta_id` resuelve en el set del mismo split (la referencia que resuelve). Sin esto, la procedencia del pool declarada en el aporte era 'garantizado por único camino' y el camino tiene un humano adentro. ⚠️ Y esto NO es *todas las filas tienen grado*: esa es otra propiedad y se verifica contra el alcance declarado."
+split_id,rubrica_id,anotador,consulta_id,artwork_id,grado,nota
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:137195,2,"LECTURA · c01-ambiguo · «con más vida» · ESCALÓN 1
+EJE: criatura — cuántos seres vivos animados (personas y animales) muestra la escena, contados con el dedo.
+MÁS: la original es un prado rural con una casa cerrada y un camino vacío, y no muestra ninguna criatura; la obra va en la dirección pedida si muestra personas o animales presentes y visibles, y no se mueve si sólo agrega vegetación o color.
+DESCARTADA: «vida» como viveza de color o de pincelada (saturación, factura animada) — escalón 1, por figurada: se lee «vida» como seres vivos antes que como viveza.
+|| la original no muestra ninguna criatura —prado, casa cerrada y camino vacío—; esta pone la Sagrada Familia con dos ángeles, un asno y una barca con remeros sobre el río."
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:150054,2,la original no muestra ningún ser animado; esta pone una mujer de blusa roja en el camino y dos figuras más subiendo el sendero.
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:124078,2,"la original no muestra ningún ser animado; esta pone una vaca bebiendo en el estanque, un pescador dentro del agua y tres figuras en la orilla."
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:136760,1,"la original no muestra ningún ser animado y esta agrega una sola figura diminuta junto a las barcas del canal: la propiedad está, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:157104,2,"la original no muestra ningún ser animado; esta pone una carreta tirada por dos caballos blancos, un jinete y varias figuras repartidas por el camino y la orilla."
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,cma:150031,0,"la original no muestra ningún ser animado y esta tampoco: una cantera de arena con árboles al fondo y la luna, sin personas ni animales. El EJE no se movió; no estoy entre dos grados."
+5b6cba32126fed61,v1,ia-tercero,c01-ambiguo,aic:6005,1,"la original no muestra ningún ser animado y esta agrega una figura caminando por el sendero y una carreta chica al fondo: la propiedad está, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:134072,0,"el pedido nombra dos cosas y la que discrimina es Japón, porque el paisaje lo hereda de la imagen. Esta es un paisaje rural como la original pero de los Estados Unidos (Inness): acompaña a la imagen e ignora el pedido, que es el 0 del renglón clave de v1."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:157104,0,"paisaje de ribera como el de la original, pero francés (Jongkind): tiene sólo la mitad que ya traía la imagen y no se movió hacia Japón."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,aic:6005,0,"paisaje rural invernal como el de la original, pero francés (Pissarro): acompaña a la imagen y la cultura pedida no está."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:95275,0,"paisaje con sauces y granja, como el de la original, pero francés (Corot): la mitad que discrimina —Japón— no está."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:128392,0,"linde de bosque, paisaje como el de la original, pero francés (Pissarro): no se movió hacia la cultura pedida."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:128371,0,"estanque en el bosque, paisaje como el de la original, pero francés (Corot): no se movió hacia la cultura pedida."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:150031,0,"paisaje de atardecer como el de la original, pero francés (Chintreuil): sólo la mitad heredada, y Japón no está."
+5b6cba32126fed61,v1,ia-tercero,c01-conceptual,cma:108999,0,"paisaje arbolado como el de la original, pero norteamericano (Weir): acompaña a la imagen e ignora la cultura pedida."
+5b6cba32126fed61,v1,ia-tercero,c01-visual,aic:64818,2,la original es un paisaje de verdes y grises apagados bajo un cielo frío; esta es un atardecer de almiares con el cielo rosa dorado y la paja en ocres y rosas: el calor dominante subió respecto de la original.
+5b6cba32126fed61,v1,ia-tercero,c02-ambiguo,aic:120163,0,"la original es una faena entre hielos con decenas de figuras; esta tiene menos figuras pero una captura naval en curso, con el cañón disparando y el mar picado, así que la escena no está quieta. El EJE no se movió hacia la quietud; no estoy entre dos grados."
+5b6cba32126fed61,v1,ia-tercero,c02-ambiguo,aic:4796,0,"la original es una faena entre hielos; esta es un bote cargado de figuras regateando pescado sobre olas rompientes, con más oleaje que la original: la escena no está quieta y por el mar va en la dirección contraria."
+5b6cba32126fed61,v1,ia-tercero,c02-ambiguo,cma:153388,2,"la original amontona decenas de figuras arponeando ballenas entre los hielos; esta es un puerto con los barcos fondeados, el agua espejada y unas pocas figuras quietas en el muelle: la escena está claramente más quieta."
+5b6cba32126fed61,v1,ia-tercero,c02-ambiguo,aic:244013,0,"la original es una faena entre hielos; esta es un naufragio con el mar rompiendo sobre las rocas, que es una acción en curso y más violenta. El EJE no se movió hacia la quietud."
+5b6cba32126fed61,v1,ia-tercero,c02-conceptual,cma:135953,2,"la original es una escena de agua pero holandesa; esta es china (Wu Bin) y su asunto es un río ancho que cruza todo el rollo con barcas encima: están las dos mitades, la cultura pedida y el tema de agua."
+5b6cba32126fed61,v1,ia-tercero,c02-conceptual,cma:136296,1,"la cultura pedida está —es china, Cheng Zhengkui—, pero el agua no se establece como el asunto: lo que la planilla muestra es un panorama de montañas en tinta, y los ríos los nombra el título y no la imagen. Usé el título y lo digo. Media propiedad."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,aic:244013,0,"el pedido nombra dos cosas y la que discrimina es la luz dorada, porque la escena de agua la hereda de la imagen. Esta es una marina como la original pero de gris plomizo y tormenta, sin nada dorado: acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,cma:153388,0,"escena de agua sí, pero la luz es un gris plateado de cielo cubierto, incluso más fría que el cielo rosado de la original: no se movió hacia el dorado."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,aic:495,2,"la original tiene el cielo rosado pero el agua y los hielos en gris frío; esta baña toda la escena en luz dorada: nubes de crema y oro, un resplandor en el horizonte y el agua parda cálida."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,aic:120163,0,"escena de agua sí; la luz es gris verdosa de tormenta con un claro pálido, no dorada: no se movió en la dirección pedida."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,cma:118042,0,"escena de agua sí; la luz es gris azulada de día cubierto, más fría que el cielo rosado de la original: no se movió hacia el dorado."
+5b6cba32126fed61,v1,ia-tercero,c02-visual,cma:148368,1,"el cielo pasa a un ámbar cálido respecto del rosa grisáceo de la original, pero el agua sigue gris verdosa y el conjunto no llega a leerse como luz dorada: la propiedad está, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,aic:57049,2,"LECTURA · c03-ambiguo · «más imponente» · ESCALÓN 4
+EJE: escala — cuán grande se ve lo representado respecto del espectador y de las figuras del cuadro (qué fracción del alto ocupa la estructura y qué tan chicas quedan las personas).
+MÁS: la original ya pone columnas colosales cortadas por el borde y figuras de un sexto del alto bajo una cúpula; la obra va en la dirección pedida si lo representado domina todavía más: mayor altura, figuras aún más chicas o ausentes, una masa que desborda el encuadre.
+DESCARTADA: «imponente» como más ornamento o suntuosidad (eje «ornamento») — escalón 4, por orden alfabético: «escala» va antes que «ornamento», y las dos lecturas quedaron igual de defendibles. Antes, escalón 1: «imponente» como lo que impresiona el ánimo; escalón 2: «imponente» como registro monumental, que pide una categoría de historia del arte.
+|| la original mide su arquitectura contra figuras de un sexto del alto; en esta las figuras son un grupo de staffage al pie de una escalinata, de un octavo del alto o menos, y el orden colosal, la bóveda y el obelisco del fondo se les van de la cabeza: lo representado se ve más grande."
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,cma:148862,2,la original tiene columnas colosales y figuras de un sexto del alto; esta mete a las suyas bajo la boca de una gruta cuya bóveda ocupa el cuadro entero y las deja como manchitas al fondo: la escala creció.
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,cma:126770,1,"la original mete al espectador entre columnas colosales cortadas por el borde; esta mira un salón largo desde el fondo y achica mucho las figuras, pero el techo queda en el tercio superior y el espacio no crece sobre el espectador: es defendible en las dos direcciones."
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,cma:145450,0,"otro interior de iglesia, con un pilar cortado por el borde y figuras de la misma fracción del alto que las de la original: la estructura no se ve más grande respecto del espectador ni de las personas. El EJE no se movió; no es una duda entre dos grados."
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,cma:148861,2,la original tiene columnas colosales y figuras de un sexto del alto; esta pone una columnata y una bóveda artesonada que desbordan el óvalo y reduce las figuras a una décima parte del alto: la escala creció.
+5b6cba32126fed61,v1,ia-tercero,c03-ambiguo,cma:126772,2,la original tiene columnas colosales y figuras de un sexto del alto; esta levanta columnas rojas que van del borde inferior al superior sobre una multitud de figuras de un vigésimo del alto: lo representado domina mucho más.
+5b6cba32126fed61,v1,ia-tercero,c03-visual,aic:57049,0,"el pedido nombra dos cosas y la que discrimina es el tono frío, porque el interior lo hereda de la imagen. Esta es un interior arquitectónico como la original pero de pardos y oro cálidos: acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,v1,ia-tercero,c03-visual,cma:145450,2,la original es de muros ocre y luz dorada; esta es un interior de piedra gris blanquecina con la luz azulada entrando por los ventanales y sin ningún cálido dominante: está claramente en tonos más fríos.
+5b6cba32126fed61,v1,ia-tercero,c03-visual,cma:148862,0,"interior sí, pero la gruta es toda de pardos oscuros y cálidos, igual que la original: no se movió hacia los fríos."
+5b6cba32126fed61,v1,ia-tercero,c03-visual,cma:148861,0,"interior sí; la bóveda es gris pero las columnas y la luz siguen siendo de pardo cálido, que es el dominante de la original. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c03-visual,cma:111691,1,"la original es de ocre cálido y luz dorada; esta baja a un gris verdoso con azules en las ropas, que enfría, pero el conjunto queda más apagado que frío: la propiedad está, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c03-visual,cma:147938,0,"interior sí, pero la cúpula, los mármoles y la luz son de un ocre dorado todavía más cálido que el de la original: va en la dirección contraria."
+5b6cba32126fed61,v1,ia-tercero,c04-ambiguo,cma:143278,0,"LECTURA · c04-ambiguo · «más ordenado» · ESCALÓN 3
+EJE: regularidad — cuán pareja y repetida es la disposición de los elementos (espaciados iguales, ejes de simetría, un módulo que se repite), medida comparando distancias dentro del cuadro.
+MÁS: la original es una retícula ortogonal pero deliberadamente despareja —bandas a distancias distintas, el rojo chico descentrado abajo, un gris suelto arriba—; la obra va en la dirección pedida si su disposición es más pareja: espaciados iguales, simetría o repetición de un mismo módulo.
+DESCARTADA: «ordenado» como «más geométrico / menos desordenado formalmente» — escalón 3, porque la original ya es una retícula de ángulos rectos y planos lisos, el extremo de ese eje, y bajo esa lectura el pedido no le pediría nada. Antes, escalón 1: «ordenado» como pulcritud o limpieza de la factura.
+|| otra retícula de Mondrian, con las bandas a distancias distintas, el rojo descentrado y una celda grande vacía: la disposición no es más pareja que la de la original. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c04-ambiguo,cma:160723,2,"la original es una retícula ortogonal de espaciados desparejos con el rojo descentrado; esta muestra un enrejado hexagonal con el mismo motivo repetido a distancias iguales por todo el campo: la disposición es claramente más regular. Aviso: lo que la planilla muestra de esta obra es la seda de montaje del rollo, y juzgué la imagen que está."
+5b6cba32126fed61,v1,ia-tercero,c04-ambiguo,aic:56905,0,"un campo atmosférico vacío con unas manchas de barcos repartidas sin espaciado ni repetición: no hay módulo ni simetría, así que la disposición no es más regular que la de la original."
+5b6cba32126fed61,v1,ia-tercero,c04-ambiguo,cma:715339,0,"planos cubistas fragmentados, con diagonales y curvas y sin espaciados parejos ni ejes: la disposición es menos regular que la de la original, o sea la dirección contraria."
+5b6cba32126fed61,v1,ia-tercero,c04-ambiguo,aic:109819,0,"otra retícula de Mondrian, además en formato de rombo, lo que desalinea las bandas respecto del marco: la disposición no es más pareja que la de la original."
+5b6cba32126fed61,v1,ia-tercero,c04-conceptual,cma:143278,0,"el pedido nombra dos cosas y la que discrimina es la India, porque lo geométrico ya es lo que la imagen original es. Esta es otra composición geométrica del mismo artista que la original (Mondrian) y de los Países Bajos: acompaña a la imagen e ignora el pedido, y v1 dice que el mismo artista agrava el caso."
+5b6cba32126fed61,v1,ia-tercero,c04-conceptual,cma:147520,0,"no está ninguna de las dos mitades: es un trampantojo de tarjetero norteamericano, no una composición geométrica, y no es arte de la India."
+5b6cba32126fed61,v1,ia-tercero,c04-conceptual,aic:109819,0,otra vez Mondrian: la geometría es la del propio original y la India no está. Acompaña a la imagen e ignora el pedido.
+5b6cba32126fed61,v1,ia-tercero,c04-conceptual,cma:162867,0,"es china, no de la India, y es un retrato de linaje de monjes: la disposición en filas regulares no la vuelve una composición geométrica. No está ninguna de las dos mitades."
+5b6cba32126fed61,v1,ia-tercero,c04-visual,cma:147520,1,"el campo es una tabla de pardos oscuros y negros, que son tonos tierra, pero la obra es un trampantojo de tarjetero y no una composición geométrica: media propiedad, que es el caso que v1 nombra para este pedido."
+5b6cba32126fed61,v1,ia-tercero,c04-visual,cma:143278,0,"composición geométrica sí, pero es la del propio original —el mismo artista y los mismos primarios rojo, amarillo y azul sobre blanco— y de tonos tierra no hay nada: acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,v1,ia-tercero,c04-visual,aic:109819,0,"lo mismo: geometría del mismo artista que la original y primarios saturados sobre blanco, sin ningún tono tierra."
+5b6cba32126fed61,v1,ia-tercero,c04-visual,cma:150074,0,"ni geométrica ni en tonos tierra: es un paisaje de montañas en tinta. El oro del fondo es el soporte del biombo, y v1 dice expresamente que un fondo de oro bruñido no es «tonos tierra»."
+5b6cba32126fed61,v1,ia-tercero,c05-ambiguo,cma:95286,0,"otro busto de mujer, con la cabeza en torno a un tercio del alto y el corte a la altura del pecho, igual que la original: la toma no está más cerca. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c05-ambiguo,aic:76166,0,"otro busto, con la cabeza algo más chica que la de la original respecto del alto del cuadro y el corte más abajo: no está tomado desde más cerca."
+5b6cba32126fed61,v1,ia-tercero,c05-ambiguo,cma:125247,0,"la cabeza ocupa una fracción del alto parecida a la de la original, pero entra más cuerpo —el torso hasta la cintura y una mano—, así que si algo se movió fue hacia atrás."
+5b6cba32126fed61,v1,ia-tercero,c05-ambiguo,cma:149769,0,mismo encuadre de busto que la original y además entran los brazos con la piel: la toma no está más cerca.
+5b6cba32126fed61,v1,ia-tercero,c05-ambiguo,cma:147447,0,"otro busto con gorguera, la cabeza en torno a un tercio del alto y el corte en el pecho: el encuadre es el mismo que el de la original y el EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c05-conceptual,cma:124080,0,"el pedido nombra dos cosas y la que discrimina es la pintura francesa, porque el retrato de mujer ya es lo que la imagen original es. Esta es un retrato de mujer del mismísimo artista de la original (Gainsborough) y es inglés: acompaña a la imagen e ignora el pedido, y v1 dice que el mismo artista agrava el caso en vez de salvarlo."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,cma:149769,0,"retrato sí, pero el fondo verde oscuro, el vestido negro y la capota azul mantienen el valor tan bajo como el de la original: la paleta no está más luminosa."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,aic:105945,0,"retrato sí; el fondo pardo oscuro y el satén negro dejan el cuadro en el mismo valor bajo que la original, con la lechuguilla haciendo el papel que allá hace el encaje: no se movió."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,cma:173240,2,"la original es de fondo oscurísimo y vestido negro, con la luz sólo en la cara y el encaje; esta tiene el fondo en un pardo medio, el escote y los hombros en carnación clara y el vestido en un verde azulado de valor medio: la paleta entera está más alta."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,cma:95286,0,"retrato sí, pero el fondo sigue tan oscuro como el de la original y la masa blanca del cuello hace lo mismo que el encaje de la original: el valor general no subió."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,cma:147447,1,"la original concentra la luz en el encaje blanco sobre un fondo casi negro; esta levanta el valor con un vestido rosa y encaje crema, pero el fondo verde oscuro mantiene el cuadro bajo: algo más luminosa, no claramente."
+5b6cba32126fed61,v1,ia-tercero,c05-visual,aic:61151,1,"el fondo pasa del casi negro de la original a un pardo medio y la cofia y la pañoleta blancas ocupan buena parte, pero el vestido oscuro sostiene el valor bajo: la propiedad está, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:169341,0,"una sola cabeza de perfil sobre el papel, sin cuerpo ni escena: la misma presencia humana que la original. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:145923,0,"otra cabeza y busto de retrato funerario, una sola figura y sin escena: idéntica presencia humana a la de la original."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:130163,0,una sola cabeza y busto sobre fondo neutro: la presencia humana es la misma que la de la original.
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:128365,0,"una sola figura en busto asomada a un vano: una persona, sin escena ni acción. No se movió en el EJE."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,aic:864,1,"sigue siendo una sola figura, pero entra media figura con las dos manos y un gesto —sostiene un clavel— en vez de la cabeza suelta de la original: la presencia corporal sube, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:314479,0,"un dibujo de una cabeza sola con turbante, sin cuerpo ni escena: la misma presencia humana que la original."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:122336,1,"una sola figura todavía, pero de tres cuartos, con manos, vestido y un paisaje detrás, contra la cabeza y busto aislados de la original: sube la presencia corporal, no la cantidad de personas."
+5b6cba32126fed61,v1,ia-tercero,c06-ambiguo,cma:142520,1,"una sola figura, pero el cuerpo entero sentado en postura de yogui, con brazos y piernas a la vista, contra la cabeza y busto de la original: sube la presencia corporal, no la cantidad de personas."
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,cma:97156,2,"la original es un retrato que conmemora a una difunta, pero egipcio; esta es italiana (Giulio Campi) y es el retrato formal de un hombre hecho para dejar memoria de él: están las dos mitades."
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,aic:22270,2,"la original es un retrato conmemorativo egipcio; esta es italiana (Andrea del Sarto) y retrata a una mujer nombrada, Lucrezia di Lippo di Iacopo Guidi: están la cultura pedida y el tema. Usé el título para la identidad de la retratada."
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,cma:97155,2,"la original es un retrato conmemorativo egipcio; esta es del norte de Italia y es un retrato doble de matrimonio con la edad de los retratados inscripta en el cuadro, que es la marca del retrato conmemorativo: las dos mitades."
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,cma:314448,0,"la planilla no trae `cultura`, pero la salida de «no se puede saber» no corresponde: la mitad que sí se ve ya falla —es una figura de género, una mujer sirviendo vino, de hechura india y no italiana, y no un retrato conmemorativo— y el dato que falta no la rescata."
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,cma:125251,2,la original es un retrato conmemorativo egipcio; esta es italiana (Girolamo da Carpi) y es el retrato formal de un prelado identificado por su cargo: las dos mitades.
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,aic:11390,2,la original es un retrato funerario que conmemora a una muerta; esta es italiana (Jacopo da Empoli) y retrata de cuerpo entero a una noble de luto con el crucifijo en la mano: las dos mitades.
+5b6cba32126fed61,v1,ia-tercero,c06-conceptual,cma:146469,2,la original es un retrato conmemorativo egipcio; esta es italiana (Bronzino) y es el retrato formal de una dama florentina: las dos mitades.
+5b6cba32126fed61,v1,ia-tercero,c06-visual,cma:145923,2,"la original levanta oro bruñido en la corona y las joyas y un manto malva sobre gris; esta es toda de pardos terrosos y verde oliva, sin oro ni ningún acento saturado: los colores están claramente más apagados."
+5b6cba32126fed61,v1,ia-tercero,c07-ambiguo,cma:151529,1,"la original carga bordados, borla con dragón, estera y una mesa con libro, tintero y pinceles; esta saca la mesa y los útiles y deja el fondo negro liso, pero conserva el halo con rayos, el collar de joyas, las telas doradas y el loto: el adorno baja, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c07-ambiguo,cma:140321,0,las tres figuras llevan brocados estampados de arriba abajo y hay además un incensario dorado y una bandeja: el adorno es comparable al de la original y no bajó. El EJE no se movió.
+5b6cba32126fed61,v1,ia-tercero,c07-conceptual,cma:153777,0,"ni la cultura ni el tema: es japonesa (Takebe Sōchō) y es una figura de género, un viejo en cuclillas con una flauta, no el retrato de un monje ni de un sabio."
+5b6cba32126fed61,v1,ia-tercero,c07-conceptual,cma:145964,2,"la original es el retrato de un gran maestro budista, pero coreano; esta es china (Wang Hui) y retrata a un letrado sentado sobre su estera bajo los árboles, con su sirviente y una grulla: están la cultura pedida y el tema del sabio."
+5b6cba32126fed61,v1,ia-tercero,c07-conceptual,cma:151529,0,es japonesa y además no es un retrato: es la imagen devocional de Jizō descendiendo sobre una nube. No está ninguna de las dos mitades.
+5b6cba32126fed61,v1,ia-tercero,c07-visual,cma:79600,1,"la original es de pardo cálido con la túnica verde y roja y oro; esta pierde todos esos cálidos y queda en gris tinta, pero el papel sigue siendo un beige cálido y no entran azules ni verdes: enfría algo, no claramente."
+5b6cba32126fed61,v1,ia-tercero,c07-visual,aic:147005,2,"la original está en pardo cálido con la túnica verde y roja y oro; esta pone un fondo de verde pálido con rocas azules y un manto azul moteado, con lo cálido reducido a los acentos de la estola: la paleta está claramente más fría."
+5b6cba32126fed61,v1,ia-tercero,c07-visual,cma:141727,1,"la original es de pardo cálido con verde, rojo y oro; esta queda en negro grisáceo con un acento azul y blanco, pero el papel crema y la estera parda sostienen el cálido: algo más fría, no claramente."
+5b6cba32126fed61,v1,ia-tercero,c07-visual,cma:160470,0,"el fondo de seda dorada y los pardos anaranjados del banco y del kimono son tan cálidos como los de la original, y los azules de las hojas de parra son sólo acentos. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c07-visual,cma:147927,0,la seda es de un pardo tostado cálido y la túnica negra no aporta frío: la paleta es tan cálida como la de la original.
+5b6cba32126fed61,v1,ia-tercero,c07-visual,cma:140321,0,"pardos, rojos y crudos sobre seda oscura: la paleta es tan cálida como la de la original y no se movió hacia los fríos."
+5b6cba32126fed61,v1,ia-tercero,c08-ambiguo,cma:314439,2,"la original pone unas once figuras sobre un fondo verde liso que todavía se ve; esta parte el folio en cinco registros y los llena con más de veinticinco figuras, un elefante, cinco vacas, pavos reales y árboles, sin dejar campo libre."
+5b6cba32126fed61,v1,ia-tercero,c08-ambiguo,cma:314436,0,"seis figuras repartidas en una arquitectura, con grandes planos rojos, negros y amarillos vacíos: hay menos amontonamiento que en la original, no más."
+5b6cba32126fed61,v1,ia-tercero,c08-ambiguo,aic:49195,2,"la original pone unas once figuras sobre un fondo verde que todavía se ve; esta despliega una comitiva de unas treinta figuras, caballos, un guepardo, quitasoles y estandartes que se superponen y cubren el folio entero."
+5b6cba32126fed61,v1,ia-tercero,c08-ambiguo,cma:162494,0,"nueve figuras sueltas dispuestas alrededor de un óvalo, con mucho papel crudo a la vista: hay menos acumulación que en la original."
+5b6cba32126fed61,v1,ia-tercero,c08-conceptual,cma:146726,2,"la original es una escena de batalla, pero un folio indio del Devi-Mahatmya; esta es francesa (Gros) y es una escena de batalla: el general a caballo entre lanzas, humo y soldados. Usé el título para saber que es el boceto de una batalla."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,aic:49195,0,"el pedido nombra dos cosas y la que discrimina es el apagado, porque la escena la hereda de la imagen. Esta mantiene el verde saturado de fondo, los naranjas y el oro que ya trae la original: acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:119007,2,"la original es de bermellón, verde y amarillo saturados con oro; esta es un dibujo monocromo de lavados beige y gris sobre papel crudo, con el color reducido a unos toques rosados: claramente más apagada."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:170812,2,"la original es de bermellón y verde saturados con oro; esta es un dibujo a línea con lavados pálidos sobre papel crudo, donde el único color fuerte es el rojo de dos sables: claramente más apagada."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:136475,0,"el fondo naranja encendido, los rojos y el negro son tan saturados como los de la original, o más: no se movió hacia lo apagado."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:314429,0,"fondo amarillo pleno con rojos, verdes y azules saturados: la misma intensidad que la original."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:677526,0,"verde saturado de fondo, borde naranja y carnaciones encendidas: tan saturada como la original."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:314442,1,"respecto del bermellón y el oro de la original, esta baja a un verde salvia con el elefante en gris y figuras en malva y blanco, pero conserva el borde rojo y la gualdrapa dorada: algo más apagada, no claramente."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:314439,0,"rojos, azules, amarillos y verdes plenos repartidos en cinco registros: tan saturada como la original."
+5b6cba32126fed61,v1,ia-tercero,c08-visual,cma:163206,0,"el fondo es un verde pálido, pero las figuras llevan rojos, azules y amarillos plenos y el borde es rojo encendido: la saturación es comparable a la de la original y no bajó."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:145430,0,"mismo motivo de ciruelo en flor y, además, un tronco grueso y oscuro que barre el cuadro entero: lo representado no es más frágil que en la original, donde ya conviven las flores con un tronco y una roca."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:159756,0,"un pino retorcido, acantilados y rocas macizas: lo representado es más pesado que en la original, o sea la dirección contraria."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:160133,1,"respecto de la original, acá las ramas son más finas y entran codornices, gorriones y hierbas menudas, pero sigue habiendo una roca maciza en el centro: lo representado es algo más frágil, no claramente."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:149625,0,el asunto es un árbol antiguo de troncos gruesos y nudosos apoyado en una roca: lo representado no es más frágil que en la original.
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:132015,0,"rocas y lomas de tinta pesada, un ciruelo de tronco grueso y una figura: lo representado es más macizo que en la original."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:152831,0,"lo representado es un dragón entre nubes de tormenta, que no es un asunto más frágil que las flores de ciruelo de la original: bajo el EJE fijado no se movió, y no estoy dudando entre dos grados. Dejo asentado, como auditoría de la ficha y no como duda, que bajo la lectura del trazo —la que el escalón 4 descartó— esta obra habría sido un 2."
+5b6cba32126fed61,v1,ia-tercero,c09-ambiguo,cma:152550,2,"la original junta las flores con un tronco grueso y una roca de lavado pesado; esta deja una sola rama larga y delgadísima con florecitas sueltas sobre el papel, sin tronco macizo ni roca: lo representado es más frágil."
+5b6cba32126fed61,v1,ia-tercero,c09-conceptual,cma:148359,0,"el pedido nombra la cultura y hereda el tema de la imagen, así que la mitad que discrimina es China. Esta es japonesa (Genga) y es bambú en tinta como la original: acompaña a la imagen e ignora el pedido."
+5b6cba32126fed61,v1,ia-tercero,c09-visual,cma:149661,0,"ni el motivo ni el color: es un paisaje con pabellones y figuras, no el ciruelo, bambú y orquídea de la original, y sigue siendo tinta monocroma. El tono dorado es la seda del soporte, y v1 dice que una propiedad del material no es una propiedad de lo pintado."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:15468,2,"LECTURA · c10-ambiguo · «más generoso» · ESCALÓN 2
+EJE: abundancia — cuánto muestra el cuadro: cuántas figuras y objetos hay y qué fracción de la superficie ocupan frente al fondo vacío.
+MÁS: la original es escueta —dos figuras y un caballo recortados contra un cielo casi vacío, con un paisaje mínimo al pie—; la obra va en la dirección pedida si muestra más: más figuras, más objetos y menos fondo desocupado.
+DESCARTADA: «generoso» como «que muestra un acto de dar o de caridad» — escalón 2, porque exige atribuirle una intención al personaje. Antes, escalón 1: «generoso» como magnanimidad del ánimo y como factura generosa o empastada.
+|| la original muestra dos figuras y un caballo contra un cielo vacío; esta llena el panel con el caballero, el dragón, la princesa, un castillo con una veintena de espectadores asomados, ovejas, huesos y un paisaje entero de terrazas y pueblos, sin dejar fondo libre."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,cma:150082,2,"la original muestra dos figuras y un caballo contra un cielo vacío; esta amontona más de treinta cuerpos —ángeles, condenados y demonios— de borde a borde, sin campo desocupado."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:81503,0,"cuatro cuerpos —jinete, caballo y dos leones— contra una masa de roca oscura y vacía: hay prácticamente lo mismo que en la original y el mismo fondo desocupado. El EJE no se movió."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:36492,1,"respecto de las dos figuras y el caballo de la original, acá hay seis cuerpos más un cisne, un banco, una columna y las telas, pero el fondo sigue siendo un plano liso y vacío en buena parte del cuadro: sube, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:16495,1,"hay más que en la original —unas cinco figuras, una barca con remeros, el escudo, el yelmo y los árboles—, pero la mitad superior sigue siendo cielo vacío: sube, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:16492,1,"hay más que en la original —cuatro figuras en primer plano, dos más en la barca, la columna y el escudo—, pero el cielo vacío ocupa la mitad del cuadro: sube, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:160030,1,"siguen siendo tres cuerpos, como en la original, pero cubren el lienzo entero y se suman la calavera, el libro, la cruz y el haz: la superficie ocupada sube y el fondo vacío desaparece, aunque el número de figuras no cambie."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,cma:97181,2,"la original muestra dos figuras y un caballo contra un cielo vacío; esta junta unas veinticinco figuras, la cruz, las escaleras, las armas y un paisaje con ciudades al fondo, sin fondo desocupado."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:81505,2,"la original muestra dos figuras y un caballo contra un cielo vacío; esta apila seis jinetes, sus caballos y cuatro leones trabados en los dos tercios inferiores, que quedan cubiertos de punta a punta."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,cma:122350,2,"la original muestra dos figuras y un caballo contra un cielo vacío; esta forma un cortejo de unas treinta figuras con caballos, un carro, un águila y una ciudad, ocupando todo el friso."
+5b6cba32126fed61,v1,ia-tercero,c10-ambiguo,aic:110663,1,"hay más que en la original —dos jinetes con sus caballos, un caído en primer plano y un grupo de combatientes al fondo—, pero el terreno y el cielo vacíos siguen ocupando buena parte del cuadro: sube, pero poco."
+5b6cba32126fed61,v1,ia-tercero,c10-conceptual,cma:146191,2,"la original es una escena con jinete, pero de El Greco; esta es arte mogol y muestra al emperador a caballo con su portaquitasol detrás: las dos mitades. Usé el título para fijar que es mogol —nombra al emperador Alamgir— porque la planilla sólo dice «India»."
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:16499,2,"la original tiene el cielo azul claro y el caballo blanco, de valor alto; esta pone un fondo negro que ocupa la mitad superior del cuadro y hunde a los soldados en pardos oscuros: la paleta es claramente más oscura."
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:81505,2,la original tiene el cielo azul claro y el caballo blanco; esta pone un cielo de tormenta pardo y un terreno oliva oscuro sobre el que todo queda ensombrecido: la paleta es claramente más oscura.
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:15468,0,"la escena con jinete está, pero la paleta es de cremas, rosas y grises claros, de valor más alto que el cielo azul de la original: va en la dirección contraria."
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:30901,2,"la original tiene el cielo azul claro y el caballo blanco; esta es un nocturno alumbrado sólo por una fogata, con el lienzo entero en pardo oscuro salvo ese foco: la paleta es claramente más oscura."
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:110663,2,"la original tiene el cielo azul claro y el caballo blanco; esta hunde la escena en grises pardos de tormenta, con el terreno y el cielo oscurecidos: la paleta es claramente más oscura."
+5b6cba32126fed61,v1,ia-tercero,c10-visual,aic:53495,2,"la original tiene el cielo azul claro y el caballo blanco; esta está sumida en negro, con un solo foco de luz sobre la bruja de la izquierda: la paleta es claramente más oscura."

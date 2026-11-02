@@ -1,0 +1,128 @@
+{
+  "aportes": [
+    {
+      "anotador": "ia-claude",
+      "identidad": "5b6cba32126fed61-v1-ia-claude",
+      "n_juicios": 379,
+      "pool_id": "5b6cba32126fed61-definitivo",
+      "por_grado": {
+        "grado_0": 159,
+        "grado_1": 104,
+        "grado_2": 116
+      }
+    },
+    {
+      "anotador": "ia-codex",
+      "identidad": "5b6cba32126fed61-v1-ia-codex",
+      "n_juicios": 379,
+      "pool_id": "5b6cba32126fed61-definitivo",
+      "por_grado": {
+        "grado_0": 128,
+        "grado_1": 153,
+        "grado_2": 98
+      }
+    },
+    {
+      "anotador": "ia-tercero",
+      "identidad": "5b6cba32126fed61-v1-ia-tercero",
+      "n_juicios": 133,
+      "pool_id": "5b6cba32126fed61-definitivo",
+      "por_grado": {
+        "grado_0": 70,
+        "grado_1": 22,
+        "grado_2": 41
+      }
+    }
+  ],
+  "artefacto": "Kappa",
+  "conteos": {
+    "n_items_del_pool": 379,
+    "n_pares_del_kappa": 379,
+    "por_resolucion_del_consenso": {
+      "acuerdo": 246,
+      "desempate": 133
+    }
+  },
+  "es_una_lectura": true,
+  "estado_del_pool": "congelado",
+  "kappa": {
+    "acuerdo_esperado_por_azar": 0.331604,
+    "acuerdo_observado": 0.649077,
+    "anotadores": [
+      "ia-claude",
+      "ia-codex"
+    ],
+    "escala": {
+      "0": "No cumple",
+      "1": "Cumple parcialmente o es defendible",
+      "2": "Cumple claramente el pedido respecto de la imagen original"
+    },
+    "formula": "κ = (po − pe) / (1 − pe), con pe = Σ_k p1k · p2k (Cohen, 3 categorías)",
+    "kappa": 0.4749763043048048,
+    "marginales": {
+      "ia-claude": {
+        "grado_0": 159,
+        "grado_1": 104,
+        "grado_2": 116
+      },
+      "ia-codex": {
+        "grado_0": 128,
+        "grado_1": 153,
+        "grado_2": 98
+      }
+    },
+    "matriz_de_confusion": {
+      "grado_0": {
+        "grado_0": 96,
+        "grado_1": 53,
+        "grado_2": 10
+      },
+      "grado_1": {
+        "grado_0": 16,
+        "grado_1": 75,
+        "grado_2": 13
+      },
+      "grado_2": {
+        "grado_0": 16,
+        "grado_1": 25,
+        "grado_2": 75
+      }
+    },
+    "n_pares_comparados": 379,
+    "nota_de_ausencia": "κ es **ausente y no cero** cuando pe = 1 (los dos anotadores usaron un solo grado): (1−1)/(1−1) no existe. Es la regla de —un modelo sin precio da ausente, no cero*— sobre la cifra que el acuerdo entre anotadores publica.",
+    "pares_que_juzgo_solo_uno": {
+      "ia-claude": [],
+      "ia-codex": []
+    },
+    "pasa_el_umbral": false,
+    "poblacion": "379 pares (consulta, obra) que **los dos** juzgaron, de 379 de ia-claude y 379 de ia-codex, sobre la rúbrica v1",
+    "razon_de_ausencia": null,
+    "umbral": 0.6
+  },
+  "nota_de_identidad": "El consenso y κ son **lecturas** (la frontera del juicio), no agregados: funciones de (split, pool, **rúbrica**) sobre aportes sellados, y son derivables desde el desempate del tercero —el desempate del tercero es otro AporteDeAnotador—. Van al repo con identidad `pool_id` + `rubrica_id` (la regla de qué se versiona): sin el `rubrica_id` en el nombre, el κ de la rúbrica refinada pisaba al de la anterior (el corte de la interfaz).",
+  "nota_de_los_dos_kappa": "⚠️ El κ del piloto y el κ del acuerdo entre anotadores son **dos números distintos** (la evaluación): el del piloto se calcula sobre los 20 juicios de la ronda piloto y su función es decidir si la rúbrica sirve —es el disparador (b) del corte de la interfaz—; el del acuerdo entre anotadores se calcula sobre el ~20 % del pool definitivo (~108 juicios duplicados). **No se suman ni se promedian.**",
+  "pareja_del_kappa": [
+    "ia-claude",
+    "ia-codex"
+  ],
+  "pool_id": "5b6cba32126fed61-definitivo",
+  "procedencia": {
+    "capas_de_configuracion": [
+      "config/default.toml"
+    ],
+    "commit": "90625aaa2d462677cebb4a1a30272152ac8b39c9",
+    "fecha": "2026-10-31T14:13:43+00:00"
+  },
+  "rubrica": {
+    "archivo": "artifacts/ground-truth/rubricas/v1.md",
+    "estado": "completa",
+    "hash_del_texto": "8e4c96749314a579",
+    "nota": "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*.",
+    "refina": "piloto",
+    "rubrica_id": "v1"
+  },
+  "split_id": "5b6cba32126fed61",
+  "umbral_de_a5": 0.6,
+  "veredicto": "κ = 0.475 < 0.6 → **la rúbrica es ambigua**, y eso **es el resultado de la ronda **definitivo** (379 pares, el pool congelado), no un fracaso** (el acuerdo entre anotadores: *un κ bajo honestamente reportado es un hallazgo*). Las dos salidas que el acuerdo entre anotadores declara: refinarla —derivar otra `rubrica_id`, lo que **descarta estos 379 juicios por anotador** y no borra nada— o reportarla como limitación explícita. ⚠️ **Y acá el descarte es el del pool congelado**, que es precisamente el precio que la ronda piloto existía para no pagar: decidir refinar a esta altura cuesta la campaña entera.",
+  "version_del_acuerdo": "1"
+}

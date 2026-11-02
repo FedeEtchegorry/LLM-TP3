@@ -1,0 +1,66 @@
+# artefacto = "AporteDelJuez"
+# version_del_aporte_del_juez = "1"
+# clase_de_identidad = 2
+# identidad = "5b6cba32126fed61-2b3d03607e84cf61-1"
+# split_id = "5b6cba32126fed61"
+# binding_juez = "2b3d03607e84cf61"
+# ordinal = 1
+# pool_id = "5b6cba32126fed61-definitivo"
+# estado_del_pool = "congelado"
+# rubrica_id = "v1"
+# set_de_consultas = "5b6cba32126fed61-grupo-2"
+# nota_de_identidad = "Clase 2 con ORDINAL (la tabla de identidades): la identidad es split_id + binding_juez + ordinal. El juez es **el** caso de salida no determinista con entrada fija, así que dos corridas del juez con el mismo prompt y el mismo modelo son DOS aportes y el κ puede decir de cuál salió. El rubrica_id NO es ingrediente y va adentro como procedencia con el hash de su texto: el prompt del binding ya transcribe la rúbrica. 🔴 Y es clase 2 y no 3 a propósito: la asimetría con el juicio humano ES la mitigación 1 de la evaluación —la tabla C0–C4 solo sabe consumir juicios humanos, por TIPO y no por filtro—."
+# nota_del_libro_mayor = "El `usage` que devolvió la API, atribuido al rol `juez` (la atribución de cada llamada a su rol, los tokens en el artefacto de corrida). ⚠️ `n_llamadas` cuenta **los intentos**, no los pares: lo que el artefacto declara es lo que **costó**, no lo que salió bien. Y es **cota inferior** del gasto facturado: la verdad de facturación es el dashboard del proxy, y las dos **no se promedian**."
+# nota_de_la_circularidad = "la evaluación § La circularidad: mitigación 3 **intacta** —el juez es `gpt-4o` y el reranker `gpt-4.1-mini` (el registro de decisiones), y es un CUARTO modelo: tampoco es el de ninguno de los dos anotadores—. Mitigación 2 **computable**: el pool declara la configuración de origen de cada ítem, así que el κ se estratifica. Mitigación 1 **formalmente rota desde la anotación por IA** (ningún humano anota) y lo que la reemplaza es separar familias; lo que SÍ se mantiene es estructural: la tabla C0–C4 consume el **consenso**, que solo el Acuerdo escribe y solo desde AporteDeAnotador — este aporte vive en otra carpeta y es otro tipo."
+#
+# [binding]
+# rol = "juez"
+# modelo = "openai/gpt-4o"
+# prompt_id = "juez-grado-0-1-2-un-par"
+# version_del_prompt = "1"
+# esquema_de_salida = "json"
+# reintentos = 2
+# clave_de_configuracion = "bindings.juez"
+# nota = "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`."
+#
+# [binding.muestreo]
+# temperature = 0.0
+# top_p = 1.0
+# max_tokens = 300
+# seed = 7369
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 3
+# n_items_del_pool = 379
+# n_sin_grado = 3
+# alcance = "parcial (3 de 379)"
+#
+# [conteos.por_grado]
+# grado_0 = 0
+# grado_1 = 0
+# grado_2 = 0
+#
+# [libro_mayor]
+#
+# [libro_mayor.juez]
+# n_llamadas = 9
+# tokens_in = 90324
+# tokens_out = 591
+# segundos = 27.36
+#
+# [procedencia]
+# fecha = "2026-10-31T14:45:54+00:00"
+# commit = "790005d05e7a27f01a2475305381fbac19269503"
+# capas_de_configuracion = ["config/default.toml"]
+split_id,pool_id,rubrica_id,binding_juez,ordinal,consulta_id,artwork_id,grado,estado,nota
+5b6cba32126fed61,5b6cba32126fed61-definitivo,v1,2b3d03607e84cf61,1,c01-ambiguo,cma:137195,,sin_grado,"sin grado después de 3 intento(s): GradoInválido: la salida no tiene la forma `{""grado"": <0|1|2>, ""nota"": ""...""}`: '<bound method RespuestaDeLLM.json of RespuestaDeLLM(texto=\'{""grado"": 2, ""nota"": ""La lectura del pedido \\\'con más vida\\\' se deriva como \\\'más seres vivos presentes\\\'. La obra recuperada muestra figuras'"
+5b6cba32126fed61,5b6cba32126fed61-definitivo,v1,2b3d03607e84cf61,1,c01-ambiguo,cma:134072,,sin_grado,"sin grado después de 3 intento(s): GradoInválido: la salida no tiene la forma `{""grado"": <0|1|2>, ""nota"": ""...""}`: '<bound method RespuestaDeLLM.json of RespuestaDeLLM(texto=\'{""grado"": 2, ""nota"": ""La lectura del pedido es \\\'más vida\\\' como \\\'más seres vivos o actividad\\\'. La obra recuperada muestra más árboles con '"
+5b6cba32126fed61,5b6cba32126fed61-definitivo,v1,2b3d03607e84cf61,1,c01-ambiguo,aic:97292,,sin_grado,"sin grado después de 3 intento(s): GradoInválido: la salida no tiene la forma `{""grado"": <0|1|2>, ""nota"": ""...""}`: '<bound method RespuestaDeLLM.json of RespuestaDeLLM(texto=\'{""grado"": 2, ""nota"": ""La lectura del pedido \\\'con más vida\\\' se deriva como \\\'más colorido y vibrante\\\'. La obra recuperada muestra colores m'"

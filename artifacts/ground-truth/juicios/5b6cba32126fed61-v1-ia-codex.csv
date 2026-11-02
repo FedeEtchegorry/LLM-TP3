@@ -1,0 +1,446 @@
+# artefacto = "AporteDeAnotador"
+# version_del_aporte = "1"
+# clase_de_identidad = 3
+# identidad = "5b6cba32126fed61-v1-ia-codex"
+# split_id = "5b6cba32126fed61"
+# rubrica_id = "v1"
+# anotador = "ia-codex"
+# nota_de_identidad = "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad son TRES ingredientes —split_id + rubrica_id + anotador— y el del medio es la lección más cara del proyecto: sin él, la ronda piloto y la campaña definitiva comparten nombre de archivo y el 'se re-anota' del acuerdo entre anotadores es impagable. El pool_id NO es ingrediente y va acá adentro: un juicio es sobre el par (consulta, obra), no sobre el pool que lo trajo, y eso es lo que vuelve legítima la importación de los 20 del piloto (la evaluación). No se reescribe y no se recalcula (la regla de que un id determina su contenido): refinar la rúbrica deriva OTRO aporte y no borra este."
+# pool_id = "5b6cba32126fed61-definitivo"
+# estado_del_pool = "congelado"
+# set_de_consultas = "5b6cba32126fed61-grupo-2"
+# planilla = "planillas/5b6cba32126fed61-definitivo-v1-ia-codex.csv"
+# fecha_de_import = "2026-10-31T11:31:38+00:00"
+# commit = "3f162417303ef566446073d31ff49a03de4153b4"
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 379
+#
+# [conteos.por_grado]
+# grado_0 = 128
+# grado_1 = 153
+# grado_2 = 98
+#
+# [validacion_del_import]
+# requisito = "la política de trazado"
+# pares_comparados_contra = "5b6cba32126fed61-definitivo"
+# secuencia_exacta = true
+# nota = "la política de trazado: el conjunto de pares importado es **igual** al exportado para este pool_id, en el **mismo orden** (la columna `fila` es el orden mezclado y es contenido), y cada `consulta_id` resuelve en el set del mismo split (la referencia que resuelve). Sin esto, la procedencia del pool declarada en el aporte era 'garantizado por único camino' y el camino tiene un humano adentro."
+split_id,rubrica_id,anotador,consulta_id,artwork_id,grado,nota
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:137195,1,"LECTURA · c01-ambiguo · «con más vida» · ESCALÓN 1
+EJE: población; cantidad de seres vivos individualmente distinguibles representados (personas, animales y plantas).
+MÁS: Mostrar más seres vivos distinguibles que en la original, que contiene árboles y vegetación pero no personas ni animales claramente visibles.
+DESCARTADA: Viveza cromática o animación emocional: figuradas, descartadas en el escalón 1. || La original tiene numerosos árboles distinguibles; la obra añade figuras humanas y aladas, pero sus copas fusionadas impiden asegurar que el total de seres vivos sea mayor. Dudoso el saldo total de población; aplico desempate."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:134072,1,"La original permite separar varios troncos; aquí hay más arbolado aparente, pero las masas del fondo no permiten individualizarlo con seguridad. Dudoso el aumento de población total, no juzgo el color."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,aic:97292,0,"La original muestra múltiples árboles; aquí se distinguen pocos frutales junto a la casa, sin aumento de seres vivos individualizables."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:128392,2,"La original tiene árboles dispersos y vegetación fusionada; la obra muestra muchos más troncos individualmente separables a lo largo de todo el bosque, además de una persona."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:150054,1,"La original tiene varios árboles; la obra añade tres personas, pero reduce el arbolado distinguible. Me costó establecer el saldo total de población; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:124078,1,"La original contiene varios árboles; aquí hay personas y ganado, pero el arbolado se agrupa en copas fusionadas. Dudoso que el total individualizable aumente."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:159501,2,"La original tiene árboles pero ninguna persona o animal claramente visible; la obra reúne más de quince personas distinguibles, un perro y varios árboles: aumenta claramente la población total."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:136760,0,No aumenta la población respecto de los árboles individualizables de la original: hay pocos árboles separables y figuras minúsculas dispersas.
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:157104,1,"La original tiene varios árboles individualizables; la obra incorpora personas y caballos, pero muchas copas no se separan. Dudoso el saldo de seres vivos total; desempate."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:150031,2,"La original tiene un grupo limitado de troncos separables; la obra muestra una larga hilera de álamos individualizables y otros árboles separados, superando esa población sin contar manchas de hierba."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:95275,1,"La original tiene varios árboles; aquí hay troncos y una persona, pero la superposición de ramas hace dudoso que aumente el total de seres vivos distinguibles."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,cma:128371,1,"La original tiene varios árboles distinguibles; aquí hay copas fusionadas, una persona y una vaca. Dudoso el saldo total de población individualizable, por lo que aplico desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c01-ambiguo,aic:6005,2,"La original muestra un grupo limitado de árboles separables; la obra presenta una hilera extensa de troncos aislados, otros árboles en la ladera y personas, aumentando claramente la población individualizable."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:134072,1,"El paisaje rural con árboles cumple el tema heredado de la original; la cultura es United States, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:157104,1,"El paisaje con vegetación y construcciones conserva el tema paisajístico; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,aic:6005,1,"Es un paisaje rural como el de la original; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:95275,1,"Conserva el paisaje rural con árboles y casa de la original; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:128392,1,"Es un paisaje arbolado con construcciones; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:159756,2,"La original es un paisaje rural con árboles y una casa; la obra representa un paisaje de árboles, choza y agua y su cultura declarada es Japan: cumple tema heredado y cultura."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:128371,1,"El paisaje arbolado cumple el tema heredado; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:150031,1,"El paisaje rural cumple el tema heredado; cultura France, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:155624,1,"Cultura Japan, pero es un arreglo floral y objetos sobre fondo vacío, no el paisaje heredado de la original. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:108999,1,"Es un paisaje forestal con intervención humana; cultura America, no Japón. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:147411,2,"La original es un paisaje rural con vegetación y edificación; la obra es un paisaje lacustre con árboles y pequeñas construcciones, de cultura Japan: cumple paisaje y cultura."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,aic:7634,2,"La original es un paisaje con árboles y casa; la obra representa montañas, árboles, agua y edificaciones, con cultura Japan: cumple paisaje y cultura."
+5b6cba32126fed61,v1,ia-codex,c01-conceptual,cma:173020,2,"La original representa un paisaje arbolado con casa; la obra representa montañas, árboles, pabellón y lago, con cultura Japan: cumple ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:150031,2,"La original combina verdes grisáceos y cielo azulado; la obra mantiene el paisaje y lo lleva a arenas ocres y horizonte amarillo dorado, claramente más cálido."
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:124078,0,"El paisaje mantiene verdes grisáceos, cielo azul gris y agua fría; no se vuelve más cálido que la original."
+5b6cba32126fed61,v1,ia-codex,c01-visual,aic:64818,1,"La original es gris verdosa; las parvas añaden rosa y ocre, pero las sombras azules y violetas dominan amplias zonas. Me costó decidir el calentamiento global; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:134072,2,"La original es de verdes grisáceos y cielo frío; la obra incorpora grandes copas naranjas y rojizas y amarillos en la luz, manteniendo el paisaje y calentándolo claramente."
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:157104,0,"El paisaje mantiene un cielo azul gris, verdes y agua fría; no hay calentamiento respecto de la original."
+5b6cba32126fed61,v1,ia-codex,c01-visual,aic:57163,2,"La original muestra verdes grises bajo cielo azulado; la obra conserva un paisaje y lo ilumina con amarillo y rosa de atardecer y verdes dorados, claramente más cálidos."
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:128371,2,"La original es gris verdosa con cielo azulado; la obra conserva el paisaje y pasa a ocres amarillentos en cielo, follaje y suelo, claramente más cálidos."
+5b6cba32126fed61,v1,ia-codex,c01-visual,aic:6005,0,El cielo plomizo y los verdes oscuros no calientan el paisaje respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:95275,0,El paisaje conserva grises y verdes azulados; no aumenta la calidez respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:128392,0,Los verdes azulados del bosque no son más cálidos que los verdes grisáceos de la original.
+5b6cba32126fed61,v1,ia-codex,c01-visual,cma:150054,2,"La original tiene verdes grises y suelo apagado; la obra mantiene el paisaje y añade tierras rojizas, ocres de roca y follaje dorado, claramente más cálidos."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,cma:148368,2,"LECTURA · c02-ambiguo · «más tranquilo» · ESCALÓN 1
+EJE: movimiento; cantidad e intensidad de acciones físicas visibles, por posturas, gestos, desplazamientos y agitación del entorno.
+MÁS: Reducir el movimiento respecto de la original, con enfrentamientos, armas alzadas, animales en acción, embarcaciones y agua agitada.
+DESCARTADA: Sensación subjetiva de paz por el color o el ambiente: evocativa, descartada en el escalón 1. || La original muestra ataques a animales, armas alzadas, remos y agua agitada; la obra tiene agua lisa y barcos estables, con una salva localizada, reduciendo claramente la cantidad e intensidad global de acciones."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,cma:150080,0,"Hay caída de un jinete, caballos tensos y numerosos brazos y armas en acción; no disminuye el movimiento respecto de los enfrentamientos de la original."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:120163,1,"La original combina combate humano, animales y barcos; aquí se reducen las figuras en acción, pero oleaje, velas tensas y disparos mantienen agitación intensa. Dudoso el descenso global de movimiento; desempate."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:4796,0,"Las grandes olas, embarcaciones inclinadas, vela hinchada y personas gesticulando mantienen una acción intensa; no hay reducción visible del movimiento respecto de la original."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:16370,2,"La original tiene combate, animales en acción y agua agitada; la obra muestra embarcaciones estables sobre agua de ondulación mínima y pocos gestos, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,cma:163456,2,"La original contiene enfrentamientos y agua agitada; la obra presenta barcos estables sobre agua lisa y pequeñas acciones de trabajo sin lucha, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:81535,2,"La original tiene lucha, remos y animales en acción sobre agua agitada; la obra muestra barcos erguidos sobre mar liso, con desplazamiento suave y sin combate, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:39691,2,"La original concentra ataques y posturas tensas; la obra tiene pocas personas quietas en la playa y solo oleaje de orilla, reduciendo claramente acciones e intensidad."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,cma:153388,2,"La original presenta lucha y agua agitada; la obra muestra barcos amarrados, agua lisa y personas con gestos limitados en el muelle, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:244013,0,"El oleaje alto, las crestas rotas y las embarcaciones zarandeadas no reducen el movimiento del entorno respecto de la original, aunque haya menos figuras."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,aic:495,2,"La original reúne combate y animales en acción sobre agua agitada; la obra muestra barcos estables, agua lisa y unos pescadores trabajando sin gestos violentos, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-ambiguo,cma:118042,2,"La original tiene lucha y remos sobre agua agitada; la obra muestra barcos en el puerto sobre agua de pequeñas ondulaciones y escasa acción humana, claramente menos movimiento."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,aic:244013,1,"La escena es de agua y naufragio, pero cultura United States, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:149126,2,"La original representa una escena acuática con barcos; la obra centra un curso de agua con numerosas barcas y orillas, con cultura China: cumple agua y cultura."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:148368,1,"La escena de barcos en el agua cumple el tema; cultura Netherlands, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:150080,0,"Es una escena de combate terrestre con caballos, sin escena acuática; cultura France, no China. Fallan ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:163456,1,"La escena portuaria cumple agua; cultura United States, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:135953,2,"La original es una escena de agua con embarcaciones; la obra organiza el paisaje alrededor de una amplia superficie de agua entre orillas y montañas, con cultura China: cumple las dos propiedades."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:155097,1,"La barca sobre el agua cumple el tema; cultura Korea, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:149415,2,"La original representa barcos sobre agua; la obra muestra barcas junto a una ribera edificada y su reflejo en el agua, con cultura China: cumple ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:136296,2,"La original muestra una escena acuática; la obra presenta un recorrido de ríos y masas de agua entre montañas como estructura del paisaje, con cultura China: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:140155,1,"Cultura China; el agua aparece como cascada estrecha y tramo al pie, pero predominan las montañas. Me costó decidir si constituye el asunto acuático pedido; aplico 1, sin usar el título para fijar el tema."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,aic:120163,1,"La escena de barcos y oleaje cumple agua; cultura Philadelphia, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,cma:159741,1,"Las barcas y el agua cumplen el tema; cultura Japan, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-conceptual,aic:495,1,"Las embarcaciones y su reflejo cumplen agua; cultura Netherlands, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-visual,aic:244013,1,"La escena acuática está, pero cielo y mar grises no muestran luz dorada respecto de la original. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-visual,cma:153388,1,"La escena portuaria cumple agua, pero luz blanca y gris sin iluminación dorada. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-visual,cma:163456,2,La original es una escena de agua bajo luz azul gris con rosa localizado; la obra conserva barcos sobre agua y los ilumina con una extensa luz amarilla dorada y su reflejo.
+5b6cba32126fed61,v1,ia-codex,c02-visual,aic:181702,2,"La original muestra agua con luz azul gris y rosa localizado; la obra conserva un río visible y lo integra en una iluminación ocre dorada de cielo, orilla y figuras."
+5b6cba32126fed61,v1,ia-codex,c02-visual,cma:150080,0,"Es una escena terrestre de combate, sin el tema acuático; las luces en uniformes no constituyen una escena de agua con iluminación dorada. No cumple el pedido."
+5b6cba32126fed61,v1,ia-codex,c02-visual,aic:495,2,"La original muestra una escena acuática con luz azul gris; la obra mantiene barcos sobre agua y añade luz amarilla dorada en cielo, velas y reflejos, claramente visible."
+5b6cba32126fed61,v1,ia-codex,c02-visual,aic:4796,2,"La original es una escena acuática con iluminación azul gris y rosa localizado; la obra mantiene barcos y olas y los baña en luz amarilla dorada sobre vela, espuma y nubes."
+5b6cba32126fed61,v1,ia-codex,c02-visual,aic:120163,2,"La original representa agua bajo luz azul gris con rosa localizado; la obra mantiene barcos en el mar y concentra luz dorada intensa en las velas, con reflejos cálidos sobre las crestas."
+5b6cba32126fed61,v1,ia-codex,c02-visual,cma:118042,1,"El puerto cumple el tema acuático, pero predominan luz blanca, grises y azules; el rojo local de edificios no es luz dorada. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c02-visual,cma:148368,2,"La original muestra agua con luz azul gris y rosa localizado; la obra mantiene la escena de barcos y la ilumina en crema amarillo dorado, visible también en el agua."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,aic:57049,1,"LECTURA · c03-ambiguo · «más imponente» · ESCALÓN 1
+EJE: tamaño; escala aparente del motivo principal respecto de las figuras humanas y del encuadre.
+MÁS: Aumentar la escala aparente del motivo respecto de la original, cuyo interior arquitectónico ya domina sobre figuras humanas pequeñas, sin que esa relación sea un máximo posible.
+DESCARTADA: Prestigio, autoridad o sobrecogimiento atribuidos al motivo: evocativos, descartados en el escalón 1. || La original tiene arquitectura dominante y figuras pequeñas; aquí el gran arco reduce algo la escala humana, pero las figuras delanteras siguen siendo comparables en proporción. Me costó asegurar el aumento de tamaño aparente; desempate."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:147938,2,"La original muestra una capilla con personas pequeñas bajo una bóveda; la obra despliega una cúpula y recinto mucho mayores respecto de sus figuras, haciendo más diminutas las personas frente al motivo arquitectónico."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:111691,0,Las figuras ocupan una proporción mayor y el recinto se ve menor respecto de ellas que en la original; no aumenta la escala aparente del motivo.
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,aic:57048,2,"La original tiene una capilla dominante sobre sus visitantes; la obra muestra columnas y bóveda de escala mucho mayor respecto de las pequeñas figuras al pie, aumentando la escala aparente arquitectónica."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:159488,0,El motivo es un grupo de figuras de tamaño humano similar entre sí; no hay aumento de escala del motivo respecto de figuras humanas como el que tiene la arquitectura de la original. El prestigio religioso no cuenta.
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:148862,0,Los personajes y el jinete son proporcionalmente mayores frente al arco que los visitantes frente a la arquitectura original; no aumenta el tamaño aparente del motivo.
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:126770,2,"La original contiene una capilla con visitantes pequeños; en ambas vistas de la obra los salones y sus columnas empequeñecen aún más las numerosas figuras, aumentando la escala aparente de la arquitectura."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,aic:43211,0,Las figuras delanteras ocupan una parte mayor del cuadro y son mayores respecto de los pilares que en la original; no aumenta la escala aparente arquitectónica.
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:145450,1,"La original tiene una gran bóveda sobre figuras pequeñas; aquí las columnas son altas respecto de dos visitantes, pero el aumento de esa relación es reducido. Me costó separarlo de una escala equivalente; desempate."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:148861,0,"Las personas, el caballo y el cañón son proporcionalmente grandes frente a la bóveda; no aumenta la escala arquitectónica respecto de la original."
+5b6cba32126fed61,v1,ia-codex,c03-ambiguo,cma:126772,2,"La original muestra una capilla sobre visitantes pequeños; la obra presenta columnas gigantes y bóvedas muy altas sobre figuras diminutas de la ceremonia, aumentando claramente la escala arquitectónica aparente."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:148862,1,"Se ve un pasaje interior abovedado de arquitectura; cultura France, no Italy. Media propiedad, sin usar el título para definir el tema."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:126772,2,"La original es un interior arquitectónico; la obra muestra un interior de iglesia con pilares, bóvedas y ceremonia, con cultura Italy: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:126770,2,"La original muestra un interior arquitectónico; las dos vistas de la obra representan salones interiores articulados por muros, columnas y techos, con cultura Italy: cumple ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:145450,1,"Es un interior arquitectónico de iglesia; cultura Netherlands, no Italy. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:147938,2,"La original es un interior arquitectónico abovedado; la obra representa el interior de un gran recinto con cúpula, muros y columnas, con cultura Italy: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,aic:57049,1,"El punto de vista está dentro de un recinto abovedado, aunque se abra al obelisco exterior; cumple interior arquitectónico, pero cultura France, no Italy. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,aic:43211,1,"Es un interior arquitectónico de iglesia; cultura Holland, no Italy. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:148861,1,"Se ve desde dentro de una galería cubierta con bóveda y columnas; cultura France, no Italy. Media propiedad; el título no sustituye lo visible."
+5b6cba32126fed61,v1,ia-codex,c03-conceptual,cma:111691,2,"La original es un interior arquitectónico; la obra muestra un recinto interior con bóvedas, muros y bancos, con cultura Italy: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c03-visual,aic:57049,1,"El recinto abovedado conserva el tema de interior, pero sus tierras pardas no se desplazan a tonos fríos respecto de la original. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c03-visual,aic:57051,0,"Es una ruina abierta al cielo, sin recinto interior dominante, y predominan tierras ocres cálidas. No cumple interior ni el cambio a tonos fríos."
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:145450,1,"El interior está; sus grises son algo menos ocres que la original, pero la luz crema mantiene una base cálida. Me costó considerar claro el cambio a frío; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:148862,1,El pasaje abovedado cumple interior; sus pardos y ocres no cambian a tonos fríos respecto de la original. Media propiedad.
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:148861,1,La galería cubierta cumple interior; los pardos y luces doradas no pasan a tonos fríos respecto de la original. Media propiedad.
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:111691,2,"La original combina muros ocres y bóveda crema cálida; la obra conserva un interior y lo lleva a grises verdosos y azulados en bóvedas, muros y sombras, claramente más fríos."
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:126772,1,"El interior está, con bóvedas más gris azuladas, pero columnas y ropajes rojos ocupan zonas importantes. Me costó decidir si la paleta global cumple tonos fríos; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c03-visual,aic:43211,2,"La original combina muros ocres y bóveda crema cálida; la obra mantiene un interior y lo desplaza a blanco gris verdoso, azul en ventanas y sombras frías sobre pilares y arcos."
+5b6cba32126fed61,v1,ia-codex,c03-visual,cma:147938,1,"El interior está; hay grises en la cúpula, pero columnas, suelo y paredes mantienen amarillos, ocres y rosas cálidos. No cumple claramente el cambio global a tonos fríos: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:143278,0,"LECTURA · c04-ambiguo · «más ordenado» · ESCALÓN 3
+EJE: regularidad; igualdad y repetición de los intervalos y módulos que distribuyen los elementos en el plano.
+MÁS: Mostrar una distribución más regular de intervalos o módulos que la original: sus rectas son ortogonales, pero los anchos de las franjas y las dimensiones de los rectángulos son desiguales.
+DESCARTADA: Mayor alineación rectilínea: supera los escalones 1 y 2, pero la original ya lleva sus líneas paralelas y perpendiculares al extremo; descartada por no vacuidad en el escalón 3. || Como en la original, los rectángulos y separaciones tienen tamaños muy desiguales; la ortogonalidad no aumenta la regularidad de módulos e intervalos fijada en la ficha."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:135182,0,"Los tallos, grupos florales y curvas del arroyo se espacian de forma desigual; no aumentan la regularidad de intervalos y módulos respecto de la original. Las divisiones físicas del biombo no cuentan como distribución pintada."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:160723,1,"La imagen suministrada muestra una cubierta textil con patrón regular y etiqueta, no las vistas pintadas. El patrón del soporte no acredita regularidad de lo representado; no se puede juzgar la propiedad de la pintura con esta imagen. Aplico dato visual insuficiente, no 2 por el tejido ni 0 por ausencia de evidencia."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,aic:56905,0,"Los barcos, luces y luna ocupan posiciones y separaciones desiguales; no hay repetición modular más regular que en la original. Menos contraste no es el eje fijado."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:715339,1,"Hay pequeñas series de puntos y líneas repetidas, pero objetos y planos mantienen intervalos desiguales. Dudoso que la regularidad local aumente la distribución global respecto de la original; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:93234,0,"Las personas, árboles y huecos se distribuyen con intervalos y tamaños diversos; no aumenta la regularidad respecto de la original."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:161673,0,"Las hierbas, flores y luna no forman intervalos o módulos regulares; las hojas iguales del biombo son soporte y no una distribución pintada más regular que la original."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:84662,0,"Las figuras, nubes y huecos tienen tamaños y distancias desiguales; no aumenta la regularidad de módulos e intervalos respecto de la original. La disposición religiosa no sustituye el eje."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,aic:109819,1,"La original alterna bandas muy estrechas y campos amplios; aquí las separaciones horizontales se aproximan algo entre sí, pero las verticales y áreas siguen siendo desiguales. Me costó decidir un aumento global de regularidad; desempate a 1."
+5b6cba32126fed61,v1,ia-codex,c04-ambiguo,cma:147520,0,"El bastidor y los papeles presentan ángulos, tamaños e intervalos distintos; no aumenta la regularidad modular respecto de la original."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:137951,1,"Mughal India cumple la cultura. Toldo y arquitectura aportan retículas, pero es dudoso que estructuren el conjunto narrativo como composición geométrica; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:143278,1,Rectángulos y ortogonales cumplen geometría; Netherlands no cumple India. Media propiedad prevalece sobre el 0 general por cultura distinta.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:147520,1,Cintas diagonales y tarjetas rectangulares estructuran la composición; United States no cumple India: media propiedad.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:137924,1,"Mughal India cumple cultura; estanque y árboles forman una escena orgánica, sin composición geométrica: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:438621,2,La original organiza el plano con rectángulos y ortogonales; la obra organiza escenas en una retícula rectangular explícita y su cultura es Northwestern India: cumple geometría e India.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,aic:109819,1,La división por rectas en polígonos cumple geometría; Netherlands no cumple India: media propiedad.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:107357,1,"Central India cumple cultura; la arquitectura aporta rectángulos, pero es dudoso que la geometría estructure toda la escena de figuras y ave; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:160723,0,"China no cumple India; la foto solo muestra la tapa cerrada, sin evidencia de composición pictórica. La cultura conocida ya falla: el interior desconocido no la rescata."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:84662,0,"France no cumple India; las figuras y manchas tienen contornos orgánicos irregulares, sin composición geométrica."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:162867,1,"China no cumple India. Las filas de figuras ofrecen una retícula aproximada, pero es dudoso tratar esa organización figurativa como composición geométrica; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,aic:75068,0,Japan no cumple India; plantas orgánicas sin composición geométrica pintada. Las divisiones físicas del soporte no bastan.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:137427,1,"Mughal India cumple cultura; suelo y cama tienen patrones geométricos extensos, pero es dudoso que conviertan el conjunto narrativo en composición geométrica; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:150074,0,Japan no cumple India; montañas irregulares sin geometría compositiva pintada. Los paneles del biombo no vuelven geométrica la pintura.
+5b6cba32126fed61,v1,ia-codex,c04-conceptual,cma:137485,1,"Mughal India cumple cultura; figuras, fuego, elefante y plantas forman una escena orgánica, sin geometría compositiva: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:84662,1,"Ocres y rojizos terrosos conviven con verdes y azules; la crucifixión tiene contornos orgánicos, sin estructura geométrica clara. Dudosa la suficiencia de la paleta; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:147520,1,"Bandas diagonales y tarjetas rectangulares cumplen geometría; la madera marrón convive con extensos negro, verde y cian. Dudoso que la paleta sea de tonos tierra; desempate."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:143278,1,"Rectángulos y ortogonales cumplen geometría; blanco, negro y primarios no cumplen tonos tierra: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:161673,1,"La vegetación incluye marrones y verdes apagados, pero no geometría compositiva. El fondo dorado del soporte no se cuenta como tono tierra: cumplimiento parcial."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:160723,1,"La foto muestra la tapa cerrada, no las vistas pintadas; no puedo juzgar su geometría ni paleta. El patrón textil no sustituye esos datos."
+5b6cba32126fed61,v1,ia-codex,c04-visual,aic:109819,1,"La división en polígonos cumple geometría; primarios, blanco y negro no cumplen tonos tierra: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:150074,1,"Montañas grises y pardas aportan tonos tierra, sin geometría compositiva pintada. No cuento oro ni divisiones físicas del biombo como propiedades de la pintura."
+5b6cba32126fed61,v1,ia-codex,c04-visual,cma:115405,1,"La arquitectura introduce volúmenes geométricos y el suelo es ocre, pero cielo azul y árboles verdes son extensos. Dudoso que alcance ambas propiedades; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:99428,0,"LECTURA · c05-ambiguo · «más cercano» · ESCALÓN 1
+EJE: distancia; proximidad aparente al sujeto, medida por el recorte y la fracción del encuadre que ocupa su rostro o motivo principal.
+MÁS: Acercar el encuadre respecto del busto de la original, dando mayor proporción al rostro o al detalle del sujeto y mostrando menos de su cuerpo o entorno.
+DESCARTADA: Intimidad o cercanía afectiva: figurada, descartada en el escalón 1. || Rostro menor que en el busto original y encuadre hasta falda y manos: no se acerca."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:11390,0,"Frente al busto original, aparece cuerpo entero con mobiliario: se aleja."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:95286,2,"La original presenta rostro relativamente pequeño dentro del busto y gran cofia; la obra amplía el rostro en el plano y recorta al pecho, acercando claramente el sujeto."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:109248,0,"Se ven cintura, brazos y silla, con menor proporción facial que en el busto original; no se acerca."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:124080,0,"Más torso y brazos que en la original, sin mayor proporción facial; la postura íntima no cuenta para la ficha."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:76166,1,"El rostro ocupa algo más del plano que en la original, pero se mantiene un busto amplio. Dudoso el acercamiento claro; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:61151,0,Figura hasta cintura con rostro proporcionalmente menor que en la original; no se acerca.
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:173240,0,Busto con más torso y sin aumento de proporción facial frente a la original; no cumple cercanía.
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:125247,2,La original deja gran espacio a cofia y busto bajo el rostro; la obra amplía el rostro en ancho y reduce el entorno a hombros y una mano: encuadre claramente más próximo.
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:149769,2,"La original reserva una parte menor del plano al rostro; la obra lo amplía claramente dentro del busto, con facciones de mayor proporción en el encuadre."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:95269,0,"Rostro menor respecto del plano, con torso y paisaje, frente al busto original; no se acerca."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:79765,0,"Frente al busto original, figura sentada con falda amplia y entorno: se aleja."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:105945,0,"Manos, cintura y asiento, con rostro menor respecto del encuadre que en la original; no se acerca."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,cma:147447,1,"Proporción facial algo mayor que en la original, pero un busto de extensión similar. Dudoso el aumento claro de proximidad; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-ambiguo,aic:105887,0,"Se incluyen manos y mesa, sin mayor proporción facial frente a la original; no cumple cercanía."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,aic:36678,2,"La original muestra un retrato femenino; la obra mantiene el retrato femenino, aquí una joven con cerezas, y su cultura es France: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:122341,2,La original muestra una mujer retratada; la obra retrata una mujer sentada con libro y su cultura es France: cumple retrato femenino y pintura francesa.
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:109248,1,"Retrato femenino, pero America no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:122347,2,"La original muestra una mujer retratada; la obra también, caracterizada como Diana según el título, y su cultura es France: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,aic:61151,1,"Retrato femenino; la ficha dice Lancaster, no una cultura francesa: cumple solo el tema."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:124080,1,"Retrato femenino, pero England no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:173240,1,"Retrato femenino, pero America no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:99428,1,"Retrato femenino, pero America no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:125951,2,La original muestra un retrato femenino; la obra también retrata una mujer y su cultura es France: cumple tema y cultura.
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,aic:105945,1,"Retrato femenino, pero Holland no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:95286,1,"Retrato femenino, pero Netherlands no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,aic:14594,2,"La original muestra un retrato femenino; la obra también, con pañuelo negro, y la ficha sitúa su cultura en Paris, Francia: cumple ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:125895,1,"Retrato femenino, pero Netherlands no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-conceptual,cma:95269,1,"Retrato femenino, pero England no cumple Francia: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:149769,1,"Frente al fondo negro de la original, rostro y ventana aclaran zonas pequeñas, pero gran parte sigue oscura. Dudoso el aumento global de luminosidad; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-visual,aic:105945,1,"Fondo algo menos negro que en la original, pero predomina vestido negro y la luz se concentra en el cuello blanco. Dudosa la mayor luminosidad global; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:95269,2,La original combina fondo negro y ropa oscura alrededor de la cofia blanca; la obra amplía blancos y cremas del vestido e introduce cielo azul claro: retrato más luminoso.
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:109248,2,La original tiene fondo negro y vestido oscuro; la obra presenta fondo pardo claro y vestido blanco de amplia superficie: retrato claramente más luminoso.
+5b6cba32126fed61,v1,ia-codex,c05-visual,aic:105887,0,"Pardos oscuros, sin elevar la luminosidad respecto de los blancos y grises claros de la original."
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:173240,2,La original rodea el busto de negro y marrón oscuro; la obra aclara el fondo a pardo medio y amplía piel iluminada y vestido verde azulado: retrato más luminoso.
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:99428,1,"Más superficie de vestido gris claro que en la original, pero entorno y fondo siguen oscuros. Dudoso el cambio global suficiente; desempate."
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:95286,2,La original concentra los claros en cofia y pechera sobre negro; la obra extiende grises claros y blancos por cuello y busto con fondo menos oscuro: retrato más luminoso.
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:124080,2,"La original tiene amplios negros alrededor de la cofia clara; la obra extiende piel clara, escote blanco y tela gris plata por el torso: retrato claramente más luminoso."
+5b6cba32126fed61,v1,ia-codex,c05-visual,cma:147447,2,La original tiene ropa y fondo muy oscuros; la obra introduce vestido rosado y encaje crema de amplia superficie: retrato de paleta más luminosa.
+5b6cba32126fed61,v1,ia-codex,c05-visual,aic:61151,0,Pardos y grises oscuros dominan retrato y fondo; no aumenta luminosidad respecto de la original de cofia y pechera claras.
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:314500,0,"LECTURA · c06-ambiguo · «más humano» · ESCALÓN 1
+EJE: población; número de figuras humanas visibles representadas.
+MÁS: Representar más personas que la única figura humana de la original; la humanidad de su rostro no sustituye ese aumento de presencia humana literal.
+DESCARTADA: Empatía, vulnerabilidad o calidez psicológica: figuradas, descartadas en el escalón 1. || Una sola persona, igual que en la original; flor y paisaje no aumentan población humana."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:169341,0,"Una sola figura humana, igual que en la original; ampliar el rostro no aumenta población."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:314448,0,"Una sola persona, igual que en la original; servir vino no agrega personas."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:145923,0,"Una sola persona, igual que en la original; no aumenta población humana."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:131819,2,"La original representa una sola persona; la obra representa dos, una mujer y su niño, aumentando la población humana de la ficha."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:130163,0,"Un único busto humano, igual número que en la original; la expresión no sustituye el aumento de personas."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:128365,0,"Un único retrato femenino, igual número de personas que en la original; no aumenta población."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:101356,0,Una sola mujer como en la original; gesto y copa no aumentan población humana.
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,aic:864,0,Un solo hombre frente a una sola persona en la original; cambiar género no aumenta población.
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:314479,0,"Una única cabeza humana, como la única persona original; no aumenta población."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:122336,0,"Una única figura humana, como en la original; el carácter religioso no cambia el conteo."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:142520,2,"La original representa una sola figura humana; la obra añade al personaje principal tres pequeñas figuras de forma humana sobre cuerpo y cabeza, aumentando el número visible. Cuento representaciones, no personas reales."
+5b6cba32126fed61,v1,ia-codex,c06-ambiguo,cma:162509,0,Una sola figura de forma humana como en la original; el ave no cuenta como persona en esta ficha.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:97156,1,Italy cumple cultura y se ve un retrato; es dudoso su carácter conmemorativo: título e imagen no acreditan una ocasión de conmemoración. Desempate.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:169341,1,"El título identifica un maharajá y fechas, sin probar función conmemorativa; Northwestern India no cumple Italia. Dudoso el tema conmemorativo; desempate."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,aic:22270,1,"Italy y retrato identificado por título; es dudoso que el medallón acredite por sí solo función conmemorativa. Desempate, sin inferirla del nombre."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:142520,0,India y figura de yogui con figuras religiosas: no es retrato conmemorativo italiano. No cumple ninguna de las dos propiedades comprobables.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:101356,1,"Retrato femenino de India; es dudoso que imagen o título prueben conmemoración. Desempate, sin atribuir función por el formato oval."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:97155,1,Northern Italy cumple Italia; retrato de pareja con inscripciones de edad. Es dudoso que esas edades prueben conmemoración; desempate.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:314500,1,Northwestern India no cumple Italia; retrato regio cuya finalidad conmemorativa es dudosa con la ficha disponible. Desempate.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:314448,1,"Se ve un retrato y el título describe a una mujer sirviendo vino; faltan cultura y evidencia conmemorativa. Dudoso el tema, sin exclusión visible concluyente; no puedo decidir ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:125251,1,"Italy cumple cultura; el título identifica un prelado, pero libro y vestimenta no demuestran conmemoración. Dudoso ese requisito; desempate."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:137333,1,Italy cumple cultura; el ángel de un pináculo no es retrato conmemorativo: media propiedad prevalece sobre el 0 general por tema ausente.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:142475,1,Italy cumple cultura; Cristo y santos en una imagen devocional no constituyen retrato conmemorativo individual: media propiedad.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,aic:11390,1,Italy cumple cultura; el título dice noble de luto. Es dudoso equiparar el luto de la retratada a función conmemorativa del retrato; desempate.
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:122336,0,"La santa identificada por el título es una representación devocional, sin carácter de retrato conmemorativo acreditado; Flanders tampoco cumple Italia."
+5b6cba32126fed61,v1,ia-codex,c06-conceptual,cma:146469,1,Italy cumple cultura; título e imagen del retrato femenino no permiten decidir su función conmemorativa. Dudoso ese requisito; desempate.
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:314448,0,"Amarillo intenso del vestido y acentos rojos más vivos que ocres, grises y malva apagados de la original; no reduce color."
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:162509,0,"Amarillo, azul y rojo intensos frente al gris y malva original; no cumple colores más apagados."
+5b6cba32126fed61,v1,ia-codex,c06-visual,aic:90437,2,"La original combina malva, ocres y detalles amarillos; la obra reduce el retrato a tinta parda y negra con extensas zonas sin color aplicado: colores más apagados, sin contar montaje dorado como paleta pintada."
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:314500,0,Naranja y rosa del vestido dan más color que malva y gris originales; no apaga la paleta.
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:150053,0,Fondo cian intenso y carnaciones ocres no dan paleta más apagada que gris y malva originales.
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:153395,1,"Rojos y verdes sobre fondo oscuro; parece menos viva que la original, pero es dudoso si baja saturación o solo oscurece la reproducción. Desempate."
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:169341,2,La original presenta malva y zonas amarillas en vestido y joyas; la obra deja amplias zonas en dibujo de contorno con ocres tenues y pequeños acentos: retrato de color más apagado.
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:142475,0,"Rojos, azules y contrastes de vestiduras no apagan color frente al gris y malva original; el oro material no sustituye la comparación cromática."
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:142520,0,Ropa roja y fondo amarillo más intensos que malva y gris originales; no apaga colores.
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:145923,1,"Retrato en pardos oscuros, pero carnaciones rojizas intensas respecto del gris y malva original. Dudoso que oscuridad equivalga a menor saturación; desempate."
+5b6cba32126fed61,v1,ia-codex,c06-visual,cma:101356,0,"Naranjas, rojos y verdes de cara y adornos vivos frente a gris y malva originales; no apaga la paleta."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,aic:147005,0,"LECTURA · c07-ambiguo · «más austero» · ESCALÓN 1
+EJE: ornamentación; cantidad y extensión de adornos visibles en los objetos, la vestimenta y el entorno representados.
+MÁS: Reducir la ornamentación respecto de la original, con vestimenta de varios colores, accesorios colgantes y muebles con motivos decorativos; mostrar mayor sencillez material visible.
+DESCARTADA: Ascetismo, disciplina moral o condición social atribuidos al personaje: evocativos, descartados en el escalón 1. || Ropa estampada, joyas, asistente y entorno decorado mantienen abundantes adornos frente a la original; no reducen ornamentación."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:161323,2,La original muestra colgantes y muebles decorados; la obra limita adornos a pequeños emblemas sobre ropa lisa y elimina mobiliario ornamentado: mayor austeridad visible.
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:141727,2,"La original tiene ropas multicolores, colgantes y mesa con motivos; la obra tiene túnica oscura lisa y estera sencilla: reduce ornamentación."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:137219,2,La original tiene accesorios y mobiliario decorados; la obra representa ropa lisa y costura sin adornos ni muebles ornamentales: reduce ornamentación.
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:147927,2,"La original combina colgantes, ropa multicolor y mesa ornamentada; la obra presenta túnica oscura lisa sin muebles decorados: reduce claramente ornamentación."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:153777,2,La original tiene colgantes y mesa ornamentada; la obra muestra ropa lisa y espada sin entorno decorativo: reduce claramente ornamentación.
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:151529,1,"Desaparece la mesa decorada original, pero persisten joyas, halo y pedestal de loto elaborados. Dudoso el saldo de ornamentación; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:140321,1,"Elimina el mueble ornamentado original, pero añade tres vestidos estampados y objeto ceremonial. Dudosa la reducción total de adornos; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:79600,2,"La original tiene colgantes, ropa multicolor y mesa con motivos; la obra tiene túnica lisa y pocos objetos sencillos sin mobiliario ornamentado: reduce adornos."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:151007,2,"La original tiene ropas multicolores, colgantes y mesa decorada; la obra se limita al busto de túnica lisa con pequeño cierre: ornamentación claramente menor."
+5b6cba32126fed61,v1,ia-codex,c07-ambiguo,cma:160470,0,"Vestido de grandes flores, abanico, textiles y banco decorados mantienen extensa ornamentación frente a la original; no reducen adornos."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:162867,2,"La original muestra un monje con vestimenta ceremonial; la obra muestra un conjunto de monjes, identificados además por el título, y su cultura es China: cumple tema y cultura."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:153777,1,"Japan no cumple China; la figura de ropa sencilla podría ser un sabio, pero ni imagen ni título genérico lo acreditan. Tema dudoso; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:146174,1,"China cumple cultura. El título identifica a Shakyamuni en imagen religiosa; es dudoso si cuenta como retrato de sabio o icono devocional, distinción no definida en la rúbrica. Desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:145964,1,"China cumple cultura; el título identifica el retrato de An Qi, pero la figura en paisaje no acredita monje o sabio. Dudoso ese requisito; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:151007,1,Busto de cabeza rasurada y túnica correspondiente al tema monástico; Japan no cumple China: media propiedad.
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:151529,1,"Japan no cumple China; el título identifica a Jizō, de apariencia monástica. Es dudoso equiparar el bodhisattva a un retrato de monje o sabio; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:147927,2,"La original muestra un monje de vestimenta ceremonial; la obra muestra un religioso de cabeza rasurada y túnica, identificado como sacerdote y maestro por el título, y su cultura es China: cumple ambas propiedades."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,aic:147005,1,"El título identifica un arhat y la imagen lo representa con túnica, cumpliendo tema; Tibet no cumple China. El artista Tibeto-Chinese no reemplaza cultura: media propiedad."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:150944,1,"China cumple cultura; el título identifica un funcionario y la vestimenta lo acompaña, pero es dudoso inferir sabiduría del cargo. Desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:140321,1,Japan no cumple China; el título identifica a Shōtoku en figura ceremonial con asistentes. Es dudoso que cumpla sabio sin otra información; desempate.
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:160470,0,"Japan no cumple China; kimono y abanico, con título que identifica una cortesana, no corresponden a monje o sabio."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:79600,1,"Japan no cumple China; el título identifica a Sugawara Michizane, pero su vestimenta oficial no acredita sabio por sí sola. Dudoso ese requisito; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:151970,1,China cumple cultura; aves y juncos no son retratos de monjes o sabios: media propiedad prevalece sobre el 0 general por tema ausente.
+5b6cba32126fed61,v1,ia-codex,c07-conceptual,cma:146713,1,"China cumple cultura; el título identifica a Guanyin, no un monje. Es dudoso si esta imagen de bodhisattva se incluye en retratos de sabios; desempate."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:153777,0,"El retrato conserva beige, crema y rosados cálidos; no enfría el verde y rojo de la original."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:151007,0,Predominan crema y pardo; la reducción de saturación no equivale a enfriar la paleta.
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:79600,0,Vestido y fondo pardos: no hay desplazamiento hacia tonos fríos.
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:161323,0,El hábito marrón rojizo y el fondo ocre no enfrían la paleta.
+5b6cba32126fed61,v1,ia-codex,c07-visual,aic:147005,1,"La original combina verde y rojo; aquí aumentan azules y verdes del entorno, pero el hábito sigue rojo y naranja: enfriamiento parcial."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:141727,2,"La original combina verdes vivos y rojos cálidos; la obra usa gris negruzco y azul en el hábito, un retrato claramente más frío."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:160470,1,"El azul del vestido enfría parte del retrato respecto del verde y rojo originales, pero comparte superficie con rojos y fondo ocre."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:151529,0,Los dorados y ocres de la figura sobre negro no constituyen una paleta más fría.
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:161268,0,El traje rosado y el fondo ocre mantienen una paleta cálida.
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:147927,1,"El hábito gris azulado aporta frío respecto del verde y rojo original, aunque el fondo pardo domina y hace discutible el cambio global."
+5b6cba32126fed61,v1,ia-codex,c07-visual,cma:140321,1,"El negro grisáceo reduce el calor de la original, pero persisten rojos pardos: enfriamiento limitado."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:154260,0,"LECTURA · c08-ambiguo · «más caótico» · ESCALÓN 4
+EJE: acumulación; densidad de elementos y superposiciones por superficie del encuadre.
+MÁS: Aumentar la acumulación respecto de la original, que tiene múltiples combatientes y armas pero conserva zonas de fondo separando muchas de sus siluetas.
+DESCARTADA: Dispersión, medida por la diversidad de orientaciones y la falta de alineación: también literal y señalable, y la original no agota ese eje. Ambas sobreviven los escalones 1–3; acumulación precede alfabéticamente a dispersión en el escalón 4. || Según la ficha, cuenta acumulación: músicos separados sobre amplias zonas amarillas; no aumenta la densidad de la batalla original."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:314439,2,"La original separa combatientes con fondo visible; la obra llena varios registros con personas, ganado y montaña, aumentando claramente densidad y superposiciones."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:125580,2,"La original deja huecos entre combatientes; aquí multitud, caballos y arquitectura se apilan y solapan en gran parte de la escena."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:137485,0,La zona pintada muestra pocos grupos aislados y campo libre; no aumenta la acumulación de la original.
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:146199,0,Pocas figuras separadas junto al edificio y grandes superficies vacías: no aumenta la acumulación.
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:677526,2,"La original conserva fondo entre siluetas; la obra concentra una maraña de cuerpos, armas y animales superpuestos que ocupa la escena."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:314429,0,Carro y figuras se separan sobre un amplio fondo amarillo; no hay más acumulación.
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:163206,2,"La original distingue combatientes con huecos de fondo; la obra amontona muchos cuerpos, caballos y armas en toda la zona de batalla."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:314436,1,"Hay más personajes y abundante arquitectura, pero franjas vacías separan los grupos; es discutible que la densidad global supere la original."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:314447,0,Los grupos están separados por amplias zonas lisas; no aumenta la densidad ni la superposición.
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,aic:49195,2,"La original deja espacios entre combatientes; la obra acumula séquito, caballos y elefante con numerosas superposiciones en la mitad inferior."
+5b6cba32126fed61,v1,ia-codex,c08-ambiguo,cma:162494,0,Las figuras rodean un centro claro y permanecen mayormente separadas; no aumenta la acumulación respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:150080,2,"La original muestra una batalla; la obra muestra soldados, caballos y un caído en acción bélica, y la ficha declara France."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,aic:110663,2,"La original representa combate armado; la obra representa jinetes enfrentándose con armas y caídos, y la cultura es France."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,aic:49195,0,Es una procesión sin enfrentamiento visible y la cultura es India: faltan ambas propiedades.
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,aic:152851,2,"La original tiene combatientes armados; la obra tiene una lucha con armas y cuerpos caídos, y la ficha declara France."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:163206,1,"Batalla visible con armas, caballos y caídos; la cultura Northwestern India no es francesa. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:314447,0,"Escena de conversación y episodios cortesanos sin batalla visible; cultura Northwestern India, no francesa."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:146184,1,"Hay batalla entre tropas y caballos; cultura Mughal India, no francesa. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:145473,1,"La ficha declara France, pero las figuras abrazadas en un paisaje no representan batalla. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:314439,0,"Escenas pastoriles y grupos bajo una montaña, sin batalla; cultura Central India, no francesa."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:314436,0,"Músicos ante un rey, sin combate; cultura Central India, no francesa."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:314429,1,"Hay agresión armada y caídos junto al carro; cultura Central India, no francesa. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:677526,1,"Hay lucha entre numerosos seres armados; cultura Northern India, no francesa. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:314446,0,"Acción de una figura sobre una serpiente y espectadores, sin batalla entre tropas; cultura Northwestern India, no francesa."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:146726,1,"Cultura France; el fragmento muestra un general montado y acompañantes, pero no establece claramente un enfrentamiento. El título lo vincula a una batalla; duda temática al medio."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:146725,1,"Cultura France; los estudios muestran general y familia con entorno militar, sin combate visible. El título menciona una batalla, pero no basta para verla representada."
+5b6cba32126fed61,v1,ia-codex,c08-conceptual,cma:154260,0,"Músicos y celebración sin enfrentamiento; cultura Northern India, no francesa."
+5b6cba32126fed61,v1,ia-codex,c08-visual,aic:49195,0,"Procesión en vez de lucha y colores vivos en verdes, azules y naranjas; no satisface escena ni apagamiento."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:119007,1,"La tinta parda está claramente más apagada que la original multicolor, pero la escena es caza, no combate. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314247,0,No conserva el combate y mantiene amarillo y rojo intensos; no cumple las dos propiedades.
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:170812,1,"Dibujo gris y beige claramente apagado respecto de la batalla roja y amarilla original; representa caza, no la escena de combate. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314447,0,Escena cortesana sin combate y grandes planos amarillos y rojos vivos; no cumple ninguna mitad.
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:133294,2,"La original muestra combate con rojos y amarillos intensos; esta lucha de diosa y demonio conserva el tema con verdes grisáceos, blancos y tonos menos saturados."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:136475,1,"Conserva la lucha de diosa y demonio, pero el gran fondo naranja sigue intensamente saturado. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314429,1,"Conserva agresión armada y caídos, pero amarillo y rojo siguen vivos; falta el apagamiento pedido."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:677526,1,"Mantiene batalla; los colores parecen algo suavizados respecto de la original, pero naranjas y amarillos aún vivos hacen limitado el cambio."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:107357,1,"Rojos pardos y grises apagados respecto de la original, pero la escena doméstica no conserva el combate. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:154260,0,Músicos en vez de batalla y amarillo y rojo intensos; no cumple ninguna mitad.
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314436,0,Escena musical cortesana en vez de batalla y grandes superficies rojas y amarillas vivas.
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314442,1,"El verde y los violetas son menos intensos que los rojos y amarillos originales, pero el incidente entre elefante y caballo no conserva la batalla de combatientes. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:314439,0,No conserva el combate y mantiene grandes zonas rojas y amarillas saturadas.
+5b6cba32126fed61,v1,ia-codex,c08-visual,cma:163206,1,"Conserva una batalla; el verde grisáceo del campo apaga parte de la escena, pero el amarillo y rojo siguen vivos: cambio cromático parcial."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:140445,0,"LECTURA · c09-ambiguo · «más delicado» · ESCALÓN 4
+EJE: grosor; espesor relativo de líneas, trazos y contornos respecto del tamaño de la imagen.
+MÁS: Mostrar trazos y contornos más finos que en la original, que combina ramillas finas con un tronco y rocas de trazos y masas gruesos.
+DESCARTADA: Tamaño, medido como menor escala de los motivos representados: también literal y señalable, y la original no está en su extremo. Ambas sobreviven los escalones 1–3; grosor precede alfabéticamente a tamaño en el escalón 4. La sensibilidad emotiva queda descartada en el escalón 1. || Contornos anchos y masas negras en árboles y rocas; no se afinan respecto de la original. La ficha mide grosor, no minuciosidad."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:145430,1,Las ramillas son finas pero el tronco conserva una ancha banda de tinta; no es claro un afinamiento global frente a la original.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:147045,2,"La original combina tronco y rocas de trazos gruesos; aquí árboles, estrías de montaña y contornos se construyen con líneas proporcionalmente más finas."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:159756,1,"Hay contornos finos en montes lejanos, pero árbol y primer plano mantienen trazos gruesos; afinamiento parcial."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:151223,0,La pincelada quebrada de montaña y vegetación sigue siendo gruesa; no reduce el grosor relativo.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,aic:75574,0,Ramas anchas y masas negras dominan; no afina los trazos respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:160133,1,"Ramillas y plumajes llevan líneas finas, pero la roca conserva masas anchas como la original; el afinamiento es parcial."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:130496,0,Hojas de bambú y tallos presentan pinceladas anchas; no hay afinamiento respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,aic:46466,0,Tronco y roca son pinceladas anchas; añadir flores rojas no reduce el grosor del eje fijado.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:147906,0,El tronco principal sigue siendo una gran banda de tinta; las ramillas finas también estaban en la original.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:79931,0,Hojas y tallos de bambú están ejecutados con pinceladas gruesas; no afina el grosor relativo.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:148359,0,Las hojas y masas de bambú y terreno son anchas; no hay reducción del grosor.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:152826,0,Contornos de túnicas y árbol gruesos y negros; no satisface el afinamiento.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:149625,0,El árbol conserva contornos gruesos y masas anchas de tinta; hojas pequeñas no equivalen a trazos globalmente más finos.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:132015,1,"Las ramas altas tienen líneas más finas, pero las crestas y masas del paisaje mantienen anchura; afinamiento parcial."
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:152831,0,Las nubes y el dragón se forman con manchas y pinceladas amplias; no se reduce el grosor relativo.
+5b6cba32126fed61,v1,ia-codex,c09-ambiguo,cma:152550,0,Las ramas principales son bandas gruesas y oscuras; no hay afinamiento respecto de la original.
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:79931,1,"Bambú y ciruelo conservan el tema vegetal de la original, pero la cultura es Japan. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,aic:46466,2,"La original centra ramas floridas y roca; la obra centra un árbol florido con aves, y la ficha declara China. Conserva el tema vegetal."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:145430,2,"La original tiene ciruelo de ramas floridas; la obra muestra otro ciruelo florido como asunto principal, y la cultura es China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:149625,2,"La original centra árbol y vegetación; la obra centra un árbol con plantas y rocas, y la cultura es China. Tomo el tema como composición botánica, no exclusivamente ciruelo."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,aic:46487,2,"La original combina ciruelo y bambú; la obra combina ramas floridas, pino y bambú, y la cultura es China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:159756,0,"Paisaje con cabaña y agua, no composición botánica como tema principal; cultura Japan, no China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:147045,1,"Cultura China, pero el asunto es un paisaje montañoso con bosque y cabaña, no una composición botánica. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:148359,1,"Bambú como asunto principal conserva el tema vegetal, pero cultura Japan, no China. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:160133,2,"La original centra plantas y rocas; la obra centra plantas y roca con aves añadidas, y la cultura es China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:140445,1,"Cultura China, pero representa un lugar con sendero y figuras; los árboles integran el paisaje y no mantienen el tema botánico principal."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:79579,0,"Paisaje montañoso, no motivo botánico principal; cultura Japan, no China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:149661,0,"Paisaje con pabellones y reunión de personas, no composición botánica; cultura Japan, no China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:160913,2,"La original centra árbol, bambú y roca; la obra centra pino, ramas floridas y bambú con roca, y la cultura es China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:147906,2,"La original centra un ciruelo; la obra centra otro ciruelo de ramas floridas, y la ficha declara China."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:132015,1,"Cultura China; el tema principal es un paisaje con poeta, no el motivo botánico de la original. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:152831,1,"Cultura China, pero el dragón entre nubes no conserva el tema vegetal. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-conceptual,cma:156792,0,"Paisaje fluvial con puente y edificios en vez de composición botánica; cultura Japan, no China."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:159724,2,"La original pinta ramas y rocas en tinta gris; la obra conserva árbol, flores y roca añadiendo hojas azul verdosas, flores rosadas y amarillos visibles."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:79931,0,"Conserva bambú y ciruelo, pero sigue en tinta monocroma. Aplico el 0 explícito por mismo motivo sin el cambio de color, antes que media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:147045,1,"Los leves tonos pardos de la vegetación son discutibles como color añadido; además el asunto principal es un paisaje montañoso, no el motivo botánico aislado."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:149661,1,"Hay pigmentos verdes y pardos frente a la tinta gris original, pero cambia el motivo a paisaje con arquitectura y figuras. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:149109,2,La original tiene plantas y flores en tinta gris; la obra conserva motivos florales y vegetales con flores rosas y rojas y hojas verdes pintadas.
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:145430,0,"Mismo motivo de ciruelo, pero ramas y flores siguen monocromas; el soporte pardo no es color del motivo. Prevalece el 0 explícito por ausencia del cambio."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:160133,0,"Plantas, roca y aves están resueltas en gris; no añade color al motivo vegetal. La semejanza sin cambio corresponde al 0 explícito."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:148359,0,Bambú monocromo sobre soporte pardo; no hay color pintado añadido al motivo.
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:159756,0,Paisaje con cabaña y agua en tinta gris; no conserva el motivo botánico ni añade color.
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:132837,1,"Montañas verdes y azuladas aportan color respecto de la original gris, pero cambia a un paisaje montañoso. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:140445,0,"Paisaje de árboles, camino y figuras en blanco y negro; no hay el cambio de color pedido."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:160913,2,"La original reúne árbol, bambú y roca en gris; la obra conserva esa composición vegetal y añade bambú azul, flores rosas y amarillas y tonos pardos pintados."
+5b6cba32126fed61,v1,ia-codex,c09-visual,aic:46466,2,"La original representa ramas floridas en gris; la obra conserva árbol florido y añade flores rojas muy visibles, con aves como elemento adicional."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:150533,0,"Figura humana en paisaje, en tinta monocroma; no conserva el motivo botánico ni aporta color pintado."
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:132015,0,Paisaje con poeta y montañas en tinta monocroma; no realiza el motivo vegetal con color.
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:152826,0,Personajes y árbol ejecutados en blanco y negro; no añade el color solicitado y el motivo principal cambia.
+5b6cba32126fed61,v1,ia-codex,c09-visual,cma:149625,2,"La original centra árbol y rocas en gris; la obra conserva árbol con vegetación y roca, añadiendo hojas ocres, pequeños rojos y verdes pintados."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:15468,0,"LECTURA · c10-ambiguo · «más generoso» · ESCALÓN 1
+EJE: donación; cantidad de actos visibles de dar o compartir bienes y magnitud visible de lo entregado.
+MÁS: Mostrar una entrega material más extensa o más actos de compartir que la original, donde dos personas participan en la entrega de una porción de tela; la mera riqueza del vestido no aumenta la donación.
+DESCARTADA: Abundancia de color, espacio o riqueza de factura como generosidad de la composición: figurada, descartada en el escalón 1. || No hay entrega de bienes: el caballero ataca al dragón. Rescate no sustituye donación en la ficha fijada."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,cma:150082,0,Figuras entre cielo e infierno sin entrega material visible; no aumenta los actos de compartir de la original.
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:81503,0,"Ataque de león a jinete, sin acto de dar bienes."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:36492,1,"La original entrega tela a una persona; aquí hay amamantamiento y un gesto de cubrir a otro niño. Es discutible contar ese gesto como segunda entrega material, y no puedo comparar la magnitud de leche y tela: duda al medio."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:16495,0,"Personajes gesticulan junto a una gruta, sin transferencia material visible; no aumenta la donación."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:16492,0,Escena de separación y gestos sin entrega de bienes; no cumple el eje donación.
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:160030,0,"Ángeles sostienen al fraile, sin entrega material de bienes; el auxilio corporal no es la donación fijada."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,cma:97181,0,"Preparación de una ejecución, sin actos de compartir bienes; no aumenta la entrega original."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:16499,0,"Soldados rodean y hostigan al prisionero, sin donación material visible."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:81505,0,"Cacería con violencia entre hombres y animales, sin actos de dar bienes."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,cma:97169,0,"Las figuras sostienen frutos y recipiente, pero no se ve transferencia a un receptor; posesión de bienes no es donación."
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,cma:125251,0,Retrato de una figura sin receptor ni entrega de bienes; no cumple el eje.
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,cma:122350,0,Procesión con acompañantes y caballos; no hay entrega material visible que supere la original.
+5b6cba32126fed61,v1,ia-codex,c10-ambiguo,aic:110663,0,Combate entre jinetes sin actos de dar o compartir bienes.
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:97169,0,"Dos figuras a pie, sin jinete, y cultura Flanders, no mogol."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:170783,2,"La original muestra un jinete; la obra muestra varios cazadores montados, y la ficha declara Mughal India."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:170784,2,"La original muestra un jinete; la obra muestra cazadores montados en caballos, y la cultura es Mughal India."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:122350,1,"Hay jinetes en procesión, pero cultura Italy, no mogol. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,aic:15468,1,"Hay un caballero montado, pero cultura Spain, no mogol. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:314453,1,"Jinete visible; la ficha declara Northwestern India y un gobernante de Mewar, sin acreditar arte mogol. No equiparo región india con cultura mogol."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,aic:81505,1,"Hay jinetes cazando, pero cultura France, no mogol. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:125580,2,"La original representa un jinete; la obra representa numerosos combatientes montados, y la ficha declara Mughal India."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:314469,1,"Jinete visible; cultura Northwestern India y príncipe de Jatoli, sin acreditación mogol. La mitad temática está."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,aic:49195,1,"Jinete visible en procesión; la ficha dice India y Maharana de Mewar, sin declarar cultura mogol. La mitad temática está."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,aic:110663,1,"Jinetes combatiendo, pero cultura France, no mogol. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:146191,1,"Jinete visible; cultura India no especifica escuela mogol. El título identifica a Alamgir, pero retratar a un emperador no acredita por sí solo la procedencia artística."
+5b6cba32126fed61,v1,ia-codex,c10-conceptual,cma:150082,0,"No hay jinete visible y la cultura es France, no mogol."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:81503,2,"La original muestra una escena con jinete bajo cielo azul y caballo blanco luminoso; la obra conserva jinete y caballo en acción, con pardos y verdes oscuros dominando."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:16499,1,"La paleta con fondo negro es más oscura que la original azul y blanca, pero la escena de prisionero y soldados no conserva la escena con jinete. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:81505,2,"La original tiene jinete y caballo blanco ante cielo azul claro; la obra conserva una escena con jinetes, pero en pardos y verdes sombríos con mucha menor luminosidad."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:15468,1,"Conserva jinete y caballo, pero fondos dorados y caballo blanco mantienen una paleta luminosa; falta el oscurecimiento."
+5b6cba32126fed61,v1,ia-codex,c10-visual,cma:97169,1,Pardos oscuros y fondo sombrío frente al azul y blanco originales; no conserva la escena con jinete. Media propiedad.
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:30901,1,"Escena nocturna mucho más oscura que la original, pero las figuras junto al fuego no conservan el jinete. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-visual,cma:150082,1,"Paleta sombría respecto del cielo azul y caballo blanco originales, pero cambia a una multitud alegórica sin jinete. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:110663,2,"La original muestra jinete y caballo blanco contra cielo azul luminoso; la obra mantiene jinetes y caballos, con cielo gris y grandes zonas pardas oscuras."
+5b6cba32126fed61,v1,ia-codex,c10-visual,aic:53495,1,"Grandes zonas negras y pardas más oscuras que la original, pero la reunión de brujas no conserva la escena con jinete. Media propiedad."
+5b6cba32126fed61,v1,ia-codex,c10-visual,cma:125251,1,Fondo y vestido oscuros frente al azul y blanco originales; el retrato de pie no conserva la escena con jinete. Media propiedad.
+5b6cba32126fed61,v1,ia-codex,c10-visual,cma:97181,1,"Paleta gris y parda más oscura que la original, pero la preparación de una ejecución no conserva la escena con jinete. Media propiedad."

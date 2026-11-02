@@ -1,0 +1,52 @@
+# artefacto = "Consenso"
+# version_del_acuerdo = "1"
+# es_una_lectura = true
+# nota_de_identidad = "El consenso y κ son **lecturas** (la frontera del juicio), no agregados: funciones de (split, pool, **rúbrica**) sobre aportes sellados, y son derivables desde el desempate del tercero —el desempate del tercero es otro AporteDeAnotador—. Van al repo con identidad `pool_id` + `rubrica_id` (la regla de qué se versiona): sin el `rubrica_id` en el nombre, el κ de la rúbrica refinada pisaba al de la anterior (el corte de la interfaz)."
+# pool_id = "5b6cba32126fed61-piloto"
+# estado_del_pool = "piloto"
+# split_id = "5b6cba32126fed61"
+# pareja_del_kappa = ["ia-pasada-1", "ia-pasada-2"]
+# aportes = ["{'identidad': '5b6cba32126fed61-piloto-ia-pasada-1', 'anotador': 'ia-pasada-1', 'n_juicios': 20, 'por_grado': {'grado_0': 9, 'grado_1': 9, 'grado_2': 2}, 'pool_id': '5b6cba32126fed61-piloto'}", "{'identidad': '5b6cba32126fed61-piloto-ia-pasada-2', 'anotador': 'ia-pasada-2', 'n_juicios': 20, 'por_grado': {'grado_0': 8, 'grado_1': 9, 'grado_2': 3}, 'pool_id': '5b6cba32126fed61-piloto'}"]
+# umbral_de_a5 = 0.6
+# nota_de_los_dos_kappa = "⚠️ El κ del piloto y el κ del acuerdo entre anotadores son **dos números distintos** (la evaluación): el del piloto se calcula sobre los 20 juicios de la ronda piloto y su función es decidir si la rúbrica sirve —es el disparador (b) del corte de la interfaz—; el del acuerdo entre anotadores se calcula sobre el ~20 % del pool definitivo (~108 juicios duplicados). **No se suman ni se promedian.**"
+#
+# [rubrica]
+# rubrica_id = "piloto"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/piloto.md"
+# hash_del_texto = "300fb59a61bb4566"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_items_del_pool = 20
+# n_pares_del_kappa = 20
+#
+# [conteos.por_resolucion_del_consenso]
+# acuerdo = 13
+# sin_consenso = 7
+#
+# [procedencia]
+# fecha = "2026-10-25T18:12:08+00:00"
+# commit = "ec084ddb14580b0979e821f24a6e4646db149b3c"
+# capas_de_configuracion = ["config/default.toml"]
+pool_id,rubrica_id,consulta_id,artwork_id,grado,como_se_resolvio,grados_por_anotador
+5b6cba32126fed61-piloto,piloto,c04-visual,cma:147520,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c04-visual,cma:143278,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c04-visual,cma:161673,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c04-visual,aic:109819,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c04-visual,cma:150074,,sin_consenso,ia-pasada-1=1 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c06-conceptual,cma:169341,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c06-conceptual,cma:101356,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c06-conceptual,cma:314500,,sin_consenso,ia-pasada-1=1 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c06-conceptual,cma:314448,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c06-conceptual,cma:142475,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c01-ambiguo,cma:134072,,sin_consenso,ia-pasada-1=2 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c01-ambiguo,cma:128392,2,acuerdo,ia-pasada-1=2 ia-pasada-2=2
+5b6cba32126fed61-piloto,piloto,c01-ambiguo,cma:136760,,sin_consenso,ia-pasada-1=1 ia-pasada-2=2
+5b6cba32126fed61-piloto,piloto,c01-ambiguo,cma:150031,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c01-ambiguo,cma:128371,,sin_consenso,ia-pasada-1=0 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c05-ambiguo,cma:99428,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0
+5b6cba32126fed61-piloto,piloto,c05-ambiguo,cma:95286,1,acuerdo,ia-pasada-1=1 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c05-ambiguo,cma:124080,,sin_consenso,ia-pasada-1=0 ia-pasada-2=2
+5b6cba32126fed61-piloto,piloto,c05-ambiguo,cma:173240,,sin_consenso,ia-pasada-1=0 ia-pasada-2=1
+5b6cba32126fed61-piloto,piloto,c05-ambiguo,aic:79765,0,acuerdo,ia-pasada-1=0 ia-pasada-2=0

@@ -1,0 +1,105 @@
+# artefacto = "AporteDeAnotador"
+# version_del_aporte = "1"
+# clase_de_identidad = 3
+# identidad = "5b6cba32126fed61-v1-ia-incremental"
+# split_id = "5b6cba32126fed61"
+# rubrica_id = "v1"
+# anotador = "ia-incremental"
+# nota_de_identidad = "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad son TRES ingredientes —split_id + rubrica_id + anotador— y el del medio es la lección más cara del proyecto: sin él, la ronda piloto y la campaña definitiva comparten nombre de archivo y el 'se re-anota' del acuerdo entre anotadores es impagable. El pool_id NO es ingrediente y va acá adentro: un juicio es sobre el par (consulta, obra), no sobre el pool que lo trajo, y eso es lo que vuelve legítima la importación de los 20 del piloto (la evaluación). No se reescribe y no se recalcula (la regla de que un id determina su contenido): refinar la rúbrica deriva OTRO aporte y no borra este."
+# pool_id = "5b6cba32126fed61-secundario-incremental"
+# nota_del_pool = "**Procedencia, no ingrediente** (la tabla de identidades). Es el pool **incremental** del estudio secundario, derivado de `5b6cba32126fed61-definitivo` sin tocarlo. Lo que la procedencia del pool declarada en el aporte verifica es *«el par estuvo en algún pool de este split»*, y por eso el pooling incremental es legal: un juicio es sobre el par, no sobre el pool que lo trajo."
+# alcance = "parcial"
+# nota_del_alcance = "🔴 **Parcial a propósito, y es.** El pool tiene 197 ítems y este aporte tiene 31: los otros 166 **ya tienen grado** en el consenso del pool definitivo y se **reusan**, que es exactamente el pooling incremental de la evaluación. El alcance parcial vale porque este anotador **no es de la pareja del κ** — no hay pareja: es uno solo (ver `limitacion_de_un_solo_anotador`)."
+# anotadores = 1
+# kappa = "(ausente)"
+# limitacion_de_un_solo_anotador = "las métricas de retrieval de los dos brazos secundarios descansan sobre 268 juicios del ground truth principal —con su κ medido y su limitación declarada— más 32 juicios de un solo anotador, sin κ propio."
+# por_que_un_solo_anotador = "Decisión del orquestador, y la razón importa más que la decisión. Bajo la anotación por IA el ground truth principal lo produjeron **dos anotadores de proveedores distintos + un desempate**, y para estos pares eso no se reproduce. Las dos alternativas son peores: (a) **dos anotadores Claude** darían un κ **intra-proveedor**, y el desempate midió que el proveedor compartido concentra el acuerdo (71 % contra 22 %), así que ese κ sería **más alto y menos informativo**; (b) **pedirle 32 ítems más a Codex** es desproporcionado para el 2 % y el 19 % de dos brazos **secundarios**, y el ground truth principal **no cambia**. Entonces: un anotador, y el artefacto lo declara."
+# por_que_la_etiqueta_no_es_ia_claude = "`ia-incremental` y no `ia-claude`: **no es el mismo aporte**. La identidad de clase 3 son tres ingredientes —`split_id` + `rubrica_id` + `anotador`— y reusar la etiqueta del anotador de la campaña definitiva haría que este aporte y aquel **se pisen** bajo el mismo nombre de archivo, que es, la lección más cara del proyecto, por la tercera puerta."
+# no_comparable_con_la_tabla_c0_c4 = "⚠️ Por lo de arriba, las métricas que salen de este aporte **no son comparables en pie de igualdad con la tabla C0–C4**. Van en su propia sección del informe, con la frase de `limitacion_de_un_solo_anotador` al lado."
+# cegueras_respetadas = ["no se abrió el `.json` del pool definitivo (lleva el `rank` y la configuración de origen de cada ítem)", "no se abrieron los juicios, el consenso ni el κ de los otros anotadores sobre los 31 pares juzgados — y no podrían estar: los 31 son exactamente los pares **sin grado** en el consenso", "no se abrió `rubricas/v1-decision-de-a5.toml` ni ningún `-como-anotar.md` (la limitación es correcta en el artefacto: llevan el κ por categoría y la asimetría de métodos entre anotadores)", "nadie dijo qué brazo se espera que gane, y el pool ciego no lleva ni el `rank` ni la configuración de origen"]
+# exposiciones_declaradas = ["🔴 la exposición declarada de la rúbrica por el mismo camino: el procedimiento manda leer la evaluación, y el recuadro «El κ se publica ESTRATIFICADO» de `§ Acuerdo entre anotadores` dice que `v1` pre-juzga «con más vida» y «más cercano». Eso anticipó el escalón 1 de `c01-ambiguo` y `c05-ambiguo` **antes** de correr la escalera. Está declarado en la `nota` de los dos. No invalida nada —las dos consultas ya están en el estrato pre-juzgado—, pero es la segunda vez que se declara.", "🔴 Un camino nuevo, y es del procedimiento mismo: el procedimiento prohíbe `v1-decision-de-a5.toml` y a la vez manda leer `los hallazgos la limitación es correcta en el artefacto`, **cuyo texto resume lo que el archivo prohibido dice** — el κ 0,475 y la asimetría de métodos entre los dos anotadores anteriores (*«uno fijó umbrales en CIELAB, el otro ninguno; 153 unos contra 104»*). Lo leí antes de anotar. Es la limitación es correcta en el artefacto por un **tercer** camino: el hallazgo que documenta la filtración la filtra.", "Se derivó el pool **y** se anotó en la misma sesión. El pool ciego no lleva el `rank`, pero el `origen` del `.json` sí, y lo escribí yo: la ceguera al puesto no está garantizada por el artefacto, está garantizada por el procedimiento —el derivador no imprime ni el `rank` ni la configuración por ítem—. **Es una garantía más débil y por eso va declarada.**"]
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [escalones_de_la_escalera]
+# c01-ambiguo = "1 (fijado por la rúbrica, no derivado — ver exposiciones)"
+# c04-ambiguo = "3"
+# c05-ambiguo = "1 (fijado por la rúbrica, no derivado — ver exposiciones)"
+# c07-ambiguo = "4"
+# c08-ambiguo = "1"
+#
+# [conteos]
+# n_juicios = 31
+# n_consultas = 19
+# n_obras_distintas = 26
+#
+# [conteos.por_grado]
+# grado_0 = 11
+# grado_1 = 16
+# grado_2 = 4
+#
+# [procedencia]
+# commit = "d6dfe78c6afd9d8b1101e6e00cb10e1339a0c224"
+# anotado_por = "una sesión de IA — la mitad de retrieval del estudio secundario"
+# llamadas_al_proxy = 0
+# orden_de_las_filas = "el de la `fila` del pool, que **es contenido**: es la mezcla declarada (la política de trazado)."
+split_id,rubrica_id,anotador,consulta_id,artwork_id,grado,nota
+5b6cba32126fed61,v1,ia-incremental,c01-ambiguo,aic:59002,1,"LECTURA · c01-ambiguo · «con más vida» · ESCALÓN 1
+EJE: ser vivo — cuántos seres vivos (personas o animales) muestra la escena
+MÁS: la obra muestra seres vivos donde la original no muestra ninguno, y cuantos más y más legibles, más claro
+DESCARTADA: «más viveza/saturación de color», descartada por el escalón 1 (es la lectura figurada)
+|| La original no muestra ni una figura ni un animal; esta tiene **una** bañista chica en el borde derecho, dentro del agua. El eje se movió, pero poco: un solo ser vivo que hay que señalar con el dedo.
+⚠️ EXPOSICIÓN DECLARADA: la lectura NO la derivé yo. La rúbrica `v1` nombra «vida» textualmente en el escalón 1 («*vida* es seres vivos antes que viveza de color»), así que el instrumento fijó el eje. Es el estrato **pre-juzgado** de `la evaluación § Acuerdo`."
+5b6cba32126fed61,v1,ia-incremental,c01-ambiguo,aic:57163,2,"La original no muestra ningún ser vivo; esta muestra varios y legibles: una carreta tirada por caballos con figuras cruzando el puente, dos figuras chicas en el primer plano a la izquierda y pájaros en el cielo. El eje se movió claramente."
+5b6cba32126fed61,v1,ia-incremental,c01-visual,aic:59002,0,"Una propiedad (paso 1): más cálida que la original. La original es un paisaje de verdes y grises fríos; esta es un crepúsculo azul plateado, **igual de fría o más**. Es un paisaje del mismo registro tonal que acompaña a la imagen y **no se movió en la dirección pedida**: es el 0 del 🔑 del grado 0, no una duda."
+5b6cba32126fed61,v1,ia-incremental,c02-conceptual,aic:198906,1,"Dos propiedades (paso 1): tema = escena de agua, y cultura = China. El tema está —son dos biombos de paisaje fluvial, con agua, bruma y una cascada—, pero la ficha dice `cultura = Japan` y lo pedido es China. Media propiedad → 1. ⚠️ Usé el título (*Eight Views of the Xiao and Xiang Rivers*) para confirmar que el agua es el asunto y no un fondo, y la rúbrica manda decirlo."
+5b6cba32126fed61,v1,ia-incremental,c03-conceptual,aic:12891,2,"Dos propiedades: tema = interior arquitectónico, cultura = Italia. Las dos están: la obra transcurre **adentro** de una iglesia y la arquitectura ocupa la mitad superior del cuadro —columnata, arquería absidal, cúpula, columna exenta y altar, todo señalable—, y la ficha dice `cultura = Italy`. El tema lo **nombra** el pedido, así que no se hereda de la imagen original."
+5b6cba32126fed61,v1,ia-incremental,c03-conceptual,cma:146167,1,"La cultura está (`Italy`); el tema no: el fondo es un espacio oscuro indeterminado con una masa de mampostería a la izquierda y un piso embaldosado, y no se lee un interior arquitectónico. Media propiedad → 1, el caso canónico."
+5b6cba32126fed61,v1,ia-incremental,c03-conceptual,cma:144303,1,"La cultura está (`Italy`); el tema no: el cobertizo de la natividad está abierto y el fondo es cielo, nubes y colinas — es una escena **al aire libre** bajo un techo parcial, no un interior arquitectónico. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c03-conceptual,aic:25774,1,"La cultura está (`Italy`); el tema no: es una tabla de fondo de oro, sin espacio arquitectónico ninguno —el trono tiene columnillas pero el fondo es oro bruñido—. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c03-visual,aic:12891,1,"Dos propiedades: que sea un interior, y que esté en tonos más fríos que la original. La primera está (interior de iglesia). La segunda no claramente: la original es un interior de **luz dorada cálida**, y esta es oscura y **parda** —tenebrista, con sólo notas frías sueltas (el cielo gris azulado del ábside, un manto azul, las armaduras)—. Es más oscura, no más fría. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c04-ambiguo,cma:159734,0,"LECTURA · c04-ambiguo · «más ordenado» · ESCALÓN 3
+EJE: densidad — cuántos elementos distintos hay que contar en el plano y cuánto se superponen entre sí
+MÁS: la obra muestra menos elementos y menos superposición que la original, que ya es muy despojada (6 barras negras, campos planos y un bloque rojo, sin una sola superposición)
+DESCARTADA: «más regularidad/alineación» (eje: alineación), descartada por el escalón 3 — una retícula ortogonal de Mondrian **ya está en el extremo** de ese eje y «más ordenado» no le pediría nada a la obra recuperada, con lo cual el sistema cobraría por devolver parecidas
+|| Biombo de gansos, cañas y agua: hay mucho papel vacío, pero también **más cosas que contar** que en la original —unos nueve gansos, un cañaveral, las ondas del agua, las bandas de bruma— y los gansos **se superponen entre sí**, donde la original no tiene ni una superposición. El eje no se movió en la dirección pedida."
+5b6cba32126fed61,v1,ia-incremental,c04-ambiguo,cma:150074,0,Un biombo de ocho hojas con decenas de picos de tinta encimados sobre bandas de oro y plata — el propio título cuenta setenta y dos. Muchísimos más elementos y muchísima más superposición que la original. Va en la dirección contraria.
+5b6cba32126fed61,v1,ia-incremental,c04-ambiguo,cma:159736,0,"El otro biombo del par: muy despojado en superficie cubierta, pero el eje declarado es cuántos elementos hay y cuánto se pisan — y acá hay siete u ocho gansos que **se superponen**, más ondas y bruma, contra una original sin una sola superposición. El eje no se movió."
+5b6cba32126fed61,v1,ia-incremental,c04-conceptual,cma:154752,1,"Dos propiedades: composición geométrica, y cultura de la India. La cultura está (`Northern India`); la geometría no: es una escena narrativa de bosque dentro de un óvalo, con orla floral. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c04-conceptual,cma:170781,1,La cultura está (`India`); la geometría no: es una escena de figuras —en parte dibujo sin terminar— con orla floral. Media propiedad → 1.
+5b6cba32126fed61,v1,ia-incremental,c04-visual,cma:146023,1,"Dos propiedades, y la rúbrica cuenta este pedido como ejemplo de las dos. Los tonos tierra están: la original es de grises, blancos y un rojo saturado, y esta es de pardos, ocres y verdes oliva. La composición geométrica no: es un paisaje de árboles. Media propiedad → 1. ⚠️ Es del **mismo artista** que la imagen original, y eso no la rescata ni la hunde: lo que la deja en 1 es que una de las dos propiedades nombradas está de verdad."
+5b6cba32126fed61,v1,ia-incremental,c04-visual,cma:153339,0,"Ninguna de las dos. No es geométrica (es un paisaje invernal), y el pardo que se ve **es el tono de la seda**, no una paleta elegida: la rúbrica dice que una propiedad del soporte no es una propiedad de lo pintado —*un fondo de oro bruñido no es «tonos tierra»*—. Sin esa salida, no queda ninguna propiedad."
+5b6cba32126fed61,v1,ia-incremental,c05-ambiguo,cma:128365,0,"LECTURA · c05-ambiguo · «más cercano» · ESCALÓN 1
+EJE: encuadre — qué fracción del cuadro ocupa la figura y cuánto del cuerpo entra
+MÁS: la obra muestra al sujeto más de cerca que la original, que es un busto en el que la cabeza con la cofia ocupa cerca de la mitad de la altura
+DESCARTADA: «más íntimo / más cercano afectivamente», descartada por el escalón 1 (es la lectura figurada)
+|| Es otro busto de mujer en óvalo fingido sobre fondo oscuro, y la cabeza ocupa **menos** altura del cuadro que en la original: el encuadre no se cerró, se abrió un poco. Mismo género, mismo registro de paleta y el eje sin mover: es el 🔑 del grado 0, no una duda.
+⚠️ EXPOSICIÓN DECLARADA: la lectura NO la derivé yo. La rúbrica `v1` nombra «cercano» textualmente en el escalón 1 («*cercano* es distancia antes que intimidad»). Estrato **pre-juzgado** de `la evaluación § Acuerdo`."
+5b6cba32126fed61,v1,ia-incremental,c05-ambiguo,aic:40599,0,"Retrato de tres cuartos de una mujer **sentada**, con la silla y las manos adentro del cuadro: el encuadre es mucho más abierto que el busto de la original. Va en la dirección contraria."
+5b6cba32126fed61,v1,ia-incremental,c05-conceptual,aic:40599,1,"Dos propiedades: retrato de mujer, y cultura francesa. El tema está —es un retrato de mujer—; la cultura no: la ficha dice `Netherlands`. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c05-visual,cma:128365,1,"Dos propiedades: que sea el mismo tipo de retrato, y que la paleta sea más luminosa que la original. La primera está (busto de mujer en óvalo). La segunda está **pero poco**: el fondo de la original es casi negro y el de esta es un gris pardo medio, y el rostro está más iluminado, pero el registro general sigue siendo oscuro. Me quedé dudando entre 2 y 1, así que por desempate va 1."
+5b6cba32126fed61,v1,ia-incremental,c06-visual,cma:122350,0,"Dos propiedades: un rostro, y colores más apagados que la original. Ninguna. No es un rostro: es un friso de cassone con un cortejo de decenas de figuras a caballo, una ciudad y un mar. Y los colores van **al revés** —azules, verdes, rojos y oro saturados contra los ocres y grises apagados del retrato de El Fayum—."
+5b6cba32126fed61,v1,ia-incremental,c07-ambiguo,cma:688675,1,"LECTURA · c07-ambiguo · «más austero» · ESCALÓN 4
+EJE: color — cuánta saturación y cuánta variedad cromática muestra la obra
+MÁS: la obra es menos saturada y de menos colores distintos que la original, que tiene campos planos de verde, rojo, azul y oro sobre seda
+DESCARTADA: «menos ornamento» (eje: ornamento), descartada por el escalón 4 — las dos sobrevivieron al 1, al 2 y al 3, y `color` va antes que `ornamento` alfabéticamente. El escalón 4 desempata, no decide, y por eso queda declarado
+|| Rollo budista coreano: el conjunto lee mucho menos saturado que la original —fondo oscurecido, casi sin campos de color pleno—, pero la **variedad** cromática es parecida (oro, rojo, verde, azul siguen estando, en el manto). O sea que la mitad del eje se movió y la otra no. Dudo entre 2 y 1 y la regla manda 1."
+5b6cba32126fed61,v1,ia-incremental,c07-conceptual,cma:139746,1,"Dos propiedades: retrato de monje o sabio, y cultura china. La cultura está (`China`); el tema no: es un rollo horizontal de bambúes, rocas y orquídeas con colofones, sin ninguna figura. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c08-ambiguo,cma:314457,0,"LECTURA · c08-ambiguo · «más caótico» · ESCALÓN 1
+EJE: desorden — cuántas figuras y objetos hay, cuánto se superponen y en cuántas direcciones distintas van
+MÁS: la obra tiene más figuras y objetos, más superposición y más direcciones de movimiento que la original, que ya es un entrevero de unas diez figuras con armas cruzadas y un león en salto
+DESCARTADA: «de factura más suelta o descontrolada», descartada por el escalón 1 (es figurada — la rúbrica descarta esa misma lectura en su ejemplo de «más abierto»); y «más turbulento de ánimo», que además pediría atribuir una intención
+|| Son más jinetes que figuras tiene la original —unos quince—, pero **en formación**: dos filas que convergen, todas las monturas en el mismo par de direcciones, sobre un fondo verde liso. Sube la cuenta y **baja el desorden**, que es la parte que decide el eje: un desfile ceremonial es menos caótico que una batalla. Va en la dirección contraria."
+5b6cba32126fed61,v1,ia-incremental,c08-ambiguo,cma:146184,2,"La original es una batalla de unas diez figuras con armas cruzadas; esta es una página mogol de batalla con **decenas** de guerreros y caballos encimados en diagonal, lanzas y flechas en todas las direcciones, caídos, una fortaleza y rocas. Más figuras, más superposición y más direcciones: el eje se movió claramente."
+5b6cba32126fed61,v1,ia-incremental,c08-conceptual,cma:125580,1,"Dos propiedades: escena de batalla, y cultura francesa. El tema está (es un asedio con combate al pie de la muralla); la cultura no: la ficha dice `Mughal India`. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c08-conceptual,aic:867,0,"Ninguna de las dos. No es una batalla: es un cuerpo de guardia con armaduras, un tambor y una bandera en el suelo y un muchacho — no hay combate. Y la ficha dice `Flanders`, no Francia."
+5b6cba32126fed61,v1,ia-incremental,c08-visual,cma:314450,1,"Dos propiedades: la misma escena, y colores más apagados que la original. La segunda está: la original es de verde intenso con rojos y amarillos saturados, y esta reparte verde oliva, rosa pálido y cremas en las áreas grandes. La primera sólo en parte: es una **cacería** multitudinaria con tigres y jabalíes, no una batalla. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c10-conceptual,cma:314457,1,"Dos propiedades: escena con jinetes, y arte mogol. Los jinetes están y son el asunto entero de la obra; la cultura no: la ficha dice `Northwestern India` y el conjunto pedido es sólo `Mughal India`. Media propiedad → 1."
+5b6cba32126fed61,v1,ia-incremental,c10-visual,cma:134620,2,"Dos propiedades: la misma escena, y una paleta más oscura. Las dos. La original es una escena narrativa religiosa con un caballo blanco y un jinete, sobre un cielo **azul luminoso**; esta es también una escena narrativa religiosa con caballo blanco y jinetes, y está en pardos oscuros con el cielo tormentoso y las figuras en sombra: claramente más oscura que la original."
+5b6cba32126fed61,v1,ia-incremental,c10-visual,cma:107358,0,"El jinete está, pero la paleta va **al revés**: la original es de azul saturado y caballo blanco a plena luz, y esta es un dibujo sin terminar sobre papel crema casi vacío — es mucho **más clara**, no más oscura. La mitad que se ve ya falla en la dirección contraria."
