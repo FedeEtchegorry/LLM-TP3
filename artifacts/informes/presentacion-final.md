@@ -177,9 +177,15 @@ top-5 con **grado 2**— va **0,200 → 0,560**, que es **2,8×**. **`QS` 0,419 
 pasa de cambiar poco el resultado según el pedido a cambiarlo casi todo **sin perder precisión**,
 que es la **única** combinación que nuestro plan de métricas declara buena — `QS` alta sola no
 significa nada, un sistema **aleatorio** tiene `QS ≈ 1`.
-**Y el costo de v2 está medido y no es chico:** p95 **15,3 s → 65,3 s** y tokens de entrada por
-consulta **3.722 → 59.395**, porque `C4` paga **20 llamadas de reranking con imagen** por consulta.
-**La columna de dólares dice *ausente*, no cero** — y eso es una decisión, no un olvido: D-15.
+**Y el costo de v2 está medido y no es chico:** p95 **15,3 s → 65,3 s**, tokens de entrada por
+consulta **3.722 → 61.733** y **USD/consulta 0,0029 → 0,0277 — 9,6×**, porque `C4` paga **20
+llamadas de reranking con imagen** por consulta. **El `nDCG@5` se duplica y el precio se multiplica
+por diez: las dos cifras van juntas.**
+🔑 **La columna de dólares decía *ausente* y desde el 2026-11-03 tiene número, sin re-correr una
+sola consulta** — los tokens ya estaban medidos en los libros mayores de las 1.151 corridas; lo
+único que faltaba era **leer el precio de lista con su fecha y su URL**, que es lo que la decisión
+D-15 había dejado pendiente. Y al derivarlo apareció un error nuestro: **`C2`–`C4` publicaban una
+llamada de menos por consulta** porque un plan reusado no paga el planificador (el reuso del plan al barrer el peso de fusión).
 🔗 `tabla-a2-m13.json` → `tabla_a_completa`, `columnas_sin_ground_truth`
 
 ### D-9 · 🔴 El orden de la tabla **CAMBIA**, y publicamos los dos · 2 min
@@ -366,10 +372,16 @@ dólares.** *El precio por request no es el precio.*
 texto 1.896 · generador 1.043 · juez ~391 · planificador 63 — contadas del libro mayor de cada
 artefacto y publicadas como **cota inferior**, porque la verdad de facturación la dice el dashboard
 y **las dos no se promedian**.
-**Y por eso la columna de dólares de D-8 dice *ausente*:** la configuración declara el precio de un
-solo modelo, y **un modelo sin precio da ausente, nunca cero**. Tampoco lo tomamos del dashboard de
-trazas, que lo calcularía con **su propia** tabla de precios: serían **dos cifras del mismo número,
-y la segunda se actualiza sola**.
+🔑 **Y el 2026-11-03 cerramos el modelo por token, que es lo que esta sección venía pidiendo.**
+Derivar el gasto de **todos** los artefactos a precio de lista da **USD 12,43** contra los
+**10,0654** facturados — **el proxy factura un 19 % por debajo de lista** (base: lista; al revés
+son 23 %) — **y confirma la atribución**: el juez da **4,67 de entrada**
+contra los *~4,4* que estimamos a mano—. **Las dos cifras no se promedian:** la facturación la dice
+el dashboard, la derivada es la única que **atribuye por rol**. La hipótesis de la brecha es el
+**descuento por entrada cacheada** (0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el
+mismo prompt 20 veces por consulta) y **la publicamos como hipótesis**: guardamos `prompt_tokens`,
+no `cached_tokens`. Tampoco lo tomamos del dashboard de trazas, que lo calcularía con **su propia**
+tabla de precios: serían **dos cifras del mismo número, y la segunda se actualiza sola**.
 **La lección de producción, que es la que vale fuera de este TP:** en un ambiente compartido con
 tope duro, el presupuesto se modela **por token y por rol**, y el rol que repite el prompt largo
 **N veces por consulta** es el que se lo come. **Decidimos no pedir que nos suban el tope:** lo
@@ -526,8 +538,8 @@ diapositiva que lo cuenta.
 | *"¿Por qué sacaron `style` del output?"* | CMA no lo publica y en AIC está en el 78 %: existiría en **1 de cada 4** obras. **Y medimos que no es un campo de estilo consistente**: lo que separa el espacio son `Himalayan` 0,86 y `Japanese` 0,71, que **no son estilos**; `Renaissance` 0,24 no separa nada. **Es un desvío no consultado** | anexo `§B` |
 | *"¿El corpus no eran 10.000 obras?"* | **10.000 prometidas → ~5.900 al consultar → 2.605 hoy**, y el motivo de cada salto está medido. El recorte **de tipo** está aceptado; **la magnitud la informamos nosotros** | encuadre del informe |
 | *"¿Por qué no filtran por metadata en los pedidos culturales?"* | **Porque de eso se encarga la rama de texto, y está medido**: cobertura cultural 0,60 → 2,60 → 4,50 de 5 | D-6, D-11 |
+| *"¿Cuánto costó?"* | **Tokens y llamadas: medidos, por rol. Dólares: derivados, con el precio declarado al lado.`C1` 0,0029 → `C4` 0,0277 USD/consulta (9,6×)**, y el total derivado de los artefactos a precio de lista da **USD 12,43** contra los **10,0654** que facturó el dashboard. 🔑 **Las dos conviven y no se promedian**: la de facturación la dice el proxy, la derivada es la única que se puede **atribuir por rol** —y dice que el juez (4,77) y el reranker (4,71) son el 76 % del gasto—. El proxy factura un **19 % por debajo de lista** (base: lista) y la hipótesis es el **descuento por entrada cacheada**, y **no la podemos verificar**: guardamos `prompt_tokens`, no `cached_tokens` | D-15, `§5.4` |
 | 🔑 *"¿Cómo comparan un resultado de texto con uno de imagen?"* | **No los comparamos: lo único que rankeamos son obras**, y cada obra tiene imagen y texto. Las dos ramas producen **rankings del mismo universo** y se fusionan con **RRF, que usa solo rangos** — justamente porque un coseno de CLIP y uno de `text-embedding-3-small` no son calibrables. Donde **sí** mezclamos modalidades es adentro de CLIP (`α·e_img + (1−α)·e_txt`), y ahí se normaliza antes y después. ⚠️ **La alternativa en cascada la evaluamos y perdería**: la intersección de las dos ramas es **3,97 de 65,1**, en **19 de 30 consultas no junta 5 candidatas**, y dejaría afuera el **23,3 %** del top-5 de v2 | `§2.3` |
-| *"¿Cuánto costó?"* | **Tokens y llamadas, medidos y por rol. Dólares: ausente**, porque el precio del modelo de chat no está declarado y el proxy no deja leer tarifas | D-15 |
 | 🔑 *"¿Y cómo saben que las explicaciones no mienten?"* | **Dos mitades, y no se promedian.** La automática: **0 referencias colgadas** y **100 % de cita byte a byte** en las 150 obras de cada fila. La fina: **25 explicaciones y 51 afirmaciones revisadas una por una** — clasificación **39/51**, la cita se sostiene **20/27**, la observación es defendible **12/16**. **Y el resultado que importa es cualitativo:** la regla de que un dato lleva referencia tiene dos tipos y el generador produce **tres clases**. 🔴 **Y de las 7 afirmaciones que no llegan a *sostiene*, 2 son defecto del DATO y no del modelo: el 14,2 % del corpus (370 de 2.605 obras) comparte su `description` con otra**, porque el museo publica una descripción por álbum y la cuelga de cada hoja | D-16b, `ejercicio-4.md §5.5` |
 | *"¿Y las 25 las anotó una persona?"* | **No: IA, igual que los 379 juicios.** Nuestro criterio decía *"muestra humana"*, así que **la letra no se cumple** y lo decimos. Lo que sí tiene distinto del κ: acá el juicio es **contra un fragmento en disco y una imagen en disco**, no contra una convención de la rúbrica | D-16b, `§F` del anexo |
 | 🔑 *"Y el chunking ciego, ¿además **recupera** peor?"* | 🔴 **Lo medimos y la respuesta es un NO-resultado, que es lo que hay que contestar.** Extendimos el ground truth por **pooling incremental** (31 juicios nuevos) y el **`Δ` contra `C3` cambia de signo** según la población: **−0,0405** sobre el consenso completo y **+0,0035 / +0,0050** sobre el restringido. **Así que no podemos afirmar que empeore el retrieval, ni que no lo empeore.** 🔑 **Y el confundidor vale más que la tabla:** los 31 juicios nuevos **no pasaron por el filtro de acuerdo/desempate** —no hay con quién acordar cuando el anotador es uno— así que **sobreviven a la restricción por construcción**, y la fila restringida **favorece estructuralmente al brazo que trajo ítems nuevos**. ⚠️ **Lo que sí está medido es que el eje mueve el top-5: churn 1,567 de 5 contra 0,267 del eje de campos, 5,9×.** Y una decisión de método que sale de ahí: **el `IDCG` se computa sobre la población del ground truth, así que extender el pool mueve el baseline** — `C3` recomputada da **0,5308** contra el **0,535** de D-8, **y las dos son correctas con bases distintas** | `ejercicio-4.md §5.3b` |

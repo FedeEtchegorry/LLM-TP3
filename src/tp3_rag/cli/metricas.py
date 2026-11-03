@@ -243,7 +243,11 @@ def _costo(args, cfg, almacén, obs) -> int:
             f"otros `config_id`). El costo lo **emite el pipeline** (el dataset documentado y reproducible, los tokens en el artefacto de corrida): sale del "
             f"`usage` que devolvió la API y está adentro de cada corrida."
         )
-    costos = met.costo_por_configuracion(corridas)
+    costos = met.costo_por_configuracion(
+        corridas,
+        precios_in=cfg.get("proveedor.precio_usd_por_millon_de_tokens") or {},
+        precios_out=cfg.get("proveedor.precio_usd_por_millon_de_tokens_de_salida") or {},
+    )
     obs.decir(
         f"\n{LÍNEA}\nla tabla de tokens, costo y la figura · el costo **medido**, por configuración (los tokens en el artefacto de corrida)\n{LÍNEA}\n"
     )
@@ -283,11 +287,34 @@ def _costo(args, cfg, almacén, obs) -> int:
             f"{(c.tokens_in // c.n_corridas if c.n_corridas else 0):>13}"
         )
     obs.decir(
-        "\n  ⚠️ **En tokens y no en USD, y no es una omisión**:\n"
-        "  `[proveedor]` declara el precio de `openai/text-embedding-3-small` y de ningún\n"
-        "  otro modelo, y *un modelo sin precio da **ausente**, no cero*. El día que alguien\n"
-        "  lea el precio de `gpt-4.1-mini` **con su fecha y su URL**, se anota ahí y esta\n"
-        "  tabla publica USD sin tocar nada más."
+        f"\n  🔴 el reuso del plan al barrer el peso de fusión · lo mismo **por consulta servida** —con el plan adentro—, que es "
+        f"la\n columna de la tabla de la tabla de ablación. Difiere de la de arriba cuando hay planes "
+        f"reusados:\n\n"
+        f"  {'config':<8}{'n':>4}{'llam/cons':>11}{'in/consulta':>13}"
+        f"{'planes reus.':>14}{'USD/consulta':>14}"
+    )
+    for c in costos:
+        usd = c.usd_por_consulta
+        obs.decir(
+            f"  {c.configuracion:<8}{c.n_corridas:>4}"
+            f"{(c.llamadas_al_llm_con_el_plan / c.n_corridas if c.n_corridas else 0):>11.2f}"
+            f"{str(c.tokens_in_por_consulta_con_el_plan or '—'):>13}"
+            f"{c.planes_reusados:>14}"
+            f"{(f'{usd:.4f}' if usd is not None else 'ausente'):>14}"
+        )
+    obs.decir(
+        "\n  🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.**\n"
+        "  Precio de lista de OpenAI leído el **2026-11-03** en\n"
+        "  `https://developers.openai.com/api/docs/pricing` — **no** es la tarifa del proxy\n"
+        "  de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys).\n"
+        "  *Un modelo sin precio da **ausente**, no cero* sigue vigente.\n"
+        "  ⚠️ **Dos cifras del gasto total, y no se promedian**: derivar de los\n"
+        "  artefactos a precio de lista da **USD 12,43** y el dashboard facturó **10,0654**.\n"
+        "  El proxy factura un **19 % por debajo de lista** (base: lista; al revés son 23 %),\n"
+        "  y la hipótesis es el descuento por **entrada cacheada** (0,10 contra 0,40\n"
+        "  en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta);\n"
+        "  **no es verificable con nuestros artefactos**: el libro mayor guarda\n"
+        "  `prompt_tokens` y no `cached_tokens`."
     )
     for c in costos:
         if not c.por_rol.get("reranker"):
@@ -1063,7 +1090,7 @@ def _filas_de_la_tabla(cfg, almacén, obs):
         salida[fila] = tuple(sorted(reparto.agregan, key=lambda c: c.consulta_id))
     return salida, lectura, repartos
 
-def _columnas_sin_ground_truth(corridas, *, imagen_de):
+def _columnas_sin_ground_truth(corridas, *, imagen_de, precios_in=None, precios_out=None):
     por_imagen = met.qs_por_imagen(corridas, imagen_de=imagen_de)
     definidas = [v for v in por_imagen.values() if v is not None]
     latencias = [
@@ -1079,6 +1106,18 @@ def _columnas_sin_ground_truth(corridas, *, imagen_de):
             tokens_out += int(valores.get("tokens_out", 0) or 0)
             if rol in ROLES_DEL_LLM:
                 llamadas += int(valores.get("n_llamadas", 0) or 0)
+    costos = met.costo_por_configuracion(
+        corridas, precios_in=precios_in or {}, precios_out=precios_out or {}
+    )
+    if len(costos) != 1:
+        raise ErrorDelProyecto(
+            f"una fila de la tabla de ablación tiene **{len(costos)}** etiquetas de configuración "
+            f"({[c.configuracion for c in costos]}) y el costo de la fila sería el de una "
+            f"de ellas. `corridas_de_la_tabla` filtra por `config_id`, así que llegar acá "
+            f"significa que la población de la fila no es la que la tabla declara (**modo "
+            f"de falla 3**)."
+        )
+    costo = costos[0]
     try:
         gen = met.generacion_medida(tuple(corridas))
         groundedness = {
@@ -1109,7 +1148,17 @@ def _columnas_sin_ground_truth(corridas, *, imagen_de):
         "tokens_in": tokens_in,
         "tokens_out": tokens_out,
         "tokens_in_por_consulta": tokens_in // len(corridas) if corridas else None,
-        "usd_por_consulta": None,
+        "llamadas_al_llm_por_consulta_con_el_plan": (
+            round(costo.llamadas_al_llm_con_el_plan / len(corridas), 2) if corridas else None
+        ),
+        "tokens_in_por_consulta_con_el_plan": costo.tokens_in_por_consulta_con_el_plan,
+        "planes_reusados_r11": costo.planes_reusados,
+        "usd_por_consulta": (
+            round(costo.usd_por_consulta, 6) if costo.usd_por_consulta is not None else None
+        ),
+        "usd_por_rol": costo.usd_por_rol,
+        "nota_del_usd": costo.a_json()["nota_del_usd"],
+        "nota_del_plan_r11": costo.a_json()["nota_del_plan_r11"],
         "groundedness_automatica": groundedness,
     }
 
@@ -1128,7 +1177,7 @@ def _imprimir_tabla(obs, filas, columnas, *, titulo: str, nota: str) -> None:
             f"{f(fila.ndcg_sobre_todas):>8} {f(fila.ndcg_sobre_definidas):>8} "
             f"{f(fila.p5):>6} {f(fila.p5_estricta):>6} {f(fila.mrr):>6} "
             f"{f(c['qs']):>6} {f(c['latencia_p95_s'], 1):>7} "
-            f"{'ausente':>7} {fila.pct_sin_grado:>5.1f}%"
+            f"{f(c['usd_por_consulta'], 4):>7} {fila.pct_sin_grado:>5.1f}%"
         )
     obs.decir(f"\n{nota}")
 
@@ -1179,7 +1228,13 @@ def _tabla(args, cfg, almacén, set_, obs) -> int:  # noqa: C901 - es *la* tabla
     )
 
     columnas = {
-        nombre: _columnas_sin_ground_truth(corridas, imagen_de=imagen.get)
+        nombre: _columnas_sin_ground_truth(
+            corridas,
+            imagen_de=imagen.get,
+            precios_in=cfg.get("proveedor.precio_usd_por_millon_de_tokens") or {},
+            precios_out=cfg.get("proveedor.precio_usd_por_millon_de_tokens_de_salida")
+            or {},
+        )
         for nombre, corridas in por_fila.items()
     }
 
@@ -1423,6 +1478,8 @@ def _columnas_5_a_7(obs, columnas) -> None:
     for nombre, c in sorted(columnas.items()):
         g = c["groundedness_automatica"] or {}
         pct = g.get("pct_byte_a_byte")
+        usd = c["usd_por_consulta"]
+        usd_txt = f"{usd:.4f}" if usd is not None else "ausente"
         obs.decir(
             f"  {nombre:<6} {g.get('n_referencias', 0):>5} "
             f"{g.get('n_colgadas', 0):>9} "
@@ -1430,8 +1487,9 @@ def _columnas_5_a_7(obs, columnas) -> None:
             f"{g.get('n_abstenciones', 0):>5} "
             f"{g.get('n_afirmaciones_descartadas_por_sa5', 0):>5} "
             f"{c['latencia_p50_s']:>7} {c['latencia_p95_s']:>7} "
-            f"{c['llamadas_al_llm_por_consulta']:>7} {c['tokens_in_por_consulta']:>9} "
-            f"{'ausente':>8}"
+            f"{c['llamadas_al_llm_por_consulta_con_el_plan']:>7} "
+            f"{c['tokens_in_por_consulta_con_el_plan']:>9} "
+            f"{usd_txt:>8}"
         )
     obs.decir(
         "\n  🔴 **La columna *groundedness* de la tabla de ablación está publicada A MEDIAS, y va dicho.**\n"
@@ -1446,20 +1504,29 @@ def _columnas_5_a_7(obs, columnas) -> None:
         "    afirmación **mal formada** no tiene `ref` y no tiene dónde contarse.\n"
         "    Lo nuevo entra **al lado**, no renombrando esa clave (ocho tests la\n"
         "    afirman y el pool está construido encima).\n"
-        "\n  🔴 **`USD/consulta` sale `ausente` en las cinco filas, y no es una omisión.**\n"
-        "    `[proveedor]` declara el precio de **un** modelo —`text-embedding-3-small`— y\n"
-        "    los tres roles de chat no tienen precio declarado: *un modelo sin precio da\n"
-        "    ausente, no cero. No se inventa ni se copia de la tabla de\n"
-        "    LangSmith**: decidió no agregar `ls_model_name` justamente para no tener\n"
-        "    **dos cifras de costo con dos procedencias**, y la segunda **se actualiza sola\n"
-        "    cuando el proveedor cambia precios**. El día que alguien lea el precio con su\n"
-        "    fecha y su URL se anota en `[proveedor]` y en ningún otro lado.\n"
-        "    Lo **medido** son los tokens y las llamadas, y están en la tabla.\n"
-        "\n  ⚠️ **`llam/q` son llamadas PAGADAS, no nominales**: el criterio de costo compromete\n"
-        "    `C0 = 0 · C1 = 1 · C2 = C3 = 2 · C4 = 2 + N` como conteo **nominal de la\n"
-        "    cadena**, y el reintento lo rompe literalmente — C1 pagó **31** sobre\n"
-        "    30 consultas. **Las dos cifras se publican**, y `2 + N` es además **cota\n"
-        "    superior**: el reranker puntúa `min(N, |fusionado|)`.\n"
+        "\n  🔴 **`USD/consulta` ya NO sale ausente — se leyó el precio el 2026-11-03.**\n"
+        "     dejó la condición escrita —*el día que alguien lea el precio con su\n"
+        "    fecha y su URL se anota en `[proveedor]` y en ningún otro lado*— y se cumplió:\n"
+        "    `https://developers.openai.com/api/docs/pricing`, leída el 2026-11-03.\n"
+        "    **No hizo falta re-correr nada**: los tokens ya estaban medidos en los libros\n"
+        "    mayores. La regla sigue intacta: *un modelo sin precio da **ausente**, no cero*.\n"
+        "    ⚠️ **Sigue sin copiarse de LangSmith**: el precio se declara acá, donde\n"
+        "    viaja adentro de la corrida como procedencia, en vez de en una tabla del\n"
+        "    servicio **que se actualiza sola cuando el proveedor cambia precios**.\n"
+        "    ⚠️ **Y es DERIVADO de un precio de lista, no de la tarifa del proxy**, que nadie\n"
+        "    puede leer. Derivar el total da **USD 12,43** contra los **10,0654** que facturó\n"
+        "    el dashboard: **las dos conviven y no se promedian**.\n"
+        "\n  🔴 **`llam/q` y `tok in/q` llevan el plan adentro desde el 2026-11-03 (el reuso del plan al barrer el peso de fusión).**\n"
+        "    Un plan **reusado** no paga el planificador —cinco brazos de un barrido\n"
+        "    comparten un plan—, así que leer solo el libro mayor publicaba **1,0**\n"
+        "    llamadas/consulta en `C2` cuando el criterio de costo compromete **2**, y **3.604** tokens de\n"
+        "    entrada cuando son **5.629** (un 56 % menos). El caché del plan es un artefacto\n"
+        "    de **nuestra ablación**, no de producción: una consulta de un usuario paga su\n"
+        "    planificador siempre. La lectura **pagada** sigue publicándose en la tabla de\n"
+        "    la tabla de tokens, costo y la figura, y las dos van juntas igual que en el criterio de costo.\n"
+        "    ⚠️ El reintento de sigue adentro de la pagada — C1 pagó **31** sobre 30\n"
+        "    consultas — y `2 + N` sigue siendo **cota superior**: el reranker puntúa\n"
+        "    `min(N, |fusionado|)`.\n"
         "    🔑 **Y los embeddings que el criterio de costo no cuenta y la tabla de tokens, costo y la figura sí van dichos acá**: el rol\n"
         "    `embedding_texto` **no es una llamada al LLM** y el dashboard del proxy\n"
         "    **cobra el request igual** — por eso `tp3-metricas costo` los suma y esta\n"

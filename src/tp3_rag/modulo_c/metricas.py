@@ -237,6 +237,8 @@ def config_ids_de_la_tabla(*, raiz=None) -> dict[str, str]:
         salida[fila] = cfg.config_id
     return salida
 
+ROLES_LOCALES: tuple[str, ...] = ("embedding_imagen", "indice")
+
 @dataclass(frozen=True)
 class CostoMedido:
     configuracion: str
@@ -244,6 +246,11 @@ class CostoMedido:
     n_candidatos: int | None
     por_rol: Mapping[str, Mapping[str, int]]
     por_etapa: Mapping[str, Mapping[str, int]]
+    modelo_por_rol: Mapping[str, str | None] = field(default_factory=dict)
+    precios_in: Mapping[str, float] = field(default_factory=dict)
+    precios_out: Mapping[str, float] = field(default_factory=dict)
+    plan_nominal: Mapping[str, int] = field(default_factory=dict)
+    planes_reusados: int = 0
 
     @property
     def tokens_in(self) -> int:
@@ -260,6 +267,78 @@ class CostoMedido:
         return sum(
             int(self.por_rol.get(rol, {}).get("n_llamadas", 0)) for rol in ROLES_DEL_LLM
         )
+
+    @property
+    def llamadas_al_llm_con_el_plan(self) -> int:
+        return self.llamadas_al_llm + self.planes_reusados
+
+    def _usd(self, rol: str, tokens_in: int, tokens_out: int) -> float | None:
+        if rol in ROLES_LOCALES:
+            return 0.0
+        modelo = self.modelo_por_rol.get(rol)
+        if not modelo:
+            return None
+        precio_in = self.precios_in.get(modelo)
+        if precio_in is None:
+            return None
+        precio_out = self.precios_out.get(modelo)
+        if tokens_out and precio_out is None:
+            return None
+        return tokens_in / 1e6 * float(precio_in) + tokens_out / 1e6 * float(
+            precio_out or 0.0
+        )
+
+    @property
+    def usd_por_rol(self) -> dict[str, float | None]:
+        return {
+            rol: self._usd(rol, int(d.get("tokens_in", 0)), int(d.get("tokens_out", 0)))
+            for rol, d in sorted(self.por_rol.items())
+        }
+
+    @property
+    def usd_pagado(self) -> float | None:
+        valores = self.usd_por_rol.values()
+        if any(v is None for v in valores):
+            return None
+        return sum(v for v in valores if v is not None)
+
+    @property
+    def usd_del_plan(self) -> float | None:
+        if not self.plan_nominal:
+            return 0.0
+        return self._usd(
+            "planificador",
+            int(self.plan_nominal.get("tokens_in", 0)),
+            int(self.plan_nominal.get("tokens_out", 0)),
+        )
+
+    @property
+    def usd_nominal(self) -> float | None:
+        sin_plan = {
+            rol: v for rol, v in self.usd_por_rol.items() if rol != "planificador"
+        }
+        if any(v is None for v in sin_plan.values()):
+            return None
+        plan = self.usd_del_plan
+        if plan is None:
+            return None
+        return sum(v for v in sin_plan.values() if v is not None) + plan
+
+    @property
+    def usd_por_consulta(self) -> float | None:
+        total = self.usd_nominal
+        if total is None or not self.n_corridas:
+            return None
+        return total / self.n_corridas
+
+    @property
+    def tokens_in_por_consulta_con_el_plan(self) -> int | None:
+        if not self.n_corridas:
+            return None
+        del_libro = self.tokens_in - int(
+            (self.por_rol.get("planificador") or {}).get("tokens_in", 0)
+        )
+        return (del_libro + int(self.plan_nominal.get("tokens_in", 0))) // self.n_corridas
 
     @property
     def tokens_por_llamada_del_reranker(self) -> int | None:
@@ -281,12 +360,52 @@ class CostoMedido:
             "tokens_in_por_llamada_del_reranker": self.tokens_por_llamada_del_reranker,
             "por_rol": {k: dict(v) for k, v in self.por_rol.items()},
             "por_etapa": {k: dict(v) for k, v in self.por_etapa.items()},
-            "usd": None,
+            "llamadas_al_llm_con_el_plan": self.llamadas_al_llm_con_el_plan,
+            "planes_reusados_r11": self.planes_reusados,
+            "plan_nominal": dict(self.plan_nominal),
+            "tokens_in_por_consulta_con_el_plan": self.tokens_in_por_consulta_con_el_plan,
+            "modelo_por_rol": dict(self.modelo_por_rol),
+            "usd_por_rol": self.usd_por_rol,
+            "usd_pagado": (
+                round(self.usd_pagado, 6) if self.usd_pagado is not None else None
+            ),
+            "usd_nominal": (
+                round(self.usd_nominal, 6) if self.usd_nominal is not None else None
+            ),
+            "usd_por_consulta": (
+                round(self.usd_por_consulta, 6)
+                if self.usd_por_consulta is not None
+                else None
+            ),
+            "precio_usd_por_millon_de_tokens": {
+                "entrada": dict(self.precios_in),
+                "salida": dict(self.precios_out),
+                "fuente": "https://developers.openai.com/api/docs/pricing",
+                "leido": "2026-11-03",
+            },
             "nota_del_usd": (
-                "⚠️ **USD ausente, no cero**: `[proveedor]` solo declara el "
-                "precio de `openai/text-embedding-3-small`. *El día que alguien lea el precio "
-                "de `gpt-4.1-mini` con su fecha y su URL, se anota ahí y en ningún otro "
-                "lado.* Lo que está **medido** son los tokens."
+                "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El "
+                "precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del "
+                "proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual "
+                "keys). *Un modelo sin precio da **ausente**, no cero* sigue "
+                "vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse** "
+                ": derivado de los artefactos a precio de lista da **USD 12,43** y el "
+                "dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis "
+                "—el proxy factura un **19 % por debajo de lista**, base: lista— es el "
+                "**descuento por entrada cacheada**, 0,10 contra 0,40 en "
+                "`gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, "
+                "**no verificable con nuestros artefactos**: el libro mayor guarda "
+                "`prompt_tokens` y no `cached_tokens`."
+            ),
+            "nota_del_plan_r11": (
+                "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga "
+                "la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un "
+                "plan), así que el libro mayor de `C2` tiene **cero** llamadas de "
+                "planificador. El caché del plan es un artefacto de **nuestra ablación**, no "
+                "de producción: una consulta de un usuario paga su planificador **siempre**. "
+                "Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y "
+                "resta el planificador del libro mayor, que si no se contaría dos veces en "
+                "las corridas que sí lo crearon."
             ),
         }
 
@@ -384,17 +503,43 @@ def llamadas_al_proxy(corridas_de, *, artefactos_extra: Sequence[Mapping[str, An
         ),
     }
 
-def costo_por_configuracion(corridas: Sequence[Any]) -> tuple[CostoMedido, ...]:
+def modelos_declarados_por_rol(resuelta: Mapping[str, Any]) -> dict[str, str]:
+    salida: dict[str, str] = {}
+    for rol, binding in (resuelta.get("bindings") or {}).items():
+        modelo = (binding or {}).get("modelo")
+        if modelo:
+            salida[str(rol)] = str(modelo)
+    modelo_de_texto = (resuelta.get("embebido_texto") or {}).get("modelo")
+    if modelo_de_texto:
+        salida["embedding_texto"] = str(modelo_de_texto)
+    return salida
+
+def costo_por_configuracion(
+    corridas: Sequence[Any],
+    *,
+    precios_in: Mapping[str, float] | None = None,
+    precios_out: Mapping[str, float] | None = None,
+) -> tuple[CostoMedido, ...]:
     acumulado: dict[str, dict] = {}
     for corrida in corridas:
         etiqueta = (corrida.contenido.get("pipeline") or {}).get("configuracion", "?")
         d = acumulado.setdefault(
             etiqueta,
-            {"n": 0, "n_candidatos": None, "por_rol": {}, "por_etapa": {}},
+            {
+                "n": 0,
+                "n_candidatos": None,
+                "por_rol": {},
+                "por_etapa": {},
+                "modelos": {},
+                "plan": {"n_llamadas": 0, "tokens_in": 0, "tokens_out": 0},
+                "reusados": 0,
+            },
         )
         d["n"] += 1
         resuelta = corrida.contenido.get("configuracion_resuelta") or {}
         d["n_candidatos"] = (resuelta.get("consulta") or {}).get("n_candidatos")
+        for rol, modelo in modelos_declarados_por_rol(resuelta).items():
+            d["modelos"].setdefault(rol, set()).add(modelo)
         for clave, destino in (
             ("libro_mayor", "por_rol"),
             ("libro_mayor_por_etapa", "por_etapa"),
@@ -405,6 +550,14 @@ def costo_por_configuracion(corridas: Sequence[Any]) -> tuple[CostoMedido, ...]:
                 )
                 for campo in acum:
                     acum[campo] += int(valores.get(campo, 0) or 0)
+        plan = (corrida.estado or {}).get("plan") or {}
+        if plan:
+            uso = plan.get("uso") or {}
+            d["plan"]["n_llamadas"] += 1
+            d["plan"]["tokens_in"] += int(uso.get("tokens_in", 0) or 0)
+            d["plan"]["tokens_out"] += int(uso.get("tokens_out", 0) or 0)
+            if plan.get("reusado"):
+                d["reusados"] += 1
     return tuple(
         CostoMedido(
             configuracion=etiqueta,
@@ -412,6 +565,14 @@ def costo_por_configuracion(corridas: Sequence[Any]) -> tuple[CostoMedido, ...]:
             n_candidatos=d["n_candidatos"],
             por_rol={k: v for k, v in sorted(d["por_rol"].items())},
             por_etapa={k: v for k, v in sorted(d["por_etapa"].items())},
+            modelo_por_rol={
+                rol: (next(iter(ms)) if len(ms) == 1 else None)
+                for rol, ms in sorted(d["modelos"].items())
+            },
+            precios_in=dict(precios_in or {}),
+            precios_out=dict(precios_out or {}),
+            plan_nominal=dict(d["plan"]),
+            planes_reusados=d["reusados"],
         )
         for etiqueta, d in sorted(acumulado.items())
     )

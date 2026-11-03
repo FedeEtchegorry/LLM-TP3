@@ -275,8 +275,6 @@ puede funcionar — y dice que no.
 
 ---
 
----
-
 ## 3. La configuración antes y después
 
 ### 3.1 La cadena de etapas — es lo único que cambia entre las cinco filas
@@ -341,31 +339,80 @@ y las tablas de este informe publican **3, redondeando el 5 hacia arriba**. Impo
 calculan sobre los 4 decimales del artefacto**, no sobre los 3 publicados.
 
 | Config | `nDCG@5` | `(def)` | `P@5` | `P@5` estricta | `MRR` | `QS` | p50 s | p95 s | llam. LLM / consulta | tokens in / consulta | USD / consulta |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| `C0` solo visual | 0,386 | 0,399 | 0,460 | 0,213 | 0,605 | **0,000** | 0,43 | 2,19 | 0,0 | 0 | **ausente** |
-| **`C1` = v1** | 0,372 | 0,385 | 0,487 | 0,200 | 0,592 | 0,419 | 10,58 | 15,29 | 1,03 | 3.722 | **ausente** |
-| `C2` + pre-retrieval | 0,498 | 0,515 | 0,607 | 0,287 | 0,684 | 0,426 | 9,57 | 19,78 | 1,0 | 3.604 | **ausente** |
-| `C3` + texto + RRF | 0,535 | 0,553 | 0,593 | 0,320 | 0,758 | 0,727 | 10,94 | 21,37 | 1,0 | 3.639 | **ausente** |
-| **`C4` = v2** | **0,743** | **0,769** | **0,733** | **0,560** | **0,867** | **0,900** | 49,44 | 65,34 | 21,0 | 59.395 | **ausente** |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `C0` solo visual | 0,386 | 0,399 | 0,460 | 0,213 | 0,605 | **0,000** | 0,43 | 2,19 | 0,0 | 0 | **0,0000** |
+| **`C1` = v1** | 0,372 | 0,385 | 0,487 | 0,200 | 0,592 | 0,419 | 10,58 | 15,29 | 1,03 | 3.722 | **0,0029** |
+| `C2` + pre-retrieval | 0,498 | 0,515 | 0,607 | 0,287 | 0,684 | 0,426 | 9,57 | 19,78 | 2,0 | 5.942 | **0,0038** |
+| `C3` + texto + RRF | 0,535 | 0,553 | 0,593 | 0,320 | 0,758 | 0,727 | 10,94 | 21,37 | 2,0 | 5.977 | **0,0038** |
+| **`C4` = v2** | **0,743** | **0,769** | **0,733** | **0,560** | **0,867** | **0,900** | 49,44 | 65,34 | 22,0 | 61.733 | **0,0277** |
 
 **El titular v1 → v2: `nDCG@5` 0,372 → 0,743, un delta de +0,371 — se duplica.** `P@5` estricta
 —la fracción del top-5 con grado 2, la vara dura— va **0,200 → 0,560**, que es **2,8×**.
 Y `QS` 0,419 → 0,900: el sistema pasa de cambiar poco el resultado según el pedido a cambiarlo
 casi todo, **sin** perder precisión, que es la única combinación que `la evaluación §B` declara buena.
 
-**El costo de v2 está medido y no es chico:** p95 **15,29 s → 65,34 s** (4,3×) y tokens de entrada
-por consulta **3.722 → 59.395** (16×), porque `C4` paga 20 llamadas de reranking con imagen.
+**El costo de v2 está medido y no es chico:** p95 **15,29 s → 65,34 s** (4,3×), tokens de entrada
+por consulta **3.722 → 61.733** (17×) y **USD/consulta 0,0029 → 0,0277, que es 9,6×**, porque `C4`
+paga 20 llamadas de reranking con imagen. **El `nDCG@5` se duplica y el precio se multiplica por
+diez**, y las dos cifras van juntas: es el trade-off que la fila `C4` compra.
 
-⚠️ **Dos columnas y dos ausencias que son parte del resultado:**
+⚠️ **Una columna con dos promedios, y dos correcciones del 2026-11-03:**
 **(1) `nDCG@5` publica dos promedios.** `c05-ambiguo` salió **15/15 en grado 0** ⇒ `IDCG = 0` ⇒
 `nDCG` **ausente, no 0**. La columna principal divide por las 30 y cuenta 0 la indefinida —que es
 lo que la decisión del acuerdo entre anotadores declara para esa consulta, *«no aporta a nDCG@5 y sí al denominador»*—;
 `(def)` divide por las 29 definidas. **Se publican las dos en vez de elegir una en silencio.**
-**(2) `USD/consulta` es ausente, nunca cero.** La configuración declara el precio de
-`text-embedding-3-small` y de ningún modelo de chat; **un modelo sin precio da ausente, no cero**.
-Lo que se publica son **tokens y llamadas**, que son medidos. ⚠️ **Y no se toma de LangSmith**: con
-el nombre del modelo en la metadata, LangSmith computaría el costo de su propia tabla de precios y
-tendríamos **dos cifras del mismo número, la segunda actualizándose sola**.
+
+> ### 🔴 **(2) `USD/consulta` dejó de ser ausente, y no hizo falta re-correr nada**
+> *2026-11-03. La ausencia tenía una condición escrita y se cumplió.*
+>
+> Esta columna decía **ausente** en las cinco filas porque `[proveedor]` declaraba el precio de
+> `text-embedding-3-small` y de ningún modelo de chat, y *un modelo sin precio da ausente, no cero*
+>. La misma regla dejaba dicho el remedio: *«el día que alguien lea el precio de
+> `gpt-4.1-mini` **con su fecha y su URL**, se anota ahí y esta tabla publica USD sin tocar nada
+> más»*. Se leyó el **2026-11-03** en `https://developers.openai.com/api/docs/pricing`:
+> `gpt-4.1-mini` **0,40 / 1,60** y `gpt-4o` **2,50 / 10,00** por millón.
+>
+> **Costó cero llamadas al proxy**, que es el punto: los tokens ya estaban medidos del `usage` de
+> la API en los libros mayores de las **1.151 corridas**. Y no podía ser de otro modo —el precio
+> **no determina el `config_id`**—, así que declararlo **no huerfanó una sola corrida**.
+> Regenerar `tabla-a2-m13.json` movió **exactamente 5 valores**: los cinco `usd_por_consulta`.
+> Ningún `nDCG`, ningún `P@5`.
+>
+> ⚠️ **Lo que sigue siendo verdad, y hay que decirlo igual:** los **tokens son medidos** y el
+> **USD es derivado de un precio declarado**. Y es el precio de **lista de OpenAI**, no la tarifa
+> del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). La
+> reconciliación contra el dashboard está en **§5.4** y **las dos cifras no se promedian**.
+> ⚠️ **Y sigue sin tomarse de LangSmith**: con el nombre del modelo en la metadata, LangSmith
+> computaría el costo de su propia tabla de precios y tendríamos **dos cifras del mismo número, la
+> segunda actualizándose sola**.
+
+> ### 🔴 **(3) Las columnas de llamadas y tokens estaban sub-reportadas en `C2`, `C3` y `C4`**
+> *Encontrado el 2026-11-03 al derivar el USD, y es un error nuestro.*
+>
+> Esta tabla publicaba **`C2` y `C3` con 1,0 llamadas/consulta** cuando `los criterios de entrega el criterio de costo` compromete
+> **2**, y `C4` con **21,0** cuando compromete **2 + N = 22**. La causa es el reuso del plan al barrer el peso de fusión: **un plan
+> reusado no paga la llamada del planificador** —cinco brazos de un barrido comparten un plan—,
+> así que el libro mayor de `C2` tiene **cero** llamadas de planificador y la columna, que leía
+> solo el libro mayor, contaba solo el generador. **Los 30 planes de cada fila están reusados.**
+>
+> 🔑 **El caché del plan es un artefacto de nuestra ablación, no de producción: una consulta de un
+> usuario paga su planificador siempre.** Entonces la columna correcta es la **nominal**, que suma
+> un plan por consulta desde `estado.plan.uso` (y resta el planificador del libro mayor, que si no
+> se contaría dos veces en la corrida que sí lo creó).
+>
+> | | llam./cons. | | tokens in/cons. | |
+> |---|---:|---:|---:|---:|
+> | | **publicado antes** | **corregido** | **publicado antes** | **corregido** |
+> | `C2` | 1,0 | **2,0** | 3.604 | **5.942** (+65 %) |
+> | `C3` | 1,0 | **2,0** | 3.639 | **5.977** (+64 %) |
+> | `C4` | 21,0 | **22,0** | 59.395 | **61.733** (+3,9 %) |
+>
+> ✅ **Corregida, la columna cierra exacto contra el criterio de costo:** `C0 = 0 · C1 = 1 · C2 = C3 = 2 ·
+> C4 = 2 + N`. **El validador del criterio de costo siempre contó bien** —lee el *estado*, no el libro mayor— así
+> que el compromiso nunca estuvo incumplido: lo que estaba mal era **esta tabla**. Es otra
+> vez: dos lecturas del mismo número, *pagada* y *nominal*, y la que se publica tiene que decir
+> cuál es. **Las dos se emiten** (`tp3-metricas costo`).
+> ⚠️ `C1` no se mueve: no tiene planificador en la cadena. Su **1,03** es el reintento.
 
 **Groundedness automática** (150 obras por fila, misma clave del artefacto): **0 referencias
 colgadas en las cinco filas**, y de las que existen, **100,0 % cita byte a byte** en `C1`–`C4`
@@ -738,6 +785,45 @@ N veces por consulta es el que lo consume. ⚠️ **Y tiene una consecuencia dec
 entregable:** el repositorio publicado no lleva los artefactos, y lo que compensaba eso era que el
 `README` dijera cómo regenerarlos. **Con el tope agotado esos comandos no corren**, así que la
 promesa va **con su condición al lado**.
+
+> ### 🔑 El modelo por token se cerró el 2026-11-03, y el proxy factura un 19 % por debajo de lista
+> *La acción 5 de la lista de pendientes —«modelar el costo por token y por rol»— ejecutada, con
+> **cero llamadas al proxy**: los tokens ya estaban en los artefactos.*
+>
+> Derivar el gasto de **todos** los artefactos en disco a precio de lista de OpenAI (leído el
+> 2026-11-03, §4.1) da **USD 12,43** sobre las mismas **7.313 requests** que esta sección cuenta.
+> El dashboard facturó **USD 10,0654**. ⚠️ **La brecha va con su base, porque las dos lecturas
+> del mismo hueco dan números distintos:** el proxy facturó un **19 % menos que el precio de
+> lista** (10,0654 / 12,4292 = 0,810), que es lo mismo que decir que **lista sobreestima la
+> factura en un 23 %** (12,4292 / 10,0654 = 1,235). **Se publica la primera** —base: lista—
+> porque la hipótesis de abajo es un **descuento** sobre el precio de lista.
+>
+> | rol | modelo | llamadas | tokens in | tokens out | USD derivado |
+> |---|---|---:|---:|---:|---:|
+> | **`juez`** | `gpt-4o` | 391 | 1.867.710 | 10.524 | **4,77** |
+> | **`reranker`** | `gpt-4.1-mini` | 3.920 | 11.009.329 | 194.322 | **4,71** |
+> | `generador` | `gpt-4.1-mini` | 1.043 | 3.689.802 | 832.772 | 2,81 |
+> | `planificador` | `gpt-4.1-mini` | 63 | 129.292 | 3.837 | 0,06 |
+> | `embedding_texto` | `text-embedding-3-small` | 1.896 | 3.692.620 | 0 | 0,07 |
+> | **total** | | **7.313** | | | **12,43** |
+>
+> ✅ **Y confirma la atribución que esta sección hizo a mano.** Arriba dice que el juez manda
+> *«~10.000 tokens de entrada por llamada, que a precio de lista son ~USD 4,4 solo de entrada»*.
+> La derivación da **4,67 de entrada** sobre los 391 intentos: **la estimación se sostiene**, y
+> ahora la emite el pipeline en vez de una cuenta al margen.
+>
+> 🔑 **Ese 19 % tiene una hipótesis con nombre, y se publica como hipótesis.** El precio de entrada
+> **cacheada** de `gpt-4.1-mini` es **0,10** —el 25 % de 0,40— y el reranker manda **el mismo
+> prompt y la misma imagen del usuario 20 veces por consulta**, que es el caso de libro del caché
+> de prompts. ⚠️ **No la podemos verificar con nuestros artefactos**: el libro mayor guarda
+> `prompt_tokens` y **no** `cached_tokens` (`puertos/llm.py`). Queda escrita **con el dato que la
+> cerraría al lado**, que es lo que corresponde a una causa no medida. La otra explicación posible
+> —que el proxy aplique una tarifa propia— es indistinguible con lo que tenemos.
+>
+> ⚠️ **Las dos cifras del gasto total conviven y NO se promedian**. La de **facturación**
+> es la del dashboard: **10,0654**, y es la que manda para decir cuánto se gastó. La **derivada**
+> es la única que se puede **atribuir por rol y por configuración**, que es lo que la tabla de tokens, costo y la figura publica y
+> el dashboard no sabe hacer. Cada una con su base.
 
 ### 5.5 🔑 La regla de honestidad dejó de ser una promesa: `la revisión humana(c)` está medido
 
@@ -1219,7 +1305,7 @@ origen por ítem sería **perder el dato en vez de estratificarlo**.
 | **2** | **Reemplazar el cuarto escalón de la escalera de pedidos ambiguos.** Está **declarado roto**: el corte alfabético depende de qué sustantivos se nominan, y la rúbrica no restringe cuáles |
 | **3** | **Un filtro de formato físico en la rama visual.** Es el único mecanismo *causal* que el proyecto midió (κ 0,66 > 0,46) y hoy actúa como un filtro que nadie puso |
 | **4** | **Sacar `provenance` del índice y medir qué entra en su lugar.** El 39 % del espacio no se cita; el presupuesto de evidencia es de suma cero, así que la pregunta correcta es qué campo lo reemplaza |
-| **5** | **Completar el juez (200 pares de 379) y modelar el costo por token y por rol.** Mejora la `n` del §6.3–6.5; no habilita ningún criterio nuevo |
+| **5** | **Completar el juez (200 pares de 379).** Mejora la `n` del §6.3–6.5; no habilita ningún criterio nuevo. ✅ **La otra mitad de esta fila —*modelar el costo por token y por rol*— está hecha** (§4.1 y §5.4, 2026-11-03), y costó **cero llamadas al proxy**: los tokens ya estaban en los artefactos. Lo que queda es lo que **sí** necesita presupuesto |
 | **6** | **Un tercer tipo de afirmación en la regla de que un dato lleva referencia, y la cláusula 2 como validador que corre.** Es el único de los seis que **no cambia una métrica: cambia una promesa.** Hoy el conocimiento general del modelo se publica con la etiqueta de *"el modelo miró y vio esto"* (§5.5), y la cláusula que impide una observación sobre la imagen del usuario **es un arreglo que nadie ejecuta**. Los dos son baratos —un tipo en el esquema y un predicado— **y los dos mueven el `config_id`**, así que van después de la entrega, no antes. 📌 **Y de paso, el detector más barato del proyecto:** dos `description` idénticas con distinto `artwork_id` es una consulta sobre `knowledge` |
 
 ---
@@ -1394,10 +1480,19 @@ las cifras del §5.5.
    explica el cambio. **Lo publicable es un no-resultado**: el eje de chunking **no mueve el
    retrieval de forma concluyente**. Lo que el informe sí dice es que **atribuye** peor —el 21,2 %
    del §5.1— y que **mueve mucho el top-5** —churn 1,567 de 5—, que son las dos cosas medidas.
-4. **"El costo por consulta es X USD".** Tokens y llamadas están medidos; **el dólar sale ausente**
-   porque el precio de los modelos de chat no está declarado en la configuración y el proxy no deja
-   leer tarifas. **Es una tarea de una persona con un navegador:** anotar el precio con su fecha y
-   su URL. Hasta entonces, ausente — **nunca cero, y nunca de LangSmith**.
+4. ✅ **"El costo por consulta es X USD".** ⚠️ **Resuelto el 2026-11-03, y la frase anterior
+   describe bien por qué podía resolverse sin gastar nada.** Decía: *"el dólar sale ausente porque
+   el precio de los modelos de chat no está declarado… **es una tarea de una persona con un
+   navegador**: anotar el precio con su fecha y su URL"*. Es exactamente lo que se hizo
+   (`developers.openai.com/api/docs/pricing`, 2026-11-03), y la columna salió **sin re-correr una
+   sola consulta**: los tokens ya estaban medidos. **`C1` 0,0029 → `C4` 0,0277 USD/consulta, 9,6×**
+   (§4.1), y el total derivado reconcilia con el dashboard —el proxy factura un **19 % por debajo
+   del precio de lista**, con lista como base (§5.4)—.
+   **Lo que sigue siendo cierto:** el dólar es **derivado de un precio declarado** —de lista, no
+   del proxy— y nunca se toma de LangSmith. *Un modelo sin precio sigue dando ausente, no cero.*
+   🔑 **Y la ausencia dejó un segundo hallazgo que nadie buscaba:** derivar el USD obligó a mirar
+   el libro mayor rol por rol, y ahí apareció que **`C2`–`C4` publicaban una llamada de menos por
+   consulta** (el reuso del plan al barrer el peso de fusión, §4.1). La columna que faltaba estaba tapando un error en la que sí estaba.
 5. **"La regla de honestidad se cumple".** Ahora **tiene número** (§5.5) y lo que el número dice es
    más incómodo que la ausencia: **12 de 51** afirmaciones mal clasificadas, **7 de 27** citas que
    no se sostienen del todo, **4 de 16** observaciones no defendibles. Lo que **no** puedo afirmar

@@ -144,6 +144,12 @@ base_url = "https://sa-llmproxy.it.itba.edu.ar/"
 
 [proveedor.precio_usd_por_millon_de_tokens]
 "openai/text-embedding-3-small" = 0.02
+"openai/gpt-4.1-mini" = 0.40
+"openai/gpt-4o" = 2.50
+
+[proveedor.precio_usd_por_millon_de_tokens_de_salida]
+"openai/gpt-4.1-mini" = 1.60
+"openai/gpt-4o" = 10.00
 
 [embebido_texto]
 modelo = "openai/text-embedding-3-small"

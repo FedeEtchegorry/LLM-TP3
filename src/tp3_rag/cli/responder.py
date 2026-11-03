@@ -260,10 +260,10 @@ def _del_set(args, cfg, almacén, montaje, ejecutor, obs) -> int:
         elif corrida.degradaciones:
             planificadas.append(corrida)
     obs.cerrar_progreso()
-    _marcador(hechas, fallidas, espontáneas, planificadas, len(consultas), obs)
+    _marcador(hechas, fallidas, espontáneas, planificadas, len(consultas), obs, cfg=cfg)
     return 0 if not fallidas else 1
 
-def _marcador(hechas, fallidas, degradadas, planificadas, total: int, obs) -> None:
+def _marcador(hechas, fallidas, degradadas, planificadas, total: int, obs, *, cfg=None) -> None:
     obs.decir(f"\n{LÍNEA}\nlas 30 consultas de punta a punta · las 30/30 end-to-end\n{LÍNEA}")
     con_cinco = sum(1 for c in hechas if len(c.top5) == 5)
     con_explicacion = sum(
@@ -309,7 +309,7 @@ def _marcador(hechas, fallidas, degradadas, planificadas, total: int, obs) -> No
         f"\n  corridas en artifacts/corridas/ · los validadores leen de ahí:\n"
         f"    poetry run tp3-validar todo"
     )
-    _costo(hechas, obs)
+    _costo(hechas, obs, cfg=cfg)
     obs.decir(LÍNEA)
 
 def _plan(hechas, obs) -> None:
@@ -361,7 +361,31 @@ def _acumular(hechas, clave: str) -> dict[str, dict]:
                 acum[k] += d.get(k, 0)
     return acumulado
 
-def _costo(hechas, obs) -> None:
+def _usd_del_reranker(d: dict, cfg) -> str:
+    modelo = (cfg or {}).get("bindings.reranker.modelo") if cfg else None
+    precios_in = (cfg or {}).get("proveedor.precio_usd_por_millon_de_tokens") or {}
+    precios_out = (
+        (cfg or {}).get("proveedor.precio_usd_por_millon_de_tokens_de_salida") or {}
+    )
+    p_in, p_out = precios_in.get(modelo), precios_out.get(modelo)
+    if p_in is None or (d.get("tokens_out") and p_out is None):
+        return (
+            f"⚠️ **USD: ausente.** `[proveedor]` no declara el precio de `{modelo}`,\n"
+            f"  y *un modelo sin precio da ausente, no cero. Lo que\n"
+            f"  está medido son los **tokens**."
+        )
+    usd = d["tokens_in"] / 1e6 * float(p_in) + d.get("tokens_out", 0) / 1e6 * float(
+        p_out or 0.0
+    )
+    return (
+        f"💲 **USD {usd:.4f}** de reranking — tokens **medidos**, precio **declarado**\n"
+        f"  (`{modelo}`: {p_in}/{p_out} por millón, precio de lista leído el 2026-11-03).\n"
+        f"  ⚠️ **No es la tarifa del proxy**, que nadie puede leer: el total derivado así\n"
+        f"  da **USD 12,43** contra los **10,0654** que facturó el dashboard, y **las dos\n"
+        f"  no se promedian**."
+    )
+
+def _costo(hechas, obs, *, cfg=None) -> None:
     if not hechas:
         return
     por_rol = _acumular(hechas, "libro_mayor")
@@ -430,9 +454,7 @@ def _costo(hechas, obs) -> None:
                 f"  (contra los **1.946** que el registro de decisiones midió a mano con el mismo par de\n"
                 f"  imágenes; si esto se despega de ese número, el modelo o el `detail`\n"
                 f"  cambiaron y **hay que volver a medir antes de barrer N**).\n"
-                f"  ⚠️ **USD: ausente.** `[proveedor]` solo declara el precio de\n"
-                f"  `text-embedding-3-small`, y *un modelo sin precio da ausente, no cero*\n"
-                f". Lo que está medido son los **tokens**."
+                f"  {_usd_del_reranker(d, cfg)}"
             )
         if "planificador" in por_rol:
             obs.decir(

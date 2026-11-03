@@ -57,10 +57,10 @@ número es correcto; su lectura como acuerdo entre dos, no.
 
 ## 2. Estrategias de puesta en producción
 
-El enunciado pide **definir**, y al 30/10 va separado: ✅ **construido, corrido y medido** la
-indexación, el caché, el versionado, la observabilidad y la degradación; 🟡 **medido a medias** el
-costo —llamadas y tokens sí, dólares solo donde hay precio declarado—; ⬜ **definición pura** el
-escalado a 100k y la evaluación continua. Nada de lo ⬜ se presenta como construido.
+El enunciado pide **definir**, y al 3/11 va separado: ✅ **construido, corrido y medido** la
+indexación, el caché, el versionado, la observabilidad, la degradación y el **costo por token y
+por rol** —en USD desde que se declaró el precio con su fecha—; ⬜ **definición pura** el escalado
+a 100k y la evaluación continua. Nada de lo ⬜ se presenta como construido.
 
 **La indexación es un batch offline y el serving solo lee**, lo que resuelve el rate limit de 60
 req/min de AIC: nunca se llama a las APIs de los museos en tiempo de consulta. El costo offline se
@@ -77,12 +77,12 @@ la degradación queda **anotada en el artefacto de la corrida**. El piso no se e
 irreducible es **un embedding CLIP más una consulta al índice** — pero **no tiene red**, así que un
 corte de conectividad degrada el sistema y no lo apaga.
 
-**Costo y observabilidad: medidos, cada cifra con su base.** El embebido del corpus se pagó:
-**622.314 tokens en 49 llamadas** para los 6.232 fragmentos, **0,012446 USD** al precio declarado
-del modelo (los tokens son medidos; el USD, derivado de un precio declarado). Por consulta son
-**33 llamadas medidas** sobre las 30 corridas limpias de la configuración completa, y el acumulado
-al 27/10 son **6.717 llamadas ≈ 6,72 USD sumando los libros mayores** — **cota inferior**: la
-facturación real la dice el dashboard del proxy, y las dos no se promedian. La observabilidad
+**Costo y observabilidad: medidos, cada cifra con su base.** El embebido del corpus se pagó
+**622.314 tokens en 49 llamadas** para los 6.232 fragmentos (**0,012446 USD**), y una consulta del
+sistema completo cuesta **0,0277 USD** contra **0,0029** del base: el `nDCG@5` se duplica y el
+precio se multiplica por **diez**. 🔑 **El gasto total modelado por token y por rol da USD 12,43 y
+el proxy facturó 10,0654; dos roles son el 76 %.** Los tokens son **medidos** y el USD **derivado**
+de un precio de lista; **las dos cifras del total no se promedian**, cada una con su base. La observabilidad
 **está construida**: las trazas van a LangSmith y los tokens se persisten **también** en el
 artefacto de la corrida. ⚠️ **Y queda un riesgo que es nuestro declarar y no
 nuestro arreglar:** el criterio *"toda obra devuelta existe y es trazable"* **depende de un tercero
@@ -179,7 +179,7 @@ oración de la sección 2.
 2. **Más mecanismo, menos producción.** Reponer las dos primeras filas de la sección B —el filtro
    de formato y el 39 % de `provenance`— sacando de la sección 2 el párrafo de indexación y caché
    entero (~95 palabras). Costo: se pierde la mitad *"lo construimos"* del primer tema de
-   producción, que es la que los criterios de entrega el criterio de respuesta garantizada señala como la que vuelve bueno este informe.
+   producción, que es la que el criterio de respuesta garantizada señala como la que vuelve bueno este informe.
 3. **Volver a la tabla de estado.** Si la maqueta final prefiere la tabla a la prosa, se repone
    tal cual y hay que recortar **6 líneas** en otro lado; la escalera de la sección F dice dónde.
 
@@ -188,12 +188,20 @@ oración de la sección 2.
 1. **"Medimos la regla de honestidad y el resultado es X".** Sigue siendo la medición que más
    mejoraría este informe y sigue sin hacerse. **Y ahora tiene una arruga nueva:** con la anotación por IA la
    anota IA, así que el resultado va a medir *un modelo juzgando si otro modelo citó bien*.
-2. **"El costo por consulta es X USD".** ⚠️ **Mejoró y conviene saber cuánto:** las **llamadas y
-   los tokens ya están medidos** (33 llamadas por consulta en C4, 622.314 tokens del embebido del
-   corpus). Lo que falta es **el dólar**, y por una razón concreta y barata de arreglar: la
-   configuración solo declara el precio de `text-embedding-3-small`, y el proxy no deja leer
-   tarifas. **Es una tarea de una persona con un navegador**: anotar el precio del modelo de chat
-   con su fecha y su URL.
+2. ✅ **"El costo por consulta es X USD" — RESUELTO el 2026-11-03.** Este punto decía que faltaba
+   el dólar *"por una razón concreta y barata de arreglar"* y que era **una tarea de una persona
+   con un navegador**: anotar el precio del modelo de chat con su fecha y su URL. Era exacto. Se
+   leyó en `developers.openai.com/api/docs/pricing` el 2026-11-03 y la columna salió **sin
+   re-correr una sola consulta**: los tokens ya estaban en los libros mayores de las 1.151
+   corridas, y el precio **no determina el `config_id`**, así que nada quedó huérfano.
+   **`C1` 0,0029 → `C4` 0,0277 USD/consulta (9,6×)**, y el total derivado reconcilia con el
+   dashboard: el proxy factura un **19 % por debajo del precio de lista**, con lista como base
+   (`ejercicio-4.md §5.4`). ⚠️ **La distinción se mantiene**: tokens
+   medidos, USD derivado de un precio **de lista** que no es la tarifa del proxy.
+   🔑 **Y derivarlo destapó un error en una cifra que sí estaba publicada:** al mirar el libro
+   mayor rol por rol apareció que `C2`–`C4` contaban **una llamada de menos por consulta**, porque
+   un plan reusado no paga el planificador (el reuso del plan al barrer el peso de fusión). *La columna que faltaba tapaba un error en la
+   que no faltaba.*
 3. **"La distribución cultural del corpus es esta"**, agrupada por región. Las cifras por etiqueta
    del informe son exactas, pero cualquier agregado regional exige una tabla de sinónimos que no
    existe (el criterio de normalización de culture, abierto). Por eso el informe reporta etiquetas y la unión India —que ya
@@ -224,7 +232,7 @@ oración de la sección 2.
    **ninguno** de `C3`. 🔑 **La conclusión no mejoró: se volvió más interesante.** Pasó de *"no lo
    sabemos porque no medimos"* a *"lo medimos, no es concluyente, y sabemos por qué"*.
 
-## E. Hallazgos sobre el material — para los hallazgos
+## E. Hallazgos sobre el material — para
 
 1. 🔴 **Quinta vez del error de población, en el alcance del proyecto.** El recuadro de `artista` dice *"`artist`
    cubre el **67,4 %** del corpus (AIC 92,8 %, CMA 59,2 %)"*. Esas tres cifras son de los **2.894
@@ -235,10 +243,12 @@ oración de la sección 2.
 2. ✅ **Resuelto: `101` vs `102` etiquetas de `culture`.** La discrepancia que este anexo reportó
    el 18/10 está cerrada a favor del artefacto: **son 102** sobre los 2.605 ids del split
    congelado, y el **101** del docstring del código es el defecto. El informe publica 102.
-3. ✅ **Resuelto a medias: el `0,012 USD`.** Ya no es una proyección: el embebido se pagó el 24/10
-   y los **622.314 tokens en 49 llamadas están medidos** del `usage` de la API. Lo que sigue
-   siendo derivado es el **USD**, porque el precio es declarado y no verificable. El informe hace
-   esa distinción explícita.
+3. ✅ **Resuelto, y ya no "a medias": el `0,012 USD`.** Ya no es una proyección: el embebido se
+   pagó el 24/10 y los **622.314 tokens en 49 llamadas están medidos** del `usage` de la API.
+   El **USD sigue siendo derivado** —el precio es declarado— pero desde el 2026-11-03 **lo es para
+   todos los roles y no solo para el embebido**, y el modelo por token reconcilia contra el
+   dashboard del proxy: factura un **19 % por debajo de lista**, con lista como base. El informe
+   mantiene la distinción explícita.
 4. 🟡 **Las cifras de licencias del informe, reverificadas hoy contra el catálogo** y por si
    alguien las quiere asentar: sobre los 2.605 ids del split, los campos de `knowledge` dan **638 `description`
    CC-BY-4.0** (= las 638 obras de AIC, una por obra), 1.967 `description` CC0, 1.199
@@ -293,7 +303,7 @@ Cuento **tokens separados por espacio** sobre el cuerpo con las marcas de Markdo
 los dos números **no son comparables** y publico el que puedo recalcular. En la regla común:
 **1.135 → 1.251, un 10 % más de palabras**.
 
-**El objetivo declarado era ~1.100 y esto queda un 13 % por encima**, y conviene decirlo en vez
+**El objetivo del encargo era ~1.100 y esto queda un 13 % por encima**, y conviene decirlo en vez
 de redondear para abajo. **Pero la restricción real no son las palabras: son las líneas**, y ahí
 el informe **no creció**: 94 contra 92. Entraron siete resultados nuevos y la densidad subió,
 porque salió una tabla que gastaba 6 líneas en 25 palabras y cinco temas se cortaron enteros.
@@ -353,6 +363,23 @@ eso va última. Los cuatro pasos juntos dan **−5 líneas → 89**, o sea **1,8
 formato físico, el 39 % de `provenance`, el bloque del vocabulario, `is_nazi_era_provenance` y el
 presupuesto de evidencia de suma cero. **Ninguno salió por ser débil: salieron por líneas**, y las
 cinco filas dicen exactamente qué recortar para reponer cada uno.
+
+### G.2 · Y qué cambió el **2026-11-03** — solo el párrafo de costo
+
+Una sola edición del cuerpo, **+15 palabras y 0 líneas**, que es la restricción que manda (§F).
+
+| Salió | Entró |
+|---|---|
+| *"🟡 **medido a medias** el costo —llamadas y tokens sí, dólares solo donde hay precio declarado—"* | ✅ el costo **por token y por rol**, en USD, en la lista de lo construido-corrido-y-medido |
+| *"el acumulado al 27/10 son **6.717 llamadas ≈ 6,72 USD** sumando los libros mayores"* | **0,0277 USD/consulta** en el sistema completo contra **0,0029** del base, y el total **USD 12,43 derivado contra 10,0654 facturados** |
+
+🔴 **Y la salida de esa cifra es, en sí misma, un resultado de producción que el informe
+necesitaba.** El **6,72** salía de multiplicar 6.717 llamadas por **USD 0,0010 por request** —la
+cifra del dashboard—, y `ejercicio-4.md §5.4` **refutó ese modelo de costo**: el proxy factura por
+token, el grupo agotó el tope de USD 10 **sin pasarse de llamadas**, y *el precio por request no es
+el precio*. Dejar el 6,72 en el informe de producción era publicar el número con el modelo que el
+propio proyecto había desmentido. **El reemplazo no es una cifra más nueva: es la cifra con el
+modelo correcto.**
 
 ## H. 🔴 El hueco de criterio que la anotación por IA me dejó — es del orquestador, no mío
 

@@ -17,11 +17,20 @@
       "latencia_p95_s": 2.19,
       "llamadas_al_llm": 0,
       "llamadas_al_llm_por_consulta": 0.0,
+      "llamadas_al_llm_por_consulta_con_el_plan": 0.0,
+      "nota_del_plan_r11": "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un plan), así que el libro mayor de `C2` tiene **cero** llamadas de planificador. El caché del plan es un artefacto de **nuestra ablación**, no de producción: una consulta de un usuario paga su planificador **siempre**. Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y resta el planificador del libro mayor, que si no se contaría dos veces en las corridas que sí lo crearon.",
+      "nota_del_usd": "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). *Un modelo sin precio da **ausente**, no cero* sigue vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse**: derivado de los artefactos a precio de lista da **USD 12,43** y el dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis —el proxy factura un **19 % por debajo de lista**, base: lista— es el **descuento por entrada cacheada**, 0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, **no verificable con nuestros artefactos**: el libro mayor guarda `prompt_tokens` y no `cached_tokens`.",
+      "planes_reusados_r11": 0,
       "qs": 0.0,
       "tokens_in": 0,
       "tokens_in_por_consulta": 0,
+      "tokens_in_por_consulta_con_el_plan": 0,
       "tokens_out": 0,
-      "usd_por_consulta": null
+      "usd_por_consulta": 0.0,
+      "usd_por_rol": {
+        "embedding_imagen": 0.0,
+        "indice": 0.0
+      }
     },
     "C1": {
       "groundedness_automatica": {
@@ -39,11 +48,22 @@
       "latencia_p95_s": 15.29,
       "llamadas_al_llm": 31,
       "llamadas_al_llm_por_consulta": 1.03,
+      "llamadas_al_llm_por_consulta_con_el_plan": 1.03,
+      "nota_del_plan_r11": "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un plan), así que el libro mayor de `C2` tiene **cero** llamadas de planificador. El caché del plan es un artefacto de **nuestra ablación**, no de producción: una consulta de un usuario paga su planificador **siempre**. Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y resta el planificador del libro mayor, que si no se contaría dos veces en las corridas que sí lo crearon.",
+      "nota_del_usd": "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). *Un modelo sin precio da **ausente**, no cero* sigue vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse**: derivado de los artefactos a precio de lista da **USD 12,43** y el dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis —el proxy factura un **19 % por debajo de lista**, base: lista— es el **descuento por entrada cacheada**, 0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, **no verificable con nuestros artefactos**: el libro mayor guarda `prompt_tokens` y no `cached_tokens`.",
+      "planes_reusados_r11": 0,
       "qs": 0.419,
       "tokens_in": 111666,
       "tokens_in_por_consulta": 3722,
+      "tokens_in_por_consulta_con_el_plan": 3722,
       "tokens_out": 25953,
-      "usd_por_consulta": null
+      "usd_por_consulta": 0.00287,
+      "usd_por_rol": {
+        "embedding_imagen": 0.0,
+        "embedding_texto": 5.08e-06,
+        "generador": 0.0860896,
+        "indice": 0.0
+      }
     },
     "C2": {
       "groundedness_automatica": {
@@ -61,11 +81,22 @@
       "latencia_p95_s": 19.78,
       "llamadas_al_llm": 30,
       "llamadas_al_llm_por_consulta": 1.0,
+      "llamadas_al_llm_por_consulta_con_el_plan": 2.0,
+      "nota_del_plan_r11": "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un plan), así que el libro mayor de `C2` tiene **cero** llamadas de planificador. El caché del plan es un artefacto de **nuestra ablación**, no de producción: una consulta de un usuario paga su planificador **siempre**. Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y resta el planificador del libro mayor, que si no se contaría dos veces en las corridas que sí lo crearon.",
+      "nota_del_usd": "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). *Un modelo sin precio da **ausente**, no cero* sigue vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse**: derivado de los artefactos a precio de lista da **USD 12,43** y el dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis —el proxy factura un **19 % por debajo de lista**, base: lista— es el **descuento por entrada cacheada**, 0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, **no verificable con nuestros artefactos**: el libro mayor guarda `prompt_tokens` y no `cached_tokens`.",
+      "planes_reusados_r11": 30,
       "qs": 0.426,
       "tokens_in": 108139,
       "tokens_in_por_consulta": 3604,
+      "tokens_in_por_consulta_con_el_plan": 5942,
       "tokens_out": 24430,
-      "usd_por_consulta": null
+      "usd_por_consulta": 0.003761,
+      "usd_por_rol": {
+        "embedding_imagen": 0.0,
+        "embedding_texto": 1.4200000000000001e-05,
+        "generador": 0.08205960000000001,
+        "indice": 0.0
+      }
     },
     "C3": {
       "groundedness_automatica": {
@@ -83,11 +114,22 @@
       "latencia_p95_s": 21.37,
       "llamadas_al_llm": 30,
       "llamadas_al_llm_por_consulta": 1.0,
+      "llamadas_al_llm_por_consulta_con_el_plan": 2.0,
+      "nota_del_plan_r11": "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un plan), así que el libro mayor de `C2` tiene **cero** llamadas de planificador. El caché del plan es un artefacto de **nuestra ablación**, no de producción: una consulta de un usuario paga su planificador **siempre**. Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y resta el planificador del libro mayor, que si no se contaría dos veces en las corridas que sí lo crearon.",
+      "nota_del_usd": "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). *Un modelo sin precio da **ausente**, no cero* sigue vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse**: derivado de los artefactos a precio de lista da **USD 12,43** y el dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis —el proxy factura un **19 % por debajo de lista**, base: lista— es el **descuento por entrada cacheada**, 0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, **no verificable con nuestros artefactos**: el libro mayor guarda `prompt_tokens` y no `cached_tokens`.",
+      "planes_reusados_r11": 30,
       "qs": 0.727,
       "tokens_in": 109189,
       "tokens_in_por_consulta": 3639,
+      "tokens_in_por_consulta_con_el_plan": 5977,
       "tokens_out": 25321,
-      "usd_por_consulta": null
+      "usd_por_consulta": 0.003814,
+      "usd_por_rol": {
+        "embedding_imagen": 0.0,
+        "embedding_texto": 2.8400000000000003e-05,
+        "generador": 0.0836212,
+        "indice": 0.0
+      }
     },
     "C4": {
       "groundedness_automatica": {
@@ -105,11 +147,23 @@
       "latencia_p95_s": 65.34,
       "llamadas_al_llm": 630,
       "llamadas_al_llm_por_consulta": 21.0,
+      "llamadas_al_llm_por_consulta_con_el_plan": 22.0,
+      "nota_del_plan_r11": "🔴 **`usd_por_consulta` NO es `usd_pagado / n`.** Un plan **reusado** no paga la llamada del planificador (el reuso del plan al barrer el peso de fusión: cinco brazos de un barrido comparten un plan), así que el libro mayor de `C2` tiene **cero** llamadas de planificador. El caché del plan es un artefacto de **nuestra ablación**, no de producción: una consulta de un usuario paga su planificador **siempre**. Por eso lo nominal suma **un plan por corrida** desde `estado.plan.uso` y resta el planificador del libro mayor, que si no se contaría dos veces en las corridas que sí lo crearon.",
+      "nota_del_usd": "🔴 **Los tokens son MEDIDOS; el USD es DERIVADO de un precio DECLARADO.** El precio es el de **lista de OpenAI** leído el 2026-11-03, no la tarifa del proxy de ITBA, que nadie puede leer (`/key/info` bloqueado para virtual keys). *Un modelo sin precio da **ausente**, no cero* sigue vigente. ⚠️ **Y las dos cifras del gasto total conviven sin promediarse**: derivado de los artefactos a precio de lista da **USD 12,43** y el dashboard del proxy facturó **USD 10,0654** (la decisión de presupuesto). La hipótesis —el proxy factura un **19 % por debajo de lista**, base: lista— es el **descuento por entrada cacheada**, 0,10 contra 0,40 en `gpt-4.1-mini`, y el reranker repite el mismo prompt N veces por consulta—, **no verificable con nuestros artefactos**: el libro mayor guarda `prompt_tokens` y no `cached_tokens`.",
+      "planes_reusados_r11": 30,
       "qs": 0.9,
       "tokens_in": 1781858,
       "tokens_in_por_consulta": 59395,
+      "tokens_in_por_consulta_con_el_plan": 61733,
       "tokens_out": 54646,
-      "usd_por_consulta": null
+      "usd_por_consulta": 0.02768,
+      "usd_por_rol": {
+        "embedding_imagen": 0.0,
+        "embedding_texto": 2.8400000000000003e-05,
+        "generador": 0.08234360000000002,
+        "indice": 0.0,
+        "reranker": 0.7172652
+      }
     }
   },
   "config_ids": {

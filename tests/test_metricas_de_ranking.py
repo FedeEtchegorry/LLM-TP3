@@ -528,3 +528,136 @@ def test_m13_el_orden_desempata_por_nombre_y_no_por_el_iterador():
         for n in ("C3", "C1", "C2")
     ]
     assert met.orden_de_las_filas(filas) == ("C1", "C2", "C3")
+
+PRECIOS_IN = {"openai/gpt-4.1-mini": 0.40, "openai/text-embedding-3-small": 0.02}
+PRECIOS_OUT = {"openai/gpt-4.1-mini": 1.60}
+
+def _corrida_con_costo(
+    consulta_id, *, libro=None, plan=None, modelo="openai/gpt-4.1-mini", **kw
+):
+    c = corrida_de_prueba(consulta_id=consulta_id, top5=["cma:1"], plan=plan, **kw)
+    c.contenido["libro_mayor"] = {
+        rol: {"n_llamadas": v[0], "tokens_in": v[1], "tokens_out": v[2]}
+        for rol, v in (libro or {}).items()
+    }
+    c.contenido["configuracion_resuelta"]["bindings"] = {
+        rol: {"modelo": modelo}
+        for rol in ("planificador", "reranker", "generador")
+    }
+    c.contenido["configuracion_resuelta"]["embebido_texto"] = {
+        "modelo": "openai/text-embedding-3-small"
+    }
+    return c
+
+def _plan(tokens_in, tokens_out, *, reusado):
+    return {"uso": {"tokens_in": tokens_in, "tokens_out": tokens_out}, "reusado": reusado}
+
+def test_el_usd_es_tokens_medidos_por_precio_declarado_y_nada_mas():
+    corridas = [
+        _corrida_con_costo("c01-visual", libro={"generador": (1, 1_000_000, 500_000)})
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.usd_por_rol["generador"] == pytest.approx(1.20)
+    assert costo.usd_pagado == pytest.approx(1.20)
+
+def test_m2c7_un_modelo_sin_precio_da_ausente_y_NO_cero():
+    corridas = [
+        _corrida_con_costo(
+            "c01-visual",
+            libro={"generador": (1, 1000, 100)},
+            modelo="openai/un-modelo-que-nadie-coteo",
+        )
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.usd_por_rol["generador"] is None
+    assert costo.usd_pagado is None and costo.usd_por_consulta is None
+    assert costo.tokens_in == 1000 and costo.tokens_out == 100
+
+def test_sin_precios_declarados_la_tabla_vuelve_a_publicar_tokens_sin_usd():
+    corridas = [_corrida_con_costo("c01-visual", libro={"generador": (1, 1000, 100)})]
+    (costo,) = met.costo_por_configuracion(corridas)
+    assert costo.usd_pagado is None
+    assert costo.tokens_in == 1000
+
+def test_los_roles_locales_cuestan_CERO_y_no_ausente():
+    corridas = [
+        _corrida_con_costo(
+            "c01-visual", libro={"embedding_imagen": (2, 0, 0), "indice": (1, 0, 0)}
+        )
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.usd_por_rol == {"embedding_imagen": 0.0, "indice": 0.0}
+    assert costo.usd_pagado == 0.0 and costo.usd_por_consulta == 0.0
+
+def test_un_embedding_sin_precio_de_salida_no_es_ausente_porque_no_tiene_salida():
+    corridas = [_corrida_con_costo("c01-visual", libro={"embedding_texto": (1, 500_000, 0)})]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.usd_por_rol["embedding_texto"] == pytest.approx(0.01)
+
+def test_un_rol_con_DOS_modelos_bajo_la_misma_etiqueta_da_ausente():
+    corridas = [
+        _corrida_con_costo("c01-visual", libro={"generador": (1, 1000, 0)}),
+        _corrida_con_costo(
+            "c01-ambiguo", libro={"generador": (1, 1000, 0)}, modelo="openai/gpt-4o"
+        ),
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in={**PRECIOS_IN, "openai/gpt-4o": 2.5}, precios_out=PRECIOS_OUT
+    )
+    assert costo.modelo_por_rol["generador"] is None
+    assert costo.usd_por_rol["generador"] is None
+
+def test_r11_un_plan_reusado_no_paga_el_planificador_pero_la_fila_LO_CUESTA():
+    corridas = [
+        _corrida_con_costo(
+            c,
+            configuracion="C2",
+            libro={"generador": (1, 3_000, 800)},
+            plan=_plan(2_000, 60, reusado=True),
+        )
+        for c in ("c01-visual", "c01-ambiguo")
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.llamadas_al_llm == 2
+    assert costo.llamadas_al_llm_con_el_plan == 4
+    assert costo.planes_reusados == 2
+    assert costo.tokens_in_por_consulta_con_el_plan == 5_000
+    assert costo.usd_por_consulta == pytest.approx(5_000 / 1e6 * 0.40 + 860 / 1e6 * 1.60)
+
+def test_r11_el_plan_creado_en_la_corrida_no_se_cuenta_DOS_veces():
+    corridas = [
+        _corrida_con_costo(
+            "c01-visual",
+            configuracion="C2",
+            libro={"generador": (1, 3_000, 800), "planificador": (1, 2_000, 60)},
+            plan=_plan(2_000, 60, reusado=False),
+        )
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.planes_reusados == 0
+    assert costo.llamadas_al_llm_con_el_plan == 2
+    assert costo.tokens_in_por_consulta_con_el_plan == 5_000
+    assert costo.usd_nominal == pytest.approx(costo.usd_pagado)
+
+def test_r11_una_fila_sin_plan_no_inventa_uno():
+    corridas = [
+        _corrida_con_costo("c01-visual", libro={"generador": (1, 3_000, 800)}, plan=None)
+    ]
+    (costo,) = met.costo_por_configuracion(
+        corridas, precios_in=PRECIOS_IN, precios_out=PRECIOS_OUT
+    )
+    assert costo.planes_reusados == 0
+    assert costo.llamadas_al_llm_con_el_plan == costo.llamadas_al_llm == 1
+    assert costo.usd_nominal == pytest.approx(costo.usd_pagado)
