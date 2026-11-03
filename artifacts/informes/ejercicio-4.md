@@ -187,6 +187,94 @@ ver a qué `α` favorece**, y no se hizo.
 ⚠️ **Misma salvedad de procedencia que arriba:** esta tabla vive en `config/default.toml` y **no**
 en un artefacto. Los cinco brazos corrieron y están en disco (30 corridas cada uno).
 
+### 2.3 🔑 La alternativa que no tomamos: **cascada** (un criterio filtra, el otro ordena)
+
+*Escrito el 2026-11-03, a partir de una recomendación recibida en clase.* Nos plantearon una
+objeción que vale la pena contestar entera, porque es la primera que a cualquiera se le ocurre:
+**¿cómo se compara un resultado de texto con uno de imagen para decir cuál es mejor?** Y la salida
+sugerida fue una **cascada**: que un criterio *filtre* y el otro *ordene*, sin sumar puntajes.
+
+**La objeción no aplica a este sistema, y el motivo es estructural: lo único que rankeamos son
+obras.** Cada candidata es una obra que tiene imagen *y* texto, y el anotador juzga el par
+`(consulta, obra)` con **una sola** rúbrica 0/1/2. No existen en el sistema dos tipos de ítem que
+haya que poner en una misma lista. Conviene separar tres cosas que la pregunta junta:
+
+1. **Qué se rankea** → obras. Un solo tipo de ítem, de punta a punta.
+2. **Cómo cada rama propone candidatas** → la rama de texto busca **fragmentos** en `knowledge`,
+   pero cada fragmento lleva `artwork_id` y se agrega a nivel obra (`mejor_fragmento`). Las dos
+   ramas terminan en **un ranking del mismo universo**.
+3. **Cómo se combinan los dos rankings** → **RRF, que usa solo rangos**. `fusionador.py` no lee
+   `score` en ninguna línea, y hay un test que lo prueba por la vía que importa: *permutar los
+   scores dentro de una rama sin cambiar sus rangos no mueve el ranking fusionado.*
+
+🔑 **O sea que RRF está en el diseño precisamente por esa objeción** (la fusión recíproca de rangos con k = 60): un coseno de
+CLIP y uno de `text-embedding-3-small` no son calibrables entre sí, así que se fusiona por rango y
+el problema desaparece. La §2.2 lo midió: el único brazo que **sí** suma dos escalas
+(`suma_de_scores_normalizados`) quedó en el medio.
+
+> **Dónde sí mezclamos modalidades, que es la versión honesta de la objeción:** no en la fusión,
+> sino **adentro de la rama visual**, en `e_q = normalize(α·e_img + (1−α)·e_txt)`. Ahí se suma un
+> vector de imagen con uno de texto y el *modality gap* es real. La mitigación está en §3.2
+> (normalizar antes y después, técnica documentada de la bibliografía de la Clase 9) y el control
+> empírico es la tabla de `α` de §2.2: con `α = 0` el anclaje se cae a **0/20**.
+
+**Y la cascada se puede evaluar sin gastar una llamada**, porque las corridas persisten las dos
+ramas completas con sus rangos (`estado.fuentes_de_ranking`). Medido sobre **las 30 corridas
+publicadas de `C3`**:
+
+| | |
+|---|---:|
+| candidatas de la rama visual | 20,0 (fijo, `N`) |
+| candidatas de la rama de texto | 49,1 |
+| **unión** (lo que RRF considera) | **65,1** |
+| 🔴 **intersección visual ∩ texto** (lo que una cascada dejaría elegible) | **3,97** — mín. **0** |
+| consultas donde la intersección **no llega a 5** | **19 de 30** |
+
+Y la procedencia del top-5 que efectivamente se publica (150 ítems por fila):
+
+| | solo visual | solo texto | ambas ramas |
+|---|---:|---:|---:|
+| `C3` | 17,3 % | 18,7 % | 64,0 % |
+| **`C4` = v2** | **23,3 %** | 38,7 % | 38,0 % |
+
+**Tres razones para no cambiar, en orden de peso:**
+
+1. 🔴 **La cascada deja afuera el 23,3 % del top-5 de `v2`.** Si la rama de texto decide quién es
+   elegible, las obras que **solo** propuso la visual dejan de existir. Y el riesgo lo nombra la
+   propia recomendación —*«si el filtro deja afuera la obra correcta, CLIP no la puede
+   recuperar»*—: con una intersección media de **3,97**, en **19 de 30 consultas la cascada no
+   llegaría a juntar 5 candidatas**. No es un riesgo teórico, es el régimen normal de este corpus.
+2. 🔴 **Deshace el mecanismo que `C3` vino a arreglar.** §1.1 midió que el espacio de CLIP está
+   organizado por **formato físico** (κ = 0,663) más que por **cultura** (κ = 0,459), y en el
+   corpus las dos cosas están casi perfectamente confundidas (0 óleos indios, 0 folios franceses,
+   Japón 96 % folio). Si CLIP queda como **único ordenador final**, ordena por formato — que es
+   exactamente *el filtro que nadie puso*. Lo que se perdería tiene número: el `Δ C3−C2` de
+   cobertura cultural, **+2,00 de 5**.
+3. **Contradice el entregable aprobado.** la entrega aprobada describe la etapa 4 como *"las obras
+   que aparecen en ambas ramas **suben** en el ranking, y las que aparecen en una sola **se
+   conservan**, sin duplicados"*. Eso es **unión con premio al acuerdo**, que es RRF. Una cascada
+   es intersección: lo que aparece en una sola rama **muere**. Y rompería la inclusión incremental
+   de §3.1 —`C3` dejaría de ser `C2` más una etapa— con la que el enunciado pide *"cambios
+   incrementales"*.
+
+⚠️ **Lo que la cascada sí tiene de bueno, y dónde ya está en el sistema.** Su variante *(a)* —el
+pedido conceptual se traduce en un **filtro por metadata** y lo visual ordena— es *metadata
+filtering* de la Clase 7.2, y es una técnica legítima. En este sistema el `where` existe pero como
+**join** (traer los fragmentos de una obra por `artwork_id`, §3.1), no como filtro del espacio de
+búsqueda, y por eso el registro de decisiones decidió **no presentarla como quinta técnica**. Convertirla en
+filtro duro sobre `culture` choca además con un problema abierto y medido: la normalización de
+`culture` mezcla lugar y período y no une sinónimos (`Holland`/`Netherlands`), así que un filtro
+duro sobre ese campo **sería frágil justo en los pedidos culturales**, que son los que debería
+ayudar.
+
+📌 **Qué queda sin medir, y se dice:** no corrimos la cascada de punta a punta. **No es una
+omisión de criterio: el tope del proxy está agotado** (§5.4), y la variante *(b)* además exige
+puntuar con CLIP las ~49 candidatas del texto, de las cuales hoy solo ~4 tienen rango visual. Lo
+que está medido es **la estructura del corpus de candidatas**, que es lo que decide si la cascada
+puede funcionar — y dice que no.
+
+---
+
 ---
 
 ## 3. La configuración antes y después
