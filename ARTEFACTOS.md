@@ -8,6 +8,12 @@ y la configuración de Poetry.
 > curso, y **el tope de USD 10 del grupo está agotado**. No se pueden volver a generar. Sin ellos se
 > puede correr el sistema, pero **no se puede reproducir ninguna de las mediciones que el informe
 > publica**.
+>
+> 🔑 **Y ahora el gasto está atribuido por rol, que es lo que el dashboard no sabe hacer.** A precio
+> de lista esas requests son **USD 12,43** contra los **10,0654** que facturó el proxy —factura un
+> 19 % por debajo de lista, con lista como base—, y **dos roles son el 76 %**: el juez (4,77) y el
+> reranking (4,71). Los **tokens son medidos**; el dólar es **derivado de un precio declarado**, así
+> que las dos cifras del total conviven y no se promedian.
 
 ---
 
@@ -95,8 +101,17 @@ poetry run tp3-metricas --variante-id c3274567371ff42b \
 pools congelados**, así que *cuál se mide* es una decisión declarada y no un `mtime`. Si falta un
 argumento, el error te dice cuáles hay y cómo se llaman.
 
-🔴 **Dos avisos sobre los otros dos comandos:**
+🔴 **Tres avisos sobre los otros comandos:**
 
+- ⚠️ **`tp3-metricas tabla --json` REESCRIBE la tabla de ablación, y reproduce 1.045 de sus 1.047
+  claves.** Las **dos** que difieren son **de prosa** y **ninguna es un número**: son las dos
+  `lectura` del análisis de sensibilidad, donde el artefacto entregado tiene una aclaración borrada
+  y el código publicado la escribe —*"(el desempate)"*—. 🔑 **Ninguna métrica se mueve: `nDCG@5`,
+  `P@5`, `QS`, latencias, tokens y USD salen idénticos**, y se puede comprobar corriéndolo. La
+  causa es la misma que la del κ: el artefacto lo escribió el código de la rama de trabajo, que
+  lleva los identificadores internos, y el publicado los lleva reemplazados por prosa. Si preferís
+  el artefacto tal como se entregó, revertí el archivo.
+  **No cuesta una request**: el comando lee artefactos y no llama al proveedor.
 - **`tp3-validar criterios` necesita `TP3_CONTACTO_AIC` y red** —no una key del proveedor—: uno de
   los criterios resuelve las URLs de las fichas en los museos, y sin ese contacto en el header AIC
   devuelve 403.
