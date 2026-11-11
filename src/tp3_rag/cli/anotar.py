@@ -188,6 +188,15 @@ def _argumentos(argv=None):
         ),
     )
     jz.add_argument(
+        "--solo-pares",
+        type=Path,
+        help=(
+            "🔴 pooling incremental · un JSON con la lista `[[consulta_id, artwork_id], …]` "
+            "de los pares a juzgar (los que no tienen juicio previo). El resto del pool no "
+            "se llama, y el aporte lo declara como alcance parcial"
+        ),
+    )
+    jz.add_argument(
         "--confirmar-gasto",
         action="store_true",
         help=(
@@ -976,7 +985,16 @@ def _juez(args, cfg, almacén, obs, rutas) -> int:
     set_ = _set_de_consultas(args, almacén, rutas, manifiesto)
     rubrica = Rúbrica.leer(almacén, rutas.rubricas, args.rubrica)
     binding_pelado = BindingDelJuez.desde_configuración(cfg)
-    n = args.limite or len(pool.items)
+    solo_pares = None
+    if args.solo_pares:
+        import json as _json
+
+        solo_pares = frozenset(
+            tuple(p) for p in _json.loads(Path(args.solo_pares).read_text(encoding="utf-8"))
+        )
+        n = sum(1 for i in pool.items if (i.consulta_id, i.artwork_id) in solo_pares)
+    else:
+        n = args.limite or len(pool.items)
 
     obs.decir(
         f"{LÍNEA}\n🔴 **El juez** · `la evaluación § Validación del LLM-judge`\n{LÍNEA}\n"
@@ -1040,7 +1058,7 @@ def _juez(args, cfg, almacén, obs, rutas) -> int:
     obs.decir("\n  corriendo…\n")
     resultado = juez.juzgar(
         pool=pool, rubrica=rubrica, set_de_consultas=set_, limite=args.limite,
-        al_juzgar=al_juzgar,
+        al_juzgar=al_juzgar, solo_pares=solo_pares,
     )
 
     aporte = resultado.aporte

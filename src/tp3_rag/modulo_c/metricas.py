@@ -410,8 +410,8 @@ class CostoMedido:
             ),
         }
 
-def corridas_de_la_tabla(corridas_de, *, raiz=None) -> dict:
-    config_ids = config_ids_de_la_tabla(raiz=raiz)
+def corridas_de_la_tabla(corridas_de, *, raiz=None, filas=None) -> dict:
+    config_ids = {**config_ids_de_la_tabla(raiz=raiz), **dict(filas or {})}
     de_la_tabla = {v: k for k, v in config_ids.items()}
     por_clave: dict[tuple[str, str], Any] = {}
     huérfanas: dict[str, int] = {}

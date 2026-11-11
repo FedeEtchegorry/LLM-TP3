@@ -136,6 +136,30 @@ def _argumentos(argv=None):
         type=Path,
         help="dónde dejar la tabla entera como JSON (por omisión, no se escribe nada)",
     )
+    tabla.add_argument(
+        "--fila",
+        action="append",
+        default=[],
+        metavar="FILA=CONFIG_ID",
+        help=(
+            "apuntar una fila a otro `config_id` (repetible). Es lo que reproduce la tabla "
+            "del diseño anterior: `--fila C3=ce0910b50e3569e9 --fila C4=e30ca8c5003c614c` "
+            "son las corridas con RRF"
+        ),
+    )
+    tabla.add_argument(
+        "--juicios-extra",
+        type=Path,
+        action="append",
+        default=[],
+        help=(
+            "🔴 pooling incremental · un `AporteDeAnotador` (CSV) con juicios de pares que "
+            "el consenso NO tiene. Se suman **solo a la población (a) completa** y solo "
+            "para pares sin grado; la (b) restringida no los ve (no pasaron por acuerdo). "
+            "Repetible. ⚠️ Extender el GT mueve el IDCG: las cinco filas se recomputan "
+            "sobre la misma base"
+        ),
+    )
     return p.parse_args(argv)
 
 def main(argv=None) -> int:
@@ -1068,11 +1092,11 @@ def _p95(valores) -> float | None:
     alto = min(bajo + 1, len(ordenados) - 1)
     return ordenados[bajo] + (posición - bajo) * (ordenados[alto] - ordenados[bajo])
 
-def _filas_de_la_tabla(cfg, almacén, obs):
+def _filas_de_la_tabla(cfg, almacén, obs, filas=None):
     from tp3_rag.dominio.corrida import AlmacenDeCorridas
 
     de = AlmacenDeCorridas(almacén, cfg["rutas.artefactos_corridas"])
-    lectura = met.corridas_de_la_tabla(de)
+    lectura = met.corridas_de_la_tabla(de, filas=filas)
     de_la_tabla = {v: k for k, v in lectura["config_ids"].items()}
     por_fila: dict[str, list] = {}
     for corrida in lectura["corridas"]:
@@ -1181,6 +1205,40 @@ def _imprimir_tabla(obs, filas, columnas, *, titulo: str, nota: str) -> None:
         )
     obs.decir(f"\n{nota}")
 
+def _juicios_extra(almacén, rutas_extra, completa) -> dict | None:
+    if not rutas_extra:
+        return None
+    from tp3_rag.dominio import ground_truth as gtmod
+
+    grados: dict[tuple[str, str], int] = {}
+    ignorados = 0
+    archivos = []
+    for ruta in rutas_extra:
+        _, filas = gtmod.partir_csv(almacén.leer_texto(ruta), ruta=ruta)
+        archivos.append(str(ruta))
+        for fila in filas:
+            crudo = (fila.get("grado") or "").strip()
+            if not crudo:
+                continue
+            par = ((fila.get("consulta_id") or "").strip(), (fila.get("artwork_id") or "").strip())
+            if par in completa.grados:
+                ignorados += 1
+                continue
+            grados[par] = int(crudo)
+    return {
+        "archivos": archivos,
+        "grados": grados,
+        "n_pares_agregados": len(grados),
+        "n_pares_ya_en_el_consenso_ignorados": ignorados,
+        "nota": (
+            "Pooling incremental (la evaluación): los pares nuevos se suman **solo a la "
+            "población (a)**. La (b) restringida no los incluye porque no pasaron por "
+            "acuerdo de dos anotadores. Extender el GT mueve el IDCG, así que las cinco "
+            "filas se recomputaron sobre esta misma base y **no se comparan** con la "
+            "tabla publicada sobre los 379."
+        ),
+    }
+
 def _tabla(args, cfg, almacén, set_, obs) -> int:  # noqa: C901 - es *la* tabla
     from tp3_rag.dominio import ground_truth as gtmod
 
@@ -1197,6 +1255,15 @@ def _tabla(args, cfg, almacén, set_, obs) -> int:  # noqa: C901 - es *la* tabla
         resoluciones=("acuerdo",),
         poblacion=met.POBLACIÓN_RESTRINGIDA,
     )
+    extra = _juicios_extra(almacén, args.juicios_extra, completa)
+    if extra:
+        import dataclasses
+
+        completa = dataclasses.replace(
+            completa,
+            grados={**completa.grados, **extra["grados"]},
+            archivo=f"{completa.archivo} + {', '.join(extra['archivos'])}",
+        )
     categoria, imagen, _ = _indices_del_set(set_)
 
     obs.decir(f"\n{LÍNEA}\n🔴 la tabla de ablación · la tabla C0–C4 — *el titular del Ejercicio 4*\n{LÍNEA}\n")
@@ -1214,7 +1281,13 @@ def _tabla(args, cfg, almacén, set_, obs) -> int:  # noqa: C901 - es *la* tabla
         f"(solo acuerdo de los dos primeros)"
     )
 
-    por_fila, lectura, repartos = _filas_de_la_tabla(cfg, almacén, obs)
+    filas = {}
+    for par in args.fila:
+        if "=" not in par:
+            raise ErrorDelProyecto(f"`--fila {par}`: se espera `FILA=CONFIG_ID`.")
+        fila, config_id = par.split("=", 1)
+        filas[fila.strip()] = config_id.strip()
+    por_fila, lectura, repartos = _filas_de_la_tabla(cfg, almacén, obs, filas=filas)
     obs.decir(
         f"\n  población de las corridas: {sum(len(v) for v in por_fila.values())} de "
         f"{lectura['en_disco']} en disco · {lectura['config_ids']}\n"
@@ -1355,6 +1428,9 @@ def _tabla(args, cfg, almacén, set_, obs) -> int:  # noqa: C901 - es *la* tabla
                 "es_una_lectura": True,
                 "pool_id": pool.pool_id,
                 "rubrica_id": args.rubrica,
+                "juicios_extra": (
+                    {k: v for k, v in extra.items() if k != "grados"} if extra else None
+                ),
                 "poblaciones": {
                     "completa": completa.a_json(),
                     "restringida": restringida.a_json(),

@@ -382,6 +382,7 @@ class Juez:
         set_de_consultas,
         limite: int | None = None,
         al_juzgar=None,
+        solo_pares=None,
     ) -> ResultadoDelJuez:
         if not rubrica.es_usable_para_anotar:
             raise ErrorDelProyecto(
@@ -390,7 +391,10 @@ class Juez:
                 f"plantilla no es un instrumento."
             )
         pedido_de = {c.consulta_id: c for c in set_de_consultas.consultas()}
-        ítems = list(pool.items)[: limite if limite else None]
+        ítems = list(pool.items)
+        if solo_pares is not None:
+            ítems = [i for i in ítems if (i.consulta_id, i.artwork_id) in set(solo_pares)]
+        ítems = ítems[: limite if limite else None]
         juicios: list[JuicioAutomático] = []
         n_llamadas = tokens_in = tokens_out = 0
         inicio = datetime.now(timezone.utc)
@@ -421,6 +425,7 @@ class Juez:
                 juicios=juicios,
                 limite=limite,
                 n_items_del_pool=len(pool.items),
+                n_seleccionados=None if solo_pares is None else len(ítems),
                 uso={
                     "n_llamadas": n_llamadas,
                     "tokens_in": tokens_in,
@@ -537,7 +542,16 @@ class Juez:
         return ordinal, Path(self.rutas.juicios_juez) / f"{base}-{ordinal}.csv"
 
     def _procedencia(
-        self, *, pool, rubrica, ordinal: int, juicios, limite, n_items_del_pool: int, uso
+        self,
+        *,
+        pool,
+        rubrica,
+        ordinal: int,
+        juicios,
+        limite,
+        n_items_del_pool: int,
+        uso,
+        n_seleccionados: int | None = None,
     ) -> dict:
         por_grado = {
             f"grado_{g}": sum(1 for j in juicios if j.grado == g) for g in GRADOS
@@ -568,7 +582,14 @@ class Juez:
                 "n_items_del_pool": n_items_del_pool,
                 "n_sin_grado": sum(1 for j in juicios if not j.juzgado),
                 "por_grado": por_grado,
-                "alcance": "completo" if limite is None else f"parcial ({limite} de {n_items_del_pool})",
+                "alcance": (
+                    f"parcial ({n_seleccionados} de {n_items_del_pool}): solo los pares sin "
+                    f"juicio previo (pooling incremental)"
+                    if n_seleccionados is not None
+                    else "completo"
+                    if limite is None
+                    else f"parcial ({limite} de {n_items_del_pool})"
+                ),
             },
             "libro_mayor": {"juez": dict(uso)},
             "nota_del_libro_mayor": (

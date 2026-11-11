@@ -369,3 +369,19 @@ def _aporte(pares, *, ordinal=1):
     )
     aporte.validar()
     return aporte
+
+def test_solo_pares_juzga_solo_esos_y_lo_declara_parcial(almacen_temporal):
+    almacén = almacen_temporal
+    rutas = _rutas_temporales()
+    puerto = LLMGrabado({"juez": [{"grado": 1, "nota": "n"}]})
+    resultado = _juez(puerto, almacén=almacén, rutas=rutas).juzgar(
+        pool=_PoolFalso(
+            [("c01-ambiguo", "cma:1"), ("c01-visual", "cma:2"), ("c01-visual", "cma:3")]
+        ),
+        rubrica=rubrica_de_prueba(),
+        set_de_consultas=_set(),
+        solo_pares=frozenset({("c01-visual", "cma:2")}),
+    )
+    assert [j.par for j in resultado.aporte.juicios] == [("c01-visual", "cma:2")]
+    conteos = resultado.aporte.procedencia["conteos"]
+    assert conteos["alcance"].startswith("parcial (1 de 3)")
