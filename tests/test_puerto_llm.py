@@ -107,3 +107,13 @@ def test_el_doble_registra_las_llamadas_para_que_se_puedan_contar():
     doble.invocar(_binding(), MENSAJES, [b"img"])
     assert doble.llamadas[0]["rol"] == "generador"
     assert doble.llamadas[0]["n_imagenes"] == 1
+
+def test_el_prefijo_del_proveedor_se_saca_solo_contra_la_api_de_openai():
+    from tp3_rag.puertos.llm import nombre_para_el_host
+
+    assert nombre_para_el_host("openai/gpt-4.1-mini", "https://api.openai.com/v1/") == "gpt-4.1-mini"
+    assert (
+        nombre_para_el_host("openai/gpt-4.1-mini", "https://sa-llmproxy.it.itba.edu.ar/")
+        == "openai/gpt-4.1-mini"
+    )
+    assert nombre_para_el_host("gpt-4o", "https://api.openai.com/v1/") == "gpt-4o"

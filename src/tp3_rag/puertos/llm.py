@@ -92,6 +92,11 @@ def _muestreo_enviado(cuerpo: Mapping[str, Any]) -> dict:
     claves = ("temperature", "top_p", "max_tokens", "seed", "response_format")
     return {k: cuerpo[k] for k in claves if k in cuerpo}
 
+def nombre_para_el_host(modelo: str, base_url: str) -> str:
+    if "api.openai.com" in (base_url or "") and modelo.startswith("openai/"):
+        return modelo.split("/", 1)[1]
+    return modelo
+
 class LLMOpenAI:
     OPERACIONES = ("invocar",)
 
@@ -130,6 +135,7 @@ class LLMOpenAI:
         _validar_modelo(binding.modelo)
         cuerpo = _cuerpo(binding, mensajes, imagenes)
         enviado = _muestreo_enviado(cuerpo)
+        cuerpo["model"] = nombre_para_el_host(cuerpo["model"], self.base_url)
 
         último: Exception | None = None
         for intento in range(1, int(binding.reintentos) + 2):

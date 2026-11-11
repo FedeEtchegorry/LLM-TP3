@@ -4,6 +4,7 @@ import time
 from dataclasses import dataclass, field
 
 from tp3_rag.nucleo.errores import ErrorDeConstrucción
+from tp3_rag.puertos.llm import nombre_para_el_host
 
 TOLERANCIA_DE_NORMA = 1e-3
 DIMS_CONOCIDAS = {"text-embedding-3-small": 1536, "text-embedding-3-large": 3072}
@@ -150,7 +151,8 @@ class EmbeddingTextoOpenAI:
         for intento in range(self.reintentos + 1):
             try:
                 return self._cliente.embeddings.create(
-                    model=self._identidad.modelo, input=textos
+                    model=nombre_para_el_host(self._identidad.modelo, self.base_url),
+                    input=textos,
                 )
             except RateLimitError:
                 if intento >= self.reintentos:
