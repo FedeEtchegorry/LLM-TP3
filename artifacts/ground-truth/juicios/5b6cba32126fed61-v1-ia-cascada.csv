@@ -1,0 +1,166 @@
+# artefacto = "AporteDeAnotador"
+# version_del_aporte = "1"
+# clase_de_identidad = 3
+# identidad = "5b6cba32126fed61-v1-ia-cascada"
+# split_id = "5b6cba32126fed61"
+# rubrica_id = "v1"
+# anotador = "ia-cascada"
+# pool_id = "5b6cba32126fed61-cascada-incremental"
+# nota_del_pool = "Procedencia, no ingrediente. Pool incremental derivado el 2026-11-11 de los top-5 de C3 y C4 con la cascada (fusion.estrategia = cascada), sin tocar 5b6cba32126fed61-definitivo. Un juicio es sobre el par, no sobre el pool que lo trajo."
+# alcance = "parcial"
+# nota_del_alcance = "El pool tiene 217 ítems y este aporte 84: son los pares sin grado en el consenso definitivo ni en ia-incremental (7 se reusan de ia-incremental, el resto del consenso)."
+# anotadores = 1
+# kappa = "0.397 nominal · 0.548 ponderado cuadrático, contra el juez gpt-4o (juicios-juez/5b6cba32126fed61-2b3d03607e84cf61-4.csv) sobre los mismos 84 pares; acuerdo exacto 50/84"
+# limitacion_de_un_solo_anotador = "Los 84 pares nuevos los anotó UN anotador (ia-cascada, Claude), no la pareja + desempate del ground truth principal. Su κ es contra el juez gpt-4o (otro proveedor), y queda en el mismo orden que el κ del juez contra el consenso (0,414)."
+# exposiciones_declaradas = ["🔴 Las fichas LECTURA de los pedidos ambiguos se fijaron DESPUÉS de haber visto las obras candidatas (una primera pasada abrió las imágenes antes de escribirlas). La rúbrica pide fijarlas antes; el anotador declara que las derivó con la escalera y no puede descartar el sesgo.", "La planilla no trae columna `fila`: la ficha va en la primera fila de cada consulta en el orden del archivo."]
+# cegueras_respetadas = ["no se abrió ningún.json de pool/", "no se abrieron juicios, juicios-juez, consensos, kappas, la decisión del acuerdo entre anotadores ni ningún -como-anotar.md", "no se abrieron corridas, informes, specs ni docs"]
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 84
+# n_consultas = 28
+# n_obras_distintas = 78
+#
+# [conteos.por_grado]
+# grado_0 = 20
+# grado_1 = 29
+# grado_2 = 35
+#
+# [procedencia]
+# commit = "cca76d61adf55e0b542b9bb5e84a9eae331bf98c"
+# anotado_por = "sesión de IA (subagente ciego), 2026-11-11 — pooling incremental de la cascada"
+# llamadas_al_proxy = 0
+# orden_de_las_filas = "por (consulta_id, artwork_id); la planilla no llevaba `fila`."
+#
+split_id,rubrica_id,anotador,consulta_id,artwork_id,grado,nota
+5b6cba32126fed61,v1,ia-cascada,c01-ambiguo,aic:4758,2,"LECTURA · c01-ambiguo · «con más vida» · ESCALÓN 1
+EJE: seres vivos — cuántas personas y animales hay representados en la escena
+MÁS: la obra muestra más figuras humanas o animales que la original, que es un camino y una casa sin ninguna figura visible
+DESCARTADA: viveza/saturación del color (lectura figurada, la descarta el escalón 1)
+|| La original no tiene figuras visibles; esta tiene campesinos, caballos con carro, una vaca y un perro. Más seres vivos: 2."
+5b6cba32126fed61,v1,ia-cascada,c01-ambiguo,cma:122345,2,"La original no tiene figuras; esta tiene varios grupos de caminantes, una figura de rojo y un perro en el camino. Más seres vivos: 2."
+5b6cba32126fed61,v1,ia-cascada,c01-conceptual,aic:79716,1,"Media propiedad: es un paisaje (árboles, agua, gansos) pero la ficha dice China, no Japón. Cultura falla, tema sí: 1."
+5b6cba32126fed61,v1,ia-cascada,c01-conceptual,cma:148358,1,"Japón sí (ficha). Tema dudoso: es más un estudio de rocas y bambú bajo la lluvia que un paisaje rural como el original (camino, casa, árboles). Dudo entre 2 y 1: 1."
+5b6cba32126fed61,v1,ia-cascada,c01-conceptual,cma:148359,2,"Japón (ficha) y paisaje: arboleda de bambú, puente, agua, terreno abierto; hereda el tema paisaje del original (campo con árboles y camino). 2."
+5b6cba32126fed61,v1,ia-cascada,c01-conceptual,cma:149961,2,"Japón (ficha) y paisaje: juncos, agua, cabaña y gansos; paisaje rural/natural como el original. 2."
+5b6cba32126fed61,v1,ia-cascada,c01-conceptual,cma:86114,2,"Japón (ficha) y paisaje rural: campos, sauces, figuras y búfalos; el mismo tipo de paisaje campestre que el original. 2."
+5b6cba32126fed61,v1,ia-cascada,c01-visual,aic:151108,2,La original es gris verdosa y apagada; esta está dominada por el rojo-naranja del árbol y ocres dorados. Claramente más cálida: 2.
+5b6cba32126fed61,v1,ia-cascada,c01-visual,aic:97292,2,"La original es gris verdosa con cielo frío; esta está bañada de luz dorada, amarillos, rosas y muros cálidos. Claramente más cálida: 2."
+5b6cba32126fed61,v1,ia-cascada,c01-visual,cma:115405,1,"La original es gris verdosa; esta tiene primer plano ocre-naranja y tejados cálidos, pero un cielo azul intenso domina la mitad superior. Más cálida solo en parte; dudo entre 2 y 1: 1."
+5b6cba32126fed61,v1,ia-cascada,c01-visual,cma:148968,1,"La original es gris verdosa; esta tiene algunos árboles otoñales rojizos y luz cálida en el claro, pero predominan verdes oscuros y cielo azul. Algo más cálida, poco: 1."
+5b6cba32126fed61,v1,ia-cascada,c02-ambiguo,aic:238272,2,"LECTURA · c02-ambiguo · «más tranquilo» · ESCALÓN 1
+EJE: actividad — cuánta acción y movimiento muestra la escena (figuras en acción, botes, agua agitada, animales)
+MÁS: menos acción que la original (caza de ballenas con barcos, botes, arpones, osos y hielo), escena más quieta
+DESCARTADA: paleta o atmósfera más serena (lectura de lo que la imagen evoca, la descarta el escalón 1)
+|| La original es una caza de ballenas llena de botes, arponeros y osos; esta es un río calmo con unos pocos pescadores y velas lejanas. Menos actividad: 2."
+5b6cba32126fed61,v1,ia-cascada,c02-conceptual,cma:132931,2,"China (ficha) y escena de agua: un bote con figuras sobre el río es el asunto, con sauce y orilla. Las dos mitades: 2."
+5b6cba32126fed61,v1,ia-cascada,c02-conceptual,cma:145426,1,China (ficha). El asunto es la tormenta sobre el acantilado y la aldea; el agua con barcos ocupa solo la franja inferior. Agua presente pero no claramente el asunto; defendible en las dos direcciones: 1.
+5b6cba32126fed61,v1,ia-cascada,c03-ambiguo,aic:57051,2,"LECTURA · c03-ambiguo · «más imponente» · ESCALÓN 1
+EJE: escala — cuánto domina la arquitectura (o masa principal) sobre las figuras humanas, medido por tamaño relativo y fracción del cuadro que ocupa
+MÁS: la masa construida es más grande respecto de las figuras y ocupa más del cuadro que el interior de iglesia de la original, cuyas figuras ya son chicas bajo la cúpula
+DESCARTADA: solemnidad o grandiosidad del registro (lectura de lo que la imagen evoca, la descarta el escalón 1; además pide atribuir un registro, escalón 2)
+|| En la original las figuras miden ~1/8 del alto bajo una cúpula; acá arcos y columnata colosales ocupan casi todo el cuadro y las figuras son diminutas (~1/15). Más escala: 2."
+5b6cba32126fed61,v1,ia-cascada,c03-visual,aic:57048,0,"Pedido: el mismo interior pero en tonos fríos. Es un interior arquitectónico (columnata abovedada) pero la paleta es ocre-dorada y cálida, igual o más cálida que la original (beige, rosado, ocre). No se movió hacia lo frío: acompaña a la imagen e ignora el pedido, 0. (No aplico media propiedad: 'el mismo interior' es el ancla, el cambio pedido es la paleta, como en el ejemplo del bambú.)"
+5b6cba32126fed61,v1,ia-cascada,c04-ambiguo,aic:65916,0,"LECTURA · c04-ambiguo · «más ordenado» · ESCALÓN 3
+EJE: simetría — cuánto se repite la composición en espejo respecto de un eje (bloques, líneas y color equilibrados a ambos lados)
+MÁS: composición más simétrica que la original, cuya grilla tiene los planos grises y el rectángulo rojo descentrados
+DESCARTADA: regularidad/alineación ortogonal de la grilla (literal y señalable, pero la original ya está en el extremo: escalón 3); lectura figurada 'más calma/pulcro' descartada en el escalón 1
+|| La original es una grilla asimétrica; esta es una composición de formas curvas, zigzags y colores chocando, sin eje de simetría. No se movió (va en contra): 0."
+5b6cba32126fed61,v1,ia-cascada,c04-ambiguo,aic:9021,0,"La original es una grilla asimétrica pero regular; esta es una composición facetada con la cascada y la rueda descentradas, sin simetría. No más simétrica: 0."
+5b6cba32126fed61,v1,ia-cascada,c04-conceptual,cma:149083,1,India (ficha: Mughal India). Composición de marcos rectangulares anidados con caligrafía y borde floral con animales: la estructura es rectilínea pero el contenido no es una composición geométrica. Media propiedad dudosa: 1.
+5b6cba32126fed61,v1,ia-cascada,c04-conceptual,cma:150710,0,"China, no India; un bambú a tinta, sin composición geométrica. Ninguna de las dos propiedades: 0."
+5b6cba32126fed61,v1,ia-cascada,c04-conceptual,cma:160803,0,"Corea, no India; multitud de deidades budistas, sin composición geométrica (la división en paneles es el formato del biombo, no lo pintado). Ninguna propiedad: 0."
+5b6cba32126fed61,v1,ia-cascada,c04-conceptual,cma:314466,1,"India (ficha: Northwestern India) pero el tema es un ramo de flores orgánico, no una composición geométrica. Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c04-visual,cma:151970,0,"No es geométrica (tinta de juncos y aves). Lo marrón es la seda del soporte, no lo pintado (tinta gris-negra), así que tampoco cuenta como tonos tierra. Ninguna propiedad: 0."
+5b6cba32126fed61,v1,ia-cascada,c04-visual,cma:715339,1,"Geométrica sí (planos facetados cubistas, como la grilla de la original). Tonos tierra solo en parte: hay marrones, ocres y grises, pero también azul intenso y verdes. La original es gris/blanco/rojo; esta es más terrosa pero no dominada por tierras. Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c05-ambiguo,cma:125951,0,"LECTURA · c05-ambiguo · «más cercano» · ESCALÓN 1
+EJE: distancia — qué fracción del alto del cuadro ocupa el rostro (encuadre más cerrado = más cerca)
+MÁS: encuadre más cerrado que la original (busto, rostro ~1/4 del alto), con la cara ocupando más del cuadro
+DESCARTADA: intimidad o cercanía emocional con la retratada (figurada, la descarta el escalón 1)
+|| La original es un busto con el rostro ~1/4 del alto; esta es de medio cuerpo con brazo y rostro ~1/6. Más lejos, no más cerca: 0."
+5b6cba32126fed61,v1,ia-cascada,c05-ambiguo,cma:148959,0,"La original tiene el rostro ~1/4 del alto; esta es un busto equivalente con el rostro ~1/5, mismo encuadre o algo más abierto. El eje no se movió: 0."
+5b6cba32126fed61,v1,ia-cascada,c05-conceptual,aic:27307,2,"Francia (ficha: David, France) y retrato de mujer (la retratada sentada, con el niño apenas visible en la cuna; 'Madame de Pastoret' del título confirma). Las dos mitades: 2."
+5b6cba32126fed61,v1,ia-cascada,c05-visual,aic:40599,0,"La original tiene fondo oscuro y blancos en el encaje; esta tiene fondo igual de oscuro y vestido negro casi total, con solo las mangas rojas. No es más luminosa (si acaso más oscura): 0."
+5b6cba32126fed61,v1,ia-cascada,c05-visual,cma:103366,2,"La original es un retrato con fondo casi negro; esta, también retrato de mujer, tiene fondo claro con cielo, cortinas rosadas y vestido blanco. Paleta claramente más luminosa: 2."
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,aic:105887,2,"LECTURA · c06-ambiguo · «más humano» · ESCALÓN 2
+EJE: cuerpo — cuánto de figura humana muestra la obra (cuántas personas y qué fracción del cuerpo: cabeza/busto → medio cuerpo con brazos y manos → cuerpo entero)
+MÁS: más figura humana que la original, que es una sola cabeza con hombros, sin brazos ni manos
+DESCARTADA: más naturalista/menos estilizado (pide atribuir una categoría de historia del arte, escalón 2); más emotivo o cálido humanamente (figurada, escalón 1)
+|| La original es una cabeza con hombros sin manos; esta muestra a la mujer de medio cuerpo con ambos brazos y manos apoyados. Más cuerpo: 2."
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:122348,0,"La original es cabeza y hombros sin manos; esta es un busto oval igual, sin brazos ni manos. El eje no se movió: 0."
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:128364,2,"La original es cabeza y hombros sin manos; esta muestra torso, ambos brazos y las manos alzadas. Más cuerpo: 2."
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:137259,2,La original es cabeza y hombros; esta es de medio cuerpo con brazo y mano sosteniendo flores. Más cuerpo: 2.
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:139730,2,La original es cabeza y hombros; esta es de medio cuerpo con brazos y manos cruzadas. Más cuerpo: 2.
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:146011,1,"Una figura (bodhisattva de forma humana) de cuerpo entero, pero diminuta, sobre un león y dentro de un rollo; la fracción del cuadro con cuerpo humano es menor que en la original. Dudo entre 2 (cuerpo entero) y 0 (menos figura humana en el cuadro): 1."
+5b6cba32126fed61,v1,ia-cascada,c06-ambiguo,cma:154283,0,"La original es cabeza y hombros; esta es una cabeza de perfil con hombros, sin brazos ni manos. El eje no se movió: 0."
+5b6cba32126fed61,v1,ia-cascada,c06-conceptual,cma:124091,1,"Italia sí (ficha). Retrato sí, pero nada en la imagen ni en la ficha lo hace conmemorativo (retrato de una viva, sin marca funeraria). Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c06-conceptual,cma:145923,1,Conmemorativo sí: retrato funerario (lo dice el título 'Funerary Panel'; la imagen es un retrato de momia tipo Fayum). Cultura 'Antonine-era Roman Empire': romano pero no necesariamente Italia (el tipo es egipcio-romano). Dudo si cuenta como Italia: 1.
+5b6cba32126fed61,v1,ia-cascada,c06-conceptual,cma:150053,0,"Ficha: Francia (Gérôme), no Italia (el título nombra a una italiana como modelo, pero eso no es la cultura de la obra). Y es una cabeza de estudio, no un retrato conmemorativo. Ninguna de las dos: 0."
+5b6cba32126fed61,v1,ia-cascada,c06-conceptual,cma:153406,1,Italia sí (ficha). Retrato de joven como San Sebastián (título); nada lo hace conmemorativo. Media propiedad: 1.
+5b6cba32126fed61,v1,ia-cascada,c06-conceptual,cma:97167,1,Italia sí (ficha). Retrato de joven sin señal conmemorativa. Media propiedad: 1.
+5b6cba32126fed61,v1,ia-cascada,c06-visual,cma:146469,1,"Es un rostro (retrato de busto). La original tiene fondo gris, manto púrpura y oro brillante; esta tiene fondo malva grisáceo, negro, blanco y cadenas de oro. Algo menos saturada en el fondo pero el oro y el blanco siguen vivos. Desplazamiento leve, dudoso: 1."
+5b6cba32126fed61,v1,ia-cascada,c06-visual,cma:154283,1,"Es un rostro (cabeza de perfil). La original: gris, púrpura y oro brillante; esta: fondo rojo ladrillo, ocre y verdoso, más oscura y terrosa pero con un rojo intenso. No termino de ver si es más apagada o solo más oscura: 1."
+5b6cba32126fed61,v1,ia-cascada,c06-visual,cma:160470,0,"No es un rostro sino una figura de cuerpo entero en un banco, y los colores (azules, rojos, estampados del kimono) no son más apagados que los de la original. Ninguna propiedad: 0."
+5b6cba32126fed61,v1,ia-cascada,c07-ambiguo,cma:147592,2,"LECTURA · c07-ambiguo · «más austero» · ESCALÓN 4
+EJE: color — cuántos colores y cuán saturados hay en lo pintado (de policromía saturada a monocromía de tinta)
+MÁS: menos colores y menos saturados que la original, que tiene verde, rojo, azul y oro saturados sobre fondo marrón
+DESCARTADA: ornamento (cantidad de decoración y objetos), literal y señalable igual que color, sobrevive al escalón 3 y pierde en el corte alfabético del escalón 4 ('color' < 'ornamento'); austeridad de vida/ascetismo (figurada, escalón 1)
+|| La original es policroma y saturada (verde, rojo, azul, oro); esta es tinta monocroma gris sobre papel claro. Mucho menos color: 2. (Bajo la lectura descartada también bajaría.)"
+5b6cba32126fed61,v1,ia-cascada,c07-ambiguo,cma:152851,2,"La original es policroma y saturada; esta es dibujo a tinta de línea, sin color salvo un toque rojo en los labios. Mucho menos color: 2."
+5b6cba32126fed61,v1,ia-cascada,c07-conceptual,aic:241750,1,"China sí (ficha). Es un retrato, pero de un funcionario con túnica de dragones, no de un monje ni de un sabio (el título dice 'Official'). Media propiedad, dudosa porque un funcionario letrado podría leerse como sabio: 1."
+5b6cba32126fed61,v1,ia-cascada,c07-conceptual,cma:147572,1,China sí (ficha). No son retratos de monjes ni sabios sino una asamblea de bodhisattvas (deidades). Media propiedad: 1.
+5b6cba32126fed61,v1,ia-cascada,c07-conceptual,cma:148384,1,"China sí (ficha); el título dice 'Scholar' y la imagen muestra a un anciano sabio con un niño, pero es una escena de paisaje (mirando la cascada), no un retrato. Dudo entre 2 y 1: 1."
+5b6cba32126fed61,v1,ia-cascada,c07-conceptual,cma:150844,1,"China sí (ficha). Es un ícono del Buda con dos acompañantes de aspecto monacal, no un retrato de monje o sabio. Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c07-conceptual,cma:161268,1,"Corea (ficha), no China. Retrato de un funcionario barbado (título 'Official'); que cuente como sabio es dudoso. A lo sumo media propiedad, dudo entre 1 y 0: 1."
+5b6cba32126fed61,v1,ia-cascada,c07-visual,aic:241750,1,"Es un retrato (funcionario sentado). La original domina verde, rojo y fondo marrón; esta domina el azul de la túnica, pero con fondo dorado cálido y collar rojo. Algo más fría, no claramente: 1."
+5b6cba32126fed61,v1,ia-cascada,c07-visual,cma:150944,0,"Retrato, pero la original es mayormente verde y marrón y esta está dominada por un rojo intenso: más cálida, dirección contraria: 0."
+5b6cba32126fed61,v1,ia-cascada,c08-ambiguo,aic:76816,2,"LECTURA · c08-ambiguo · «más caótico» · ESCALÓN 4
+EJE: densidad — cuántas figuras y elementos hay por área del cuadro y cuánto se superponen
+MÁS: más figuras/elementos amontonados y superpuestos que la original, que tiene ~9 figuras separadas sobre un fondo verde liso con mucho espacio vacío
+DESCARTADA: desorden de orientación (figuras en direcciones dispares, sin estructura), literal y señalable, sobrevive al escalón 3 y pierde en el corte alfabético del escalón 4 ('densidad' < 'desorden'); violencia o agitación emocional (figurada, escalón 1)
+|| La original tiene ~9 figuras separadas sobre fondo liso; esta tiene ~50 figuras apiñadas y superpuestas, toldos, caballos y camellos llenando todo el folio. Más densidad: 2."
+5b6cba32126fed61,v1,ia-cascada,c08-ambiguo,cma:148767,2,"La original tiene ~9 figuras separadas sobre fondo liso; esta tiene ~20 figuras más carros y caballos en compartimentos que llenan todo el folio, sin fondo vacío. Más densidad (aunque compartimentada): 2."
+5b6cba32126fed61,v1,ia-cascada,c08-ambiguo,cma:170784,0,"La original tiene ~9 figuras sobre fondo liso; esta tiene ~10 figuras y caballos muy espaciados sobre un paisaje rocoso. Mismo número de figuras y más separadas: el eje no se movió, 0."
+5b6cba32126fed61,v1,ia-cascada,c08-ambiguo,cma:170831,1,"La mitad superior es texto y paisaje vacío; abajo, elefantes, jinetes y caídos se superponen en una franja apretada. Más denso en la franja de batalla, menos en el folio entero. Dudo entre 2 y 0: 1."
+5b6cba32126fed61,v1,ia-cascada,c08-ambiguo,cma:314450,2,"La original tiene ~9 figuras; esta tiene más de un centenar de figuras, tigres, jabalíes, caballos y elefantes cubriendo todo el campo. Mucha más densidad: 2."
+5b6cba32126fed61,v1,ia-cascada,c08-conceptual,aic:81505,1,"Francia sí (Delacroix, ficha). Es un combate violento de jinetes armados contra leones, pero una cacería, no una batalla. Defendible en las dos direcciones: 1."
+5b6cba32126fed61,v1,ia-cascada,c08-conceptual,cma:141728,2,"Francia sí (Girodet, ficha) y escena de batalla: combate cuerpo a cuerpo con sables, soldados y caídos (título: revuelta del Cairo). Las dos mitades: 2."
+5b6cba32126fed61,v1,ia-cascada,c08-visual,cma:148767,0,"La original tiene verde, rojo y amarillo saturados; esta tiene rojos, azules y negros igual de saturados. No es más apagada: 0."
+5b6cba32126fed61,v1,ia-cascada,c08-visual,cma:170774,2,"Escena narrativa de figuras y animales en acción, como la original. La original es de verde, rojo y amarillo saturados; esta es de fondo beige con rojos, grises y azules jaspeados y desvaídos. Más apagada: 2."
+5b6cba32126fed61,v1,ia-cascada,c08-visual,cma:170784,2,"Escena narrativa con jinetes y figuras en acción (cacería), como la original. La original es de verde, rojo y amarillo saturados; esta es casi toda ocre-beige pálido, con pequeños toques de color en las figuras. Más apagada: 2."
+5b6cba32126fed61,v1,ia-cascada,c08-visual,cma:314406,1,"Escena narrativa con muchas figuras. La original es de verde y rojo/amarillo saturados; esta tiene fondo salmón, blancos y tonos más pastel, pero también naranjas y verdes vivos. Algo menos saturada, no claramente apagada: 1."
+5b6cba32126fed61,v1,ia-cascada,c09-ambiguo,cma:149626,2,"LECTURA · c09-ambiguo · «más delicado» · ESCALÓN 4
+EJE: peso — qué fracción del cuadro cubren masas densas u oscuras de tinta (tronco, roca, follaje apretado)
+MÁS: menos superficie cubierta por masas densas/oscuras que la original, cuyo tronco grueso, roca oscura y floración apretada llenan casi todo el rollo
+DESCARTADA: trazo (finura de las líneas), literal y señalable, sobrevive al escalón 3 (la original mezcla líneas finas y masas gruesas, no está en el extremo) y pierde en el corte alfabético del escalón 4 ('peso' < 'trazo'); sensibilidad/fragilidad expresiva (figurada, escalón 1)
+|| La original cubre ~70% del rollo con tronco, roca y flor densos; acá tronco y rocas en grises medios ocupan ~35% con mucho vacío. Menos peso: 2."
+5b6cba32126fed61,v1,ia-cascada,c09-ambiguo,cma:151078,2,La original llena casi todo el rollo de masas de tinta; esta es una sola rama oscura y unas flores con la mayor parte del rollo vacía. Mucho menos peso (aunque la rama sea de trazo grueso): 2.
+5b6cba32126fed61,v1,ia-cascada,c09-ambiguo,cma:159726,2,"La original llena casi todo el rollo; esta es una rama esbelta con hojas y flores claras, ~20% del rollo, el resto vacío. Menos peso: 2."
+5b6cba32126fed61,v1,ia-cascada,c09-conceptual,cma:159724,2,"China sí (Shen Zhou, ficha) y el mismo tema que la original: árbol en flor sobre roca, con plantas al pie (y pájaros). Las dos mitades: 2."
+5b6cba32126fed61,v1,ia-cascada,c09-visual,aic:46450,2,"Motivo: planta florida trepando sobre roca, como el árbol en flor con roca de la original. Color: la original es tinta monocroma; esta tiene glicinas azul-violeta, hojas ocre y pájaros con rojo y azul. Con color: 2."
+5b6cba32126fed61,v1,ia-cascada,c09-visual,cma:149609,1,"La original es tinta monocroma; esta tiene color, pero tenue (verde-azulado en hojas de narciso, amarillo en las flores). El motivo es parecido pero no el mismo (narcisos y árboles pelados sobre roca, no árbol en flor). Las dos propiedades a medias: 1."
+5b6cba32126fed61,v1,ia-cascada,c09-visual,cma:149613,1,"Color sí: la original es tinta monocroma; esta tiene hojas rojas, figura con túnica naranja y azules en montes. Pero el motivo es un paisaje con lago, figura y grulla, no el árbol en flor con roca. Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:16362,0,"LECTURA · c10-ambiguo · «más generoso» · ESCALÓN 4
+EJE: abundancia — cuántas figuras, animales y objetos muestra la escena
+MÁS: más figuras/animales/objetos que la original, que muestra dos figuras y un caballo contra un cielo casi vacío
+DESCARTADA: el acto de dar o compartir (pide atribuir una intención, la descarta el escalón 2); amplitud (tamaño de las formas en el cuadro), literal y señalable, sobrevive al escalón 3 y pierde en el corte alfabético del escalón 4 ('abundancia' < 'amplitud')
+|| La original tiene dos figuras y un caballo; esta también tiene dos figuras y un caballo. El eje no se movió: 0."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:16488,2,"La original tiene dos figuras y un caballo; esta tiene cuatro figuras, un amorcillo, caballo, carro, escudo, carcaj, árboles y río. Más abundancia: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:21937,2,"La original tiene dos figuras y un caballo; esta tiene una docena de figuras en primer plano, multitud a la izquierda, cabalgatas y ciudad al fondo, regalos y arquitectura. Más abundancia: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:33249,2,"La original tiene dos figuras y un caballo; esta tiene unas diez figuras, soldados con armas, estandartes y arquitectura. Más abundancia: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:51130,2,"La original tiene dos figuras y un caballo; esta tiene unas diez figuras alegóricas, putti, balanza, trompeta, libro y herramientas. Más abundancia: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,aic:61665,0,"La original tiene dos figuras y un caballo; esta tiene dos figuras (santo y niño) y un libro, con una figurita lejana al fondo. El eje no se movió: 0."
+5b6cba32126fed61,v1,ia-cascada,c10-ambiguo,cma:95264,2,"La original tiene dos figuras y un caballo; esta tiene más de quince figuras, varios caballos, carro, ángeles, guirnaldas y marco arquitectónico. Más abundancia: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-conceptual,cma:146184,2,"Mogol (ficha: Mughal India, 1585) y escena con jinetes: batalla con decenas de hombres a caballo. Las dos mitades: 2."
+5b6cba32126fed61,v1,ia-cascada,c10-conceptual,cma:170774,0,"No hay jinetes: caballos sueltos y hombres a pie, uno con lazo (título: atrapando a Rakhsh). La mitad visible falla; la ficha además dice 'India', no mogol. 0."
+5b6cba32126fed61,v1,ia-cascada,c10-conceptual,cma:314486,1,"Jinete sí (un rajá a caballo cazando un búfalo). Cultura: la ficha dice Northwestern India y el título nombra a un maharao de Kota (rajput, 1832), no arte mogol. Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c10-visual,aic:16488,0,"La original tiene cielo azul intenso y caballo blanco; esta tiene cielo celeste pálido, nubes rosadas y telas naranja: igual o más clara, no más oscura. Y no es la misma escena (no hay jinete). 0."
+5b6cba32126fed61,v1,ia-cascada,c10-visual,cma:109507,1,"Paleta más oscura sí: la original tiene cielo azul vivo y caballo blanco; esta, fondo de cortina granate y negro, con acero gris. Pero no es la misma escena (retrato de medio cuerpo, sin caballo ni mendigo). Media propiedad: 1."
+5b6cba32126fed61,v1,ia-cascada,c10-visual,cma:140149,1,"No es la misma escena (arcángel solo, sin caballo). Paleta: la original es cielo azul vivo y caballo blanco; esta, rosa salmón, marrones y verde oscuro, algo más oscura pero con escudo blanco. Media propiedad y la parte de paleta, poca: 1."

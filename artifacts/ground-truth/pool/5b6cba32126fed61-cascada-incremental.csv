@@ -1,0 +1,218 @@
+pool_id,fila,consulta_id,artwork_id,obra,artista,cultura,anio,museo,source_url
+5b6cba32126fed61-cascada-incremental,1,c01-ambiguo,aic:97292,Spring in France,Robert William Vonnoh,France,1890,aic,https://www.artic.edu/artworks/97292
+5b6cba32126fed61-cascada-incremental,2,c01-ambiguo,cma:150054,"Landscape at Saint-André, Near Marseilles",Paul Guigou,France,1860,cma,https://clevelandart.org/art/1980.265
+5b6cba32126fed61-cascada-incremental,3,c01-ambiguo,cma:124078,Pond at Ville-d'Avray,Jean Baptiste Camille Corot,France,1865,cma,https://clevelandart.org/art/1944.80
+5b6cba32126fed61-cascada-incremental,4,c01-ambiguo,cma:157104,The Seine at Bas-Meudon,Johan Barthold Jongkind,France,1865,cma,https://clevelandart.org/art/1993.236
+5b6cba32126fed61-cascada-incremental,5,c01-ambiguo,cma:122345,A Cottage in the Woods,Meindert Hobbema,Netherlands,1657,cma,https://clevelandart.org/art/1942.641
+5b6cba32126fed61-cascada-incremental,6,c01-ambiguo,cma:95275,Willows and Farmhouse at Sainte-Catherine-lès-Arras,Jean Baptiste Camille Corot,France,1871,cma,https://clevelandart.org/art/1916.1047
+5b6cba32126fed61-cascada-incremental,7,c01-ambiguo,aic:4758,Stoke-by-Nayland,John Constable,England,1836,aic,https://www.artic.edu/artworks/4758
+5b6cba32126fed61-cascada-incremental,8,c01-ambiguo,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-cascada-incremental,9,c01-ambiguo,aic:6005,The Banks of the Marne in Winter,Camille Pissarro,France,1866,aic,https://www.artic.edu/artworks/6005
+5b6cba32126fed61-cascada-incremental,10,c01-conceptual,cma:149961,"Wild Geese Descending on a Sandbar, from Eight Views of Xiao-Xiang",Tani Bunchō,Japan,1788,cma,https://clevelandart.org/art/1980.188.4
+5b6cba32126fed61-cascada-incremental,11,c01-conceptual,cma:86114,Farming and Herding Buffalo in Summer,Kano Hideyori,Japan,1525,cma,https://clevelandart.org/art/2015.594
+5b6cba32126fed61-cascada-incremental,12,c01-conceptual,cma:148359,Bamboo in Wind,Genga,Japan,1500,cma,https://clevelandart.org/art/1975.71.2
+5b6cba32126fed61-cascada-incremental,13,c01-conceptual,cma:159756,Thatched Hut by Water's Edge,,Japan,1500,cma,https://clevelandart.org/art/1997.125
+5b6cba32126fed61-cascada-incremental,14,c01-conceptual,cma:148358,Bamboo in Rain,Genga,Japan,1500,cma,https://clevelandart.org/art/1975.71.1
+5b6cba32126fed61-cascada-incremental,15,c01-conceptual,aic:79716,Flight of Geese,,China,1279,aic,https://www.artic.edu/artworks/79716
+5b6cba32126fed61-cascada-incremental,16,c01-visual,cma:128371,The Pond at the Entrance of the Woods,Jean Baptiste Camille Corot,France,1860,cma,https://clevelandart.org/art/1951.330
+5b6cba32126fed61-cascada-incremental,17,c01-visual,aic:6005,The Banks of the Marne in Winter,Camille Pissarro,France,1866,aic,https://www.artic.edu/artworks/6005
+5b6cba32126fed61-cascada-incremental,18,c01-visual,cma:95275,Willows and Farmhouse at Sainte-Catherine-lès-Arras,Jean Baptiste Camille Corot,France,1871,cma,https://clevelandart.org/art/1916.1047
+5b6cba32126fed61-cascada-incremental,19,c01-visual,aic:151108,The Mill Pond,George Inness,United States,1889,aic,https://www.artic.edu/artworks/151108
+5b6cba32126fed61-cascada-incremental,20,c01-visual,cma:128392,"Edge of the Woods Near L'Hermitage, Pontoise",Camille Pissarro,France,1879,cma,https://clevelandart.org/art/1951.356
+5b6cba32126fed61-cascada-incremental,21,c01-visual,cma:150054,"Landscape at Saint-André, Near Marseilles",Paul Guigou,France,1860,cma,https://clevelandart.org/art/1980.265
+5b6cba32126fed61-cascada-incremental,22,c01-visual,cma:148968,In the Forest,Célestin François Nanteuil,France,1841,cma,https://clevelandart.org/art/1977.125
+5b6cba32126fed61-cascada-incremental,23,c01-visual,aic:97292,Spring in France,Robert William Vonnoh,France,1890,aic,https://www.artic.edu/artworks/97292
+5b6cba32126fed61-cascada-incremental,24,c01-visual,cma:115405,The Pigeon Tower at Bellevue,Paul Cezanne,France,1890,cma,https://clevelandart.org/art/1936.19
+5b6cba32126fed61-cascada-incremental,25,c02-ambiguo,cma:148368,English Warship Firing a Salute,,Netherlands,1690,cma,https://clevelandart.org/art/1975.80
+5b6cba32126fed61-cascada-incremental,26,c02-ambiguo,aic:120163,Capture of the Tripoli by the Enterprise,Thomas Birch,Philadelphia,1806,aic,https://www.artic.edu/artworks/120163
+5b6cba32126fed61-cascada-incremental,27,c02-ambiguo,aic:238272,River Landscape with a View of Naarden,Salomon van Ruysdael,Netherlands,1642,aic,https://www.artic.edu/artworks/238272
+5b6cba32126fed61-cascada-incremental,28,c02-ambiguo,aic:16370,Fishing Boats off an Estuary,Jan van Goyen,Netherlands,1633,aic,https://www.artic.edu/artworks/16370
+5b6cba32126fed61-cascada-incremental,29,c02-ambiguo,cma:163456,"Harbor of Boston, with the City in the Distance",Fitz Henry Lane,United States,1846,cma,https://clevelandart.org/art/2004.35
+5b6cba32126fed61-cascada-incremental,30,c02-ambiguo,aic:81535,"Sea View, Calm Weather (Vue de mer, temps calme)",Édouard Manet,France,1864,aic,https://www.artic.edu/artworks/81535
+5b6cba32126fed61-cascada-incremental,31,c02-ambiguo,cma:153388,"View of Bordeaux, from the Quai des Chartrons",Eugène Boudin,France,1874,cma,https://clevelandart.org/art/1986.73
+5b6cba32126fed61-cascada-incremental,32,c02-ambiguo,aic:244013,Shipwreck near a Rocky Coast,Thomas Birch,United States,1833,aic,https://www.artic.edu/artworks/244013
+5b6cba32126fed61-cascada-incremental,33,c02-ambiguo,aic:495,Coast Scene,"Reinier Nooms, called Zeeman",Netherlands,1645,aic,https://www.artic.edu/artworks/495
+5b6cba32126fed61-cascada-incremental,34,c02-conceptual,cma:149126,Fisherman's Joy,Qian Gu,China,1572,cma,https://clevelandart.org/art/1977.56
+5b6cba32126fed61-cascada-incremental,35,c02-conceptual,cma:135953,Greeting the Spring,Wu Bin,China,1600,cma,https://clevelandart.org/art/1959.45
+5b6cba32126fed61-cascada-incremental,36,c02-conceptual,cma:155097,Boating in Moonlight,,Korea,1600,cma,https://clevelandart.org/art/1989.87
+5b6cba32126fed61-cascada-incremental,37,c02-conceptual,cma:149415,Boats at Anchor on West Lake at the City Gate,,China,1150,cma,https://clevelandart.org/art/1978.68
+5b6cba32126fed61-cascada-incremental,38,c02-conceptual,cma:145426,River Village in a Rainstorm,Lu Wenying,China,1475,cma,https://clevelandart.org/art/1970.76
+5b6cba32126fed61-cascada-incremental,39,c02-conceptual,cma:132931,Landscape Album in Various Styles: Pleasure in a Mountain Brook,Zha Shibiao,China,1684,cma,https://clevelandart.org/art/1955.37.9
+5b6cba32126fed61-cascada-incremental,40,c02-conceptual,cma:159741,View of Xiao Xiang,Kenkō Shōkei,Japan,1478,cma,https://clevelandart.org/art/1997.113
+5b6cba32126fed61-cascada-incremental,41,c02-visual,aic:244013,Shipwreck near a Rocky Coast,Thomas Birch,United States,1833,aic,https://www.artic.edu/artworks/244013
+5b6cba32126fed61-cascada-incremental,42,c02-visual,cma:153388,"View of Bordeaux, from the Quai des Chartrons",Eugène Boudin,France,1874,cma,https://clevelandart.org/art/1986.73
+5b6cba32126fed61-cascada-incremental,43,c02-visual,cma:163456,"Harbor of Boston, with the City in the Distance",Fitz Henry Lane,United States,1846,cma,https://clevelandart.org/art/2004.35
+5b6cba32126fed61-cascada-incremental,44,c02-visual,aic:495,Coast Scene,"Reinier Nooms, called Zeeman",Netherlands,1645,aic,https://www.artic.edu/artworks/495
+5b6cba32126fed61-cascada-incremental,45,c02-visual,aic:4796,Fishing Boats with Hucksters Bargaining for Fish,Joseph Mallord William Turner,England,1832,aic,https://www.artic.edu/artworks/4796
+5b6cba32126fed61-cascada-incremental,46,c02-visual,cma:148368,English Warship Firing a Salute,,Netherlands,1690,cma,https://clevelandart.org/art/1975.80
+5b6cba32126fed61-cascada-incremental,47,c03-ambiguo,cma:147938,"Interior of the Pantheon, Rome",Giovanni Paolo Panini,Italy,1747,cma,https://clevelandart.org/art/1974.39
+5b6cba32126fed61-cascada-incremental,48,c03-ambiguo,aic:57051,The Fountains,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57051
+5b6cba32126fed61-cascada-incremental,49,c03-ambiguo,aic:57048,The Old Temple,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57048
+5b6cba32126fed61-cascada-incremental,50,c03-ambiguo,cma:126770,"Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187
+5b6cba32126fed61-cascada-incremental,51,c03-ambiguo,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-cascada-incremental,52,c03-ambiguo,cma:148861,"The Colonnade of Saint Peter's, Rome, during the Conclave",Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.1
+5b6cba32126fed61-cascada-incremental,53,c03-ambiguo,cma:126772,"Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782",Francesco Guardi,Italy,1778,cma,https://clevelandart.org/art/1949.187.2
+5b6cba32126fed61-cascada-incremental,54,c03-conceptual,aic:12891,Theodosius Repulsed from the Church by Saint Ambrose,Alessandro Magnasco,Italy,1700,aic,https://www.artic.edu/artworks/12891
+5b6cba32126fed61-cascada-incremental,55,c03-conceptual,cma:148862,The Grotto of Posillipo,Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.2
+5b6cba32126fed61-cascada-incremental,56,c03-conceptual,cma:145450,Interior of a Church,Emanuel de Witte,Netherlands,1675,cma,https://clevelandart.org/art/1971.1
+5b6cba32126fed61-cascada-incremental,57,c03-conceptual,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-cascada-incremental,58,c03-conceptual,cma:148861,"The Colonnade of Saint Peter's, Rome, during the Conclave",Hubert Robert,France,1764,cma,https://clevelandart.org/art/1976.97.1
+5b6cba32126fed61-cascada-incremental,59,c03-conceptual,cma:111691,Interior of a Synagogue,Alessandro Magnasco,Italy,1725,cma,https://clevelandart.org/art/1930.22
+5b6cba32126fed61-cascada-incremental,60,c03-visual,aic:57049,The Obelisk,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57049
+5b6cba32126fed61-cascada-incremental,61,c03-visual,cma:145450,Interior of a Church,Emanuel de Witte,Netherlands,1675,cma,https://clevelandart.org/art/1971.1
+5b6cba32126fed61-cascada-incremental,62,c03-visual,aic:57048,The Old Temple,Hubert Robert,France,1787,aic,https://www.artic.edu/artworks/57048
+5b6cba32126fed61-cascada-incremental,63,c03-visual,cma:111691,Interior of a Synagogue,Alessandro Magnasco,Italy,1725,cma,https://clevelandart.org/art/1930.22
+5b6cba32126fed61-cascada-incremental,64,c03-visual,aic:43211,"Interior of the Oude Kerk, Delft",Emanuel de Witte,Holland,1675,aic,https://www.artic.edu/artworks/43211
+5b6cba32126fed61-cascada-incremental,65,c04-ambiguo,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-cascada-incremental,66,c04-ambiguo,aic:9021,The Bewitched Mill,Franz Marc,Germany,1913,aic,https://www.artic.edu/artworks/9021
+5b6cba32126fed61-cascada-incremental,67,c04-ambiguo,cma:160723,Eighteen Views of Huzhou,Song Xu,China,1583,cma,https://clevelandart.org/art/1998.78
+5b6cba32126fed61-cascada-incremental,68,c04-ambiguo,aic:65916,Movement,Marsden Hartley,United States,1913,aic,https://www.artic.edu/artworks/65916
+5b6cba32126fed61-cascada-incremental,69,c04-ambiguo,cma:84662,The Orange Christ,Maurice Denis,France,1889,cma,https://clevelandart.org/art/2020.107
+5b6cba32126fed61-cascada-incremental,70,c04-ambiguo,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-cascada-incremental,71,c04-ambiguo,cma:159736,"Geese, Reeds and Water",Yamamoto Baiitsu,Japan,1800,cma,https://clevelandart.org/art/1997.109.2
+5b6cba32126fed61-cascada-incremental,72,c04-conceptual,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-cascada-incremental,73,c04-conceptual,cma:438621,"Prince Shreyamsa dreams of the coming of Rishabha, from a Panchakalyanaka (Five Auspicious Events)",,Northwestern India,1670,cma,https://clevelandart.org/art/2021.12
+5b6cba32126fed61-cascada-incremental,74,c04-conceptual,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-cascada-incremental,75,c04-conceptual,cma:314466,Still Life: Bouquet of Flowers Emerging from the Grass,,Northwestern India,1740,cma,https://clevelandart.org/art/2018.161
+5b6cba32126fed61-cascada-incremental,76,c04-conceptual,cma:160803,Buddhist Deities,,Korea,1700,cma,https://clevelandart.org/art/1999.119
+5b6cba32126fed61-cascada-incremental,77,c04-conceptual,cma:149083,"Persian calligraphy framed by an ornamental border of flowers, birds, and deer, from the Late Shah Jahan Album",Mir 'Ali Haravi,Mughal India,1495,cma,https://clevelandart.org/art/1977.207
+5b6cba32126fed61-cascada-incremental,78,c04-conceptual,cma:150710,Ink Bamboo,,China,1200,cma,https://clevelandart.org/art/1982.138
+5b6cba32126fed61-cascada-incremental,79,c04-visual,cma:84662,The Orange Christ,Maurice Denis,France,1889,cma,https://clevelandart.org/art/2020.107
+5b6cba32126fed61-cascada-incremental,80,c04-visual,cma:151970,Waterfowl and Reeds,Liang Kai,China,1200,cma,https://clevelandart.org/art/1984.42
+5b6cba32126fed61-cascada-incremental,81,c04-visual,cma:143278,"Composition with Red, Yellow, and Blue",Piet Mondrian,Netherlands,1927,cma,https://clevelandart.org/art/1967.215
+5b6cba32126fed61-cascada-incremental,82,c04-visual,cma:715339,Still Life,María Blanchard,France,1911,cma,https://clevelandart.org/art/2026.37
+5b6cba32126fed61-cascada-incremental,83,c04-visual,cma:160723,Eighteen Views of Huzhou,Song Xu,China,1583,cma,https://clevelandart.org/art/1998.78
+5b6cba32126fed61-cascada-incremental,84,c04-visual,aic:109819,"Lozenge Composition with Yellow, Black, Blue, Red, and Gray",Piet Mondrian,Netherlands,1921,aic,https://www.artic.edu/artworks/109819
+5b6cba32126fed61-cascada-incremental,85,c04-visual,cma:150074,Seventy-Two Peaks Under the Blue Sky with Mount Furong,Matsumura Goshun,Japan,1785,cma,https://clevelandart.org/art/1980.28
+5b6cba32126fed61-cascada-incremental,86,c05-ambiguo,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-cascada-incremental,87,c05-ambiguo,cma:148959,Portrait of a Woman,Govaert Flinck,Netherlands,1646,cma,https://clevelandart.org/art/1977.117
+5b6cba32126fed61-cascada-incremental,88,c05-ambiguo,cma:125951,Portrait of a Woman,Jean-Marc Nattier,France,1743,cma,https://clevelandart.org/art/1948.183
+5b6cba32126fed61-cascada-incremental,89,c05-ambiguo,cma:149769,Susanna Anderson Rose,Frederick Sandys,England,1862,cma,https://clevelandart.org/art/1979.81
+5b6cba32126fed61-cascada-incremental,90,c05-ambiguo,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-cascada-incremental,91,c05-ambiguo,cma:147447,"Portrait of a Woman, possibly Elizabeth Boothby",Cornelis Jonson,England,1619,cma,https://clevelandart.org/art/1973.185
+5b6cba32126fed61-cascada-incremental,92,c05-ambiguo,aic:105887,Portrait of a Young Woman,Aert de Gelder,Netherlands,1685,aic,https://www.artic.edu/artworks/105887
+5b6cba32126fed61-cascada-incremental,93,c05-conceptual,aic:36678,Girl with Cherries,Eva Gonzalès,France,1865,aic,https://www.artic.edu/artworks/36678
+5b6cba32126fed61-cascada-incremental,94,c05-conceptual,cma:122341,Portrait of the Marquise d'Aguirandes,François Hubert Drouais,France,1759,cma,https://clevelandart.org/art/1942.638
+5b6cba32126fed61-cascada-incremental,95,c05-conceptual,cma:122347,Portrait of a Woman as Diana,Jean-Marc Nattier,France,1752,cma,https://clevelandart.org/art/1942.643
+5b6cba32126fed61-cascada-incremental,96,c05-conceptual,aic:40599,Portrait of a Seated Woman,Anthonis Mor,Netherlands,1560,aic,https://www.artic.edu/artworks/40599
+5b6cba32126fed61-cascada-incremental,97,c05-conceptual,cma:125951,Portrait of a Woman,Jean-Marc Nattier,France,1743,cma,https://clevelandart.org/art/1948.183
+5b6cba32126fed61-cascada-incremental,98,c05-conceptual,aic:27307,Madame de Pastoret and Her Son,Jacques Louis David,France,1791,aic,https://www.artic.edu/artworks/27307
+5b6cba32126fed61-cascada-incremental,99,c05-conceptual,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-cascada-incremental,100,c05-conceptual,cma:125895,"Portrait of a Woman, probably Aeltje Dircksdr. Pater",Frans Hals,Netherlands,1638,cma,https://clevelandart.org/art/1948.137
+5b6cba32126fed61-cascada-incremental,101,c05-visual,cma:149769,Susanna Anderson Rose,Frederick Sandys,England,1862,cma,https://clevelandart.org/art/1979.81
+5b6cba32126fed61-cascada-incremental,102,c05-visual,aic:105945,Portrait of a Lady,Frans Hals,Holland,1627,aic,https://www.artic.edu/artworks/105945
+5b6cba32126fed61-cascada-incremental,103,c05-visual,aic:40599,Portrait of a Seated Woman,Anthonis Mor,Netherlands,1560,aic,https://www.artic.edu/artworks/40599
+5b6cba32126fed61-cascada-incremental,104,c05-visual,cma:103366,Elizabeth Beltzhoover Mason,Gilbert Stuart,America,1798,cma,https://clevelandart.org/art/1921.428
+5b6cba32126fed61-cascada-incremental,105,c05-visual,aic:105887,Portrait of a Young Woman,Aert de Gelder,Netherlands,1685,aic,https://www.artic.edu/artworks/105887
+5b6cba32126fed61-cascada-incremental,106,c05-visual,cma:124080,Portrait of Mary Wise,Thomas Gainsborough,England,1773,cma,https://clevelandart.org/art/1944.82
+5b6cba32126fed61-cascada-incremental,107,c05-visual,cma:147447,"Portrait of a Woman, possibly Elizabeth Boothby",Cornelis Jonson,England,1619,cma,https://clevelandart.org/art/1973.185
+5b6cba32126fed61-cascada-incremental,108,c06-ambiguo,cma:139730,Portrait of a Man,,Northeastern France or the Burgundian Netherlands,1480,cma,https://clevelandart.org/art/1963.503
+5b6cba32126fed61-cascada-incremental,109,c06-ambiguo,aic:105887,Portrait of a Young Woman,Aert de Gelder,Netherlands,1685,aic,https://www.artic.edu/artworks/105887
+5b6cba32126fed61-cascada-incremental,110,c06-ambiguo,cma:128364,Young Woman Arranging Her Earring,Pierre-Auguste Renoir,France,1905,cma,https://clevelandart.org/art/1951.324
+5b6cba32126fed61-cascada-incremental,111,c06-ambiguo,cma:137259,Mme L . . . (Laure Borreau),Gustave Courbet,France,1863,cma,https://clevelandart.org/art/1962.2
+5b6cba32126fed61-cascada-incremental,112,c06-ambiguo,cma:145923,Funerary Panel of a Man,,Antonine-era Roman Empire,138,cma,https://clevelandart.org/art/1971.135
+5b6cba32126fed61-cascada-incremental,113,c06-ambiguo,cma:122348,A Young Man with a Chain,Rembrandt van Rijn,Netherlands,1625,cma,https://clevelandart.org/art/1942.644
+5b6cba32126fed61-cascada-incremental,114,c06-ambiguo,cma:128365,A Young Woman,Gerrit Dou,Netherlands,1640,cma,https://clevelandart.org/art/1951.325
+5b6cba32126fed61-cascada-incremental,115,c06-ambiguo,cma:154283,Symbolic Head,Odilon Redon,France,1885,cma,https://clevelandart.org/art/1988.91
+5b6cba32126fed61-cascada-incremental,116,c06-ambiguo,cma:314479,Drawing of a Man’s Head with an Unusual Turban,,Northwestern India,1770,cma,https://clevelandart.org/art/2018.174
+5b6cba32126fed61-cascada-incremental,117,c06-ambiguo,cma:146011,Monju with Five Hair Knots,,Japan,1275,cma,https://clevelandart.org/art/1971.21
+5b6cba32126fed61-cascada-incremental,118,c06-conceptual,cma:153406,Portrait of a Youth as Saint Sebastian,Marco d'Oggiono,Italy,1485,cma,https://clevelandart.org/art/1986.9
+5b6cba32126fed61-cascada-incremental,119,c06-conceptual,aic:22270,Lucrezia di Lippo di Iacopo Guidi,Andrea del Sarto,Italy,1525,aic,https://www.artic.edu/artworks/22270
+5b6cba32126fed61-cascada-incremental,120,c06-conceptual,cma:145923,Funerary Panel of a Man,,Antonine-era Roman Empire,138,cma,https://clevelandart.org/art/1971.135
+5b6cba32126fed61-cascada-incremental,121,c06-conceptual,cma:150053,Head of an Italian Woman,Jean-Léon Gérôme,France,1847,cma,https://clevelandart.org/art/1980.264
+5b6cba32126fed61-cascada-incremental,122,c06-conceptual,cma:142475,"Christ in a Mandorla, with the instruments of the Passion, with St. Stephen and St. Lawrence below",Berlinghiero,Italy,1225,cma,https://clevelandart.org/art/1966.237.c
+5b6cba32126fed61-cascada-incremental,123,c06-conceptual,cma:124091,Portrait of a Woman,Andrea del Sarto,Italy,1513,cma,https://clevelandart.org/art/1944.92
+5b6cba32126fed61-cascada-incremental,124,c06-conceptual,cma:97167,Portrait of a Young Man,Dosso Dossi,Italy,1525,cma,https://clevelandart.org/art/1916.803
+5b6cba32126fed61-cascada-incremental,125,c06-conceptual,cma:146469,Portrait of a Woman,Agnolo Bronzino,Italy,1550,cma,https://clevelandart.org/art/1972.121
+5b6cba32126fed61-cascada-incremental,126,c06-visual,cma:154283,Symbolic Head,Odilon Redon,France,1885,cma,https://clevelandart.org/art/1988.91
+5b6cba32126fed61-cascada-incremental,127,c06-visual,cma:314448,A European Woman Pouring Wine into a Cup,,,1700,cma,https://clevelandart.org/art/2018.143
+5b6cba32126fed61-cascada-incremental,128,c06-visual,cma:160470,Courtesan Seated on a Bench Enjoying the Evening Cool in Summer,Kamigaki Hōryū,Japan,1615,cma,https://clevelandart.org/art/1998.290
+5b6cba32126fed61-cascada-incremental,129,c06-visual,cma:314500,Royal Woman Holding a Flower,,Northwestern India,1665,cma,https://clevelandart.org/art/2018.194
+5b6cba32126fed61-cascada-incremental,130,c06-visual,cma:150053,Head of an Italian Woman,Jean-Léon Gérôme,France,1847,cma,https://clevelandart.org/art/1980.264
+5b6cba32126fed61-cascada-incremental,131,c06-visual,cma:146469,Portrait of a Woman,Agnolo Bronzino,Italy,1550,cma,https://clevelandart.org/art/1972.121
+5b6cba32126fed61-cascada-incremental,132,c06-visual,cma:145923,Funerary Panel of a Man,,Antonine-era Roman Empire,138,cma,https://clevelandart.org/art/1971.135
+5b6cba32126fed61-cascada-incremental,133,c07-ambiguo,cma:152851,Thirty-Six Poetic Immortals of the Buddhist Clergy,,Japan,1392,cma,https://clevelandart.org/art/1985.88
+5b6cba32126fed61-cascada-incremental,134,c07-ambiguo,cma:141727,Portrait of Duli Xingyi,Kita Genki,Japan,1671,cma,https://clevelandart.org/art/1965.31
+5b6cba32126fed61-cascada-incremental,135,c07-ambiguo,cma:147927,"Portrait of Priest Dazhi (1048–1116), Master of Law",Liu Tao,China,1100,cma,https://clevelandart.org/art/1974.29
+5b6cba32126fed61-cascada-incremental,136,c07-ambiguo,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-cascada-incremental,137,c07-ambiguo,cma:160470,Courtesan Seated on a Bench Enjoying the Evening Cool in Summer,Kamigaki Hōryū,Japan,1615,cma,https://clevelandart.org/art/1998.290
+5b6cba32126fed61-cascada-incremental,138,c07-ambiguo,cma:147592,Weizheng Riding on an Ox,Yamaguchi Sekkei,Japan,1687,cma,https://clevelandart.org/art/1973.86
+5b6cba32126fed61-cascada-incremental,139,c07-conceptual,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-cascada-incremental,140,c07-conceptual,cma:150944,Portrait of an Official,,China,1600,cma,https://clevelandart.org/art/1982.35
+5b6cba32126fed61-cascada-incremental,141,c07-conceptual,cma:148384,Scholar Watching the Waterfall,Luo Ping,China,1764,cma,https://clevelandart.org/art/1975.95
+5b6cba32126fed61-cascada-incremental,142,c07-conceptual,cma:161268,Portrait of an Official,,Korea,1800,cma,https://clevelandart.org/art/1999.45
+5b6cba32126fed61-cascada-incremental,143,c07-conceptual,cma:150844,Shakyamuni with two attendants,,China,1300,cma,https://clevelandart.org/art/1982.25
+5b6cba32126fed61-cascada-incremental,144,c07-conceptual,cma:147572,The Bodhisattvas of the Ten Stages in Attaining the Most Perfect Knowledge,,China,1454,cma,https://clevelandart.org/art/1973.70.1
+5b6cba32126fed61-cascada-incremental,145,c07-conceptual,aic:241750,Portrait of an Official,Gu Jianlong,China,1600,aic,https://www.artic.edu/artworks/241750
+5b6cba32126fed61-cascada-incremental,146,c07-visual,cma:151007,Portrait Study of Seigen,,Japan,1300,cma,https://clevelandart.org/art/1982.55
+5b6cba32126fed61-cascada-incremental,147,c07-visual,aic:147005,"Arhat Vanavasin, One of the Sixteen Great Arhats, from a Set of Twenty-Three",Tibeto-Chinese,Tibet,1675,aic,https://www.artic.edu/artworks/147005
+5b6cba32126fed61-cascada-incremental,148,c07-visual,cma:141727,Portrait of Duli Xingyi,Kita Genki,Japan,1671,cma,https://clevelandart.org/art/1965.31
+5b6cba32126fed61-cascada-incremental,149,c07-visual,cma:161268,Portrait of an Official,,Korea,1800,cma,https://clevelandart.org/art/1999.45
+5b6cba32126fed61-cascada-incremental,150,c07-visual,cma:150944,Portrait of an Official,,China,1600,cma,https://clevelandart.org/art/1982.35
+5b6cba32126fed61-cascada-incremental,151,c07-visual,aic:241750,Portrait of an Official,Gu Jianlong,China,1600,aic,https://www.artic.edu/artworks/241750
+5b6cba32126fed61-cascada-incremental,152,c07-visual,cma:147927,"Portrait of Priest Dazhi (1048–1116), Master of Law",Liu Tao,China,1100,cma,https://clevelandart.org/art/1974.29
+5b6cba32126fed61-cascada-incremental,153,c08-ambiguo,cma:314450,Maharana Sangram Singh II of Mewar (r. 1710–34) and Stages a Boar Hunt with Tigers at Sadri,,Northwestern India,1710,cma,https://clevelandart.org/art/2018.145
+5b6cba32126fed61-cascada-incremental,154,c08-ambiguo,cma:146184,"Mughal ruler Humayun defeating the Afghans before reconquering India, folio from an Akbar-nama (Book of Akbar) of Abu’l Fazl (Indian, 1551–1602)",,Mughal India,1585,cma,https://clevelandart.org/art/1971.77
+5b6cba32126fed61-cascada-incremental,155,c08-ambiguo,cma:163206,Sindhu Raga,,Northwestern India,1715,cma,https://clevelandart.org/art/2004.110
+5b6cba32126fed61-cascada-incremental,156,c08-ambiguo,cma:170831,"Ghatotkacha and three demons in his company chase Bhagadatta, from Bhishma-parva (volume six) of a Razm-nama (Book of Wars) adapted from the Sanskrit Mahabharata and translated into Persian by Mir Ghiyath al-Din Ali Qazvini, known as Naqib Khan (Persian, d. 1614)",Fazl,Mughal India | made for Abd al-Rahim the Khan Khanan,1616,cma,https://clevelandart.org/art/2013.321
+5b6cba32126fed61-cascada-incremental,157,c08-ambiguo,cma:170784,Hunting with falcons in a landscape (recto),Abd al-Samad,Mughal India,1553,cma,https://clevelandart.org/art/2013.292.a
+5b6cba32126fed61-cascada-incremental,158,c08-ambiguo,aic:76816,"The Young Emperor Akbar Arrests the Insolent Shah Abu’l-Maali, Page from a Manuscript of the Akbarnama",Basawan,India,1585,aic,https://www.artic.edu/artworks/76816
+5b6cba32126fed61-cascada-incremental,159,c08-ambiguo,cma:148767,"The Marriage of Pradyumna and Rukmavati, page from a Bhagavata Purana",,Northern India,1520,cma,https://clevelandart.org/art/1976.26
+5b6cba32126fed61-cascada-incremental,160,c08-conceptual,cma:150080,The Death of General Colbert,Victor Schnetz,France,1809,cma,https://clevelandart.org/art/1980.285
+5b6cba32126fed61-cascada-incremental,161,c08-conceptual,cma:125580,"The siege of Arbela in the era of Hulagu Khan, page from a Chingiz-nama (Book of Chingiz Khan) of the Jami al-tavarikh (Compendium of Chronicles) of Rashid al-Din (Persian,1247–1318)",Basavana,Mughal India,1591,cma,https://clevelandart.org/art/1947.502.a
+5b6cba32126fed61-cascada-incremental,162,c08-conceptual,aic:110663,The Combat of the Giaour and Hassan,Eugène Delacroix,France,1826,aic,https://www.artic.edu/artworks/110663
+5b6cba32126fed61-cascada-incremental,163,c08-conceptual,aic:152851,Sketch for The Revolt of Cairo,Anne-Louis Girodet de Roussy-Trioson,France,1805,aic,https://www.artic.edu/artworks/152851
+5b6cba32126fed61-cascada-incremental,164,c08-conceptual,cma:141728,"Sketch for ""The Revolt at Cairo""",Anne-Louis Girodet de Roucy-Trioson,France,1804,cma,https://clevelandart.org/art/1965.310
+5b6cba32126fed61-cascada-incremental,165,c08-conceptual,cma:146725,"General Jean-Baptiste Kléber and Egyptian Family (Sketches for ""The Battle of the Pyramids"")",Antoine-Jean Gros,France,1830,cma,https://clevelandart.org/art/1972.17
+5b6cba32126fed61-cascada-incremental,166,c08-conceptual,aic:81505,Lion Hunt,Eugène Delacroix,France,1860,aic,https://www.artic.edu/artworks/81505
+5b6cba32126fed61-cascada-incremental,167,c08-visual,cma:148767,"The Marriage of Pradyumna and Rukmavati, page from a Bhagavata Purana",,Northern India,1520,cma,https://clevelandart.org/art/1976.26
+5b6cba32126fed61-cascada-incremental,168,c08-visual,cma:314406,"Feast where Vishnu decides he will incarnate as King Dasharatha’s sons, from Chapters 14–15 of the ""Bala Kanda"" (Book of Childhood) of a Ramayana (Rama’s Journey)",,Northern India,1800,cma,https://clevelandart.org/art/2018.121
+5b6cba32126fed61-cascada-incremental,169,c08-visual,cma:133294,Durga Slaying Mahisha,,Northern India,1825,cma,https://clevelandart.org/art/1955.667
+5b6cba32126fed61-cascada-incremental,170,c08-visual,cma:154260,"Celebrations of Krishna's Birth, from a Bhagavata Purana",,Northern India,1725,cma,https://clevelandart.org/art/1988.70
+5b6cba32126fed61-cascada-incremental,171,c08-visual,cma:170774,A marbled picture of Rustam catching Rakhsh,Shafi,India,1645,cma,https://clevelandart.org/art/2013.286
+5b6cba32126fed61-cascada-incremental,172,c08-visual,cma:170784,Hunting with falcons in a landscape (recto),Abd al-Samad,Mughal India,1553,cma,https://clevelandart.org/art/2013.292.a
+5b6cba32126fed61-cascada-incremental,173,c08-visual,cma:163206,Sindhu Raga,,Northwestern India,1715,cma,https://clevelandart.org/art/2004.110
+5b6cba32126fed61-cascada-incremental,174,c09-ambiguo,cma:149626,"Paintings after Ancient Masters: Rock, Old Tree, and Bamboo",Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.21
+5b6cba32126fed61-cascada-incremental,175,c09-ambiguo,cma:159726,Flowering Crab Apple,Shen Zhou,China,1500,cma,https://clevelandart.org/art/1997.101
+5b6cba32126fed61-cascada-incremental,176,c09-ambiguo,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-cascada-incremental,177,c09-ambiguo,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-cascada-incremental,178,c09-ambiguo,cma:147906,A Prunus in the Moonlight,Wang Mian,China,1300,cma,https://clevelandart.org/art/1974.26
+5b6cba32126fed61-cascada-incremental,179,c09-ambiguo,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-cascada-incremental,180,c09-ambiguo,cma:151078,Plum Tree,Ogata Kōrin,Japan,1680,cma,https://clevelandart.org/art/1983.10
+5b6cba32126fed61-cascada-incremental,181,c09-ambiguo,cma:149625,Paintings after Ancient Masters: An Ancient Tree,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.20
+5b6cba32126fed61-cascada-incremental,182,c09-ambiguo,cma:132015,The Poet Lin Bu Wandering in the Moonlight,Du Jin,China,1460,cma,https://clevelandart.org/art/1954.582
+5b6cba32126fed61-cascada-incremental,183,c09-conceptual,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-cascada-incremental,184,c09-conceptual,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-cascada-incremental,185,c09-conceptual,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-cascada-incremental,186,c09-conceptual,cma:160913,Three Purities,Zhang Xiong,China,1878,cma,https://clevelandart.org/art/1999.193
+5b6cba32126fed61-cascada-incremental,187,c09-conceptual,cma:147906,A Prunus in the Moonlight,Wang Mian,China,1300,cma,https://clevelandart.org/art/1974.26
+5b6cba32126fed61-cascada-incremental,188,c09-conceptual,cma:132015,The Poet Lin Bu Wandering in the Moonlight,Du Jin,China,1460,cma,https://clevelandart.org/art/1954.582
+5b6cba32126fed61-cascada-incremental,189,c09-conceptual,cma:159724,Yellow Chrysanthemums and Red Osmanthus in the Style of Wang Yuan,Shen Zhou,China,1468,cma,https://clevelandart.org/art/1997.100
+5b6cba32126fed61-cascada-incremental,190,c09-visual,cma:149609,Paintings after Ancient Masters: Narcissus and Bare Trees,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.1.3
+5b6cba32126fed61-cascada-incremental,191,c09-visual,cma:79931,Bamboo and Plum,Sesson Shūkei,Japan,1504,cma,https://clevelandart.org/art/2015.503
+5b6cba32126fed61-cascada-incremental,192,c09-visual,cma:149613,Paintings after Ancient Masters: Daoist and Crane in Autumn Landscape,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.1.7
+5b6cba32126fed61-cascada-incremental,193,c09-visual,cma:160133,Quails and Sparrows in an Autumn Scene,Wang Yuan,China,1347,cma,https://clevelandart.org/art/1997.91
+5b6cba32126fed61-cascada-incremental,194,c09-visual,aic:46466,Birds on Red Plum,Ren Yi,China,1887,aic,https://www.artic.edu/artworks/46466
+5b6cba32126fed61-cascada-incremental,195,c09-visual,aic:46450,Paradise Flycatchers and Wisteria,Ren Yi,China,1840,aic,https://www.artic.edu/artworks/46450
+5b6cba32126fed61-cascada-incremental,196,c09-visual,cma:149625,Paintings after Ancient Masters: An Ancient Tree,Chen Hongshou,China,1598,cma,https://clevelandart.org/art/1979.27.2.20
+5b6cba32126fed61-cascada-incremental,197,c10-ambiguo,aic:21937,Adoration of the Magi,Jan van Scorel,Netherlands,1514,aic,https://www.artic.edu/artworks/21937
+5b6cba32126fed61-cascada-incremental,198,c10-ambiguo,aic:16488,Armida Encounters the Sleeping Rinaldo,Giovanni Battista Tiepolo,Italy,1742,aic,https://www.artic.edu/artworks/16488
+5b6cba32126fed61-cascada-incremental,199,c10-ambiguo,cma:95264,The Triumph of the Church,Peter Paul Rubens,Flanders,1628,cma,https://clevelandart.org/art/1916.1037
+5b6cba32126fed61-cascada-incremental,200,c10-ambiguo,aic:160030,The Ecstasy of Saint Francis,Giovanni Baglione,Italy,1601,aic,https://www.artic.edu/artworks/160030
+5b6cba32126fed61-cascada-incremental,201,c10-ambiguo,aic:51130,Time Unveiling Truth,Pompeo Girolamo Batoni,Italy,1740,aic,https://www.artic.edu/artworks/51130
+5b6cba32126fed61-cascada-incremental,202,c10-ambiguo,aic:16362,Friar Pedro Shoots El Maragato as His Horse Runs Off,Francisco José de Goya y Lucientes,Spain,1801,aic,https://www.artic.edu/artworks/16362
+5b6cba32126fed61-cascada-incremental,203,c10-ambiguo,aic:61665,Saint Romanus of Antioch and Saint Barulas,Francisco de Zurbarán,Spain,1638,aic,https://www.artic.edu/artworks/61665
+5b6cba32126fed61-cascada-incremental,204,c10-ambiguo,aic:33249,The Continence of Scipio,Sebastiano Ricci,Italy,1701,aic,https://www.artic.edu/artworks/33249
+5b6cba32126fed61-cascada-incremental,205,c10-conceptual,cma:125580,"The siege of Arbela in the era of Hulagu Khan, page from a Chingiz-nama (Book of Chingiz Khan) of the Jami al-tavarikh (Compendium of Chronicles) of Rashid al-Din (Persian,1247–1318)",Basavana,Mughal India,1591,cma,https://clevelandart.org/art/1947.502.a
+5b6cba32126fed61-cascada-incremental,206,c10-conceptual,cma:314486,Maharao Ram Singh II of Kota (r. 1828–66) Hunting Buffalo,,Northwestern India,1832,cma,https://clevelandart.org/art/2018.180
+5b6cba32126fed61-cascada-incremental,207,c10-conceptual,cma:314469,Prince Mathu Singh of Jatoli on a Blue Horse Riding to Udaipur,,Northwestern India,1710,cma,https://clevelandart.org/art/2018.164
+5b6cba32126fed61-cascada-incremental,208,c10-conceptual,cma:314457,Maharaja Balwant Singh of Ratlam (r. 1825–57) in Procession with His Relatives and Courtiers,Kushala,Northwestern India,1825,cma,https://clevelandart.org/art/2018.152
+5b6cba32126fed61-cascada-incremental,209,c10-conceptual,cma:146184,"Mughal ruler Humayun defeating the Afghans before reconquering India, folio from an Akbar-nama (Book of Akbar) of Abu’l Fazl (Indian, 1551–1602)",,Mughal India,1585,cma,https://clevelandart.org/art/1971.77
+5b6cba32126fed61-cascada-incremental,210,c10-conceptual,cma:146191,The Emperor Alamgir (reigned 1658–1707) on Horseback,,India,1685,cma,https://clevelandart.org/art/1971.81
+5b6cba32126fed61-cascada-incremental,211,c10-conceptual,cma:170774,A marbled picture of Rustam catching Rakhsh,Shafi,India,1645,cma,https://clevelandart.org/art/2013.286
+5b6cba32126fed61-cascada-incremental,212,c10-visual,cma:134620,Adoration of the Magi,Titian,Italy,1500,cma,https://clevelandart.org/art/1957.150
+5b6cba32126fed61-cascada-incremental,213,c10-visual,aic:81503,Arab Horseman Attacked by a Lion,Eugène Delacroix,France,1849,aic,https://www.artic.edu/artworks/81503
+5b6cba32126fed61-cascada-incremental,214,c10-visual,aic:16499,Jesus Mocked by the Soldiers,Édouard Manet,France,1865,aic,https://www.artic.edu/artworks/16499
+5b6cba32126fed61-cascada-incremental,215,c10-visual,cma:109507,Portrait of Agostino Barbarigo,Paolo Veronese,Italy,1571,cma,https://clevelandart.org/art/1928.16
+5b6cba32126fed61-cascada-incremental,216,c10-visual,aic:16488,Armida Encounters the Sleeping Rinaldo,Giovanni Battista Tiepolo,Italy,1742,aic,https://www.artic.edu/artworks/16488
+5b6cba32126fed61-cascada-incremental,217,c10-visual,cma:140149,Panel from a Triptych: The Archangel Michael,Fra Filippo Lippi,Italy,1458,cma,https://clevelandart.org/art/1964.150.1

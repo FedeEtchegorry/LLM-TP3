@@ -1,0 +1,3121 @@
+{
+  "artefacto": "Pool",
+  "cita_al_set_de_consultas": {
+    "autoria": "grupo-2",
+    "estado": "completo",
+    "identidad": "5b6cba32126fed61-grupo-2",
+    "nota": "El **pedido** y la **categoría** de cada consulta NO se copian acá: viven en el `SetDeConsultas` (clase 3, versionado) y se citan por `consulta_id`. Lo que sí se copia por valor es la **ficha de cada obra**, porque su único otro hogar es la corrida —clase 2, no va al repo y no se reproduce— (la regla de qué se versiona, el argumento de la RevisiónDeExplicaciones)."
+  },
+  "clase_de_identidad": 3,
+  "configuraciones": [
+    {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "cadena": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "corridas": [
+        "182a552657ec59c5-1",
+        "ffc7bcd9325927fb-1",
+        "55b9427d86c51bcb-1",
+        "3cabcdd8f5f25f8b-1",
+        "7a9a3d8faa9d4b43-1",
+        "ab4dd0865aeac08d-1",
+        "fccff56b4b184ae6-1",
+        "688ef4f0695808f0-1",
+        "287f92accd83af5a-1",
+        "d4b5fa69dc70524b-1",
+        "07b8a7c5ce2c42fe-1",
+        "670d6df53dece5b6-1",
+        "a06ee9efc2632dcc-1",
+        "1a20fc90275542e2-1",
+        "eae7fd56fb30ec0d-1",
+        "57a8dc936cd308b7-1",
+        "4fdbca45f9e78e9c-1",
+        "530e4421a23b4544-1",
+        "e550dfa90cd0075b-1",
+        "634c08041c19da3d-1",
+        "15481a3a7ce19a09-1",
+        "627b9001307d5baa-1",
+        "34fa24bf947e1d8e-1",
+        "37ebd993932e2a97-1",
+        "347b187fa337ba08-1",
+        "73ea9be9f39928d7-1",
+        "1a582014fe43d365-1",
+        "e005d7e753b0561c-1",
+        "e13bd9878b818922-1",
+        "f9f280de1bd07a4f-1"
+      ],
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "cadena": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "corridas": [
+        "c5159acdd94653a6-1",
+        "01bc04785726ce8b-1",
+        "b9d278e22906c90b-1",
+        "b8bd236a657e788b-1",
+        "e99aa4968f32cee9-1",
+        "38a8413bac45e313-1",
+        "6102cbbebc8c1e19-1",
+        "a5b84ae2849261d7-1",
+        "a55632e626cfd62f-1",
+        "2dad8f8e726e125d-1",
+        "844fffe64e04100d-1",
+        "ec541e05ad97e5c7-1",
+        "94d25e22a12399cf-1",
+        "1cdfca2ea11bf0d0-1",
+        "269e4ae216bac577-1",
+        "a0ec55142152d140-1",
+        "ddadf8b4da917e09-1",
+        "638fc0ac4473ddc9-1",
+        "8f62825e1bbf916f-1",
+        "17e3f0b0ba4c64f9-1",
+        "0bfb62bd49dff78a-1",
+        "bc3031bd273cdac4-1",
+        "b81eb9fd72f1c95f-1",
+        "6de563defc03c3a7-1",
+        "9a146668f34efe60-1",
+        "196891e3fedf319b-1",
+        "6b70e28ccb423c48-1",
+        "7d579e8a422c0513-1",
+        "a2e6c6bef9074354-1",
+        "c88a731490245412-1"
+      ],
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    }
+  ],
+  "conteos": {
+    "aporte_por_configuracion": {
+      "C3": 150,
+      "C4": 150
+    },
+    "deduplicados": 83,
+    "duplicado_del_20_por_ciento_de_a5": 43,
+    "exclusivos_por_configuracion": {
+      "C3": 67,
+      "C4": 67
+    },
+    "items_del_top5_sin_juzgar_por_configuracion": {
+      "C3": 0,
+      "C4": 0
+    },
+    "items_por_consulta": {
+      "maximo": 10,
+      "media": 7.23,
+      "minimo": 5
+    },
+    "minutos_por_anotador_al_ritmo_de_docs_05": 54,
+    "n_consultas": 30,
+    "n_items": 217,
+    "n_juicios_por_anotador": 217,
+    "n_obras_distintas": 157,
+    "nota": "`n_items` **es** el presupuesto de anotación por persona, y hacen falta **dos** personas porque κ necesita dos. Es la campaña definitiva: `n_items` es el número que reemplaza al **~540 proyectado** de la evaluación / los criterios de producto, que suponía ~18 obras únicas por consulta. `items_por_consulta.media` es lo que la unión dio de verdad: cuanto más se solapan los top-5 de C0–C4, menos juicios cuesta el pool — y el solapamiento es un resultado, no un supuesto.",
+    "nota_de_la_union": "`aporte_por_configuracion` suma más que `n_items`: la diferencia **es** la deduplicación de `la evaluación § Pooling`. `exclusivos_por_configuracion` cuenta los ítems que trajo **solo** esa configuración, que es la medida de cuánto cambia esa etapa el conjunto a juzgar. `items_del_top5_sin_juzgar_por_configuracion` es la *regla innegociable* de `la evaluación § El pool se congela` computada en el momento en que tiene que dar **cero**: todo par del top-5 de una configuración de origen está en el pool por construcción, y se computa igual porque *un invariante que se cumple por construcción deja de cumplirse el día que la construcción cambia.",
+    "nota_del_duplicado": "`la evaluación § Acuerdo entre anotadores` manda anotar el **20 %** del pool por duplicado para el κ del acuerdo entre anotadores. ⚠️ **Es un número, no un subconjunto elegido**: *cuáles* ítems se duplican es una decisión del protocolo, y hoy `tp3-anotar exportar` proyecta el pool **entero** por anotador — dos planillas son el 100 % duplicado, no el 20 %.",
+    "suma_de_los_top5_sin_deduplicar": 300
+  },
+  "corridas_descartadas": {
+    "ad_hoc": 0,
+    "con_degradacion": 0,
+    "fallidas": 0,
+    "ordinales_viejos": 0,
+    "otra_configuracion": 337,
+    "otro_config_id": 814,
+    "salida_incompleta": 0
+  },
+  "corridas_descartadas_por_configuracion": {
+    "C3": {
+      "ad_hoc": 0,
+      "con_degradacion": 0,
+      "fallidas": 0,
+      "ordinales_viejos": 0,
+      "otra_configuracion": 0,
+      "otro_config_id": 513,
+      "salida_incompleta": 0
+    },
+    "C4": {
+      "ad_hoc": 0,
+      "con_degradacion": 0,
+      "fallidas": 0,
+      "ordinales_viejos": 0,
+      "otra_configuracion": 0,
+      "otro_config_id": 301,
+      "salida_incompleta": 0
+    }
+  },
+  "designacion": "cascada-incremental",
+  "estado": "congelado",
+  "identidad": "5b6cba32126fed61-cascada-incremental",
+  "nota_de_ceguera": "El CSV es **ciego**: no lleva ni la configuración de origen ni el `rank`. El origen vive en el `.json` porque *cegar al anotador y perder el dato son dos cosas distintas* (el módulo de evaluación) — la mitigación 2 de la evaluación estratifica κ por configuración de origen y necesita el dato. **Pero el `rank` se ciega igual**, y es una decisión de esta pieza: el puesto del ranking filtra más que el nombre de la configuración. Ver *'se mezcla el orden'* en la evaluación § Pooling: lo que se juzga es la obra, no el puesto que el sistema le dio.",
+  "nota_de_corridas_descartadas": "`con_degradacion` es la regla de qué corridas agregan a la tabla del lado de la anotación: un top-5 degradado no es el de la configuración declarada, y acá el costo de dejarlo pasar es trabajo humano irrecuperable. `ordinales_viejos` es el muestreo fijado, registrado y con su variabilidad medida: hay dos corridas de la misma consulta a propósito, y se toma el último ordinal **por (`config_id`, consulta)** —el `corrida_id` elegido está en el origen, así que *cuál* es citable—. `otra_configuracion` cuenta por etiqueta y es global: una corrida de una fila que este pool no pidió no se le imputa a ninguna.",
+  "nota_de_estado": "Pool **congelado**: la unión deduplicada de los top-5 de las configuraciones declaradas arriba. Una vez anotado no se toca; agregar un finalista es **derivar otro pool** con otra designación y juzgar la diferencia (pooling incremental, la evaluación).",
+  "nota_de_identidad": "Clase 3 (la tabla de identidades): ancla de trabajo humano. La identidad es `split_id` + `designación`, y la designación **la asigna una persona** cuando decide abrir una ronda de anotación. El **estado**, las **configuraciones de origen** y la **semilla de mezcla** NO son ingredientes y van acá adentro: el estado no alcanza porque dos pools congelados del mismo split tendrían el mismo id (la verificación de la norma de los vectores), y las configuraciones tampoco porque **ningún conjunto de entradas determina el contenido de un pool: los top-5 no son deterministas**. Congelar y agregar un finalista son **derivar otro pool**, nunca reescribir este (la regla de que un id determina su contenido).",
+  "origen": [
+    {
+      "artwork_id": "aic:97292",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "182a552657ec59c5-1",
+      "rank": 5,
+      "score": 0.7042141214409415
+    },
+    {
+      "artwork_id": "aic:97292",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "c5159acdd94653a6-1",
+      "rank": 1,
+      "score": 0.7042141214409415
+    },
+    {
+      "artwork_id": "cma:150054",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "182a552657ec59c5-1",
+      "rank": 3,
+      "score": 0.7123473609624523
+    },
+    {
+      "artwork_id": "cma:124078",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "c5159acdd94653a6-1",
+      "rank": 4,
+      "score": 0.6932809999538644
+    },
+    {
+      "artwork_id": "cma:157104",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "c5159acdd94653a6-1",
+      "rank": 3,
+      "score": 0.7004361405009378
+    },
+    {
+      "artwork_id": "cma:122345",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "c5159acdd94653a6-1",
+      "rank": 2,
+      "score": 0.6693471191571013
+    },
+    {
+      "artwork_id": "cma:95275",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "182a552657ec59c5-1",
+      "rank": 2,
+      "score": 0.7153553447946845
+    },
+    {
+      "artwork_id": "aic:4758",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "c5159acdd94653a6-1",
+      "rank": 5,
+      "score": 0.6790481189204474
+    },
+    {
+      "artwork_id": "cma:128371",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "182a552657ec59c5-1",
+      "rank": 1,
+      "score": 0.7218253545786617
+    },
+    {
+      "artwork_id": "aic:6005",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-ambiguo",
+      "corrida_id": "182a552657ec59c5-1",
+      "rank": 4,
+      "score": 0.7079709627604446
+    },
+    {
+      "artwork_id": "cma:149961",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "01bc04785726ce8b-1",
+      "rank": 1,
+      "score": 0.5856705938014534
+    },
+    {
+      "artwork_id": "cma:86114",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "ffc7bcd9325927fb-1",
+      "rank": 5,
+      "score": 0.5924695285183323
+    },
+    {
+      "artwork_id": "cma:86114",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "01bc04785726ce8b-1",
+      "rank": 5,
+      "score": 0.5924695285183323
+    },
+    {
+      "artwork_id": "cma:148359",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "ffc7bcd9325927fb-1",
+      "rank": 2,
+      "score": 0.6012774128178975
+    },
+    {
+      "artwork_id": "cma:148359",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "01bc04785726ce8b-1",
+      "rank": 2,
+      "score": 0.6012774128178975
+    },
+    {
+      "artwork_id": "cma:159756",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "ffc7bcd9325927fb-1",
+      "rank": 4,
+      "score": 0.5957610556022075
+    },
+    {
+      "artwork_id": "cma:159756",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "01bc04785726ce8b-1",
+      "rank": 4,
+      "score": 0.5957610556022075
+    },
+    {
+      "artwork_id": "cma:148358",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "ffc7bcd9325927fb-1",
+      "rank": 3,
+      "score": 0.5975526486156426
+    },
+    {
+      "artwork_id": "cma:148358",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "01bc04785726ce8b-1",
+      "rank": 3,
+      "score": 0.5975526486156426
+    },
+    {
+      "artwork_id": "aic:79716",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-conceptual",
+      "corrida_id": "ffc7bcd9325927fb-1",
+      "rank": 1,
+      "score": 0.6121108901196352
+    },
+    {
+      "artwork_id": "cma:128371",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-visual",
+      "corrida_id": "55b9427d86c51bcb-1",
+      "rank": 1,
+      "score": 0.7438746369949761
+    },
+    {
+      "artwork_id": "aic:6005",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-visual",
+      "corrida_id": "55b9427d86c51bcb-1",
+      "rank": 4,
+      "score": 0.6999380322718292
+    },
+    {
+      "artwork_id": "cma:95275",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-visual",
+      "corrida_id": "55b9427d86c51bcb-1",
+      "rank": 2,
+      "score": 0.7204642932174763
+    },
+    {
+      "artwork_id": "aic:151108",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-visual",
+      "corrida_id": "b9d278e22906c90b-1",
+      "rank": 3,
+      "score": 0.6789963001921472
+    },
+    {
+      "artwork_id": "cma:128392",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-visual",
+      "corrida_id": "55b9427d86c51bcb-1",
+      "rank": 3,
+      "score": 0.7093814046759905
+    },
+    {
+      "artwork_id": "cma:150054",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c01-visual",
+      "corrida_id": "55b9427d86c51bcb-1",
+      "rank": 5,
+      "score": 0.6933604304775736
+    },
+    {
+      "artwork_id": "cma:150054",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-visual",
+      "corrida_id": "b9d278e22906c90b-1",
+      "rank": 2,
+      "score": 0.6933604304775736
+    },
+    {
+      "artwork_id": "cma:148968",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-visual",
+      "corrida_id": "b9d278e22906c90b-1",
+      "rank": 4,
+      "score": 0.6669603560936509
+    },
+    {
+      "artwork_id": "aic:97292",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-visual",
+      "corrida_id": "b9d278e22906c90b-1",
+      "rank": 1,
+      "score": 0.686043266816641
+    },
+    {
+      "artwork_id": "cma:115405",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c01-visual",
+      "corrida_id": "b9d278e22906c90b-1",
+      "rank": 5,
+      "score": 0.6614909344996416
+    },
+    {
+      "artwork_id": "cma:148368",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "3cabcdd8f5f25f8b-1",
+      "rank": 1,
+      "score": 0.7462456504373959
+    },
+    {
+      "artwork_id": "aic:120163",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "3cabcdd8f5f25f8b-1",
+      "rank": 3,
+      "score": 0.7298453378829005
+    },
+    {
+      "artwork_id": "aic:238272",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "b8bd236a657e788b-1",
+      "rank": 4,
+      "score": 0.6590878707606993
+    },
+    {
+      "artwork_id": "aic:16370",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "b8bd236a657e788b-1",
+      "rank": 2,
+      "score": 0.6966869229287042
+    },
+    {
+      "artwork_id": "cma:163456",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "3cabcdd8f5f25f8b-1",
+      "rank": 2,
+      "score": 0.7440834623767415
+    },
+    {
+      "artwork_id": "cma:163456",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "b8bd236a657e788b-1",
+      "rank": 1,
+      "score": 0.7440834623767415
+    },
+    {
+      "artwork_id": "aic:81535",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "b8bd236a657e788b-1",
+      "rank": 5,
+      "score": 0.6544149548251884
+    },
+    {
+      "artwork_id": "cma:153388",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "b8bd236a657e788b-1",
+      "rank": 3,
+      "score": 0.6656599486700602
+    },
+    {
+      "artwork_id": "aic:244013",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "3cabcdd8f5f25f8b-1",
+      "rank": 5,
+      "score": 0.71561347868003
+    },
+    {
+      "artwork_id": "aic:495",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-ambiguo",
+      "corrida_id": "3cabcdd8f5f25f8b-1",
+      "rank": 4,
+      "score": 0.7187298345263499
+    },
+    {
+      "artwork_id": "cma:149126",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "7a9a3d8faa9d4b43-1",
+      "rank": 1,
+      "score": 0.6910215770106484
+    },
+    {
+      "artwork_id": "cma:149126",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "rank": 1,
+      "score": 0.6910215770106484
+    },
+    {
+      "artwork_id": "cma:135953",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "rank": 4,
+      "score": 0.6205341467151884
+    },
+    {
+      "artwork_id": "cma:155097",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "7a9a3d8faa9d4b43-1",
+      "rank": 2,
+      "score": 0.6864152348804421
+    },
+    {
+      "artwork_id": "cma:149415",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "7a9a3d8faa9d4b43-1",
+      "rank": 3,
+      "score": 0.6768143784408083
+    },
+    {
+      "artwork_id": "cma:149415",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "rank": 5,
+      "score": 0.6768143784408083
+    },
+    {
+      "artwork_id": "cma:145426",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "7a9a3d8faa9d4b43-1",
+      "rank": 5,
+      "score": 0.6484951949275205
+    },
+    {
+      "artwork_id": "cma:145426",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "rank": 2,
+      "score": 0.6484951949275205
+    },
+    {
+      "artwork_id": "cma:132931",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "rank": 3,
+      "score": 0.6231344012749354
+    },
+    {
+      "artwork_id": "cma:159741",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-conceptual",
+      "corrida_id": "7a9a3d8faa9d4b43-1",
+      "rank": 4,
+      "score": 0.6495251791298068
+    },
+    {
+      "artwork_id": "aic:244013",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-visual",
+      "corrida_id": "ab4dd0865aeac08d-1",
+      "rank": 4,
+      "score": 0.7008482550317227
+    },
+    {
+      "artwork_id": "cma:153388",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-visual",
+      "corrida_id": "38a8413bac45e313-1",
+      "rank": 2,
+      "score": 0.6620145376024538
+    },
+    {
+      "artwork_id": "cma:163456",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-visual",
+      "corrida_id": "ab4dd0865aeac08d-1",
+      "rank": 2,
+      "score": 0.7447162767807607
+    },
+    {
+      "artwork_id": "cma:163456",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-visual",
+      "corrida_id": "38a8413bac45e313-1",
+      "rank": 1,
+      "score": 0.7447162767807607
+    },
+    {
+      "artwork_id": "aic:495",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-visual",
+      "corrida_id": "ab4dd0865aeac08d-1",
+      "rank": 3,
+      "score": 0.7091928746528038
+    },
+    {
+      "artwork_id": "aic:495",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-visual",
+      "corrida_id": "38a8413bac45e313-1",
+      "rank": 4,
+      "score": 0.7091928746528038
+    },
+    {
+      "artwork_id": "aic:4796",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-visual",
+      "corrida_id": "ab4dd0865aeac08d-1",
+      "rank": 5,
+      "score": 0.6904165251312753
+    },
+    {
+      "artwork_id": "aic:4796",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-visual",
+      "corrida_id": "38a8413bac45e313-1",
+      "rank": 5,
+      "score": 0.6904165251312753
+    },
+    {
+      "artwork_id": "cma:148368",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c02-visual",
+      "corrida_id": "ab4dd0865aeac08d-1",
+      "rank": 1,
+      "score": 0.7527085260600747
+    },
+    {
+      "artwork_id": "cma:148368",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c02-visual",
+      "corrida_id": "38a8413bac45e313-1",
+      "rank": 3,
+      "score": 0.7527085260600747
+    },
+    {
+      "artwork_id": "cma:147938",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "fccff56b4b184ae6-1",
+      "rank": 1,
+      "score": 0.6976231458958578
+    },
+    {
+      "artwork_id": "cma:147938",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "6102cbbebc8c1e19-1",
+      "rank": 1,
+      "score": 0.6976231458958578
+    },
+    {
+      "artwork_id": "aic:57051",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "6102cbbebc8c1e19-1",
+      "rank": 5,
+      "score": 0.6342314126621995
+    },
+    {
+      "artwork_id": "aic:57048",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "6102cbbebc8c1e19-1",
+      "rank": 4,
+      "score": 0.6464365761467589
+    },
+    {
+      "artwork_id": "cma:126770",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "fccff56b4b184ae6-1",
+      "rank": 5,
+      "score": 0.6660745845904301
+    },
+    {
+      "artwork_id": "cma:126770",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "6102cbbebc8c1e19-1",
+      "rank": 3,
+      "score": 0.6660745845904301
+    },
+    {
+      "artwork_id": "aic:43211",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "fccff56b4b184ae6-1",
+      "rank": 2,
+      "score": 0.6837207816177858
+    },
+    {
+      "artwork_id": "cma:148861",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "fccff56b4b184ae6-1",
+      "rank": 3,
+      "score": 0.6769794464357751
+    },
+    {
+      "artwork_id": "cma:126772",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "fccff56b4b184ae6-1",
+      "rank": 4,
+      "score": 0.6719264102605825
+    },
+    {
+      "artwork_id": "cma:126772",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-ambiguo",
+      "corrida_id": "6102cbbebc8c1e19-1",
+      "rank": 2,
+      "score": 0.6719264102605825
+    },
+    {
+      "artwork_id": "aic:12891",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "a5b84ae2849261d7-1",
+      "rank": 2,
+      "score": 0.6056538188393227
+    },
+    {
+      "artwork_id": "cma:148862",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "688ef4f0695808f0-1",
+      "rank": 4,
+      "score": 0.6609129947779996
+    },
+    {
+      "artwork_id": "cma:148862",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "a5b84ae2849261d7-1",
+      "rank": 4,
+      "score": 0.6609129947779996
+    },
+    {
+      "artwork_id": "cma:145450",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "688ef4f0695808f0-1",
+      "rank": 5,
+      "score": 0.6532048137611559
+    },
+    {
+      "artwork_id": "cma:145450",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "a5b84ae2849261d7-1",
+      "rank": 5,
+      "score": 0.6532048137611559
+    },
+    {
+      "artwork_id": "aic:43211",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "688ef4f0695808f0-1",
+      "rank": 1,
+      "score": 0.6936481729728793
+    },
+    {
+      "artwork_id": "cma:148861",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "688ef4f0695808f0-1",
+      "rank": 2,
+      "score": 0.6920812862932819
+    },
+    {
+      "artwork_id": "cma:148861",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "a5b84ae2849261d7-1",
+      "rank": 3,
+      "score": 0.6920812862932819
+    },
+    {
+      "artwork_id": "cma:111691",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "688ef4f0695808f0-1",
+      "rank": 3,
+      "score": 0.6778853341359253
+    },
+    {
+      "artwork_id": "cma:111691",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-conceptual",
+      "corrida_id": "a5b84ae2849261d7-1",
+      "rank": 1,
+      "score": 0.6778853341359253
+    },
+    {
+      "artwork_id": "aic:57049",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-visual",
+      "corrida_id": "287f92accd83af5a-1",
+      "rank": 3,
+      "score": 0.6669776564079609
+    },
+    {
+      "artwork_id": "aic:57049",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-visual",
+      "corrida_id": "a55632e626cfd62f-1",
+      "rank": 4,
+      "score": 0.6669776564079609
+    },
+    {
+      "artwork_id": "cma:145450",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-visual",
+      "corrida_id": "287f92accd83af5a-1",
+      "rank": 5,
+      "score": 0.6435036023485833
+    },
+    {
+      "artwork_id": "cma:145450",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-visual",
+      "corrida_id": "a55632e626cfd62f-1",
+      "rank": 1,
+      "score": 0.6435036023485833
+    },
+    {
+      "artwork_id": "aic:57048",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-visual",
+      "corrida_id": "287f92accd83af5a-1",
+      "rank": 4,
+      "score": 0.6526461275097614
+    },
+    {
+      "artwork_id": "aic:57048",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-visual",
+      "corrida_id": "a55632e626cfd62f-1",
+      "rank": 5,
+      "score": 0.6526461275097614
+    },
+    {
+      "artwork_id": "cma:111691",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-visual",
+      "corrida_id": "287f92accd83af5a-1",
+      "rank": 2,
+      "score": 0.6753947050956471
+    },
+    {
+      "artwork_id": "cma:111691",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-visual",
+      "corrida_id": "a55632e626cfd62f-1",
+      "rank": 3,
+      "score": 0.6753947050956471
+    },
+    {
+      "artwork_id": "aic:43211",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c03-visual",
+      "corrida_id": "287f92accd83af5a-1",
+      "rank": 1,
+      "score": 0.6863376481226898
+    },
+    {
+      "artwork_id": "aic:43211",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c03-visual",
+      "corrida_id": "a55632e626cfd62f-1",
+      "rank": 2,
+      "score": 0.6863376481226898
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "d4b5fa69dc70524b-1",
+      "rank": 1,
+      "score": 0.7352682181506759
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "2dad8f8e726e125d-1",
+      "rank": 1,
+      "score": 0.7352682181506759
+    },
+    {
+      "artwork_id": "aic:9021",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "2dad8f8e726e125d-1",
+      "rank": 4,
+      "score": 0.5844789048066544
+    },
+    {
+      "artwork_id": "cma:160723",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "d4b5fa69dc70524b-1",
+      "rank": 3,
+      "score": 0.6303616904852725
+    },
+    {
+      "artwork_id": "aic:65916",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "2dad8f8e726e125d-1",
+      "rank": 2,
+      "score": 0.5907434575512245
+    },
+    {
+      "artwork_id": "cma:84662",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "d4b5fa69dc70524b-1",
+      "rank": 4,
+      "score": 0.6133117674166725
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "d4b5fa69dc70524b-1",
+      "rank": 2,
+      "score": 0.719839388062337
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "2dad8f8e726e125d-1",
+      "rank": 3,
+      "score": 0.719839388062337
+    },
+    {
+      "artwork_id": "cma:159736",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "d4b5fa69dc70524b-1",
+      "rank": 5,
+      "score": 0.6037607789357354
+    },
+    {
+      "artwork_id": "cma:159736",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-ambiguo",
+      "corrida_id": "2dad8f8e726e125d-1",
+      "rank": 5,
+      "score": 0.6037607789357354
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "07b8a7c5ce2c42fe-1",
+      "rank": 1,
+      "score": 0.740925528852317
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "844fffe64e04100d-1",
+      "rank": 3,
+      "score": 0.740925528852317
+    },
+    {
+      "artwork_id": "cma:438621",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "844fffe64e04100d-1",
+      "rank": 2,
+      "score": 0.5529259942087591
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "07b8a7c5ce2c42fe-1",
+      "rank": 2,
+      "score": 0.7267158720151489
+    },
+    {
+      "artwork_id": "cma:314466",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "844fffe64e04100d-1",
+      "rank": 1,
+      "score": 0.5567568214220271
+    },
+    {
+      "artwork_id": "cma:160803",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "07b8a7c5ce2c42fe-1",
+      "rank": 3,
+      "score": 0.5996522201560519
+    },
+    {
+      "artwork_id": "cma:149083",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "07b8a7c5ce2c42fe-1",
+      "rank": 5,
+      "score": 0.5855286574789623
+    },
+    {
+      "artwork_id": "cma:149083",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "844fffe64e04100d-1",
+      "rank": 5,
+      "score": 0.5855286574789623
+    },
+    {
+      "artwork_id": "cma:150710",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "07b8a7c5ce2c42fe-1",
+      "rank": 4,
+      "score": 0.5894564089662595
+    },
+    {
+      "artwork_id": "cma:150710",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-conceptual",
+      "corrida_id": "844fffe64e04100d-1",
+      "rank": 4,
+      "score": 0.5894564089662595
+    },
+    {
+      "artwork_id": "cma:84662",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-visual",
+      "corrida_id": "670d6df53dece5b6-1",
+      "rank": 4,
+      "score": 0.626294989818602
+    },
+    {
+      "artwork_id": "cma:84662",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ec541e05ad97e5c7-1",
+      "rank": 4,
+      "score": 0.626294989818602
+    },
+    {
+      "artwork_id": "cma:151970",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ec541e05ad97e5c7-1",
+      "rank": 5,
+      "score": 0.6033976129525422
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-visual",
+      "corrida_id": "670d6df53dece5b6-1",
+      "rank": 2,
+      "score": 0.7210459586730826
+    },
+    {
+      "artwork_id": "cma:143278",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ec541e05ad97e5c7-1",
+      "rank": 3,
+      "score": 0.7210459586730826
+    },
+    {
+      "artwork_id": "cma:715339",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ec541e05ad97e5c7-1",
+      "rank": 1,
+      "score": 0.6032089247065915
+    },
+    {
+      "artwork_id": "cma:160723",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-visual",
+      "corrida_id": "670d6df53dece5b6-1",
+      "rank": 3,
+      "score": 0.6417205183233637
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-visual",
+      "corrida_id": "670d6df53dece5b6-1",
+      "rank": 1,
+      "score": 0.7315094582708944
+    },
+    {
+      "artwork_id": "aic:109819",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c04-visual",
+      "corrida_id": "ec541e05ad97e5c7-1",
+      "rank": 2,
+      "score": 0.7315094582708944
+    },
+    {
+      "artwork_id": "cma:150074",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c04-visual",
+      "corrida_id": "670d6df53dece5b6-1",
+      "rank": 5,
+      "score": 0.6114724190885249
+    },
+    {
+      "artwork_id": "cma:124080",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "a06ee9efc2632dcc-1",
+      "rank": 1,
+      "score": 0.6941849593590088
+    },
+    {
+      "artwork_id": "cma:124080",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "94d25e22a12399cf-1",
+      "rank": 1,
+      "score": 0.6941849593590088
+    },
+    {
+      "artwork_id": "cma:148959",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "94d25e22a12399cf-1",
+      "rank": 3,
+      "score": 0.647253654235367
+    },
+    {
+      "artwork_id": "cma:125951",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "a06ee9efc2632dcc-1",
+      "rank": 5,
+      "score": 0.6704665696710447
+    },
+    {
+      "artwork_id": "cma:149769",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "a06ee9efc2632dcc-1",
+      "rank": 3,
+      "score": 0.6745558971739467
+    },
+    {
+      "artwork_id": "aic:105945",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "a06ee9efc2632dcc-1",
+      "rank": 2,
+      "score": 0.6767904623463376
+    },
+    {
+      "artwork_id": "aic:105945",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "94d25e22a12399cf-1",
+      "rank": 5,
+      "score": 0.6767904623463376
+    },
+    {
+      "artwork_id": "cma:147447",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "a06ee9efc2632dcc-1",
+      "rank": 4,
+      "score": 0.6731872316829963
+    },
+    {
+      "artwork_id": "cma:147447",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "94d25e22a12399cf-1",
+      "rank": 2,
+      "score": 0.6731872316829963
+    },
+    {
+      "artwork_id": "aic:105887",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-ambiguo",
+      "corrida_id": "94d25e22a12399cf-1",
+      "rank": 4,
+      "score": 0.6661492033689588
+    },
+    {
+      "artwork_id": "aic:36678",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1cdfca2ea11bf0d0-1",
+      "rank": 5,
+      "score": 0.6581074933758896
+    },
+    {
+      "artwork_id": "cma:122341",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1cdfca2ea11bf0d0-1",
+      "rank": 3,
+      "score": 0.6726022933374526
+    },
+    {
+      "artwork_id": "cma:122347",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1a20fc90275542e2-1",
+      "rank": 3,
+      "score": 0.6949199325727149
+    },
+    {
+      "artwork_id": "cma:122347",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1cdfca2ea11bf0d0-1",
+      "rank": 2,
+      "score": 0.6949199325727149
+    },
+    {
+      "artwork_id": "aic:40599",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1a20fc90275542e2-1",
+      "rank": 2,
+      "score": 0.6978399633787127
+    },
+    {
+      "artwork_id": "cma:125951",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1a20fc90275542e2-1",
+      "rank": 1,
+      "score": 0.7049646728937174
+    },
+    {
+      "artwork_id": "cma:125951",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1cdfca2ea11bf0d0-1",
+      "rank": 1,
+      "score": 0.7049646728937174
+    },
+    {
+      "artwork_id": "aic:27307",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1cdfca2ea11bf0d0-1",
+      "rank": 4,
+      "score": 0.6671492986077098
+    },
+    {
+      "artwork_id": "aic:105945",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1a20fc90275542e2-1",
+      "rank": 4,
+      "score": 0.6946598961471272
+    },
+    {
+      "artwork_id": "cma:125895",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-conceptual",
+      "corrida_id": "1a20fc90275542e2-1",
+      "rank": 5,
+      "score": 0.6925352652921211
+    },
+    {
+      "artwork_id": "cma:149769",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-visual",
+      "corrida_id": "eae7fd56fb30ec0d-1",
+      "rank": 2,
+      "score": 0.6926599714479679
+    },
+    {
+      "artwork_id": "cma:149769",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-visual",
+      "corrida_id": "269e4ae216bac577-1",
+      "rank": 2,
+      "score": 0.6926599714479679
+    },
+    {
+      "artwork_id": "aic:105945",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-visual",
+      "corrida_id": "eae7fd56fb30ec0d-1",
+      "rank": 3,
+      "score": 0.6856921258643291
+    },
+    {
+      "artwork_id": "aic:105945",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-visual",
+      "corrida_id": "269e4ae216bac577-1",
+      "rank": 3,
+      "score": 0.6856921258643291
+    },
+    {
+      "artwork_id": "aic:40599",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-visual",
+      "corrida_id": "eae7fd56fb30ec0d-1",
+      "rank": 5,
+      "score": 0.6833489484329421
+    },
+    {
+      "artwork_id": "cma:103366",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-visual",
+      "corrida_id": "eae7fd56fb30ec0d-1",
+      "rank": 4,
+      "score": 0.6856851525615171
+    },
+    {
+      "artwork_id": "aic:105887",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-visual",
+      "corrida_id": "269e4ae216bac577-1",
+      "rank": 4,
+      "score": 0.6822866696216067
+    },
+    {
+      "artwork_id": "cma:124080",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c05-visual",
+      "corrida_id": "eae7fd56fb30ec0d-1",
+      "rank": 1,
+      "score": 0.7098430585809913
+    },
+    {
+      "artwork_id": "cma:124080",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-visual",
+      "corrida_id": "269e4ae216bac577-1",
+      "rank": 1,
+      "score": 0.7098430585809913
+    },
+    {
+      "artwork_id": "cma:147447",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c05-visual",
+      "corrida_id": "269e4ae216bac577-1",
+      "rank": 5,
+      "score": 0.6784691319728536
+    },
+    {
+      "artwork_id": "cma:139730",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "57a8dc936cd308b7-1",
+      "rank": 5,
+      "score": 0.5833833081714414
+    },
+    {
+      "artwork_id": "aic:105887",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "a0ec55142152d140-1",
+      "rank": 3,
+      "score": 0.5629956869137076
+    },
+    {
+      "artwork_id": "cma:128364",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "a0ec55142152d140-1",
+      "rank": 2,
+      "score": 0.5717005736989242
+    },
+    {
+      "artwork_id": "cma:137259",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "a0ec55142152d140-1",
+      "rank": 5,
+      "score": 0.5466904347617724
+    },
+    {
+      "artwork_id": "cma:145923",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "57a8dc936cd308b7-1",
+      "rank": 1,
+      "score": 0.6413897342569461
+    },
+    {
+      "artwork_id": "cma:122348",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "a0ec55142152d140-1",
+      "rank": 1,
+      "score": 0.5777185992223004
+    },
+    {
+      "artwork_id": "cma:128365",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "a0ec55142152d140-1",
+      "rank": 4,
+      "score": 0.5525452936124428
+    },
+    {
+      "artwork_id": "cma:154283",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "57a8dc936cd308b7-1",
+      "rank": 2,
+      "score": 0.5986253895129756
+    },
+    {
+      "artwork_id": "cma:314479",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "57a8dc936cd308b7-1",
+      "rank": 4,
+      "score": 0.5979798375502955
+    },
+    {
+      "artwork_id": "cma:146011",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-ambiguo",
+      "corrida_id": "57a8dc936cd308b7-1",
+      "rank": 3,
+      "score": 0.5985425369544185
+    },
+    {
+      "artwork_id": "cma:153406",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "rank": 4,
+      "score": 0.6161323608644164
+    },
+    {
+      "artwork_id": "aic:22270",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "rank": 1,
+      "score": 0.6287706787389388
+    },
+    {
+      "artwork_id": "cma:145923",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "4fdbca45f9e78e9c-1",
+      "rank": 3,
+      "score": 0.6504063489678628
+    },
+    {
+      "artwork_id": "cma:150053",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "4fdbca45f9e78e9c-1",
+      "rank": 5,
+      "score": 0.6330797082187574
+    },
+    {
+      "artwork_id": "cma:142475",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "4fdbca45f9e78e9c-1",
+      "rank": 1,
+      "score": 0.6614097186095178
+    },
+    {
+      "artwork_id": "cma:124091",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "4fdbca45f9e78e9c-1",
+      "rank": 4,
+      "score": 0.6381261996754242
+    },
+    {
+      "artwork_id": "cma:124091",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "rank": 3,
+      "score": 0.6381261996754242
+    },
+    {
+      "artwork_id": "cma:97167",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "rank": 5,
+      "score": 0.6064517293547443
+    },
+    {
+      "artwork_id": "cma:146469",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "4fdbca45f9e78e9c-1",
+      "rank": 2,
+      "score": 0.6591013198275845
+    },
+    {
+      "artwork_id": "cma:146469",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-conceptual",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "rank": 2,
+      "score": 0.6591013198275845
+    },
+    {
+      "artwork_id": "cma:154283",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-visual",
+      "corrida_id": "530e4421a23b4544-1",
+      "rank": 4,
+      "score": 0.6448685287899952
+    },
+    {
+      "artwork_id": "cma:154283",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-visual",
+      "corrida_id": "638fc0ac4473ddc9-1",
+      "rank": 4,
+      "score": 0.6448685287899952
+    },
+    {
+      "artwork_id": "cma:314448",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-visual",
+      "corrida_id": "530e4421a23b4544-1",
+      "rank": 1,
+      "score": 0.7003233455676675
+    },
+    {
+      "artwork_id": "cma:160470",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-visual",
+      "corrida_id": "530e4421a23b4544-1",
+      "rank": 5,
+      "score": 0.6388871793900467
+    },
+    {
+      "artwork_id": "cma:314500",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-visual",
+      "corrida_id": "530e4421a23b4544-1",
+      "rank": 2,
+      "score": 0.6702241431144028
+    },
+    {
+      "artwork_id": "cma:314500",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-visual",
+      "corrida_id": "638fc0ac4473ddc9-1",
+      "rank": 2,
+      "score": 0.6702241431144028
+    },
+    {
+      "artwork_id": "cma:150053",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-visual",
+      "corrida_id": "638fc0ac4473ddc9-1",
+      "rank": 1,
+      "score": 0.6124050665863694
+    },
+    {
+      "artwork_id": "cma:146469",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-visual",
+      "corrida_id": "638fc0ac4473ddc9-1",
+      "rank": 5,
+      "score": 0.6267866111082931
+    },
+    {
+      "artwork_id": "cma:145923",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c06-visual",
+      "corrida_id": "530e4421a23b4544-1",
+      "rank": 3,
+      "score": 0.6632121935245737
+    },
+    {
+      "artwork_id": "cma:145923",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c06-visual",
+      "corrida_id": "638fc0ac4473ddc9-1",
+      "rank": 3,
+      "score": 0.6632121935245737
+    },
+    {
+      "artwork_id": "cma:152851",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "e550dfa90cd0075b-1",
+      "rank": 4,
+      "score": 0.7236672679889075
+    },
+    {
+      "artwork_id": "cma:152851",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "8f62825e1bbf916f-1",
+      "rank": 4,
+      "score": 0.7236672679889075
+    },
+    {
+      "artwork_id": "cma:141727",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "e550dfa90cd0075b-1",
+      "rank": 3,
+      "score": 0.7250271939330797
+    },
+    {
+      "artwork_id": "cma:141727",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "8f62825e1bbf916f-1",
+      "rank": 3,
+      "score": 0.7250271939330797
+    },
+    {
+      "artwork_id": "cma:147927",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "e550dfa90cd0075b-1",
+      "rank": 1,
+      "score": 0.7571868889065156
+    },
+    {
+      "artwork_id": "cma:147927",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "8f62825e1bbf916f-1",
+      "rank": 1,
+      "score": 0.7571868889065156
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "e550dfa90cd0075b-1",
+      "rank": 2,
+      "score": 0.7540667465737475
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "8f62825e1bbf916f-1",
+      "rank": 2,
+      "score": 0.7540667465737475
+    },
+    {
+      "artwork_id": "cma:160470",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "e550dfa90cd0075b-1",
+      "rank": 5,
+      "score": 0.7192161502602723
+    },
+    {
+      "artwork_id": "cma:147592",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-ambiguo",
+      "corrida_id": "8f62825e1bbf916f-1",
+      "rank": 5,
+      "score": 0.705957359076677
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "634c08041c19da3d-1",
+      "rank": 1,
+      "score": 0.7440914718284353
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "17e3f0b0ba4c64f9-1",
+      "rank": 4,
+      "score": 0.7440914718284353
+    },
+    {
+      "artwork_id": "cma:150944",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "634c08041c19da3d-1",
+      "rank": 2,
+      "score": 0.7354764813230038
+    },
+    {
+      "artwork_id": "cma:150944",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "17e3f0b0ba4c64f9-1",
+      "rank": 5,
+      "score": 0.7354764813230038
+    },
+    {
+      "artwork_id": "cma:148384",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "17e3f0b0ba4c64f9-1",
+      "rank": 3,
+      "score": 0.6811721667590412
+    },
+    {
+      "artwork_id": "cma:161268",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "634c08041c19da3d-1",
+      "rank": 3,
+      "score": 0.7143943621631582
+    },
+    {
+      "artwork_id": "cma:150844",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "634c08041c19da3d-1",
+      "rank": 4,
+      "score": 0.7143050409972163
+    },
+    {
+      "artwork_id": "cma:150844",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "17e3f0b0ba4c64f9-1",
+      "rank": 1,
+      "score": 0.7143050409972163
+    },
+    {
+      "artwork_id": "cma:147572",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "17e3f0b0ba4c64f9-1",
+      "rank": 2,
+      "score": 0.6898577301238152
+    },
+    {
+      "artwork_id": "aic:241750",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-conceptual",
+      "corrida_id": "634c08041c19da3d-1",
+      "rank": 5,
+      "score": 0.7084223327608228
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-visual",
+      "corrida_id": "15481a3a7ce19a09-1",
+      "rank": 2,
+      "score": 0.733126396076956
+    },
+    {
+      "artwork_id": "cma:151007",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-visual",
+      "corrida_id": "0bfb62bd49dff78a-1",
+      "rank": 1,
+      "score": 0.733126396076956
+    },
+    {
+      "artwork_id": "aic:147005",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-visual",
+      "corrida_id": "15481a3a7ce19a09-1",
+      "rank": 1,
+      "score": 0.7387219712283513
+    },
+    {
+      "artwork_id": "aic:147005",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-visual",
+      "corrida_id": "0bfb62bd49dff78a-1",
+      "rank": 4,
+      "score": 0.7387219712283513
+    },
+    {
+      "artwork_id": "cma:141727",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-visual",
+      "corrida_id": "15481a3a7ce19a09-1",
+      "rank": 4,
+      "score": 0.7121999358868082
+    },
+    {
+      "artwork_id": "cma:161268",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-visual",
+      "corrida_id": "0bfb62bd49dff78a-1",
+      "rank": 2,
+      "score": 0.7061601559875718
+    },
+    {
+      "artwork_id": "cma:150944",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-visual",
+      "corrida_id": "15481a3a7ce19a09-1",
+      "rank": 5,
+      "score": 0.7113604871672077
+    },
+    {
+      "artwork_id": "aic:241750",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-visual",
+      "corrida_id": "0bfb62bd49dff78a-1",
+      "rank": 3,
+      "score": 0.6966811195001255
+    },
+    {
+      "artwork_id": "cma:147927",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c07-visual",
+      "corrida_id": "15481a3a7ce19a09-1",
+      "rank": 3,
+      "score": 0.7229299779853919
+    },
+    {
+      "artwork_id": "cma:147927",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c07-visual",
+      "corrida_id": "0bfb62bd49dff78a-1",
+      "rank": 5,
+      "score": 0.7229299779853919
+    },
+    {
+      "artwork_id": "cma:314450",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "627b9001307d5baa-1",
+      "rank": 4,
+      "score": 0.7096124031227219
+    },
+    {
+      "artwork_id": "cma:314450",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "bc3031bd273cdac4-1",
+      "rank": 5,
+      "score": 0.7096124031227219
+    },
+    {
+      "artwork_id": "cma:146184",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "627b9001307d5baa-1",
+      "rank": 2,
+      "score": 0.7176981125739338
+    },
+    {
+      "artwork_id": "cma:146184",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "bc3031bd273cdac4-1",
+      "rank": 1,
+      "score": 0.7176981125739338
+    },
+    {
+      "artwork_id": "cma:163206",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "627b9001307d5baa-1",
+      "rank": 1,
+      "score": 0.7395527105050186
+    },
+    {
+      "artwork_id": "cma:163206",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "bc3031bd273cdac4-1",
+      "rank": 2,
+      "score": 0.7395527105050186
+    },
+    {
+      "artwork_id": "cma:170831",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "bc3031bd273cdac4-1",
+      "rank": 4,
+      "score": 0.6915183334730142
+    },
+    {
+      "artwork_id": "cma:170784",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "627b9001307d5baa-1",
+      "rank": 3,
+      "score": 0.7115058645816252
+    },
+    {
+      "artwork_id": "aic:76816",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "bc3031bd273cdac4-1",
+      "rank": 3,
+      "score": 0.6934605854511493
+    },
+    {
+      "artwork_id": "cma:148767",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-ambiguo",
+      "corrida_id": "627b9001307d5baa-1",
+      "rank": 5,
+      "score": 0.7030055837262873
+    },
+    {
+      "artwork_id": "cma:150080",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "b81eb9fd72f1c95f-1",
+      "rank": 4,
+      "score": 0.5533171314555877
+    },
+    {
+      "artwork_id": "cma:125580",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "34fa24bf947e1d8e-1",
+      "rank": 1,
+      "score": 0.7033913523052697
+    },
+    {
+      "artwork_id": "aic:110663",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "34fa24bf947e1d8e-1",
+      "rank": 4,
+      "score": 0.576893987653893
+    },
+    {
+      "artwork_id": "aic:110663",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "b81eb9fd72f1c95f-1",
+      "rank": 2,
+      "score": 0.576893987653893
+    },
+    {
+      "artwork_id": "aic:152851",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "34fa24bf947e1d8e-1",
+      "rank": 5,
+      "score": 0.5759301633627157
+    },
+    {
+      "artwork_id": "aic:152851",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "b81eb9fd72f1c95f-1",
+      "rank": 3,
+      "score": 0.5759301633627157
+    },
+    {
+      "artwork_id": "cma:141728",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "34fa24bf947e1d8e-1",
+      "rank": 3,
+      "score": 0.6095255688960719
+    },
+    {
+      "artwork_id": "cma:141728",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "b81eb9fd72f1c95f-1",
+      "rank": 1,
+      "score": 0.6095255688960719
+    },
+    {
+      "artwork_id": "cma:146725",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "b81eb9fd72f1c95f-1",
+      "rank": 5,
+      "score": 0.5285083364648382
+    },
+    {
+      "artwork_id": "aic:81505",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-conceptual",
+      "corrida_id": "34fa24bf947e1d8e-1",
+      "rank": 2,
+      "score": 0.6409896680247525
+    },
+    {
+      "artwork_id": "cma:148767",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-visual",
+      "corrida_id": "6de563defc03c3a7-1",
+      "rank": 5,
+      "score": 0.7078455325211546
+    },
+    {
+      "artwork_id": "cma:314406",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-visual",
+      "corrida_id": "37ebd993932e2a97-1",
+      "rank": 4,
+      "score": 0.7216581603125268
+    },
+    {
+      "artwork_id": "cma:133294",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-visual",
+      "corrida_id": "37ebd993932e2a97-1",
+      "rank": 1,
+      "score": 0.7460986151286151
+    },
+    {
+      "artwork_id": "cma:133294",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-visual",
+      "corrida_id": "6de563defc03c3a7-1",
+      "rank": 1,
+      "score": 0.7460986151286151
+    },
+    {
+      "artwork_id": "cma:154260",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-visual",
+      "corrida_id": "37ebd993932e2a97-1",
+      "rank": 3,
+      "score": 0.7289876846047644
+    },
+    {
+      "artwork_id": "cma:170774",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-visual",
+      "corrida_id": "37ebd993932e2a97-1",
+      "rank": 5,
+      "score": 0.7190114852921764
+    },
+    {
+      "artwork_id": "cma:170774",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-visual",
+      "corrida_id": "6de563defc03c3a7-1",
+      "rank": 3,
+      "score": 0.7190114852921764
+    },
+    {
+      "artwork_id": "cma:170784",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-visual",
+      "corrida_id": "6de563defc03c3a7-1",
+      "rank": 4,
+      "score": 0.7112672050192946
+    },
+    {
+      "artwork_id": "cma:163206",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c08-visual",
+      "corrida_id": "37ebd993932e2a97-1",
+      "rank": 2,
+      "score": 0.7377767998688163
+    },
+    {
+      "artwork_id": "cma:163206",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c08-visual",
+      "corrida_id": "6de563defc03c3a7-1",
+      "rank": 2,
+      "score": 0.7377767998688163
+    },
+    {
+      "artwork_id": "cma:149626",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "9a146668f34efe60-1",
+      "rank": 4,
+      "score": 0.7415599727969145
+    },
+    {
+      "artwork_id": "cma:159726",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "9a146668f34efe60-1",
+      "rank": 1,
+      "score": 0.7390645039869259
+    },
+    {
+      "artwork_id": "cma:160133",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "347b187fa337ba08-1",
+      "rank": 4,
+      "score": 0.7688568554651705
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "347b187fa337ba08-1",
+      "rank": 1,
+      "score": 0.7795263600129264
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "9a146668f34efe60-1",
+      "rank": 5,
+      "score": 0.7795263600129264
+    },
+    {
+      "artwork_id": "cma:147906",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "9a146668f34efe60-1",
+      "rank": 2,
+      "score": 0.7598420976705412
+    },
+    {
+      "artwork_id": "cma:79931",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "347b187fa337ba08-1",
+      "rank": 2,
+      "score": 0.7726316995177148
+    },
+    {
+      "artwork_id": "cma:151078",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "9a146668f34efe60-1",
+      "rank": 3,
+      "score": 0.7428767287967556
+    },
+    {
+      "artwork_id": "cma:149625",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "347b187fa337ba08-1",
+      "rank": 3,
+      "score": 0.7697162229391165
+    },
+    {
+      "artwork_id": "cma:132015",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-ambiguo",
+      "corrida_id": "347b187fa337ba08-1",
+      "rank": 5,
+      "score": 0.7664236313953477
+    },
+    {
+      "artwork_id": "cma:79931",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "73ea9be9f39928d7-1",
+      "rank": 2,
+      "score": 0.7720339726581898
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "73ea9be9f39928d7-1",
+      "rank": 1,
+      "score": 0.776637150542648
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "196891e3fedf319b-1",
+      "rank": 1,
+      "score": 0.776637150542648
+    },
+    {
+      "artwork_id": "cma:160133",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "73ea9be9f39928d7-1",
+      "rank": 3,
+      "score": 0.7672257094825674
+    },
+    {
+      "artwork_id": "cma:160133",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "196891e3fedf319b-1",
+      "rank": 3,
+      "score": 0.7672257094825674
+    },
+    {
+      "artwork_id": "cma:160913",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "196891e3fedf319b-1",
+      "rank": 4,
+      "score": 0.7429855381603495
+    },
+    {
+      "artwork_id": "cma:147906",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "196891e3fedf319b-1",
+      "rank": 2,
+      "score": 0.7562820315978592
+    },
+    {
+      "artwork_id": "cma:132015",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "73ea9be9f39928d7-1",
+      "rank": 4,
+      "score": 0.7632274288008976
+    },
+    {
+      "artwork_id": "cma:132015",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "196891e3fedf319b-1",
+      "rank": 5,
+      "score": 0.7632274288008976
+    },
+    {
+      "artwork_id": "cma:159724",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-conceptual",
+      "corrida_id": "73ea9be9f39928d7-1",
+      "rank": 5,
+      "score": 0.760848383561202
+    },
+    {
+      "artwork_id": "cma:149609",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-visual",
+      "corrida_id": "6b70e28ccb423c48-1",
+      "rank": 5,
+      "score": 0.74121589381667
+    },
+    {
+      "artwork_id": "cma:79931",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-visual",
+      "corrida_id": "1a582014fe43d365-1",
+      "rank": 4,
+      "score": 0.763889104240711
+    },
+    {
+      "artwork_id": "cma:149613",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-visual",
+      "corrida_id": "6b70e28ccb423c48-1",
+      "rank": 4,
+      "score": 0.7424432172783477
+    },
+    {
+      "artwork_id": "cma:160133",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-visual",
+      "corrida_id": "1a582014fe43d365-1",
+      "rank": 3,
+      "score": 0.7659614302611866
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-visual",
+      "corrida_id": "1a582014fe43d365-1",
+      "rank": 1,
+      "score": 0.7766711409738822
+    },
+    {
+      "artwork_id": "aic:46466",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-visual",
+      "corrida_id": "6b70e28ccb423c48-1",
+      "rank": 1,
+      "score": 0.7766711409738822
+    },
+    {
+      "artwork_id": "aic:46450",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-visual",
+      "corrida_id": "1a582014fe43d365-1",
+      "rank": 5,
+      "score": 0.7532795420060833
+    },
+    {
+      "artwork_id": "aic:46450",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-visual",
+      "corrida_id": "6b70e28ccb423c48-1",
+      "rank": 2,
+      "score": 0.7532795420060833
+    },
+    {
+      "artwork_id": "cma:149625",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c09-visual",
+      "corrida_id": "1a582014fe43d365-1",
+      "rank": 2,
+      "score": 0.770453275038103
+    },
+    {
+      "artwork_id": "cma:149625",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c09-visual",
+      "corrida_id": "6b70e28ccb423c48-1",
+      "rank": 3,
+      "score": 0.770453275038103
+    },
+    {
+      "artwork_id": "aic:21937",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "7d579e8a422c0513-1",
+      "rank": 5,
+      "score": 0.5675965665416849
+    },
+    {
+      "artwork_id": "aic:16488",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "e005d7e753b0561c-1",
+      "rank": 2,
+      "score": 0.6156832752065533
+    },
+    {
+      "artwork_id": "cma:95264",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "e005d7e753b0561c-1",
+      "rank": 3,
+      "score": 0.6084145978078136
+    },
+    {
+      "artwork_id": "cma:95264",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "7d579e8a422c0513-1",
+      "rank": 1,
+      "score": 0.6084145978078136
+    },
+    {
+      "artwork_id": "aic:160030",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "e005d7e753b0561c-1",
+      "rank": 1,
+      "score": 0.6177222438329216
+    },
+    {
+      "artwork_id": "aic:51130",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "7d579e8a422c0513-1",
+      "rank": 3,
+      "score": 0.571188582514661
+    },
+    {
+      "artwork_id": "aic:16362",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "e005d7e753b0561c-1",
+      "rank": 4,
+      "score": 0.600583904927814
+    },
+    {
+      "artwork_id": "aic:61665",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "7d579e8a422c0513-1",
+      "rank": 4,
+      "score": 0.5696550942313103
+    },
+    {
+      "artwork_id": "aic:33249",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "e005d7e753b0561c-1",
+      "rank": 5,
+      "score": 0.5998678202213981
+    },
+    {
+      "artwork_id": "aic:33249",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-ambiguo",
+      "corrida_id": "7d579e8a422c0513-1",
+      "rank": 2,
+      "score": 0.5998678202213981
+    },
+    {
+      "artwork_id": "cma:125580",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "e13bd9878b818922-1",
+      "rank": 5,
+      "score": 0.6454209389238165
+    },
+    {
+      "artwork_id": "cma:125580",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "a2e6c6bef9074354-1",
+      "rank": 3,
+      "score": 0.6454209389238165
+    },
+    {
+      "artwork_id": "cma:314486",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "e13bd9878b818922-1",
+      "rank": 2,
+      "score": 0.6545046130922918
+    },
+    {
+      "artwork_id": "cma:314469",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "e13bd9878b818922-1",
+      "rank": 1,
+      "score": 0.656707777469871
+    },
+    {
+      "artwork_id": "cma:314469",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "a2e6c6bef9074354-1",
+      "rank": 2,
+      "score": 0.656707777469871
+    },
+    {
+      "artwork_id": "cma:314457",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "e13bd9878b818922-1",
+      "rank": 3,
+      "score": 0.653364461932976
+    },
+    {
+      "artwork_id": "cma:146184",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "a2e6c6bef9074354-1",
+      "rank": 1,
+      "score": 0.6199182143226213
+    },
+    {
+      "artwork_id": "cma:146191",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "a2e6c6bef9074354-1",
+      "rank": 4,
+      "score": 0.6432146062623341
+    },
+    {
+      "artwork_id": "cma:170774",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "e13bd9878b818922-1",
+      "rank": 4,
+      "score": 0.6492447793359751
+    },
+    {
+      "artwork_id": "cma:170774",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-conceptual",
+      "corrida_id": "a2e6c6bef9074354-1",
+      "rank": 5,
+      "score": 0.6492447793359751
+    },
+    {
+      "artwork_id": "cma:134620",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-visual",
+      "corrida_id": "c88a731490245412-1",
+      "rank": 5,
+      "score": 0.5670406415668698
+    },
+    {
+      "artwork_id": "aic:81503",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-visual",
+      "corrida_id": "f9f280de1bd07a4f-1",
+      "rank": 1,
+      "score": 0.6485221998654229
+    },
+    {
+      "artwork_id": "aic:81503",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-visual",
+      "corrida_id": "c88a731490245412-1",
+      "rank": 1,
+      "score": 0.6485221998654229
+    },
+    {
+      "artwork_id": "aic:16499",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-visual",
+      "corrida_id": "f9f280de1bd07a4f-1",
+      "rank": 3,
+      "score": 0.5840638216908113
+    },
+    {
+      "artwork_id": "aic:16499",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-visual",
+      "corrida_id": "c88a731490245412-1",
+      "rank": 3,
+      "score": 0.5840638216908113
+    },
+    {
+      "artwork_id": "cma:109507",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-visual",
+      "corrida_id": "f9f280de1bd07a4f-1",
+      "rank": 2,
+      "score": 0.6059702153646761
+    },
+    {
+      "artwork_id": "cma:109507",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-visual",
+      "corrida_id": "c88a731490245412-1",
+      "rank": 2,
+      "score": 0.6059702153646761
+    },
+    {
+      "artwork_id": "aic:16488",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-visual",
+      "corrida_id": "f9f280de1bd07a4f-1",
+      "rank": 4,
+      "score": 0.581682345111023
+    },
+    {
+      "artwork_id": "cma:140149",
+      "config_id": "6b1e25abd3e63952",
+      "configuracion": "C3",
+      "consulta_id": "c10-visual",
+      "corrida_id": "f9f280de1bd07a4f-1",
+      "rank": 5,
+      "score": 0.5781647317577319
+    },
+    {
+      "artwork_id": "cma:140149",
+      "config_id": "88368002659b48fd",
+      "configuracion": "C4",
+      "consulta_id": "c10-visual",
+      "corrida_id": "c88a731490245412-1",
+      "rank": 4,
+      "score": 0.5781647317577319
+    }
+  ],
+  "procedencia": {
+    "capas_de_configuracion": [
+      "config/default.toml"
+    ],
+    "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+    "fecha_de_derivacion": "2026-11-11T19:00:03+00:00",
+    "manifiesto": {
+      "corpus_indexado": 2605,
+      "held_out": 289,
+      "split_id": "5b6cba32126fed61"
+    },
+    "top_k": 5
+  },
+  "regla": {
+    "de_donde_sale_la_semilla": "la del `ManifiestoDeSplit` (clase 3, versionada)",
+    "elegidas": [
+      {
+        "artwork_id": "cma:109240",
+        "categoria": "ambiguo",
+        "consulta_id": "c01-ambiguo",
+        "pedido": "con más vida",
+        "turno": 1
+      },
+      {
+        "artwork_id": "cma:109240",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c01-conceptual",
+        "pedido": "el mismo paisaje pero pintado en Japón",
+        "turno": 2
+      },
+      {
+        "artwork_id": "cma:109240",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c01-visual",
+        "pedido": "versiones más cálidas de este paisaje",
+        "turno": 3
+      },
+      {
+        "artwork_id": "aic:111728",
+        "categoria": "ambiguo",
+        "consulta_id": "c02-ambiguo",
+        "pedido": "más tranquilo",
+        "turno": 4
+      },
+      {
+        "artwork_id": "aic:111728",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c02-conceptual",
+        "pedido": "escenas de agua en la pintura china",
+        "turno": 5
+      },
+      {
+        "artwork_id": "aic:111728",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c02-visual",
+        "pedido": "la misma escena de agua pero con luz dorada",
+        "turno": 6
+      },
+      {
+        "artwork_id": "cma:159270",
+        "categoria": "ambiguo",
+        "consulta_id": "c03-ambiguo",
+        "pedido": "más imponente",
+        "turno": 7
+      },
+      {
+        "artwork_id": "cma:159270",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c03-conceptual",
+        "pedido": "interiores arquitectónicos en la pintura italiana",
+        "turno": 8
+      },
+      {
+        "artwork_id": "cma:159270",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c03-visual",
+        "pedido": "el mismo interior pero en tonos fríos",
+        "turno": 9
+      },
+      {
+        "artwork_id": "aic:65821",
+        "categoria": "ambiguo",
+        "consulta_id": "c04-ambiguo",
+        "pedido": "más ordenado",
+        "turno": 10
+      },
+      {
+        "artwork_id": "aic:65821",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c04-conceptual",
+        "pedido": "composiciones geométricas en el arte de la India",
+        "turno": 11
+      },
+      {
+        "artwork_id": "aic:65821",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c04-visual",
+        "pedido": "composiciones geométricas pero en tonos tierra",
+        "turno": 12
+      },
+      {
+        "artwork_id": "aic:105600",
+        "categoria": "ambiguo",
+        "consulta_id": "c05-ambiguo",
+        "pedido": "más cercano",
+        "turno": 13
+      },
+      {
+        "artwork_id": "aic:105600",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c05-conceptual",
+        "pedido": "retratos de mujeres en la pintura francesa",
+        "turno": 14
+      },
+      {
+        "artwork_id": "aic:105600",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c05-visual",
+        "pedido": "el mismo retrato con una paleta más luminosa",
+        "turno": 15
+      },
+      {
+        "artwork_id": "cma:145925",
+        "categoria": "ambiguo",
+        "consulta_id": "c06-ambiguo",
+        "pedido": "más humano",
+        "turno": 16
+      },
+      {
+        "artwork_id": "cma:145925",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c06-conceptual",
+        "pedido": "retratos conmemorativos en Italia",
+        "turno": 17
+      },
+      {
+        "artwork_id": "cma:145925",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c06-visual",
+        "pedido": "el mismo rostro pero con colores más apagados",
+        "turno": 18
+      },
+      {
+        "artwork_id": "cma:155431",
+        "categoria": "ambiguo",
+        "consulta_id": "c07-ambiguo",
+        "pedido": "más austero",
+        "turno": 19
+      },
+      {
+        "artwork_id": "cma:155431",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c07-conceptual",
+        "pedido": "retratos de monjes y sabios en China",
+        "turno": 20
+      },
+      {
+        "artwork_id": "cma:155431",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c07-visual",
+        "pedido": "el mismo retrato en tonos más fríos",
+        "turno": 21
+      },
+      {
+        "artwork_id": "cma:314432",
+        "categoria": "ambiguo",
+        "consulta_id": "c08-ambiguo",
+        "pedido": "más caótico",
+        "turno": 22
+      },
+      {
+        "artwork_id": "cma:314432",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c08-conceptual",
+        "pedido": "escenas de batalla en la pintura francesa",
+        "turno": 23
+      },
+      {
+        "artwork_id": "cma:314432",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c08-visual",
+        "pedido": "la misma escena pero con colores apagados",
+        "turno": 24
+      },
+      {
+        "artwork_id": "cma:148382",
+        "categoria": "ambiguo",
+        "consulta_id": "c09-ambiguo",
+        "pedido": "más delicado",
+        "turno": 25
+      },
+      {
+        "artwork_id": "cma:148382",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c09-conceptual",
+        "pedido": "el mismo tema en la pintura china",
+        "turno": 26
+      },
+      {
+        "artwork_id": "cma:148382",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c09-visual",
+        "pedido": "el mismo motivo pero con color",
+        "turno": 27
+      },
+      {
+        "artwork_id": "aic:67362",
+        "categoria": "ambiguo",
+        "consulta_id": "c10-ambiguo",
+        "pedido": "más generoso",
+        "turno": 28
+      },
+      {
+        "artwork_id": "aic:67362",
+        "categoria": "conceptual_cultural",
+        "consulta_id": "c10-conceptual",
+        "pedido": "escenas con jinetes en el arte mogol",
+        "turno": 29
+      },
+      {
+        "artwork_id": "aic:67362",
+        "categoria": "visual_cromatico",
+        "consulta_id": "c10-visual",
+        "pedido": "la misma escena con una paleta más oscura",
+        "turno": 30
+      }
+    ],
+    "excluye": "las consultas marcadas `es_ejemplo` en el `SetDeConsultas`: un ejemplo no es dato (el set de consultas).",
+    "fuente": "la evaluación § Pooling (metodología TREC)",
+    "mezcla_dentro_de_la_consulta": "sha256(\"<semilla>|<consulta_id>|<artwork_id>\"), el menor primero (`identidad.rango_de_seleccion`). No es un PRNG a propósito: el orden mezclado **es contenido** —es lo que la política de trazado compara al importar— y la declaración tiene que alcanzar para re-derivarlo.",
+    "n_consultas": 30,
+    "orden": "por `consulta_id` ascendente",
+    "por_que_ese_orden": "Las consultas quedan **agrupadas** —se mezcla dentro de cada una, como TREC mezcla dentro del topic— así que el orden entre grupos es contenido del pool y es parte de lo que la política de trazado compara al importar. Por `consulta_id` y no por el orden del archivo del set: el archivo se puede reordenar sin cambiar el artefacto, el id no.",
+    "seleccion_de_consultas": "todas",
+    "semilla": 7369,
+    "texto": "Para cada consulta: se corren todas las configuraciones de la ablación, se toma la unión de los top-5 de cada una, se deduplica y se mezcla el orden ocultando de qué configuración vino cada una."
+  },
+  "semilla_de_mezcla": 7369,
+  "split_id": "5b6cba32126fed61",
+  "version_del_pool": "2"
+}

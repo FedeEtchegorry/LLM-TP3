@@ -1,0 +1,147 @@
+# artefacto = "AporteDelJuez"
+# version_del_aporte_del_juez = "1"
+# clase_de_identidad = 2
+# identidad = "5b6cba32126fed61-2b3d03607e84cf61-4"
+# split_id = "5b6cba32126fed61"
+# binding_juez = "2b3d03607e84cf61"
+# ordinal = 4
+# pool_id = "5b6cba32126fed61-cascada-incremental"
+# estado_del_pool = "congelado"
+# rubrica_id = "v1"
+# set_de_consultas = "5b6cba32126fed61-grupo-2"
+# nota_de_identidad = "Clase 2 con ORDINAL (la tabla de identidades): la identidad es split_id + binding_juez + ordinal. El juez es **el** caso de salida no determinista con entrada fija, así que dos corridas del juez con el mismo prompt y el mismo modelo son DOS aportes y el κ puede decir de cuál salió. El rubrica_id NO es ingrediente y va adentro como procedencia con el hash de su texto: el prompt del binding ya transcribe la rúbrica. 🔴 Y es clase 2 y no 3 a propósito: la asimetría con el juicio humano ES la mitigación 1 de la evaluación —la tabla C0–C4 solo sabe consumir juicios humanos, por TIPO y no por filtro—."
+# nota_del_libro_mayor = "El `usage` que devolvió la API, atribuido al rol `juez` (la atribución de cada llamada a su rol, los tokens en el artefacto de corrida). ⚠️ `n_llamadas` cuenta **los intentos**, no los pares: lo que el artefacto declara es lo que **costó**, no lo que salió bien. Y es **cota inferior** del gasto facturado: la verdad de facturación es el dashboard del proxy, y las dos **no se promedian**."
+# nota_de_la_circularidad = "la evaluación § La circularidad: mitigación 3 **intacta** —el juez es `gpt-4o` y el reranker `gpt-4.1-mini` (el registro de decisiones), y es un CUARTO modelo: tampoco es el de ninguno de los dos anotadores—. Mitigación 2 **computable**: el pool declara la configuración de origen de cada ítem, así que el κ se estratifica. Mitigación 1 **formalmente rota desde la anotación por IA** (ningún humano anota) y lo que la reemplaza es separar familias; lo que SÍ se mantiene es estructural: la tabla C0–C4 consume el **consenso**, que solo el Acuerdo escribe y solo desde AporteDeAnotador — este aporte vive en otra carpeta y es otro tipo."
+#
+# [binding]
+# rol = "juez"
+# modelo = "openai/gpt-4o"
+# prompt_id = "juez-grado-0-1-2-un-par"
+# version_del_prompt = "1"
+# esquema_de_salida = "json"
+# reintentos = 2
+# clave_de_configuracion = "bindings.juez"
+# nota = "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`."
+#
+# [binding.muestreo]
+# temperature = 0.0
+# top_p = 1.0
+# max_tokens = 300
+# seed = 7369
+#
+# [rubrica]
+# rubrica_id = "v1"
+# estado = "completa"
+# archivo = "artifacts/ground-truth/rubricas/v1.md"
+# hash_del_texto = "8e4c96749314a579"
+# refina = "piloto"
+# nota = "El hash es **procedencia, no identidad** (la tabla de identidades): hashear el texto como identidad descartaría los ~540 juicios por una coma corregida. Como procedencia es el detector de que la rúbrica se movió sin cambiar de designación, que es lo que la evaluación castiga con *se descartan los juicios*."
+#
+# [conteos]
+# n_juicios = 84
+# n_items_del_pool = 217
+# n_sin_grado = 0
+# alcance = "parcial (84 de 217): solo los pares sin juicio previo (pooling incremental)"
+#
+# [conteos.por_grado]
+# grado_0 = 37
+# grado_1 = 11
+# grado_2 = 36
+#
+# [libro_mayor]
+#
+# [libro_mayor.juez]
+# n_llamadas = 84
+# tokens_in = 815920
+# tokens_out = 4484
+# segundos = 186.75
+#
+# [procedencia]
+# fecha = "2026-11-11T19:04:25+00:00"
+# commit = "cca76d61adf55e0b542b9bb5e84a9eae331bf98c"
+# capas_de_configuracion = ["config/default.toml", "--set proveedor.base_url"]
+split_id,pool_id,rubrica_id,binding_juez,ordinal,consulta_id,artwork_id,grado,estado,nota
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-ambiguo,cma:122345,2,juzgado,"La obra recuperada muestra más figuras humanas y actividad en comparación con la original, cumpliendo con el pedido de 'con más vida'. La original tiene un paisaje tranquilo, mientras que la recuperada tiene personas y movimiento."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-ambiguo,aic:4758,2,juzgado,"La lectura del pedido 'con más vida' se deriva al escalón 1 como 'más seres vivos'. La obra recuperada muestra claramente más actividad y figuras vivas que la original, cumpliendo el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-conceptual,cma:149961,1,juzgado,"La obra es de cultura japonesa, cumpliendo con la parte cultural del pedido, pero el tema del paisaje no se mantiene respecto a la imagen original. Es un caso de media propiedad."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-conceptual,cma:86114,1,juzgado,"La obra es de la cultura japonesa, cumpliendo con la parte cultural del pedido. Sin embargo, el tema del paisaje no coincide claramente con el original, que muestra una casa y un camino. Cumple parcialmente."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-conceptual,cma:148359,0,juzgado,"La obra recuperada es de cultura japonesa, pero no representa el mismo paisaje que la imagen original. No cumple el pedido de 'el mismo paisaje pero pintado en Japón'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-conceptual,cma:148358,0,juzgado,"La obra recuperada es de cultura japonesa, pero no representa el mismo paisaje que la imagen original. No cumple con el pedido de 'el mismo paisaje pero pintado en Japón'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-conceptual,aic:79716,0,juzgado,"La obra recuperada es de cultura china, no japonesa, y no cumple con el pedido de 'el mismo paisaje pero pintado en Japón'. La cultura es un aspecto clave del pedido y no se cumple."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-visual,aic:151108,2,juzgado,"La obra recuperada es claramente más cálida que la original. La original tiene una paleta de verdes y grises apagados, mientras que la obra recuperada presenta tonos cálidos dominantes como ocres y rojos."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-visual,cma:148968,2,juzgado,"La obra recuperada es claramente más cálida que la original. La original tiene una paleta de verdes y grises apagados, mientras que la obra recuperada presenta tonos más cálidos con ocres y rojos."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-visual,aic:97292,2,juzgado,"La obra recuperada es claramente más cálida que la original. La original tiene una paleta de verdes y grises apagados, mientras que la obra recuperada utiliza ocres y amarillos brillantes."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c01-visual,cma:115405,2,juzgado,"La obra recuperada es claramente más cálida que la original. La original tiene una paleta de verdes y grises apagados, mientras que la obra de Cézanne utiliza tonos más cálidos como ocres y azules brillantes."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c02-ambiguo,aic:238272,2,juzgado,"La lectura derivada es 'menos actividad humana y movimiento'. La obra recuperada muestra una escena más tranquila con menos barcos y actividad que la original, que tiene barcos y personas en acción. La propiedad pedida está claramente presente respecto de la imagen original."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c02-conceptual,cma:145426,2,juzgado,"La obra cumple con el pedido de 'escenas de agua en la pintura china'. La cultura es china y el tema del agua es central en la composición, claramente visible en la obra recuperada."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c02-conceptual,cma:132931,2,juzgado,"La obra cumple con el pedido de 'escenas de agua en la pintura china'. La cultura es china y el tema del agua está presente en la escena, cumpliendo ambas propiedades del pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c03-ambiguo,aic:57051,2,juzgado,"La obra recuperada es claramente más imponente que la original. La original muestra un interior arquitectónico con columnas y un techo abovedado, mientras que la obra recuperada presenta una escena exterior con ruinas monumentales y arcos masivos, lo que aumenta la sensación de imponencia."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c03-visual,aic:57048,0,juzgado,"La obra recuperada no cumple el pedido de 'el mismo interior pero en tonos fríos'. La imagen original muestra un interior arquitectónico con tonos neutros, mientras que la obra recuperada presenta un interior en tonos cálidos, con predominancia de ocres y marrones. No hay cambio en la dirección pedida."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-ambiguo,aic:9021,0,juzgado,"La obra recuperada no es más ordenada que la original. La original muestra una composición geométrica y ordenada, mientras que la obra recuperada es más caótica y dinámica. No cumple el pedido de 'más ordenado'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-ambiguo,aic:65916,0,juzgado,"La obra recuperada no es más ordenada que la original. La original muestra una composición geométrica clara y estructurada, mientras que la recuperada es más caótica y abstracta. No cumple el pedido de 'más ordenado'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-conceptual,cma:314466,1,juzgado,"La obra cumple con la cultura pedida (India), pero no presenta una composición geométrica como la imagen original. La propiedad cultural está, pero falta la geométrica."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-conceptual,cma:160803,0,juzgado,La obra no cumple el pedido: no es de la cultura india ni presenta composiciones geométricas. Es una obra coreana con temática budista.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-conceptual,cma:149083,0,juzgado,"La obra recuperada no presenta composiciones geométricas, que es la propiedad pedida. Aunque es de la cultura Mughal India, no cumple con el aspecto geométrico solicitado."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-conceptual,cma:150710,0,juzgado,La obra no cumple con el pedido de 'composiciones geométricas en el arte de la India'. La obra recuperada es de cultura china y no presenta composiciones geométricas.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-visual,cma:151970,0,juzgado,"La obra recuperada no cumple con el pedido de 'composiciones geométricas'. Aunque utiliza tonos tierra, no presenta elementos geométricos como la imagen original."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c04-visual,cma:715339,1,juzgado,"La obra tiene composiciones geométricas, pero los tonos tierra no predominan claramente. Hay una mezcla de colores, incluyendo tonos más vivos."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c05-ambiguo,cma:148959,0,juzgado,ESCALÓN 1. EJE: distancia del encuadre. La obra recuperada no está más cerca que la original; ambas son retratos de busto. La lectura de intimidad se descarta por ser figurada.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c05-ambiguo,cma:125951,0,juzgado,ESCALÓN 1. EJE: distancia del encuadre. La obra recuperada no es más cercana que la original; ambas son retratos de medio cuerpo. La lectura de intimidad se descarta por ser figurada.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c05-conceptual,aic:27307,2,juzgado,"La obra cumple con el pedido de 'retratos de mujeres en la pintura francesa'. La cultura es francesa y el tema es un retrato de una mujer, lo cual coincide con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c05-visual,aic:40599,0,juzgado,La obra recuperada no tiene una paleta más luminosa que la original. Ambas imágenes presentan tonos oscuros y no se observa un cambio en la dirección pedida.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c05-visual,cma:103366,0,juzgado,"La obra recuperada no cumple el pedido de una paleta más luminosa respecto al retrato original. La paleta de la obra es diferente, pero no necesariamente más luminosa que la original."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:139730,1,juzgado,"La lectura del pedido 'más humano' se deriva como 'más realista o detallado en la representación humana'. La obra recuperada muestra un retrato más detallado y realista que el original, pero la diferencia no es claramente significativa. Por lo tanto, cumple parcialmente."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,aic:105887,2,juzgado,"La lectura del pedido 'más humano' se deriva como 'más realista o expresivo en el retrato'. La obra recuperada muestra un retrato más detallado y expresivo que el original, cumpliendo claramente con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:128364,2,juzgado,"La lectura del pedido 'más humano' se deriva como 'más expresividad o emoción en el rostro'. La obra de Renoir muestra una expresión más cálida y emocional que la original, cumpliendo claramente con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:137259,2,juzgado,"ESCALÓN 1. EJE: realismo en la representación humana. La obra de Courbet es más realista y detallada que el retrato original, cumpliendo con el pedido de 'más humano'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:122348,2,juzgado,"La lectura del pedido 'más humano' se deriva como 'más realista en la representación del rostro'. La obra de Rembrandt muestra un retrato más detallado y realista que el original, cumpliendo claramente con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:154283,0,juzgado,"La obra recuperada no es más humana que la original. La original muestra un retrato humano detallado, mientras que la obra de Redon es más abstracta y menos detallada en términos humanos."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-ambiguo,cma:146011,0,juzgado,"ESCALÓN 1. EJE: cantidad de rasgos humanos visibles. La obra recuperada muestra una figura divina con pocos rasgos humanos comparada con el retrato original, que es claramente humano. No cumple el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-conceptual,cma:153406,1,juzgado,"La obra es de la cultura italiana, pero no es un retrato conmemorativo. Cumple parcialmente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-conceptual,cma:145923,0,juzgado,"La obra recuperada es un retrato funerario romano, no un retrato conmemorativo en Italia. No cumple con el tema ni la cultura pedida."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-conceptual,cma:150053,0,juzgado,"La obra no cumple el pedido: no es un retrato conmemorativo ni es de cultura italiana, sino francesa."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-conceptual,cma:124091,1,juzgado,"La obra es un retrato de la cultura italiana, cumpliendo con la parte cultural del pedido. Sin embargo, no es claramente un retrato conmemorativo, lo que deja el cumplimiento parcial."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-conceptual,cma:97167,1,juzgado,"La obra es de la cultura italiana, pero no es un retrato conmemorativo. Cumple parcialmente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-visual,cma:154283,0,juzgado,"La obra recuperada no muestra el mismo rostro que la original, y los colores no son más apagados. No cumple el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-visual,cma:160470,0,juzgado,La obra recuperada no muestra el mismo rostro ni colores más apagados. Ignora el pedido de mantener el rostro y cambiar la paleta.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c06-visual,cma:146469,0,juzgado,"La obra recuperada no tiene colores más apagados que la original. La paleta es rica y saturada, mientras que la original tiene tonos más apagados."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-ambiguo,cma:152851,2,juzgado,"La obra recuperada es más austera que la original. La original tiene colores vivos y detalles ornamentales, mientras que la recuperada es monocromática y simple en su composición."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-ambiguo,cma:147592,2,juzgado,"La obra recuperada es más austera que la original. La original tiene colores vivos y detalles ornamentales, mientras que la recuperada es monocromática y minimalista, cumpliendo claramente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-conceptual,cma:148384,2,juzgado,"La obra recuperada muestra a un sabio, cumpliendo con el tema de 'retratos de monjes y sabios en China'. La cultura es china, como se pide, y el tema de la obra se alinea con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-conceptual,cma:161268,0,juzgado,"La obra recuperada es un retrato de un oficial coreano, no de un monje o sabio en China. No cumple con el tema ni la cultura pedida."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-conceptual,cma:150844,2,juzgado,"La obra recuperada cumple con el pedido de 'retratos de monjes y sabios en China'. La imagen muestra a Shakyamuni con dos asistentes, lo cual se alinea con el tema de monjes y sabios. Además, es de cultura china, cumpliendo ambas propiedades del pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-conceptual,cma:147572,1,juzgado,"La obra recuperada es de cultura china, cumpliendo con parte del pedido. Sin embargo, representa bodhisattvas, no específicamente monjes o sabios, lo que no cumple completamente con el tema solicitado."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-conceptual,aic:241750,1,juzgado,"La obra es de cultura china, cumpliendo con la parte cultural del pedido, pero el tema es un retrato de un oficial, no de un monje o sabio. Cumple parcialmente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-visual,cma:150944,0,juzgado,"La obra recuperada no cumple el pedido de 'tonos más fríos'. La paleta sigue siendo cálida, con predominio de rojos y marrones, similar a la original."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c07-visual,aic:241750,2,juzgado,"La obra recuperada tiene tonos más fríos que la original. La original presenta una paleta cálida con predominio de verdes y rojos, mientras que la obra recuperada utiliza azules y tonos más fríos, cumpliendo claramente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-ambiguo,cma:314450,2,juzgado,"La obra recuperada es más caótica que la original. La original muestra una escena de caza con figuras en acción, mientras que la recuperada presenta una composición más compleja con múltiples figuras y animales en diferentes actividades, aumentando el caos visual."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-ambiguo,cma:170831,2,juzgado,"La obra recuperada muestra una escena más caótica que la original, con múltiples figuras, elefantes y acción dispersa. La original es más ordenada en su composición."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-ambiguo,cma:170784,0,juzgado,"La obra recuperada no es más caótica que la original. La original muestra una escena de batalla con múltiples figuras en acción, mientras que la recuperada presenta una caza organizada y menos dinámica."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-ambiguo,aic:76816,2,juzgado,"La obra recuperada es más caótica que la original, con más figuras y acciones en diferentes planos. La original tiene una escena de batalla con menos elementos, mientras que la recuperada muestra una escena más compleja y dinámica."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-ambiguo,cma:148767,2,juzgado,"La obra recuperada es más caótica que la original. La original muestra una escena de batalla con figuras organizadas, mientras que la recuperada tiene múltiples escenas y personajes en diferentes acciones, creando una sensación de caos."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-conceptual,cma:141728,2,juzgado,"La obra recuperada es una escena de batalla y es de la pintura francesa, cumpliendo ambas propiedades del pedido. La cultura francesa está confirmada por la ficha, y el tema de batalla es evidente en la imagen."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-conceptual,aic:81505,0,juzgado,"La obra recuperada no cumple el pedido de 'escenas de batalla en la pintura francesa'. Aunque es de la cultura francesa, el tema es una caza de leones, no una batalla. La propiedad temática no está presente."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-visual,cma:148767,0,juzgado,"La obra recuperada no tiene colores apagados respecto a la original. Ambas imágenes presentan colores vivos y saturados, por lo que no cumple el pedido de 'colores apagados'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-visual,cma:314406,0,juzgado,"La obra recuperada no tiene colores apagados en comparación con la original. Ambas escenas son coloridas, por lo que no cumple el pedido de 'colores apagados'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-visual,cma:170774,2,juzgado,"La obra recuperada tiene colores más apagados que la original, cumpliendo claramente el pedido de cambio cromático. La original es vibrante y saturada, mientras que la recuperada presenta tonos más suaves y desaturados."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c08-visual,cma:170784,0,juzgado,"La obra recuperada no cumple el pedido de colores apagados. La imagen original tiene colores vibrantes, y la obra recuperada también presenta colores vivos, sin el cambio cromático solicitado."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-ambiguo,cma:149626,2,juzgado,"ESCALÓN 1. EJE: cantidad de detalles y suavidad en la representación. MÁS: La obra recuperada es más simple y tiene menos detalles que la original, lo que la hace más delicada."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-ambiguo,cma:159726,2,juzgado,"La lectura del pedido 'más delicado' se deriva como 'menos elementos y más espacio vacío'. La obra recuperada muestra una composición más simple y con más espacio vacío que la original, cumpliendo claramente el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-ambiguo,cma:151078,2,juzgado,"ESCALÓN 1. EJE: simplicidad en la composición. MÁS: La obra recuperada es más simple y minimalista que la original, cumpliendo con el pedido de 'más delicado'."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-conceptual,cma:159724,0,juzgado,"El pedido es conceptual_cultural y pide el mismo tema en la pintura china. La obra recuperada es de la cultura china, pero el tema no coincide con el original, que es un paisaje con bambú y rocas. La obra recuperada muestra flores y un árbol, no el mismo tema."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-visual,cma:149609,2,juzgado,"La obra recuperada cumple el pedido de 'el mismo motivo pero con color'. La imagen original es monocroma, mientras que la obra recuperada introduce color en el motivo similar de árboles y plantas."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-visual,cma:149613,2,juzgado,"La obra recuperada cumple el pedido de 'el mismo motivo pero con color'. La imagen original es monocroma, mientras que la obra recuperada introduce color en el paisaje, cumpliendo claramente con el cambio cromático solicitado."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c09-visual,aic:46450,2,juzgado,"La obra recuperada cumple el pedido de 'el mismo motivo pero con color'. La imagen original es monocroma, mientras que la obra recuperada introduce color en el motivo similar de naturaleza."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:21937,0,juzgado,ESCALÓN 1. EJE: cantidad de figuras o elementos en la escena. La obra recuperada no muestra más generosidad en términos de figuras o elementos que la original; ambas tienen múltiples personajes y detalles. No hay un cambio claro en la dirección pedida.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:16488,1,juzgado,"La lectura del pedido 'más generoso' se deriva como 'más figuras o elementos en la escena'. La obra recuperada tiene más personajes y elementos que la original, pero el cambio no es claramente significativo. Es defendible como un 1."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,cma:95264,2,juzgado,"La lectura del pedido 'más generoso' se deriva como 'más figuras y elementos en la composición'. La obra recuperada muestra una escena mucho más rica en personajes y detalles que la original, cumpliendo claramente con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:51130,0,juzgado,"ESCALÓN 1. EJE: cantidad de figuras en la escena. La obra recuperada no tiene más figuras que la original, por lo que no cumple el pedido de ser 'más generoso' en este sentido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:16362,0,juzgado,"ESCALÓN 1. EJE: cantidad de figuras humanas. La obra recuperada no tiene más figuras humanas que la original, por lo que no cumple el pedido de ser 'más generoso' en este sentido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:61665,0,juzgado,"ESCALÓN 1. EJE: cantidad de figuras humanas. La obra recuperada no tiene más figuras que la original, por lo que no cumple el pedido de ser 'más generoso' en este sentido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-ambiguo,aic:33249,2,juzgado,"La lectura del pedido 'más generoso' se deriva como 'más figuras o interacción'. La obra recuperada muestra una escena con más personajes e interacción que la original, cumpliendo claramente con el pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-conceptual,cma:314486,0,juzgado,"La obra no cumple el pedido cultural: no es arte mogol. Es de la India noroccidental, no de la cultura mogol, aunque muestra jinetes."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-conceptual,cma:146184,2,juzgado,"La obra recuperada cumple con el pedido de 'escenas con jinetes en el arte mogol'. La cultura es mogol y la escena muestra claramente jinetes, cumpliendo ambas propiedades del pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-conceptual,cma:170774,2,juzgado,"La obra recuperada muestra una escena con jinetes y es de la cultura india, cumpliendo con el pedido de 'escenas con jinetes en el arte mogol'. La cultura y el tema están presentes respecto al pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-visual,cma:109507,0,juzgado,La obra recuperada no representa la misma escena que la original y no tiene una paleta más oscura. No cumple el pedido visual.
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-visual,aic:16488,0,juzgado,"La obra recuperada no tiene una paleta más oscura que la original. La original tiene tonos oscuros y la recuperada es clara y luminosa, lo que va en la dirección contraria al pedido."
+5b6cba32126fed61,5b6cba32126fed61-cascada-incremental,v1,2b3d03607e84cf61,4,c10-visual,cma:140149,0,juzgado,La obra recuperada no tiene una paleta más oscura que la original. La original tiene tonos oscuros y la recuperada presenta colores más claros y brillantes.
