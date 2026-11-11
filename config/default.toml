@@ -140,7 +140,7 @@ tokenizador = "cl100k_base"
 separadores = ["\n\n", "\n", ". ", " ", ""]
 
 [proveedor]
-base_url = "https://sa-llmproxy.it.itba.edu.ar/"
+base_url = "https://api.openai.com/v1/"
 
 [proveedor.precio_usd_por_millon_de_tokens]
 "openai/text-embedding-3-small" = 0.02

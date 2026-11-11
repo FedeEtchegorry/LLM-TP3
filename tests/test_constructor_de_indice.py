@@ -423,7 +423,7 @@ def test_k1_mover_el_proxy_no_cambia_el_variante_id(cfg, escenario):
 def test_k1_la_receta_declara_el_base_url_como_procedencia(cfg, escenario):
     almacén, _, manifiesto = escenario
     receta = _constructor(cfg, almacén, manifiesto).receta()
-    assert receta["base_url_del_proveedor"].startswith("https://sa-llmproxy")
+    assert receta["base_url_del_proveedor"] == cfg["proveedor.base_url"]
     assert "procedencia" in receta["nota_del_base_url"].lower()
 
 def test_m2c1_la_receta_declara_el_bloque_de_claves_no_determinantes(cfg, escenario):

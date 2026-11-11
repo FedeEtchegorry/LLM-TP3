@@ -113,10 +113,9 @@ def test_un_criterio_de_culture_inexistente_falla_al_cargar(tmp_path):
     with pytest.raises(ErrorDeConfiguración, match="el criterio de normalización"):
         Configuración.cargar(archivo=archivo)
 
-def test_k1_el_base_url_del_proveedor_esta_declarado_y_es_el_del_proxy():
+def test_k1_el_base_url_del_proveedor_esta_declarado_y_es_el_de_openai():
     base_url = Configuración.cargar()["proveedor.base_url"]
-    assert base_url.startswith("https://")
-    assert "api.openai.com" not in base_url
+    assert base_url == "https://api.openai.com/v1/"
 
 def test_k1_un_base_url_vacio_falla_al_cargar_y_no_cae_al_default_del_sdk(tmp_path):
     archivo = tmp_path / "sin-host.toml"
