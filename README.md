@@ -19,8 +19,9 @@ Dos colecciones vectoriales sobre el mismo corpus:
 
 El pipeline de consulta es una **cadena de etapas seleccionada por
 configuración**: pre-retrieval con LLM, recuperación visual, recuperación
-textual, fusión por rangos, recolección de evidencia, reranking multimodal,
-generación y renderizado. Cada etapa es omitible, y las cinco combinaciones que
+textual, una cascada en la que el texto filtra las obras elegibles y CLIP las
+ordena, reranking multimodal, recolección de evidencia, generación y
+renderizado. Cada etapa es omitible, y las cinco combinaciones que
 se comparan son las filas de la tabla de ablación:
 
 | Fila | Qué agrega |
@@ -28,7 +29,7 @@ se comparan son las filas de la tabla de ablación:
 | `C0` | solo imagen a CLIP, sin usar el pedido (piso de control) |
 | `C1` | imagen + pedido crudo al text encoder, evidencia y explicación citada |
 | `C2` | `C1` + pre-retrieval con LLM (reescritura y expansión de la consulta) |
-| `C3` | `C2` + rama de texto sobre `knowledge` y fusión por rangos |
+| `C3` | `C2` + rama de texto sobre `knowledge` en cascada: el texto filtra, CLIP ordena |
 | `C4` | `C3` + reranking multimodal con LLM |
 
 Cada fila vive en `config/c0.toml` … `config/c4.toml`, como una capa sobre
@@ -139,7 +140,7 @@ desconocida es un error: `config/default.toml` es el esquema.
 ## Tests
 
 ```bash
-poetry run pytest                     # los 1.119
+poetry run pytest                     # los 1.139
 poetry run pytest -m nivel1           # unitarios, sin red ni API
 poetry run pytest -m nivel2           # validadores de contrato
 poetry run pytest -m nivel3           # sanity y regresión, necesitan índice
@@ -161,7 +162,7 @@ src/tp3_rag/
   modulo_c/      evaluación: set de consultas, pool, planilla, acuerdo, juez, métricas, validadores
   cli/           un entrypoint por etapa
 config/          default.toml (el esquema) + una capa por fila de la ablación
-tests/           1.119 tests, con sus fixtures
+tests/           1.139 tests, con sus fixtures
 ```
 
 ## Licencias del corpus

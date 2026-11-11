@@ -14,6 +14,12 @@ y la configuración de Poetry.
 > 19 % por debajo de lista, con lista como base—, y **dos roles son el 76 %**: el juez (4,77) y el
 > reranking (4,71). Los **tokens son medidos**; el dólar es **derivado de un precio declarado**, así
 > que las dos cifras del total conviven y no se promedian.
+>
+> ➕ **Después del tope, el 2026-11-11, se agregaron 60 corridas** —`C3` y `C4` con la etapa 4 en
+> **cascada**, que pidió la cátedra— y un juicio del juez sobre 84 pares. Ese día el proxy tenía
+> invalidada su propia key de OpenAI, así que se corrieron **contra `api.openai.com` con una key
+> del grupo y los mismos modelos**, por **≈ USD 3**. Las corridas lo declaran en su
+> `proveedor.base_url`.
 
 ---
 
@@ -21,11 +27,12 @@ y la configuración de Poetry.
 
 | Ruta | Qué es | Se puede regenerar |
 |---|---|---|
-| **`artifacts/corridas/`** | **1.151 corridas** — cada una es una ejecución completa de la cadena sobre una consulta, con su evidencia, su salida citada y su libro mayor de tokens por rol | 🔴 **no: cuesta proxy** |
+| **`artifacts/corridas/`** | **1.211 corridas** (1.151 del proxy + 60 de la cascada) — cada una es una ejecución completa de la cadena sobre una consulta, con su evidencia, su salida citada y su libro mayor de tokens por rol | 🔴 **no: cuesta proxy** |
 | **`artifacts/planes/`** | **62 planes** del pre-retrieval con LLM (reescritura y expansión del pedido) | 🔴 **no: cuesta proxy** |
-| **`artifacts/ground-truth/`** | el pool de evaluación, **6 aportes de anotación**, el consenso de **379 juicios** (grados `0`: 166 · `1`: 97 · `2`: 116), el κ de Cohen, la rúbrica `v1` y su decisión, y la revisión de **25 explicaciones** | 🔴 **no: es trabajo de anotación** |
+| **`artifacts/ground-truth/`** | el pool de evaluación, **7 aportes de anotación**, el consenso de **379 juicios** (grados `0`: 166 · `1`: 97 · `2`: 116), el κ de Cohen, la rúbrica `v1` y su decisión, y la revisión de **25 explicaciones** | 🔴 **no: es trabajo de anotación** |
 | **`artifacts/ground-truth/pool/…-secundario-incremental.*`** | el pool del estudio secundario, con **31 juicios** más que los 379 | 🔴 **no** |
-| **`artifacts/informes/`** | los informes de los Ejercicios 3 y 4, la presentación, y las tablas que citan (la tabla de ablación, κ del juez, retrieval secundario) | — son los entregables |
+| **`artifacts/ground-truth/pool/…-cascada-incremental.*`** | el pool de `C3`/`C4` en cascada: **84 pares nuevos**, juzgados por el aporte `ia-cascada` y, como segunda opinión, por el juez (`juicios-juez/…-4.csv`) | 🔴 **no** |
+| **`artifacts/informes/`** | los informes de los Ejercicios 3 y 4, la presentación, y las tablas que citan (la tabla de ablación —la de `v2` en cascada y la de RRF sobre la misma base—, κ del juez, retrieval secundario) | — son los entregables |
 | **`artifacts/indices/`** | las **3 recetas de variante de índice** registradas, con su identidad: `c3274567371ff42b` (la congelada, 6.232 fragmentos) · `a02f862565637f06` (campos ampliados, 12.772) · `d8da543eb94034ca` (chunking ciego, 2.775) | ✅ sí, **sin key** |
 | **`artifacts/splits/`** · **`artifacts/ingesta/`** · **`artifacts/embebido/`** | el manifiesto de split **congelado**, y los reportes de ingesta y de embebido | ✅ sí, **sin key** |
 | **`consultas-g2.toml`** | el `SetDeConsultas`: 10 imágenes del held-out × 3 pedidos. **Congelado**: es el instrumento de medición | ✅ está acá |
@@ -97,7 +104,20 @@ poetry run tp3-metricas --variante-id c3274567371ff42b \
          tabla --pool 5b6cba32126fed61-definitivo
 ```
 
-⚠️ **Casi nada tiene valor por omisión, y es a propósito.** Hay **3 variantes de índice** y **2
+🔑 **Esa tabla es sobre los 379 juicios, y ahí `C3`/`C4` en cascada tienen 32 % y 43 % de su top-5
+sin juzgar.** La tabla de `v2` que publica el informe suma los juicios incrementales, y la de RRF
+apunta las filas a las corridas anteriores sobre **la misma base**:
+
+```bash
+J=artifacts/ground-truth/juicios
+poetry run tp3-metricas --variante-id c3274567371ff42b tabla --pool 5b6cba32126fed61-definitivo \
+         --juicios-extra $J/5b6cba32126fed61-v1-ia-cascada.csv \
+         --juicios-extra $J/5b6cba32126fed61-v1-ia-incremental.csv
+# la misma, con RRF en C3 y C4
+#   … --fila C3=ce0910b50e3569e9 --fila C4=e30ca8c5003c614c
+```
+
+⚠️ **Casi nada tiene valor por omisión, y es a propósito.** Hay **3 variantes de índice** y **3
 pools congelados**, así que *cuál se mide* es una decisión declarada y no un `mtime`. Si falta un
 argumento, el error te dice cuáles hay y cómo se llaman.
 
@@ -144,11 +164,11 @@ del set de evaluación**, que es nuestro propio held-out.
 repo que cita documentos internos** —31 identificadores y 26 referencias—. **No es un olvido.**
 
 Cada juicio de anotación lleva el **hash del texto de la rúbrica con la que se juzgó**, y ese hash
-está escrito adentro de **15 artefactos**: el consenso, el κ, la decisión del acuerdo entre anotadores, los **cuatro
-aportes de anotación** y los tres archivos del juez. 🔑 **El hash existe exactamente para eso: atar
+está escrito adentro de **17 artefactos**: el consenso, el κ, la decisión del acuerdo entre anotadores, los **cinco
+aportes de anotación** y los cuatro archivos del juez. 🔑 **El hash existe exactamente para eso: atar
 cada juicio al instrumento con el que se emitió.**
 
-Reescribir el texto de una rúbrica cambia su hash, y entonces habría que reescribir los 15 —o sea
+Reescribir el texto de una rúbrica cambia su hash, y entonces habría que reescribir los 17 —o sea
 **el registro de anotación entero**—, afirmando que los anotadores leyeron una rúbrica **que no
 existía cuando anotaron**. ⚠️ **Por eso se conservan tal cual, con sus referencias adentro**, y esta
 sección es la excepción declarada.
@@ -158,8 +178,8 @@ sección es la excepción declarada.
 Toda cifra de este proyecto **va con la población sobre la que se midió**, y dos números correctos
 pueden no ser comparables. Tres casos concretos que están en el informe:
 
-- La suite da **1.121** tests en la rama de trabajo y **1.119** en el repo publicado: son **dos
-  árboles**, porque el publicado no lleva `artifacts/`.
+- La suite tiene **1.139** tests: en el repo publicado **1.138 pasan y 1 se saltea**, porque ese
+  test necesita el catálogo en disco (`data/catalogo/`, que se regenera con `tp3-ingesta`).
 - El `nDCG` **no es estable ante extensiones del pool**: el ideal se computa sobre la población del
   ground truth, así que agregar juicios mueve el denominador. La fila `C3` da **0,5348** sobre los
   379 juicios y **0,5308** sobre el ground truth extendido, **y las dos son correctas**.
