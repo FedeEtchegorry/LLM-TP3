@@ -1378,9 +1378,9 @@ origen por ítem sería **perder el dato en vez de estratificarlo**.
 
 ---
 
-**Repositorio entregado — ‹HASH DEL COMMIT: PENDIENTE›**
-⚠️ *Lugar reservado a propósito. La exportación a la rama `main` es otra pasada, y el hash se pega
-recién cuando ese commit exista; el criterio de la entrega en fecha y en formato lo pide junto con la presentación el 18/11 18:59.*
+**Repositorio entregado — `https://github.com/FedeEtchegorry/LLM-TP3`, commit `8fb1b9a`**
+*Ese commit tiene el código, las corridas y los artefactos que cita este informe. El commit que le
+sigue solo agrega esta línea: un archivo no puede contener el hash del commit que lo crea.*
 
 *Fuentes: AIC y CMA, obras de dominio público / CC0. `description` de AIC es **CC BY 4.0**; este
 informe no reproduce fragmentos de esos textos. Todas las cifras las emitió nuestro pipeline entre
