@@ -8,7 +8,9 @@ explicación en español citada a fragmentos de texto de los museos. La propieda
 falsable: *la misma imagen con pedidos distintos tiene que devolver obras distintas.*
 
 **`v1` = `C1`** (RAG base completo y honesto: rama visual + evidencia + generación citada) ·
-**`v2` = `C4`** (pre-retrieval con LLM + rama de texto + fusión RRF + reranking multimodal).
+**`v2` = `C4`** (pre-retrieval con LLM + rama de texto **en cascada** —el texto filtra, CLIP
+ordena— + reranking multimodal). ⚠️ **Hasta el 2026-11-11 la etapa 4 era una fusión RRF**; la
+cátedra pidió cambiarla y el cambio está medido en §2.3.
 Lo fija el enunciado y `la evaluación § Las configuraciones` define las cinco por **inclusión incremental**.
 
 **Poblaciones, porque las cifras no son intercambiables.** Universo elegible **5.915** pinturas de
@@ -121,7 +123,7 @@ porque muy pocos trabajos miden su propio instrumento.
 | | Qué agrega | Por qué, y contra qué mecanismo de §1 |
 |---|---|---|
 | **`C2`** | **Pre-retrieval con un LLM multimodal**: *query rewriting* + *query expansion* en **una sola llamada** | El LLM **ve la imagen y el pedido juntos**, así que puede resolver *"más cálidas **respecto de este gris**"* y emitir una **descripción absoluta** que CLIP sí entiende. Ataca el mecanismo de §1.1 en su raíz: deja de embeber una instrucción relativa |
-| **`C3`** | **Rama de texto sobre `knowledge` + fusión RRF** | Un pedido cultural **cruza formatos físicos** y la rama visual no (§1.1). El texto del museo sí nombra la cultura. Es la pieza que la predicción de la UMAP señalaba |
+| **`C3`** | **Rama de texto sobre `knowledge` como filtro + CLIP como orden (cascada)** | Un pedido cultural **cruza formatos físicos** y la rama visual no (§1.1). El texto del museo sí nombra la cultura, así que decide **qué obras son elegibles**; CLIP ordena solo esas (§2.3) |
 | **`C4`** | **Reranking con LLM multimodal**, un candidato por llamada, score 0–10 con justificación | El retrieval ordena por similitud; **cumplir un pedido no es ser similar**. El reranker es el único componente que juzga *el pedido* con la imagen candidata a la vista |
 
 **Las cuatro técnicas de las técnicas avanzadas aisladas por medición, cada una con su artefacto verificable** — y la evidencia es el
@@ -131,20 +133,25 @@ artefacto, no el conteo de trazas:
 |---|---|---|---|
 | **Query rewriting** | pre-retrieval | `PlanDeConsulta`, clave `pl3.distintas_del_pedido_crudo` | `artifacts/planes/0911f8725c7e813d.json`: `pedido` *"más cercano"* → `consulta_visual` de 14 palabras |
 | **Query expansion** | pre-retrieval | el mismo plan, clave `pl3.distintas_entre_si` — **dos** consultas de una llamada | mismo archivo: `consulta_visual` ≠ `consulta_conceptual`, las tres distintas |
-| **Fusión RRF** | post-retrieval | `corrida.json`, `estado.ranking_fusionado` con `rangos_de_origen` **por rama** | `artifacts/corridas/e3821d8533de06a3-1/corrida.json`: `cma:155097` entra con `{texto: 12, visual: 7}`, `n_ramas: 2` |
-| **Reranking** | post-retrieval | el mismo `corrida.json`, `estado.rerank` con `score_0_10` + `justificacion` + `rango_fusionado` | mismo archivo: `cma:149126`, `score_0_10: 9`, promovido del puesto 2 al 1 |
+| **Filtrado + ordenamiento en cascada** | post-retrieval | `corrida.json`, `estado.ranking_fusionado`: **solo** obras propuestas por el texto, ordenadas por coseno CLIP, con `rangos_de_origen` **por rama** | `artifacts/corridas/e99aa4968f32cee9-1/corrida.json`: 97 elegibles; `cma:149126` entra con `{texto: 17, visual: 6}` |
+| **Reranking** | post-retrieval | el mismo `corrida.json`, `estado.rerank` con `score_0_10` + `justificacion` + `rango_fusionado` | mismo archivo: `cma:149126`, `score_0_10: 9`, se queda en el puesto 1 |
 
 🔑 **Las cuatro se pueden mostrar sobre una sola consulta de punta a punta**: el plan
 `artifacts/planes/d408abc4d01bdd73.json` (pedido *"escenas de agua en la pintura china"*) es el
 que consume esa corrida, y la `justificacion` del reranker **le devuelve el pedido reescrito**.
 
 ⚠️ **las técnicas avanzadas aisladas por medición se cumple con cuatro y los deltas aíslan de a dos**: `C2−C1` (rewriting + expansion,
-conjuntas), `C3−C2` (rama de texto + RRF, conjuntas), `C4−C3` (reranking, **aislado**). No se
-reclama aislamiento individual de las cuatro. **Y el filtrado por metadata no se presenta como
-quinta técnica** (el registro de decisiones, decidido el 28/10): el sistema usa `where` como **join** para traer
-los fragmentos de una obra por `artwork_id`, no para angostar el espacio de búsqueda.
+conjuntas), `C3−C2` (rama de texto + cascada, conjuntas), `C4−C3` (reranking, **aislado**). No se
+reclama aislamiento individual de las cuatro. **Desde la cascada, el filtrado por `artwork_id` sí
+angosta el espacio de búsqueda** (CLIP solo ordena las obras que el texto dejó pasar); antes el
+`where` era solo un **join** para traer los fragmentos de una obra (el registro de decisiones).
 
-### 2.2 La justificación de la fusión dejó de ser un argumento y pasó a ser un número
+### 2.2 La fusión que usábamos antes: RRF, y por qué le ganaba a las otras fusiones
+
+⚠️ **Esta sección mide el diseño anterior** (hasta el 2026-11-11). `v2` ya no usa RRF (§2.3), pero
+el barrido sigue siendo la comparación entre las tres formas de *fusionar*. La cascada no fusiona:
+filtra y ordena.
+
 
 la fusión recíproca de rangos con k = 60 eligió **RRF con `k = 60`** sobre la suma de scores normalizados con un argumento:
 *un coseno de CLIP y uno de `text-embedding-3-small` no son calibrables entre sí*, así que se
@@ -187,91 +194,76 @@ ver a qué `α` favorece**, y no se hizo.
 ⚠️ **Misma salvedad de procedencia que arriba:** esta tabla vive en `config/default.toml` y **no**
 en un artefacto. Los cinco brazos corrieron y están en disco (30 corridas cada uno).
 
-### 2.3 🔑 La alternativa que no tomamos: **cascada** (un criterio filtra, el otro ordena)
+### 2.3 🔴 La cátedra pidió una **cascada**, y `v2` pasó a usarla: un criterio filtra y el otro ordena
 
-*Escrito el 2026-11-03, a partir de una recomendación recibida en clase.* Nos plantearon una
-objeción que vale la pena contestar entera, porque es la primera que a cualquiera se le ocurre:
-**¿cómo se compara un resultado de texto con uno de imagen para decir cuál es mejor?** Y la salida
-sugerida fue una **cascada**: que un criterio *filtre* y el otro *ordene*, sin sumar puntajes.
+*Escrito el 2026-11-11, después de la consulta con las profesoras.* En la consulta del 3/11 nos
+sugirieron no fusionar dos búsquedas paralelas sino **armar el pipeline de búsqueda**: que un
+criterio **filtre** y el otro **ordene**, sin sumar puntajes. Una primera versión de esta sección
+(del 3/11) la descartaba con un argumento **mal planteado**: medía la intersección de la rama de
+texto con el **top-20** visual (3,97 obras) como si fuera el conjunto elegible, cuando en una
+cascada CLIP puntúa **todas** las obras que deja pasar el filtro. En la consulta del 11/11 la
+cátedra lo volvió a pedir, así que **lo implementamos, lo corrimos y lo medimos**.
 
-**La objeción no aplica a este sistema, y el motivo es estructural: lo único que rankeamos son
-obras.** Cada candidata es una obra que tiene imagen *y* texto, y el anotador juzga el par
-`(consulta, obra)` con **una sola** rúbrica 0/1/2. No existen en el sistema dos tipos de ítem que
-haya que poner en una misma lista. Conviene separar tres cosas que la pregunta junta:
+**Qué hace ahora la etapa 4** (`fusion.estrategia = "cascada"`, `src/tp3_rag/modulo_b/fusionador.py`):
 
-1. **Qué se rankea** → obras. Un solo tipo de ítem, de punta a punta.
-2. **Cómo cada rama propone candidatas** → la rama de texto busca **fragmentos** en `knowledge`,
-   pero cada fragmento lleva `artwork_id` y se agrega a nivel obra (`mejor_fragmento`). Las dos
-   ramas terminan en **un ranking del mismo universo**.
-3. **Cómo se combinan los dos rankings** → **RRF, que usa solo rangos**. `fusionador.py` no lee
-   `score` en ninguna línea, y hay un test que lo prueba por la vía que importa: *permutar los
-   scores dentro de una rama sin cambiar sus rangos no mueve el ranking fusionado.*
+1. **Filtra el concepto.** La rama de texto busca `plan.consulta_conceptual` en `knowledge`
+   (**100 fragmentos**; antes eran 50) y cada fragmento propone su obra por `artwork_id`. Esas
+   obras son **las únicas elegibles**: en promedio **96,9 por consulta (mín. 92)**. El filtro es
+   generoso a propósito, como recomendó la cátedra: si deja afuera la obra correcta, CLIP no la
+   puede recuperar.
+2. **Ordena lo visual.** CLIP ordena **todas** las elegibles por coseno contra el mismo
+   `e_q = normalize(α·e_img + (1−α)·e_txt)` de la rama visual, no solo las que cayeron en su
+   top-20.
+3. **Después sigue igual que antes**: el reranker multimodal puntúa las 20 primeras y quedan 5.
 
-🔑 **O sea que RRF está en el diseño precisamente por esa objeción** (la fusión recíproca de rangos con k = 60): un coseno de
-CLIP y uno de `text-embedding-3-small` no son calibrables entre sí, así que se fusiona por rango y
-el problema desaparece. La §2.2 lo midió: el único brazo que **sí** suma dos escalas
-(`suma_de_scores_normalizados`) quedó en el medio.
+🔑 **Ningún puntaje se suma con otro**: el concepto decide **quién entra** y lo visual decide **el
+orden**. El problema de calibración que justificaba RRF (la fusión recíproca de rangos con k = 60) **desaparece por diseño**.
+Y es *metadata filtering* de la Clase 7.2: el `artwork_id` de los fragmentos funciona como filtro
+del espacio en el que busca CLIP. Si la rama de texto falla, el sistema vuelve al ranking visual,
+igual que antes (el criterio de respuesta garantizada).
 
-> **Dónde sí mezclamos modalidades, que es la versión honesta de la objeción:** no en la fusión,
-> sino **adentro de la rama visual**, en `e_q = normalize(α·e_img + (1−α)·e_txt)`. Ahí se suma un
-> vector de imagen con uno de texto y el *modality gap* es real. La mitigación está en §3.2
-> (normalizar antes y después, técnica documentada de la bibliografía de la Clase 9) y el control
-> empírico es la tabla de `α` de §2.2: con `α = 0` el anclaje se cae a **0/20**.
+**Artefacto:** `artifacts/corridas/e99aa4968f32cee9-1/corrida.json` (`C4`, *"escenas de agua en la
+pintura china"*, plan `d408abc4d01bdd73`). `estado.ranking_fusionado` tiene **97 elegibles**, todas
+propuestas por el texto y ordenadas por CLIP: `cma:149126` entra con `{texto: 17, visual: 6}` y
+coseno 0,691, y el reranker la deja primera con `score_0_10: 9`.
 
-**Y la cascada se puede evaluar sin gastar una llamada**, porque las corridas persisten las dos
-ramas completas con sus rangos (`estado.fuentes_de_ranking`). Medido sobre **las 30 corridas
-publicadas de `C3`**:
+#### Medido: cascada contra RRF, sobre el mismo ground truth
 
-| | |
-|---|---:|
-| candidatas de la rama visual | 20,0 (fijo, `N`) |
-| candidatas de la rama de texto | 49,1 |
-| **unión** (lo que RRF considera) | **65,1** |
-| 🔴 **intersección visual ∩ texto** (lo que una cascada dejaría elegible) | **3,97** — mín. **0** |
-| consultas donde la intersección **no llega a 5** | **19 de 30** |
+Las 30 consultas de `C3` y de `C4` se corrieron de nuevo con la cascada, con **cero
+degradaciones** y los planes del pre-retrieval reusados (el reuso del plan al barrer el peso de fusión). El 32 % del top-5 de `C3` y el
+43 % del de `C4` eran **pares nuevos**: la cascada trae obras que RRF no traía. Esos **84 pares**
+se juzgaron por *pooling incremental* (§4.0), y **las dos estrategias se miden sobre la misma
+base**; si no, el IDCG distinto las haría incomparables (§5.3b).
 
-Y la procedencia del top-5 que efectivamente se publica (150 ítems por fila):
+| `nDCG@5` · 30 consultas · GT extendido | `C3` cascada | `C3` RRF | **`C4` cascada = v2** | `C4` RRF |
+|---|---:|---:|---:|---:|
+| con los grados del anotador `ia-cascada` | **0,563** | 0,515 | 0,708 | **0,712** |
+| con los grados del juez `gpt-4o` (sensibilidad) | 0,505 | **0,511** | 0,701 | **0,710** |
 
-| | solo visual | solo texto | ambas ramas |
+| `C4` (v2), por categoría · anotador | `visual_cromatico` | `conceptual_cultural` | `ambiguo` |
 |---|---:|---:|---:|
-| `C3` | 17,3 % | 18,7 % | 64,0 % |
-| **`C4` = v2** | **23,3 %** | 38,7 % | 38,0 % |
+| cascada | 0,640 | 0,831 | **0,653** |
+| RRF | **0,667** | **0,927** | 0,541 |
 
-**Tres razones para no cambiar, en orden de peso:**
+**Lo que se puede decir, y lo que no:**
 
-1. 🔴 **La cascada deja afuera el 23,3 % del top-5 de `v2`.** Si la rama de texto decide quién es
-   elegible, las obras que **solo** propuso la visual dejan de existir. Y el riesgo lo nombra la
-   propia recomendación —*«si el filtro deja afuera la obra correcta, CLIP no la puede
-   recuperar»*—: con una intersección media de **3,97**, en **19 de 30 consultas la cascada no
-   llegaría a juntar 5 candidatas**. No es un riesgo teórico, es el régimen normal de este corpus.
-2. 🔴 **Deshace el mecanismo que `C3` vino a arreglar.** §1.1 midió que el espacio de CLIP está
-   organizado por **formato físico** (κ = 0,663) más que por **cultura** (κ = 0,459), y en el
-   corpus las dos cosas están casi perfectamente confundidas (0 óleos indios, 0 folios franceses,
-   Japón 96 % folio). Si CLIP queda como **único ordenador final**, ordena por formato — que es
-   exactamente *el filtro que nadie puso*. Lo que se perdería tiene número: el `Δ C3−C2` de
-   cobertura cultural, **+2,00 de 5**.
-3. **Contradice el entregable aprobado.** la entrega aprobada describe la etapa 4 como *"las obras
-   que aparecen en ambas ramas **suben** en el ranking, y las que aparecen en una sola **se
-   conservan**, sin duplicados"*. Eso es **unión con premio al acuerdo**, que es RRF. Una cascada
-   es intersección: lo que aparece en una sola rama **muere**. Y rompería la inclusión incremental
-   de §3.1 —`C3` dejaría de ser `C2` más una etapa— con la que el enunciado pide *"cambios
-   incrementales"*.
+- ✅ **En `v2` la cascada empata con RRF.** La diferencia es **−0,004** (anotador) o **−0,009**
+  (juez), muy por debajo de la banda de ruido del reranker (±0,8 obras de 5, §4.4). **No se pierde
+  calidad**: `QS` igual (**0,899** contra 0,900), `P@5` **0,767** contra 0,733 y p95 **56,5 s**
+  contra 65,3 s, con el mismo costo (USD 0,028 por consulta).
+- ⚠️ **En `C3` el signo depende de quién juzgó**: **+0,048** con el anotador y **−0,006** con el
+  juez. No se publica como mejora.
+- 🔑 **La cascada cambia dónde acierta `v2`.** Gana en los pedidos **ambiguos** (+0,112) y pierde en
+  los **culturales** (−0,096). La cobertura cultural del top-5 de `C4` baja de **44/50 a 41/50**; en
+  `C3` queda igual (**26/50** las dos). Es el mecanismo de §1.1: cuando CLIP ordena, ordena en
+  parte por **formato físico**. La rama de texto garantiza que la cultura correcta *entre*, pero el
+  orden visual la puede bajar del top-5. Con 10 consultas por celda, ±0,1 está en el borde del
+  ruido, así que lo leemos como **tendencia, no como resultado**.
 
-⚠️ **Lo que la cascada sí tiene de bueno, y dónde ya está en el sistema.** Su variante *(a)* —el
-pedido conceptual se traduce en un **filtro por metadata** y lo visual ordena— es *metadata
-filtering* de la Clase 7.2, y es una técnica legítima. En este sistema el `where` existe pero como
-**join** (traer los fragmentos de una obra por `artwork_id`, §3.1), no como filtro del espacio de
-búsqueda, y por eso el registro de decisiones decidió **no presentarla como quinta técnica**. Convertirla en
-filtro duro sobre `culture` choca además con un problema abierto y medido: la normalización de
-`culture` mezcla lugar y período y no une sinónimos (`Holland`/`Netherlands`), así que un filtro
-duro sobre ese campo **sería frágil justo en los pedidos culturales**, que son los que debería
-ayudar.
-
-📌 **Qué queda sin medir, y se dice:** no corrimos la cascada de punta a punta. **No es una
-omisión de criterio: el tope del proxy está agotado** (§5.4), y la variante *(b)* además exige
-puntuar con CLIP las ~49 candidatas del texto, de las cuales hoy solo ~4 tienen rango visual. Lo
-que está medido es **la estructura del corpus de candidatas**, que es lo que decide si la cascada
-puede funcionar — y dice que no.
+**Por qué igual la elegimos:** es lo que pidió la cátedra; es una arquitectura más simple de
+explicar (un pipeline y no dos búsquedas mezcladas); no suma escalas incomparables; y **la
+medición no muestra una pérdida en `v2`**. RRF sigue implementado y medido como alternativa
+(`--set fusion.estrategia=rrf --set recuperacion_textual.n_fragmentos_recuperados=50`).
 
 ---
 
@@ -291,7 +283,8 @@ cadena es un prefijo de la siguiente con una etapa más.
 | **`C4` = v2** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 **v1 → v2 son cuatro etapas nuevas: `planificador`, `recuperador_textual`, `fusionador`,
-`reranker`.** Nada se saca.
+`reranker`.** Nada se saca. ⚠️ La etapa se sigue llamando `fusionador` en el código, pero desde el
+2026-11-11 **no fusiona: filtra y ordena en cascada** (§2.3).
 
 ### 3.2 Lo que NO cambió, y es la mitad del diseño experimental
 
@@ -300,8 +293,8 @@ cadena es un prefijo de la siguiente con una etapa más.
 | **Índice** | variante `c3274567371ff42b` — 2.605 obras, 6.232 fragmentos, chunking por campo semántico, campos `description` · `did_you_know` · `provenance` |
 | **`α`** | **0,5**, `alfa_congelado = true`, el mismo en `C1`–`C4`. `C0` es `α = 1` **por construcción** (ignora el pedido) |
 | **`N` candidatos / `top_k`** | 20 / 5 |
-| **Fusión** | `rrf`, `k = 60` |
-| **Evidencia** | `n_fragmentos_por_obra = 3`; recuperación textual 50 fragmentos, agregación `mejor_fragmento` |
+| **Etapa 4** | **`cascada`** (desde el 2026-11-11; antes `rrf`, `k = 60`) — solo la leen `C3` y `C4` |
+| **Evidencia** | `n_fragmentos_por_obra = 3`; recuperación textual **100** fragmentos (50 con RRF), agregación `mejor_fragmento` |
 | **Modelos** | `planificador` · `reranker` · `generador`: **`openai/gpt-4.1-mini`** · **juez: `openai/gpt-4o`**, *otro modelo a propósito* (el registro de decisiones, mitigación 3 de la circularidad) · texto: `openai/text-embedding-3-small` (1536 d) · imagen: **`openai/clip-vit-base-patch32`** local |
 | **Muestreo** | `seed = 7369` en los cuatro roles; `temperature` 0,1 planificador · **0,0** reranker · 0,2 generador · 0,0 juez |
 | **Pool y rúbrica** | `5b6cba32126fed61-definitivo` (379 ítems) y rúbrica `v1` — **sellados** |
@@ -318,7 +311,8 @@ computa después de congelar. el pipeline base completo y andando no se rompe �
 
 | | `C0` | `C1` | `C2` | `C3` | `C4` |
 |---|---|---|---|---|---|
-| `config_id` | `44bd01270964aec2` | `4443862ae45e62d6` | `8c128ba44b0f67cc` | `ce0910b50e3569e9` | `e30ca8c5003c614c` |
+| `config_id` | `44bd01270964aec2` | `4443862ae45e62d6` | `8c128ba44b0f67cc` | **`6b1e25abd3e63952`** | **`88368002659b48fd`** |
+| `config_id` con RRF (diseño anterior, §4.1–§4.4) | = | = | = | `ce0910b50e3569e9` | `e30ca8c5003c614c` |
 
 📌 **La etiqueta describe, el `config_id` identifica.** Un brazo de barrido puede llevar la
 etiqueta `C3` y **no** ser la fila `C3` publicada; pasa, y en §5.4 cuesta una cifra.
@@ -327,7 +321,61 @@ etiqueta `C3` y **no** ser la fila `C3` publicada; pasa, y en §5.4 cuesta una c
 
 ## 4. Los resultados comparados
 
-### 4.1 La tabla, sobre el consenso completo (a) — 379 pares, política `cero`
+### 4.0 🔴 La tabla de `v2` con la cascada — ground truth extendido (2026-11-11)
+
+`artifacts/informes/tabla-a2-cascada.json`, clave `tabla_a_completa` · 30 consultas × 5 obras por
+fila · política `cero` · `C3` y `C4` con la cascada (`config_id` `6b1e25abd3e63952` y
+`88368002659b48fd`). **Es la tabla de la versión entregada.**
+
+**El ground truth es el de §4.1 más 115 pares**, por *pooling incremental* (la evaluación): 84 juzgados
+ahora por el anotador **`ia-cascada`** (`artifacts/ground-truth/juicios/5b6cba32126fed61-v1-ia-cascada.csv`)
+y 31 reusados de `ia-incremental` (§5.3b). Ningún grado del consenso se pisó. El pool nuevo es
+`5b6cba32126fed61-cascada-incremental` y el congelado **no se tocó**. ⚠️ **Extender el GT mueve el
+IDCG de todas las filas** (§5.3b), así que **las cinco se recomputaron sobre la misma base** y
+**no se comparan** contra las cifras de §4.1.
+
+| Config | `nDCG@5` | `(def)` | `P@5` | `P@5` estricta | `MRR` | `QS` | p50 s | p95 s | llam. LLM / consulta | USD / consulta |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `C0` solo visual | 0,373 | 0,386 | 0,460 | 0,213 | 0,605 | **0,000** | 0,43 | 2,19 | 0,0 | 0,0000 |
+| **`C1` = v1** | 0,358 | 0,370 | 0,487 | 0,200 | 0,592 | 0,419 | 10,58 | 15,29 | 1,03 | 0,0029 |
+| `C2` + pre-retrieval | 0,481 | 0,498 | 0,607 | 0,287 | 0,684 | 0,426 | 9,57 | 19,78 | 2,0 | 0,0038 |
+| `C3` + texto en cascada | 0,563 | 0,582 | 0,653 | 0,360 | 0,826 | 0,751 | 11,68 | 24,87 | 2,0 | 0,0038 |
+| **`C4` = v2** | **0,708** | **0,732** | **0,767** | **0,540** | **0,856** | **0,899** | 44,47 | 56,53 | 22,0 | 0,0283 |
+
+**El titular v1 → v2 se sostiene con la cascada: `nDCG@5` 0,358 → 0,708, casi el doble**
+(+0,350), y `P@5` estricta **0,200 → 0,540** (2,7×). `QS` 0,419 → 0,899. **Groundedness
+automática:** 0 referencias colgadas y **100 % de cita byte a byte** en `C3` (164 referencias) y en
+`C4` (172). La abstención en `C4` es de **58 de 150 obras**.
+
+**el delta por categoría de pedido sigue en pie con la cascada.** `C3 − C2` por categoría, sobre esta misma base:
+**conceptual_cultural +0,241** (0,374 → 0,615), visual_cromatico +0,011, ambiguo −0,007. **La rama de
+texto aporta en los pedidos culturales y casi nada en el resto**, como predijo §1.1. Con la
+cascada, además, el delta cromático **deja de ser negativo**.
+
+**El κ de los juicios nuevos, que el pooling incremental de §5.3b no tenía.** Los mismos 84 pares
+los juzgó también el juez `gpt-4o`, de otro proveedor
+(`artifacts/ground-truth/juicios-juez/5b6cba32126fed61-2b3d03607e84cf61-4.csv`):
+**κ = 0,397** nominal y **0,548** ponderado cuadrático, con **50 de 84** acuerdos exactos. Es el
+mismo orden que el κ del juez contra el consenso (0,414, §6.3). Por eso §2.3 publica la
+comparación con **los dos** juegos de grados.
+
+⚠️ **Dos limitaciones de estos 84 juicios, dichas acá y no al pie:**
+1. **Los anotó UN solo anotador**, no la pareja + desempate del ground truth principal.
+2. **El anotador declara una exposición:** fijó las lecturas de los pedidos ambiguos **después** de
+   ver las obras candidatas, y la rúbrica pide fijarlas antes. No puede descartar el sesgo, y queda
+   escrito en el aporte.
+
+⚠️ **La población (b) restringida no es comparable para la cascada.** Los 84 pares nuevos no
+pasaron por acuerdo de dos anotadores, así que (b) los excluye. Eso **castiga por construcción** a
+la fila que trae obras nuevas: `C4` cascada da 0,439 en (b) contra 0,636 de RRF. Es el confundidor
+de §5.3b, al revés. Para comparar cascada y RRF vale la población (a) con los dos juegos de grados
+(§2.3), no (b).
+
+📌 **Las secciones §4.1–§4.4 que siguen son la medición del diseño anterior (RRF) sobre los 379
+pares del consenso original.** Se conservan porque son la tabla que se publicó y porque sus filas
+`C0`–`C2` no cambiaron. Lo que dicen de `C3`/`C4` es **de RRF**.
+
+### 4.1 La tabla del diseño anterior (RRF), sobre el consenso completo (a) — 379 pares, política `cero`
 
 `artifacts/informes/tabla-a2-m13.json`, clave `tabla_a_completa` · 30 consultas × 5 obras = 150
 ítems por fila · `% sin juzgar = 0,0` en las cinco **por construcción** (el pool *es* la unión de
@@ -825,6 +873,21 @@ promesa va **con su condición al lado**.
 > es la única que se puede **atribuir por rol y por configuración**, que es lo que la tabla de tokens, costo y la figura publica y
 > el dashboard no sabe hacer. Cada una con su base.
 
+> ### 🔴 2026-11-11 · las corridas de la cascada no pasaron por el proxy, y por qué
+>
+> Para la cascada (§2.3) la cátedra nos habilitó a gastar lo necesario. Pero ese día **el proxy
+> respondía `401` a todos sus modelos**, con el mensaje *«OpenAIException - Your API key has been
+> invalidated»*. Lo invalidado era la key de OpenAI **del proxy**, no la nuestra: una key falsa
+> recibe otro error (*«Invalid proxy server token»*). El proxy solo ofrece modelos de OpenAI, así
+> que tampoco había otro proveedor al que cambiar.
+>
+> **Entonces se corrió contra `api.openai.com` con una key propia del grupo y los mismos modelos**
+> (`gpt-4.1-mini`, `text-embedding-3-small`, `gpt-4o`). El prefijo `openai/` del proxy se traduce
+> en el transporte (`puertos/llm.py: nombre_para_el_host`), así que **ningún `config_id` se movió**
+> y los planes ya pagados se reusaron. **Medido:** las 60 corridas de `C3`/`C4` usaron 1,93 M tokens
+> de entrada y 83 mil de salida (≈ USD 0,90 a precio de lista), y el juez sobre 84 pares 816 mil y
+> 4,5 mil (≈ USD 2,09). **Total ≈ USD 3**, y el planificador no se volvió a pagar.
+
 ### 5.5 🔑 La regla de honestidad dejó de ser una promesa: `la revisión humana(c)` está medido
 
 el criterio de honestidad compromete **dos** cosas y hasta el 1/11 solo una tenía número. el conteo de referencias colgadas —*0
@@ -1267,31 +1330,36 @@ origen por ítem sería **perder el dato en vez de estratificarlo**.
 
 ## 7. Conclusiones
 
-1. **La iteración funcionó y el titular es robusto.** `nDCG@5` **0,372 → 0,743** y `P@5` estricta
-   **0,200 → 0,560** sobre el consenso completo —los **379** pares—; `C4` queda primero **en las dos
-   poblaciones**, por **+0,208** sobre esos 379 y **+0,149** sobre los **246 de acuerdo**.
-2. 🔑 **El resultado más fuerte no es el agregado: es el delta por categoría de pedido por categoría.** `C3 − C2` da
+1. **La iteración funcionó y el titular es robusto.** Con la `v2` entregada, **en cascada**:
+   `nDCG@5` **0,358 → 0,708** y `P@5` estricta **0,200 → 0,540** sobre el GT extendido (§4.0).
+   Con el diseño anterior (RRF) era **0,372 → 0,743** sobre los **379** pares, y `C4` quedaba
+   primero **en las dos poblaciones**.
+2. 🔑 **La cascada que pidió la cátedra empata con RRF en `v2`** (0,708 contra 0,712, y 0,701
+   contra 0,710 con los grados del juez), dentro del ruido del reranker. **Cambia dónde acierta:**
+   mejor en los ambiguos, peor en los culturales (§2.3). Y el argumento con el que la habíamos
+   descartado estaba mal planteado: lo corregimos midiendo, no defendiendo.
+3. 🔑 **El resultado más fuerte no es el agregado: es el delta por categoría de pedido por categoría.** `C3 − C2` da
    **+0,262 (379 pares) / +0,161 (246)** en los conceptuales y **−0,089 (379) / −0,211 (246)** en
    los cromáticos, **con el signo correcto en las dos poblaciones** —el primer número de cada par
    es siempre la completa—. Y el mecanismo estaba **medido y la predicción escrita dos
    semanas antes** de que existiera la métrica que la confirma.
-3. 🔴 **El orden de `C0`–`C4` cambia según el consenso, y eso se publica.** Lo que sobrevive es
+4. 🔴 **El orden de `C0`–`C4` cambia según el consenso, y eso se publica.** Lo que sobrevive es
    `C4` primero y el desglose por categoría. Lo que **no se puede decir nunca más** es *"`C3` le
    gana a `C2`"*.
-4. **El sistema no es un Q&A y tiene con qué demostrarlo:** `QS(C0) = 0,000` **exacto** es el
+5. **El sistema no es un Q&A y tiene con qué demostrarlo:** `QS(C0) = 0,000` **exacto** es el
    control que vuelve falsable la premisa, y `QS(C4) = 0,900` con `nDCG` alto es la única
    combinación que la evaluación declara buena.
-5. **Tres resultados negativos que valen más que un número redondo:** el 39 % del índice nunca se
+6. **Tres resultados negativos que valen más que un número redondo:** el 39 % del índice nunca se
    cita, el presupuesto de evidencia es de suma cero, y el chunking que la entrega aprobada pedía
    tiene un costo de licencia del 21,2 %.
-6. 🔑 **Y la regla de honestidad dejó de ser una promesa: `la revisión humana(c)` tiene número.** Sobre 25
+7. 🔑 **Y la regla de honestidad dejó de ser una promesa: `la revisión humana(c)` tiene número.** Sobre 25
    explicaciones y **51 afirmaciones**: clasificación **39/51**, la cita se sostiene en **20 de
    27**, la observación es defendible en **12 de 16**. **Pero el resultado no es el porcentaje: es
    que la regla de que un dato lleva referencia tiene dos tipos y el generador produce tres clases** —dato de museo, observación de la
    imagen y **conocimiento general del modelo**, que no tiene dónde ir—, así que la métrica de
    `la evaluación §D` **corta binario sobre una población de tres clases**. Y **una obra falla los tres
    ejes a la vez y la falla le costó al sistema la mejor obra de su propio top-5**.
-7. 🔴 **Y una limitación metodológica que no se esconde: el ground truth lo produjo IA.** El κ es
+8. 🔴 **Y una limitación metodológica que no se esconde: el ground truth lo produjo IA.** El κ es
    inter-modelo, el autoritativo es **0,435** sobre 269 ítems, y la mitigación de circularidad que
    pedía juicios humanos **queda formalmente rota**. Lo que la reemplaza está medido, incluido el
    hallazgo de que **el efecto proveedor salió al revés** y que **el κ del juez invierte el patrón
@@ -1316,7 +1384,7 @@ recién cuando ese commit exista; el criterio de la entrega en fecha y en format
 
 *Fuentes: AIC y CMA, obras de dominio público / CC0. `description` de AIC es **CC BY 4.0**; este
 informe no reproduce fragmentos de esos textos. Todas las cifras las emitió nuestro pipeline entre
-el 14/10 y el 1/11 de 2026 y cada una lleva su población y su artefacto; donde la cifra no sale de
+el 14/10 y el 11/11 de 2026 y cada una lleva su población y su artefacto; donde la cifra no sale de
 un artefacto, está dicho. El ground truth lo produjeron anotadores de IA (la anotación por IA) y el
 acuerdo entre ellos se reporta en el §6.*
 

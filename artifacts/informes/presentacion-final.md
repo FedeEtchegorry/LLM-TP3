@@ -138,29 +138,33 @@ prueba**.
 el artefacto, no el conteo de trazas.
 **Query rewriting** y **query expansion** salen de **una sola llamada** y las prueba el mismo
 `PlanDeConsulta`, con **un booleano para cada una**: `distintas_del_pedido_crudo` es rewriting,
-`distintas_entre_si` es expansion. **La fusión RRF** la prueba el `ranking_fusionado` **con los
-rangos de origen por rama**. **El reranking**, el `score_0_10` con su justificación y el rango
-previo.
+`distintas_entre_si` es expansion. **La cascada** —el texto filtra, CLIP ordena— la prueba el
+`ranking_fusionado`: **solo** obras propuestas por el texto (97 en esa consulta), ordenadas por
+coseno CLIP, con sus rangos de origen por rama. **El reranking**, el `score_0_10` con su
+justificación y el rango previo.
 🔑 **Y las cuatro se pueden ver sobre una sola consulta de punta a punta** — el pedido *"escenas de
 agua en la pintura china"*, cuyo plan es el que esa corrida consume, y donde **la justificación del
 reranker le devuelve el pedido reescrito**.
-⚠️ **Y una técnica que decidimos NO presentar como quinta:** el filtrado por metadata. Usamos
-`where`, pero como **join** —traer los fragmentos de una obra por su id— no para angostar el espacio
-de búsqueda, que es lo que la técnica significa. **Cuatro sólidas valen más que cinco discutibles.**
-🔗 `artifacts/planes/d408abc4d01bdd73.json` + `artifacts/corridas/e3821d8533de06a3-1/corrida.json`
+🔑 **Y la cascada es *metadata filtering* de la Clase 7.2:** el `artwork_id` de los fragmentos
+angosta el espacio en el que CLIP busca.
+🔗 `artifacts/planes/d408abc4d01bdd73.json` + `artifacts/corridas/e99aa4968f32cee9-1/corrida.json`
 
-### D-7 · 🔑 Una decisión que dejó de ser un argumento y pasó a ser un número · 1 min
+### D-7 · 🔑 La cátedra nos pidió una cascada, la medimos, y `v2` la usa · 1 min
 
-**Se muestra:** tres filas. **`rrf` 0,727** · `suma de scores` 0,682 · `concatenacion` 0,649.
+**Se muestra:** el diagrama *texto filtra → CLIP ordena → reranker*, y una tabla de dos filas:
+`nDCG@5` de `C4` **cascada 0,708 · RRF 0,712** (anotador) y **0,701 · 0,710** (juez `gpt-4o`).
 
-**Se dice:** elegimos **RRF con k = 60** con un argumento: los scores de las dos ramas **no son
-calibrables entre sí**, así que se fusiona por **rango** y el problema desaparece. Corrimos los tres
-brazos. **El orden medido es exactamente el que el argumento predijo:** la única estrategia que
-**suma dos escalas** queda en el medio, y la que **ignora el acuerdo entre ramas** es la peor.
-⚠️ **Y una nota de honestidad sobre las propias cifras:** el **0,727** lo emite el artefacto de la
-tabla; los otros dos **están medidos y sus corridas están en disco, pero la comparación nunca se
-escribió a un artefacto**. Son medidas, no emitidas, y lo decimos distinto.
-🔗 `tabla-a2-m13.json` (0,727) · `config/default.toml [fusion]` (los tres)
+**Se dice:** antes fusionábamos dos búsquedas con **RRF**. En la consulta nos sugirieron **armar el
+pipeline**: que el concepto **decida qué obras entran** y lo visual **decida el orden**, sin sumar
+puntajes. Lo implementamos: la rama de texto deja ~97 obras elegibles y CLIP ordena **todas**
+esas. Corrimos las 30 consultas y juzgamos los 84 pares nuevos. **En `v2` empata con RRF**, con
+una diferencia menor que el ruido del reranker, y **sin perder** `QS` (0,899). **Cambia dónde
+acierta**: mejor en los pedidos ambiguos (+0,11) y peor en los culturales (−0,10), porque cuando
+CLIP ordena, ordena en parte por formato físico (D-5).
+⚠️ **Y una corrección propia:** la primera vez la habíamos descartado con un número mal planteado
+(medíamos la intersección con el top-20 visual, no lo que CLIP podía ordenar). **Lo corregimos
+midiendo.**
+🔗 `ejercicio-4.md §2.3` · `tabla-a2-cascada.json` · `tabla-a2-rrf-gt-extendido.json`
 
 ---
 
@@ -168,17 +172,18 @@ escribió a un artefacto**. Son medidas, no emitidas, y lo decimos distinto.
 
 ### D-8 · La tabla: v1 → v2 · 2 min
 
-**Se muestra:** las 5 filas × 7 columnas sobre el consenso completo. Resaltar la columna
-`P@5 estricta` y la fila `C4`.
+**Se muestra:** las 5 filas × 7 columnas de `ejercicio-4.md §4.0` (v2 en cascada, GT extendido).
+Resaltar la columna `P@5 estricta` y la fila `C4`.
 
-**Se dice:** sobre los 379 pares anotados del pool congelado, 30 consultas × 5 obras por fila.
-**`nDCG@5` va 0,372 → 0,743: se duplica.** Y en la vara dura —`P@5` **estricta**, la fracción del
-top-5 con **grado 2**— va **0,200 → 0,560**, que es **2,8×**. **`QS` 0,419 → 0,900**: el sistema
+**Se dice:** 30 consultas × 5 obras por fila, sobre el ground truth extendido con los pares que
+trajo la cascada. **`nDCG@5` va 0,358 → 0,708: casi se duplica.** Y en la vara dura —`P@5`
+**estricta**, la fracción del top-5 con **grado 2**— va **0,200 → 0,540**, que es **2,7×**.
+**`QS` 0,419 → 0,899**: el sistema
 pasa de cambiar poco el resultado según el pedido a cambiarlo casi todo **sin perder precisión**,
 que es la **única** combinación que nuestro plan de métricas declara buena — `QS` alta sola no
 significa nada, un sistema **aleatorio** tiene `QS ≈ 1`.
-**Y el costo de v2 está medido y no es chico:** p95 **15,3 s → 65,3 s**, tokens de entrada por
-consulta **3.722 → 61.733** y **USD/consulta 0,0029 → 0,0277 — 9,6×**, porque `C4` paga **20
+**Y el costo de v2 está medido y no es chico:** p95 **15,3 s → 56,5 s**, tokens de entrada por
+consulta **3.722 → 62.996** y **USD/consulta 0,0029 → 0,0283 — 9,8×**, porque `C4` paga **20
 llamadas de reranking con imagen** por consulta. **El `nDCG@5` se duplica y el precio se multiplica
 por diez: las dos cifras van juntas.**
 🔑 **La columna de dólares decía *ausente* y desde el 2026-11-03 tiene número, sin re-correr una
@@ -186,7 +191,8 @@ sola consulta** — los tokens ya estaban medidos en los libros mayores de las 1
 único que faltaba era **leer el precio de lista con su fecha y su URL**, que es lo que la decisión
 D-15 había dejado pendiente. Y al derivarlo apareció un error nuestro: **`C2`–`C4` publicaban una
 llamada de menos por consulta** porque un plan reusado no paga el planificador (el reuso del plan al barrer el peso de fusión).
-🔗 `tabla-a2-m13.json` → `tabla_a_completa`, `columnas_sin_ground_truth`
+🔗 `tabla-a2-cascada.json` → `tabla_a_completa`, `columnas_sin_ground_truth`. ⚠️ D-9 a D-11 son
+la medición del diseño anterior (RRF) sobre los 379 pares: **se dicen como tales**.
 
 ### D-9 · 🔴 El orden de la tabla **CAMBIA**, y publicamos los dos · 2 min
 
@@ -469,8 +475,9 @@ nuestro criterio decía *"muestra humana"*: **la letra falla en quién anota**, 
 **Se muestra:** seis líneas y el hash.
 
 **Se dice:**
-1. **La iteración funcionó:** sobre los **379 pares** del consenso completo, `nDCG@5` **0,372 →
-   0,743** y `P@5` estricta **0,200 → 0,560**, con `C4` primero **en las dos poblaciones**.
+1. **La iteración funcionó:** con `v2` en cascada, `nDCG@5` **0,358 → 0,708** y `P@5` estricta
+   **0,200 → 0,540**. Y la cascada que pidió la cátedra **empata con RRF** en `v2`: cambia dónde
+   acierta, no cuánto.
 2. 🔑 **El resultado más fuerte no es el agregado: es el desglose por categoría** — la rama de
    texto aporta **+0,262** sobre esos 379 pares y **+0,161** sobre los **246 de acuerdo** en los
    conceptuales, y **resta** en los cromáticos, **con el signo correcto en los dos ground truths**.
@@ -506,7 +513,7 @@ maqueta tiene que pegar el hash acá antes de subir**, y es lo último que se ha
 | D-5, alternativa | `umap-02-culture.png` (el espacio coloreado por `culture`) |
 | opcional, bloque 1 | `umap-01-tema.png` — los clusters por **tema**, que es el objetivo opcional de la figura UMAP cumplido |
 | opcional, D-6 | `umap-06-hallazgos-no-pedidos.png` |
-| **D-1** | hay que **armarla**: 1 imagen del held-out + los 3 top-5. Salen de las corridas de `e30ca8c5003c614c` (30 en disco). **Es la única figura que falta y es la primera que se ve** |
+| **D-1** | hay que **armarla**: 1 imagen del held-out + los 3 top-5. Salen de las corridas de `88368002659b48fd` (v2 en cascada, 30 en disco). **Es la única figura que falta y es la primera que se ve** |
 | **D-14** | tabla de **cuatro** filas, se tipea |
 | **D-16b** | sin figura: **tres pares de números** y una línea. Se tipea. ⚠️ Si quien presente quiere **una** imagen, va `aic:43211` —*Interior of the Oude Kerk*— al lado de las dos afirmaciones: **el gris-blanco de la piedra contra el texto que dice «cálida» es el argumento entero** |
 
@@ -514,7 +521,8 @@ maqueta tiene que pegar el hash acá antes de subir**, y es lo último que se ha
 
 | Diapositiva | De dónde |
 |---|---|
-| D-8 | `ejercicio-4.md §4.1` entera |
+| D-7 | `ejercicio-4.md §2.3`, las dos tablas |
+| D-8 | `ejercicio-4.md §4.0` entera |
 | D-9 | `§4.2`, las dos secuencias + la columna `% sin juzgar` |
 | D-10 | `§4.3`, la tabla de `C3 − C2` |
 | D-11 | `§4.3`, la matriz 5 × 3 de la población (a) |
@@ -537,9 +545,9 @@ diapositiva que lo cuenta.
 | 🔑 *"¿Y por qué `α = 0,5` y no el que maximiza `QS`?"* | **Porque `QS` es monótona decreciente en `α`:** maximizarla sola empuja a **`α = 0`**, que da la `QS` más alta de las cinco (**0,821**) **con anclaje 0/20 y las 20 obras devolviendo la misma**. **Es `C0` por el otro lado** — `C0` ignora el pedido, `α = 0` ignora la imagen. El criterio —*la `QS` más alta entre los `α` que conservan el anclaje top-1 20/20*— **se declaró antes de mirar el barrido**, y con el umbral en top-5 habría ganado `α = 0,25` por **+0,026 de `QS`**. **No se movió: eso sería elegir la vara después de ver a qué `α` favorece.** Es la mejor respuesta de oral que tenemos para *"`QS` alta sola no significa nada"* | `§2.2` |
 | *"¿Por qué sacaron `style` del output?"* | CMA no lo publica y en AIC está en el 78 %: existiría en **1 de cada 4** obras. **Y medimos que no es un campo de estilo consistente**: lo que separa el espacio son `Himalayan` 0,86 y `Japanese` 0,71, que **no son estilos**; `Renaissance` 0,24 no separa nada. **Es un desvío no consultado** | anexo `§B` |
 | *"¿El corpus no eran 10.000 obras?"* | **10.000 prometidas → ~5.900 al consultar → 2.605 hoy**, y el motivo de cada salto está medido. El recorte **de tipo** está aceptado; **la magnitud la informamos nosotros** | encuadre del informe |
-| *"¿Por qué no filtran por metadata en los pedidos culturales?"* | **Porque de eso se encarga la rama de texto, y está medido**: cobertura cultural 0,60 → 2,60 → 4,50 de 5 | D-6, D-11 |
-| *"¿Cuánto costó?"* | **Tokens y llamadas: medidos, por rol. Dólares: derivados, con el precio declarado al lado.`C1` 0,0029 → `C4` 0,0277 USD/consulta (9,6×)**, y el total derivado de los artefactos a precio de lista da **USD 12,43** contra los **10,0654** que facturó el dashboard. 🔑 **Las dos conviven y no se promedian**: la de facturación la dice el proxy, la derivada es la única que se puede **atribuir por rol** —y dice que el juez (4,77) y el reranker (4,71) son el 76 % del gasto—. El proxy factura un **19 % por debajo de lista** (base: lista) y la hipótesis es el **descuento por entrada cacheada**, y **no la podemos verificar**: guardamos `prompt_tokens`, no `cached_tokens` | D-15, `§5.4` |
-| 🔑 *"¿Cómo comparan un resultado de texto con uno de imagen?"* | **No los comparamos: lo único que rankeamos son obras**, y cada obra tiene imagen y texto. Las dos ramas producen **rankings del mismo universo** y se fusionan con **RRF, que usa solo rangos** — justamente porque un coseno de CLIP y uno de `text-embedding-3-small` no son calibrables. Donde **sí** mezclamos modalidades es adentro de CLIP (`α·e_img + (1−α)·e_txt`), y ahí se normaliza antes y después. ⚠️ **La alternativa en cascada la evaluamos y perdería**: la intersección de las dos ramas es **3,97 de 65,1**, en **19 de 30 consultas no junta 5 candidatas**, y dejaría afuera el **23,3 %** del top-5 de v2 | `§2.3` |
+| *"¿Por qué no filtran por metadata en los pedidos culturales?"* | **Filtramos, por el `artwork_id` de los fragmentos que responden al concepto** (la cascada). No filtramos por el campo `culture` porque su normalización mezcla lugar y período y no une sinónimos (`Holland`/`Netherlands`): sería un filtro frágil justo en esos pedidos. Cobertura cultural de `C4` en cascada: **41/50** (RRF 44/50) | D-6, D-7 |
+| *"¿Cuánto costó?"* | **Tokens y llamadas: medidos, por rol. Dólares: derivados, con el precio declarado al lado.`C1` 0,0029 → `C4` 0,0277 USD/consulta (9,6×)**, y el total derivado de los artefactos a precio de lista da **USD 12,43** contra los **10,0654** que facturó el dashboard. 🔑 **Las dos conviven y no se promedian**: la de facturación la dice el proxy, la derivada es la única que se puede **atribuir por rol** —y dice que el juez (4,77) y el reranker (4,71) son el 76 % del gasto—. El proxy factura un **19 % por debajo de lista** (base: lista) y la hipótesis es el **descuento por entrada cacheada**, y **no la podemos verificar**: guardamos `prompt_tokens`, no `cached_tokens`. ➕ **Las corridas de la cascada (11/11) se pagaron aparte, ≈ USD 3, con una key propia**, porque ese día el proxy tenía invalidada su key de OpenAI | D-15, `§5.4` |
+| 🔑 *"¿Cómo comparan un resultado de texto con uno de imagen?"* | **Ya no los combinamos: los encadenamos.** El texto decide **qué obras son elegibles** y CLIP **ordena solo esas**, así que ningún puntaje de un espacio se compara con uno del otro. Donde **sí** mezclamos modalidades es adentro de CLIP (`α·e_img + (1−α)·e_txt`), y ahí se normaliza antes y después. **Y medimos la alternativa anterior (RRF): en `v2` empatan**, 0,708 contra 0,712 | `§2.3` |
 | 🔑 *"¿Y cómo saben que las explicaciones no mienten?"* | **Dos mitades, y no se promedian.** La automática: **0 referencias colgadas** y **100 % de cita byte a byte** en las 150 obras de cada fila. La fina: **25 explicaciones y 51 afirmaciones revisadas una por una** — clasificación **39/51**, la cita se sostiene **20/27**, la observación es defendible **12/16**. **Y el resultado que importa es cualitativo:** la regla de que un dato lleva referencia tiene dos tipos y el generador produce **tres clases**. 🔴 **Y de las 7 afirmaciones que no llegan a *sostiene*, 2 son defecto del DATO y no del modelo: el 14,2 % del corpus (370 de 2.605 obras) comparte su `description` con otra**, porque el museo publica una descripción por álbum y la cuelga de cada hoja | D-16b, `ejercicio-4.md §5.5` |
 | *"¿Y las 25 las anotó una persona?"* | **No: IA, igual que los 379 juicios.** Nuestro criterio decía *"muestra humana"*, así que **la letra no se cumple** y lo decimos. Lo que sí tiene distinto del κ: acá el juicio es **contra un fragmento en disco y una imagen en disco**, no contra una convención de la rúbrica | D-16b, `§F` del anexo |
 | 🔑 *"Y el chunking ciego, ¿además **recupera** peor?"* | 🔴 **Lo medimos y la respuesta es un NO-resultado, que es lo que hay que contestar.** Extendimos el ground truth por **pooling incremental** (31 juicios nuevos) y el **`Δ` contra `C3` cambia de signo** según la población: **−0,0405** sobre el consenso completo y **+0,0035 / +0,0050** sobre el restringido. **Así que no podemos afirmar que empeore el retrieval, ni que no lo empeore.** 🔑 **Y el confundidor vale más que la tabla:** los 31 juicios nuevos **no pasaron por el filtro de acuerdo/desempate** —no hay con quién acordar cuando el anotador es uno— así que **sobreviven a la restricción por construcción**, y la fila restringida **favorece estructuralmente al brazo que trajo ítems nuevos**. ⚠️ **Lo que sí está medido es que el eje mueve el top-5: churn 1,567 de 5 contra 0,267 del eje de campos, 5,9×.** Y una decisión de método que sale de ahí: **el `IDCG` se computa sobre la población del ground truth, así que extender el pool mueve el baseline** — `C3` recomputada da **0,5308** contra el **0,535** de D-8, **y las dos son correctas con bases distintas** | `ejercicio-4.md §5.3b` |
