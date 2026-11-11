@@ -12,7 +12,10 @@ ESTRATEGIAS: tuple[str, ...] = (
     "rrf",
     "suma_de_scores_normalizados",
     "concatenacion",
+    "cascada",
 )
+
+FUENTE_DEL_FILTRO = "texto"
 
 FUENTE_DEL_PISO = "visual"
 
@@ -144,8 +147,55 @@ def concatenacion(
     ]
     return filas
 
+def cascada(
+    fuentes: Mapping[str, Sequence[Candidata]],
+    *,
+    puntajes_visuales: Mapping[str, float],
+    **_,
+) -> list[ObraFusionada]:
+    rangos = _rangos_por_rama(fuentes)
+    if FUENTE_DEL_FILTRO not in rangos:
+        visual = rangos.get(FUENTE_DEL_PISO, {})
+        filas = [
+            ObraFusionada(
+                artwork_id=a,
+                score_fusionado=1.0 / r,
+                rangos_de_origen={FUENTE_DEL_PISO: r},
+                estrategia="cascada",
+            )
+            for a, r in visual.items()
+        ]
+        filas.sort(key=lambda f: (-f.score_fusionado, f.artwork_id))
+        return filas
+    elegibles = rangos[FUENTE_DEL_FILTRO]
+    sin_puntaje = sorted(set(elegibles) - set(puntajes_visuales))
+    if sin_puntaje:
+        raise ErrorDelProyecto(
+            f"la cascada no tiene puntaje visual para {len(sin_puntaje)} obras elegibles "
+            f"({sin_puntaje[:3]}). Ordenar las que sí tienen y descartar el resto sería un "
+            f"filtro que nadie declaró."
+        )
+    filas = [
+        ObraFusionada(
+            artwork_id=a,
+            score_fusionado=float(puntajes_visuales[a]),
+            rangos_de_origen=dict(
+                sorted(
+                    (rama, por_obra[a])
+                    for rama, por_obra in rangos.items()
+                    if a in por_obra
+                )
+            ),
+            estrategia="cascada",
+        )
+        for a in elegibles
+    ]
+    filas.sort(key=lambda f: (-f.score_fusionado, f.artwork_id))
+    return filas
+
 FUNCIONES = {
     "rrf": rrf,
+    "cascada": cascada,
     "suma_de_scores_normalizados": suma_de_scores_normalizados,
     "concatenacion": concatenacion,
 }
@@ -156,7 +206,12 @@ class SinPiso(ErrorDelProyecto):
 class Fusionador(Etapa):
     NOMBRE = "fusionador"
     PRECONDICIONES = ("fuentes_de_ranking",)
-    CLAVES_DE_CONFIGURACIÓN = ("fusion.estrategia", "fusion.k", "consulta.top_k")
+    CLAVES_DE_CONFIGURACIÓN = (
+        "fusion.estrategia",
+        "fusion.k",
+        "consulta.top_k",
+        "consulta.alfa",
+    )
     DEGRADA = True
     POLÍTICA = (
         "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la "
@@ -165,7 +220,16 @@ class Fusionador(Etapa):
         "degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación)."
     )
 
-    def __init__(self, *, estrategia: str, k: int = K_POR_DEFECTO, top_k: int = 5) -> None:
+    def __init__(
+        self,
+        *,
+        estrategia: str,
+        k: int = K_POR_DEFECTO,
+        top_k: int = 5,
+        indice=None,
+        puerto_de_imagen=None,
+        alfa: float | None = None,
+    ) -> None:
         if estrategia not in ESTRATEGIAS:
             raise ErrorDeConfiguración(
                 f"`fusion.estrategia = {estrategia!r}` no es una de {list(ESTRATEGIAS)}. "
@@ -175,6 +239,17 @@ class Fusionador(Etapa):
                 f"es el reuso del caché de imagen entre variantes de la lista de recortes."
             )
         self.estrategia = estrategia
+        if estrategia == "cascada" and (
+            indice is None or puerto_de_imagen is None or alfa is None
+        ):
+            raise ErrorDeConfiguración(
+                "`fusion.estrategia = \"cascada\"` ordena las obras elegibles con CLIP, así "
+                "que necesita el `PuertoÍndiceVectorial`, el `PuertoEmbeddingImagen` y "
+                "`consulta.alfa`, y no se le inyectó alguno."
+            )
+        self.indice = indice
+        self.puerto = puerto_de_imagen
+        self.alfa = None if alfa is None else float(alfa)
         self.k = int(k)
         if self.k < 1:
             raise ErrorDeConfiguración(f"`fusion.k = {k}` tiene que ser ≥ 1 (la fusión recíproca de rangos con k = 60: 60).")
@@ -208,16 +283,37 @@ class Fusionador(Etapa):
                 f"cosa."
             )
 
-        filas = FUNCIONES[self.estrategia](fuentes, k=self.k)
+        if self.estrategia == "cascada":
+            filas = cascada(fuentes, puntajes_visuales=self._puntajes_visuales(estado, fuentes))
+        else:
+            filas = FUNCIONES[self.estrategia](fuentes, k=self.k)
         nuevo = estado.con(ranking_fusionado=tuple(filas))
         return nuevo.proyectar_top5(
             [f.artwork_id for f in filas[: self.top_k]], por=self.NOMBRE
         )
 
+    def _puntajes_visuales(
+        self, estado: EstadoDeConsulta, fuentes: Mapping[str, Sequence[Candidata]]
+    ) -> dict[str, float]:
+        if FUENTE_DEL_FILTRO not in fuentes:
+            return {}
+        from tp3_rag.modulo_b.recuperador_visual import combinar
+        from tp3_rag.puertos.indice_vectorial import ARTWORKS
+
+        e_img = self.puerto.embeber_imagen(
+            estado.entrada.datos_de_imagen,
+            artwork_id=estado.entrada.artwork_id_de_la_imagen or estado.entrada.consulta_id,
+        )
+        e_txt = self.puerto.embeber_texto(estado.consulta_visual)
+        vector = combinar(e_img, e_txt, self.alfa)
+        ids = [c.artwork_id for c in fuentes[FUENTE_DEL_FILTRO]]
+        return {r.id: float(r.score) for r in self.indice.puntuar(ARTWORKS, vector, ids)}
+
     def a_json(self) -> dict:
         return {
             "etapa": self.NOMBRE,
             "estrategia": self.estrategia,
+            "alfa": self.alfa if self.estrategia == "cascada" else None,
             "k": self.k if self.estrategia == "rrf" else None,
             "estrategias_declaradas": list(ESTRATEGIAS),
             "top_k": self.top_k,

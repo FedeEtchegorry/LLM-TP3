@@ -14,6 +14,7 @@ from tp3_rag.modulo_b.fusionador import (
     Fusionador,
     ObraFusionada,
     SinPiso,
+    cascada,
     concatenacion,
     ramas_que_entraron,
     rrf,
@@ -281,10 +282,15 @@ def test_la_concatenacion_no_premia_el_acuerdo_entre_ramas():
     assert orden == ["cma:101", "cma:102", "cma:103"]
     assert concatenacion(fuentes)[1].rangos_de_origen == {"texto": 1, "visual": 2}
 
-def test_las_tres_estrategias_estan_declaradas_y_el_default_es_rrf():
+def test_las_estrategias_estan_declaradas_y_el_default_es_la_cascada():
     cfg = Configuración.cargar()
-    assert set(ESTRATEGIAS) == {"rrf", "suma_de_scores_normalizados", "concatenacion"}
-    assert cfg["fusion.estrategia"] == "rrf"
+    assert set(ESTRATEGIAS) == {
+        "rrf",
+        "suma_de_scores_normalizados",
+        "concatenacion",
+        "cascada",
+    }
+    assert cfg["fusion.estrategia"] == "cascada"
     assert int(cfg["fusion.k"]) == K_POR_DEFECTO == 60
 
 def _con_dos_ramas(estado=None):
@@ -469,3 +475,82 @@ def test_el_score_que_se_publica_en_c3_es_el_fusionado():
     esperado = {f.artwork_id: f.score_fusionado for f in fusionado.ranking_fusionado}
     for obra in salida.obras:
         assert obra.score == pytest.approx(esperado[obra.artwork_id])
+
+def test_la_cascada_solo_deja_elegibles_las_obras_del_texto_y_las_ordena_por_clip():
+    fuentes = {
+        "visual": _candidatas(("cma:101", 0.9), ("cma:102", 0.8)),
+        "texto": _candidatas(("cma:103", 0.6), ("cma:102", 0.5), ("aic:201", 0.4)),
+    }
+    puntajes = {"cma:103": 0.20, "cma:102": 0.31, "aic:201": 0.25}
+    filas = cascada(fuentes, puntajes_visuales=puntajes)
+    assert [f.artwork_id for f in filas] == ["cma:102", "aic:201", "cma:103"]
+    assert {f.estrategia for f in filas} == {"cascada"}
+    assert filas[0].score_fusionado == pytest.approx(0.31)
+    assert filas[0].rangos_de_origen == {"texto": 2, "visual": 2}
+    assert filas[1].rangos_de_origen == {"texto": 3}
+
+def test_la_cascada_no_mira_los_scores_del_texto():
+    base = {"visual": _candidatas(("cma:101", 0.9))}
+    puntajes = {"cma:103": 0.2, "cma:102": 0.3}
+    a = cascada(
+        {**base, "texto": _candidatas(("cma:103", 0.9), ("cma:102", 0.1))},
+        puntajes_visuales=puntajes,
+    )
+    b = cascada(
+        {**base, "texto": _candidatas(("cma:102", 0.9), ("cma:103", 0.1))},
+        puntajes_visuales=puntajes,
+    )
+    assert [f.artwork_id for f in a] == [f.artwork_id for f in b] == ["cma:102", "cma:103"]
+
+def test_la_cascada_sin_rama_de_texto_pasa_a_traves_la_visual():
+    filas = cascada(
+        {"visual": _candidatas(("cma:101", 0.9), ("cma:102", 0.8))},
+        puntajes_visuales={},
+    )
+    assert [f.artwork_id for f in filas] == ["cma:101", "cma:102"]
+
+def test_la_cascada_sin_puntaje_para_una_elegible_es_error_y_no_un_filtro_mudo():
+    from tp3_rag.nucleo.errores import ErrorDelProyecto
+
+    with pytest.raises(ErrorDelProyecto):
+        cascada(
+            {
+                "visual": _candidatas(("cma:101", 0.9)),
+                "texto": _candidatas(("cma:103", 0.6), ("cma:102", 0.5)),
+            },
+            puntajes_visuales={"cma:103": 0.2},
+        )
+
+def test_la_cascada_sin_clip_o_sin_indice_no_se_construye():
+    with pytest.raises(ErrorDeConfiguración):
+        Fusionador(estrategia="cascada")
+
+class _ClipFijo:
+    def embeber_imagen(self, datos, *, artwork_id="?"):
+        return (1.0, 0.0, 0.0, 0.0)
+
+    def embeber_texto(self, texto):
+        return (1.0, 0.0, 0.0, 0.0)
+
+def test_el_fusionador_en_cascada_ordena_con_clip_las_elegibles_del_texto():
+    indice = ÍndiceVectorialEnMemoria(variante_id="v")
+    vectores = {
+        "cma:101": [1.0, 0.0, 0.0, 0.0],
+        "cma:102": [0.6, 0.8, 0.0, 0.0],
+        "cma:103": [0.9, 0.0, 0.43589, 0.0],
+        "aic:201": [0.0, 1.0, 0.0, 0.0],
+        "aic:202": [0.0, 0.0, 1.0, 0.0],
+    }
+    indice.upsert(
+        ARTWORKS,
+        ids=list(vectores),
+        vectores=list(vectores.values()),
+        metadatas=[{"title": o} for o in vectores],
+    )
+    etapa = Fusionador(
+        estrategia="cascada", top_k=2, indice=indice, puerto_de_imagen=_ClipFijo(), alfa=0.5
+    )
+    nuevo = etapa.correr(_con_dos_ramas())
+    assert [f.artwork_id for f in nuevo.ranking_fusionado] == ["cma:103", "cma:102"]
+    assert nuevo.top5 == ("cma:103", "cma:102")
+    assert "cma:101" not in nuevo.top5

@@ -217,12 +217,12 @@ n_fragmentos_por_obra = 3
 orden = "por_similitud_al_pedido"
 
 [recuperacion_textual]
-n_fragmentos_recuperados = 50
+n_fragmentos_recuperados = 100
 
 agregacion = "mejor_fragmento"
 
 [fusion]
-estrategia = "rrf"
+estrategia = "cascada"
 k = 60
 
 [medicion]

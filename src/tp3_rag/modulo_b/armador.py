@@ -326,10 +326,23 @@ class ArmadorDePipeline:
                 agregacion=self.cfg["recuperacion_textual.agregacion"],
             )
         if nombre == "fusionador":
+            estrategia = self.cfg["fusion.estrategia"]
+            en_cascada = estrategia == "cascada"
             return Fusionador(
-                estrategia=self.cfg["fusion.estrategia"],
+                estrategia=estrategia,
                 k=int(self.cfg["fusion.k"]),
                 top_k=top_k,
+                indice=(
+                    _exigir(self.indice, "PuertoÍndiceVectorial", nombre)
+                    if en_cascada
+                    else None
+                ),
+                puerto_de_imagen=(
+                    _exigir(self.puerto_de_imagen, "PuertoEmbeddingImagen", nombre)
+                    if en_cascada
+                    else None
+                ),
+                alfa=alfa if en_cascada else None,
             )
         if nombre == "reranker":
             return Reranker(

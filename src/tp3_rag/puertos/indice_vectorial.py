@@ -54,6 +54,7 @@ class _BaseDeÍndice:
         "traer",
         "metadatas",
         "contar",
+        "puntuar",
     )
 
     def __init__(self, *, variante_id: str) -> None:
@@ -213,6 +214,24 @@ class ÍndiceVectorialChroma(_BaseDeÍndice):
             for i, m in zip(crudo.get("ids") or [], crudo.get("metadatas") or [])
         }
 
+    def puntuar(
+        self, nombre: str, vector: Sequence[float], ids: Sequence[str]
+    ) -> list[Resultado]:
+        if not ids:
+            return []
+        coleccion = self._abrir(nombre, exigir_no_vacia=False)
+        crudo = coleccion.get(ids=list(ids), include=["embeddings", "metadatas"])
+        salida = [
+            Resultado(i, _coseno(vector, list(v)), dict(m or {}))
+            for i, v, m in zip(
+                crudo.get("ids") or [],
+                crudo.get("embeddings") if crudo.get("embeddings") is not None else [],
+                crudo.get("metadatas") or [],
+            )
+        ]
+        salida.sort(key=lambda r: (-(r.score or 0.0), r.id))
+        return salida
+
     def contar(self, nombre: str) -> int:
         return self._abrir(nombre, exigir_no_vacia=False).count()
 
@@ -303,6 +322,19 @@ class ÍndiceVectorialEnMemoria(_BaseDeÍndice):
         self._validar_nombre(nombre)
         contenido = self._datos.get(nombre) or {}
         return {i: dict(contenido[i][1]) for i in ids if i in contenido}
+
+    def puntuar(
+        self, nombre: str, vector: Sequence[float], ids: Sequence[str]
+    ) -> list[Resultado]:
+        self.n_consultas += 1
+        contenido = self._abrir(nombre)
+        salida = [
+            Resultado(i, _coseno(vector, contenido[i][0]), dict(contenido[i][1]))
+            for i in dict.fromkeys(ids)
+            if i in contenido
+        ]
+        salida.sort(key=lambda r: (-(r.score or 0.0), r.id))
+        return salida
 
     def contar(self, nombre: str) -> int:
         self._validar_nombre(nombre)

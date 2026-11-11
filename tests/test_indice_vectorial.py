@@ -171,3 +171,17 @@ def test_el_upsert_se_batchea_por_debajo_del_tope_de_chroma(tmp_path):
     )
     assert n == 20
     assert indice.contar(KNOWLEDGE) == 20
+
+def test_puntuar_ordena_solo_los_ids_pedidos_y_omite_los_ausentes():
+    from tp3_rag.puertos.indice_vectorial import ARTWORKS, ÍndiceVectorialEnMemoria
+
+    indice = ÍndiceVectorialEnMemoria(variante_id="v")
+    indice.upsert(
+        ARTWORKS,
+        ids=["a", "b", "c"],
+        vectores=[[1.0, 0.0], [0.6, 0.8], [0.0, 1.0]],
+        metadatas=[{}, {}, {}],
+    )
+    resultado = indice.puntuar(ARTWORKS, [1.0, 0.0], ["c", "b", "z"])
+    assert [r.id for r in resultado] == ["b", "c"]
+    assert resultado[0].score > resultado[1].score

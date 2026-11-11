@@ -168,7 +168,9 @@ CADENAS = {
 
 OVERRIDES_POR_FILA = {"C0": {"consulta.alfa": 1.0, "consulta.alfa_congelado": True}}
 
-def _correr_las_30(tmp_path, *, plan_de_falla=None, configuracion="C1", n_candidatos=None):
+def _correr_las_30(
+    tmp_path, *, plan_de_falla=None, configuracion="C1", n_candidatos=None, fusion=None
+):
     cadena = CADENAS[configuracion]
     cfg = Configuración.cargar(
         overrides={
@@ -184,6 +186,7 @@ def _correr_las_30(tmp_path, *, plan_de_falla=None, configuracion="C1", n_candid
             **OVERRIDES_POR_FILA.get(configuracion, {}),
             **({"consulta.n_candidatos": n_candidatos} if n_candidatos else {}),
             **({"consulta.plan_de_falla": plan_de_falla} if plan_de_falla else {}),
+            **({"fusion.estrategia": fusion} if fusion else {}),
         }
     )
     obs = Observabilidad(silencioso=True)
@@ -363,9 +366,12 @@ def test_la_rama_de_texto_caida_deja_la_fusion_pasando_a_traves_con_la_visual(tm
 
 def test_la_fusion_caida_deja_el_top5_de_la_visual_y_et6_lo_acepta(tmp_path):
     con_fusion_caida = _correr_las_30(
-        tmp_path / "a", plan_de_falla={"fusionador": "excepcion"}, configuracion="C3"
+        tmp_path / "a",
+        plan_de_falla={"fusionador": "excepcion"},
+        configuracion="C3",
+        fusion="rrf",
     )
-    c3_entera = _correr_las_30(tmp_path / "b", configuracion="C3")
+    c3_entera = _correr_las_30(tmp_path / "b", configuracion="C3", fusion="rrf")
     for c in con_fusion_caida:
         et6 = c.contenido["invariante_et6"]
         assert et6["cumple_et6"] is True
