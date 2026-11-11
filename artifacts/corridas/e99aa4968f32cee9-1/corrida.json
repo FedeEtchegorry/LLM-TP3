@@ -1,0 +1,3302 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set proveedor.base_url"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "88368002659b48fd",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c02-conceptual",
+  "corrida_id": "e99aa4968f32cee9-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:111728",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c02-conceptual",
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "cma:132931": [
+        {
+          "artist": "Zha Shibiao",
+          "artwork_id": "cma:132931",
+          "chunk_index": 0,
+          "fragment_id": "cma:132931::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1955.37.9",
+          "texto": "Zha Shibiao, a native of Anhui province, moved to Yangzhou later in his career, like so many of his fellow countrymen. At age 68, he painted this album with seasonal landscapes in various styles. Painted in fresh colors and wet strokes, all depict typical scenes of Jiangnan, the Yangzi delta: a herdboy on a buffalo wading through water, boating on the stream to the Peach Blossom Spring at Wulin, a waterfront town shrouded in mist, a scholar on his donkey enjoying the red autumn leaves, and drinking tea on a boat while watching migrating birds.",
+          "title": "Landscape Album in Various Styles: Pleasure in a Mountain Brook"
+        },
+        {
+          "artist": "Zha Shibiao",
+          "artwork_id": "cma:132931",
+          "chunk_index": 0,
+          "fragment_id": "cma:132931::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1955.37.9",
+          "texto": "Ma Yueguan 馬曰琯 [1688–1755]\nDing Huikang 丁惠康 [1868/1869–about 1918] and Gu Anmi 顧安宓\n(C. T. Loo & Co., New York, NY, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Landscape Album in Various Styles: Pleasure in a Mountain Brook"
+        }
+      ],
+      "cma:135953": [
+        {
+          "artist": "Wu Bin",
+          "artwork_id": "cma:135953",
+          "chunk_index": 0,
+          "fragment_id": "cma:135953::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1959.45",
+          "texto": "This masterfully composed landscape in light colors and delicate brushwork is an image of the water-rich Jiangnan region in southeast China, where Wu Bin was active as an artist. Embedded in rolling hills along lakesides and streams nestle cityscapes hosting numerous spring festivities. Lantern displays and street performances in the villages salute the New Year, and are interwoven with scenes of farming, fishing, and silk making. In one scene in the middle ground, an ox made of clay under a canopy is lead in a procession to an architectural compound, a ceremony known as whipping the spring ox in hope for a good harvest.",
+          "title": "Greeting the Spring"
+        },
+        {
+          "artist": "Wu Bin",
+          "artwork_id": "cma:135953",
+          "chunk_index": 0,
+          "fragment_id": "cma:135953::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1959.45",
+          "texto": "This handscroll bears five collector seals by the Qianlong emperor indicating his appreciation for the painting.",
+          "title": "Greeting the Spring"
+        },
+        {
+          "artist": "Wu Bin",
+          "artwork_id": "cma:135953",
+          "chunk_index": 0,
+          "fragment_id": "cma:135953::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1959.45",
+          "texto": "Qing imperial collection (seals of\nEmperors Qianlong, r. 1736–1795; Jiaqing, r. 1796–1820; and Xuanzong, r. 1821–1850), Beijing, China\n(Walter Hochstadter [1914–2007], New York, NY, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Greeting the Spring"
+        }
+      ],
+      "cma:145426": [
+        {
+          "artist": "Lu Wenying",
+          "artwork_id": "cma:145426",
+          "chunk_index": 0,
+          "fragment_id": "cma:145426::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1970.76",
+          "texto": "In this scene, windswept rain pelting a village captures the power of nature in a masterful composition. \n\nLü Wenying from Zhejiang served as a court painter during the Hongzhi era (1488–1505). Hardly known, with few remaining works, he is considered a Zhe school painter who followed the style of the Southern Song academy. Zhe school painters, named after the province of Zhejiang, transformed the poetic scenery of the Southern Song artists into dramatic, large-scale views. Active in the same region with frequent monsoon rains in the summer season, artists were familiar with outbreaks of rain and storms.",
+          "title": "River Village in a Rainstorm"
+        },
+        {
+          "artist": "Lu Wenying",
+          "artwork_id": "cma:145426",
+          "chunk_index": 0,
+          "fragment_id": "cma:145426::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1970.76",
+          "texto": "(Kinzen Company, Ltd., Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "River Village in a Rainstorm"
+        },
+        {
+          "artist": "Lu Wenying",
+          "artwork_id": "cma:145426",
+          "chunk_index": 0,
+          "fragment_id": "cma:145426::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1970.76",
+          "texto": "A young boy peeks out a window perhaps viewing the two people struggling through the rain.",
+          "title": "River Village in a Rainstorm"
+        }
+      ],
+      "cma:149126": [
+        {
+          "artist": "Qian Gu",
+          "artwork_id": "cma:149126",
+          "chunk_index": 0,
+          "fragment_id": "cma:149126::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1977.56",
+          "texto": "This painting has a scene showing two small crafts, each manned by two fishermen, practicing a traditional fishing method. In one of them, a man uses a bamboo pole to direct the movements of a cormorant bird sent into the water. Cormorant fishing, witnessed in some areas of the lower Yangzi River, appears in Zhe school paintings. Qian Gu may have borrowed these narrative figure scenes from Zhe school paintings, while his vantage point, brushwork, and soft tones align with the Wu school style. Scenes of fishermen appealed to urban and educated audiences who idealized the self-sufficient independence of fisherfolk.",
+          "title": "Fisherman's Joy"
+        },
+        {
+          "artist": "Qian Gu",
+          "artwork_id": "cma:149126",
+          "chunk_index": 0,
+          "fragment_id": "cma:149126::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1977.56",
+          "texto": "(Dr. Gimpoh Y. King [1911–1998], Cleveland, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Fisherman's Joy"
+        }
+      ],
+      "cma:149415": [
+        {
+          "artist": null,
+          "artwork_id": "cma:149415",
+          "chunk_index": 0,
+          "fragment_id": "cma:149415::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1978.68",
+          "texto": "Highlighted with a few bright accents, this fan painting conveys a nightly atmosphere with boats anchoring on West Lake at the foot of the city walls. Willow trees line the embankment, and the moon appears above the mountains. While the city is asleep, a figure wearing red inside a boat holds what appears to be a pipa (plucked stringed instrument), while a blue-robed gentleman nearby gazes toward the sound of music, evoking an association with Song of the Lute (Pipa xing) by Tang poet Bai Juyi (772–846) which tells the story of a romantic encounter on the Yangzi River.",
+          "title": "Boats at Anchor on West Lake at the City Gate"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:149415",
+          "chunk_index": 0,
+          "fragment_id": "cma:149415::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1978.68",
+          "texto": "The depiction of the female figure playing the pipa and the scholarly male evokes an association with a romantic encounter narrated in a well-known Tang dynasty poem.",
+          "title": "Boats at Anchor on West Lake at the City Gate"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:149415",
+          "chunk_index": 0,
+          "fragment_id": "cma:149415::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1978.68",
+          "texto": "(Kochukyo Company, Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Boats at Anchor on West Lake at the City Gate"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149126::description::0"
+            ],
+            "texto": "La pintura muestra una escena con dos pequeñas embarcaciones, cada una con dos pescadores, practicando la pesca tradicional con cormoranes en el agua.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena representa claramente una actividad relacionada con el agua, específicamente la pesca en un río.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149126"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:145426::description::0"
+            ],
+            "texto": "La obra muestra una escena de lluvia intensa azotando un pueblo, capturando el poder de la naturaleza.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La lluvia implica la presencia de agua en la escena, lo que la relaciona con el pedido de escenas de agua.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:145426"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:132931::description::0"
+            ],
+            "texto": "La obra incluye paisajes estacionales con escenas típicas de Jiangnan, la región del delta del Yangzi, incluyendo un niño pastoreando un búfalo que cruza el agua y paseos en bote por un arroyo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Las escenas de personas y animales interactuando con el agua en ríos y arroyos cumplen con el pedido de escenas de agua en la pintura china.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:132931"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:135953::description::0"
+            ],
+            "texto": "La pintura representa el paisaje rico en agua de la región de Jiangnan, con colinas, lagos y arroyos donde se desarrollan diversas actividades como la pesca.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La presencia de lagos y arroyos en la composición indica escenas relacionadas con el agua.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:135953"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149415::description::0"
+            ],
+            "texto": "La obra muestra un ambiente nocturno con barcos anclados en el Lago Oeste al pie de las murallas de la ciudad.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La representación de barcos en un lago es una escena claramente relacionada con el agua.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149415"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:140155",
+          "rank": 1,
+          "score": 0.6522319912910461
+        },
+        {
+          "artwork_id": "cma:135953",
+          "rank": 2,
+          "score": 0.63507479429245
+        },
+        {
+          "artwork_id": "cma:149077",
+          "rank": 3,
+          "score": 0.6293494701385498
+        },
+        {
+          "artwork_id": "aic:198906",
+          "rank": 4,
+          "score": 0.6191126108169556
+        },
+        {
+          "artwork_id": "cma:145123",
+          "rank": 5,
+          "score": 0.6182936429977417
+        },
+        {
+          "artwork_id": "cma:144829",
+          "rank": 6,
+          "score": 0.6092063784599304
+        },
+        {
+          "artwork_id": "aic:212492",
+          "rank": 7,
+          "score": 0.60736083984375
+        },
+        {
+          "artwork_id": "aic:79716",
+          "rank": 8,
+          "score": 0.6063497066497803
+        },
+        {
+          "artwork_id": "cma:159741",
+          "rank": 9,
+          "score": 0.6057575941085815
+        },
+        {
+          "artwork_id": "cma:136296",
+          "rank": 10,
+          "score": 0.6000791788101196
+        },
+        {
+          "artwork_id": "cma:79579",
+          "rank": 11,
+          "score": 0.5966923236846924
+        },
+        {
+          "artwork_id": "cma:155097",
+          "rank": 12,
+          "score": 0.5959265828132629
+        },
+        {
+          "artwork_id": "cma:148234",
+          "rank": 13,
+          "score": 0.5941586494445801
+        },
+        {
+          "artwork_id": "aic:75361",
+          "rank": 14,
+          "score": 0.5939873456954956
+        },
+        {
+          "artwork_id": "cma:148383",
+          "rank": 15,
+          "score": 0.5918505191802979
+        },
+        {
+          "artwork_id": "aic:79310",
+          "rank": 16,
+          "score": 0.5897057056427002
+        },
+        {
+          "artwork_id": "cma:149126",
+          "rank": 17,
+          "score": 0.5838116407394409
+        },
+        {
+          "artwork_id": "cma:154086",
+          "rank": 18,
+          "score": 0.5823615789413452
+        },
+        {
+          "artwork_id": "cma:98261",
+          "rank": 19,
+          "score": 0.5813208818435669
+        },
+        {
+          "artwork_id": "aic:62536",
+          "rank": 20,
+          "score": 0.58024001121521
+        },
+        {
+          "artwork_id": "aic:105786",
+          "rank": 21,
+          "score": 0.5782736539840698
+        },
+        {
+          "artwork_id": "cma:149763",
+          "rank": 22,
+          "score": 0.5761138796806335
+        },
+        {
+          "artwork_id": "cma:149097",
+          "rank": 23,
+          "score": 0.5743123888969421
+        },
+        {
+          "artwork_id": "cma:142641",
+          "rank": 24,
+          "score": 0.5728147625923157
+        },
+        {
+          "artwork_id": "cma:79590",
+          "rank": 25,
+          "score": 0.5725671648979187
+        },
+        {
+          "artwork_id": "cma:149415",
+          "rank": 26,
+          "score": 0.5686484575271606
+        },
+        {
+          "artwork_id": "cma:149125",
+          "rank": 27,
+          "score": 0.5678567290306091
+        },
+        {
+          "artwork_id": "cma:86121",
+          "rank": 28,
+          "score": 0.5655837655067444
+        },
+        {
+          "artwork_id": "cma:90136",
+          "rank": 29,
+          "score": 0.5655837655067444
+        },
+        {
+          "artwork_id": "cma:86120",
+          "rank": 30,
+          "score": 0.5654933452606201
+        },
+        {
+          "artwork_id": "cma:143776",
+          "rank": 31,
+          "score": 0.5653985738754272
+        },
+        {
+          "artwork_id": "cma:144286",
+          "rank": 32,
+          "score": 0.5651081204414368
+        },
+        {
+          "artwork_id": "cma:86111",
+          "rank": 33,
+          "score": 0.5641893148422241
+        },
+        {
+          "artwork_id": "cma:86110",
+          "rank": 34,
+          "score": 0.5636834502220154
+        },
+        {
+          "artwork_id": "cma:149605",
+          "rank": 35,
+          "score": 0.5617465972900391
+        },
+        {
+          "artwork_id": "cma:149606",
+          "rank": 36,
+          "score": 0.5617465972900391
+        },
+        {
+          "artwork_id": "cma:149614",
+          "rank": 37,
+          "score": 0.5617465972900391
+        },
+        {
+          "artwork_id": "cma:149619",
+          "rank": 38,
+          "score": 0.5617465972900391
+        },
+        {
+          "artwork_id": "cma:149620",
+          "rank": 39,
+          "score": 0.5617465972900391
+        },
+        {
+          "artwork_id": "cma:149621",
+          "rank": 40,
+          "score": 0.5616593360900879
+        },
+        {
+          "artwork_id": "cma:149623",
+          "rank": 41,
+          "score": 0.5616593360900879
+        },
+        {
+          "artwork_id": "cma:149625",
+          "rank": 42,
+          "score": 0.5616593360900879
+        },
+        {
+          "artwork_id": "cma:149626",
+          "rank": 43,
+          "score": 0.5616593360900879
+        },
+        {
+          "artwork_id": "cma:149608",
+          "rank": 44,
+          "score": 0.5615546107292175
+        },
+        {
+          "artwork_id": "cma:149613",
+          "rank": 45,
+          "score": 0.5615332126617432
+        },
+        {
+          "artwork_id": "cma:132926",
+          "rank": 46,
+          "score": 0.56071537733078
+        },
+        {
+          "artwork_id": "cma:172785",
+          "rank": 47,
+          "score": 0.559507429599762
+        },
+        {
+          "artwork_id": "cma:145426",
+          "rank": 48,
+          "score": 0.5591426491737366
+        },
+        {
+          "artwork_id": "cma:149615",
+          "rank": 49,
+          "score": 0.557160496711731
+        },
+        {
+          "artwork_id": "cma:149607",
+          "rank": 50,
+          "score": 0.5565059185028076
+        },
+        {
+          "artwork_id": "cma:149609",
+          "rank": 51,
+          "score": 0.5565059185028076
+        },
+        {
+          "artwork_id": "cma:149610",
+          "rank": 52,
+          "score": 0.5565059185028076
+        },
+        {
+          "artwork_id": "cma:149603",
+          "rank": 53,
+          "score": 0.5564953088760376
+        },
+        {
+          "artwork_id": "cma:149604",
+          "rank": 54,
+          "score": 0.5564953088760376
+        },
+        {
+          "artwork_id": "cma:149616",
+          "rank": 55,
+          "score": 0.5564953088760376
+        },
+        {
+          "artwork_id": "cma:149624",
+          "rank": 56,
+          "score": 0.5564906597137451
+        },
+        {
+          "artwork_id": "cma:149627",
+          "rank": 57,
+          "score": 0.5564906597137451
+        },
+        {
+          "artwork_id": "cma:149612",
+          "rank": 58,
+          "score": 0.556424081325531
+        },
+        {
+          "artwork_id": "cma:149109",
+          "rank": 59,
+          "score": 0.5550950765609741
+        },
+        {
+          "artwork_id": "aic:50983",
+          "rank": 60,
+          "score": 0.5537639260292053
+        },
+        {
+          "artwork_id": "cma:129859",
+          "rank": 61,
+          "score": 0.5512436628341675
+        },
+        {
+          "artwork_id": "cma:95171",
+          "rank": 62,
+          "score": 0.5499120354652405
+        },
+        {
+          "artwork_id": "cma:150728",
+          "rank": 63,
+          "score": 0.5497457981109619
+        },
+        {
+          "artwork_id": "cma:160956",
+          "rank": 64,
+          "score": 0.5493754744529724
+        },
+        {
+          "artwork_id": "cma:94983",
+          "rank": 65,
+          "score": 0.5472872257232666
+        },
+        {
+          "artwork_id": "aic:46435",
+          "rank": 66,
+          "score": 0.5469030141830444
+        },
+        {
+          "artwork_id": "cma:149958",
+          "rank": 67,
+          "score": 0.5464752316474915
+        },
+        {
+          "artwork_id": "cma:149959",
+          "rank": 68,
+          "score": 0.5464752316474915
+        },
+        {
+          "artwork_id": "cma:149960",
+          "rank": 69,
+          "score": 0.5464752316474915
+        },
+        {
+          "artwork_id": "cma:149961",
+          "rank": 70,
+          "score": 0.5464752316474915
+        },
+        {
+          "artwork_id": "aic:68041",
+          "rank": 71,
+          "score": 0.5459300875663757
+        },
+        {
+          "artwork_id": "cma:143755",
+          "rank": 72,
+          "score": 0.5452911257743835
+        },
+        {
+          "artwork_id": "aic:7634",
+          "rank": 73,
+          "score": 0.5443722605705261
+        },
+        {
+          "artwork_id": "aic:13954",
+          "rank": 74,
+          "score": 0.5430395603179932
+        },
+        {
+          "artwork_id": "cma:160957",
+          "rank": 75,
+          "score": 0.5420529246330261
+        },
+        {
+          "artwork_id": "cma:135593",
+          "rank": 76,
+          "score": 0.5399392247200012
+        },
+        {
+          "artwork_id": "aic:46487",
+          "rank": 77,
+          "score": 0.5394294261932373
+        },
+        {
+          "artwork_id": "cma:148810",
+          "rank": 78,
+          "score": 0.5394101738929749
+        },
+        {
+          "artwork_id": "cma:135595",
+          "rank": 79,
+          "score": 0.5390123128890991
+        },
+        {
+          "artwork_id": "cma:136949",
+          "rank": 80,
+          "score": 0.5390057563781738
+        },
+        {
+          "artwork_id": "cma:136950",
+          "rank": 81,
+          "score": 0.5390057563781738
+        },
+        {
+          "artwork_id": "cma:149957",
+          "rank": 82,
+          "score": 0.5385669469833374
+        },
+        {
+          "artwork_id": "cma:143879",
+          "rank": 83,
+          "score": 0.53849858045578
+        },
+        {
+          "artwork_id": "cma:160133",
+          "rank": 84,
+          "score": 0.5367375612258911
+        },
+        {
+          "artwork_id": "cma:132919",
+          "rank": 85,
+          "score": 0.5345184803009033
+        },
+        {
+          "artwork_id": "cma:132924",
+          "rank": 86,
+          "score": 0.5345184803009033
+        },
+        {
+          "artwork_id": "cma:132931",
+          "rank": 87,
+          "score": 0.5345184803009033
+        },
+        {
+          "artwork_id": "cma:86124",
+          "rank": 88,
+          "score": 0.533542811870575
+        },
+        {
+          "artwork_id": "cma:86125",
+          "rank": 89,
+          "score": 0.533542811870575
+        },
+        {
+          "artwork_id": "cma:156308",
+          "rank": 90,
+          "score": 0.5335243940353394
+        },
+        {
+          "artwork_id": "aic:75574",
+          "rank": 91,
+          "score": 0.5330684781074524
+        },
+        {
+          "artwork_id": "cma:173020",
+          "rank": 92,
+          "score": 0.5326002240180969
+        },
+        {
+          "artwork_id": "cma:148237",
+          "rank": 93,
+          "score": 0.5324306488037109
+        },
+        {
+          "artwork_id": "cma:160913",
+          "rank": 94,
+          "score": 0.5323841571807861
+        },
+        {
+          "artwork_id": "cma:155627",
+          "rank": 95,
+          "score": 0.5311791300773621
+        },
+        {
+          "artwork_id": "cma:156183",
+          "rank": 96,
+          "score": 0.528138279914856
+        },
+        {
+          "artwork_id": "aic:46423",
+          "rank": 97,
+          "score": 0.5276181697845459
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:148368",
+          "rank": 1,
+          "score": 0.7330914735794067
+        },
+        {
+          "artwork_id": "cma:163456",
+          "rank": 2,
+          "score": 0.7169614434242249
+        },
+        {
+          "artwork_id": "aic:120163",
+          "rank": 3,
+          "score": 0.7101937532424927
+        },
+        {
+          "artwork_id": "aic:495",
+          "rank": 4,
+          "score": 0.7033883333206177
+        },
+        {
+          "artwork_id": "aic:244013",
+          "rank": 5,
+          "score": 0.6966431140899658
+        },
+        {
+          "artwork_id": "cma:149126",
+          "rank": 6,
+          "score": 0.6910219192504883
+        },
+        {
+          "artwork_id": "cma:155097",
+          "rank": 7,
+          "score": 0.6864156126976013
+        },
+        {
+          "artwork_id": "cma:149415",
+          "rank": 8,
+          "score": 0.6768144965171814
+        },
+        {
+          "artwork_id": "aic:4796",
+          "rank": 9,
+          "score": 0.6714927554130554
+        },
+        {
+          "artwork_id": "aic:238272",
+          "rank": 10,
+          "score": 0.6669245958328247
+        },
+        {
+          "artwork_id": "cma:148855",
+          "rank": 11,
+          "score": 0.6631847620010376
+        },
+        {
+          "artwork_id": "cma:90080",
+          "rank": 12,
+          "score": 0.6611190438270569
+        },
+        {
+          "artwork_id": "cma:118042",
+          "rank": 13,
+          "score": 0.6590572595596313
+        },
+        {
+          "artwork_id": "aic:16370",
+          "rank": 14,
+          "score": 0.657634973526001
+        },
+        {
+          "artwork_id": "cma:160724",
+          "rank": 15,
+          "score": 0.6570339798927307
+        },
+        {
+          "artwork_id": "cma:153388",
+          "rank": 16,
+          "score": 0.656733512878418
+        },
+        {
+          "artwork_id": "aic:181702",
+          "rank": 17,
+          "score": 0.6566064953804016
+        },
+        {
+          "artwork_id": "cma:147464",
+          "rank": 18,
+          "score": 0.6543199419975281
+        },
+        {
+          "artwork_id": "cma:90267",
+          "rank": 19,
+          "score": 0.6497436761856079
+        },
+        {
+          "artwork_id": "cma:159741",
+          "rank": 20,
+          "score": 0.6495251655578613
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Chinese traditional painting depicting water landscapes, rivers, and boats, emphasizing harmony with nature and fluid brushwork in classical Chinese art",
+      "consulta_id": "c02-conceptual",
+      "consulta_visual": "Chinese painting of water scene with boats, rivers, and natural landscape under soft light",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "escenas de agua en la pintura china",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "d408abc4d01bdd73",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2089,
+        "tokens_out": 54
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:149126",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 17,
+          "visual": 6
+        },
+        "score_fusionado": 0.69102158
+      },
+      {
+        "artwork_id": "cma:155097",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 12,
+          "visual": 7
+        },
+        "score_fusionado": 0.68641523
+      },
+      {
+        "artwork_id": "cma:149415",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 26,
+          "visual": 8
+        },
+        "score_fusionado": 0.67681438
+      },
+      {
+        "artwork_id": "cma:159741",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 9,
+          "visual": 20
+        },
+        "score_fusionado": 0.64952518
+      },
+      {
+        "artwork_id": "cma:145426",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.64849519
+      },
+      {
+        "artwork_id": "cma:149097",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.6322971
+      },
+      {
+        "artwork_id": "cma:149960",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.62885042
+      },
+      {
+        "artwork_id": "cma:149961",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.62597677
+      },
+      {
+        "artwork_id": "aic:105786",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.62578257
+      },
+      {
+        "artwork_id": "cma:172785",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.62556255
+      },
+      {
+        "artwork_id": "cma:79590",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.62551119
+      },
+      {
+        "artwork_id": "cma:98261",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.62464407
+      },
+      {
+        "artwork_id": "cma:149959",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.62464104
+      },
+      {
+        "artwork_id": "cma:132931",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.6231344
+      },
+      {
+        "artwork_id": "cma:135953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.62053415
+      },
+      {
+        "artwork_id": "cma:154086",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.61822569
+      },
+      {
+        "artwork_id": "cma:148237",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.61754774
+      },
+      {
+        "artwork_id": "cma:132924",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.61611774
+      },
+      {
+        "artwork_id": "cma:86121",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.61542028
+      },
+      {
+        "artwork_id": "cma:86111",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.6150083
+      },
+      {
+        "artwork_id": "cma:156183",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 96
+        },
+        "score_fusionado": 0.61485905
+      },
+      {
+        "artwork_id": "cma:145123",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.612359
+      },
+      {
+        "artwork_id": "cma:79579",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.61193207
+      },
+      {
+        "artwork_id": "cma:86120",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.6106244
+      },
+      {
+        "artwork_id": "cma:160957",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.60974107
+      },
+      {
+        "artwork_id": "cma:148383",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.6090773
+      },
+      {
+        "artwork_id": "cma:160956",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.60848651
+      },
+      {
+        "artwork_id": "aic:198906",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.60594458
+      },
+      {
+        "artwork_id": "cma:132926",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.60480417
+      },
+      {
+        "artwork_id": "aic:75361",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.6027931
+      },
+      {
+        "artwork_id": "cma:173020",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.60234517
+      },
+      {
+        "artwork_id": "cma:149606",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.59981126
+      },
+      {
+        "artwork_id": "cma:143755",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.59849419
+      },
+      {
+        "artwork_id": "cma:86110",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.5965965
+      },
+      {
+        "artwork_id": "cma:149958",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.59586169
+      },
+      {
+        "artwork_id": "aic:68041",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.59559661
+      },
+      {
+        "artwork_id": "cma:149623",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.59424282
+      },
+      {
+        "artwork_id": "aic:13954",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.59291272
+      },
+      {
+        "artwork_id": "cma:94983",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.59256395
+      },
+      {
+        "artwork_id": "cma:143879",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.59230642
+      },
+      {
+        "artwork_id": "cma:148810",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.59145799
+      },
+      {
+        "artwork_id": "aic:79310",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.5913099
+      },
+      {
+        "artwork_id": "aic:75574",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.58880565
+      },
+      {
+        "artwork_id": "cma:129859",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.5884989
+      },
+      {
+        "artwork_id": "cma:136950",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.58795231
+      },
+      {
+        "artwork_id": "cma:149610",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.58406124
+      },
+      {
+        "artwork_id": "cma:149613",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.5835655
+      },
+      {
+        "artwork_id": "cma:148234",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.58122056
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.5757675
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.57213819
+      },
+      {
+        "artwork_id": "cma:140155",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.57156178
+      },
+      {
+        "artwork_id": "cma:149620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.57128772
+      },
+      {
+        "artwork_id": "cma:90136",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.57101153
+      },
+      {
+        "artwork_id": "cma:160133",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.57020054
+      },
+      {
+        "artwork_id": "cma:149109",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.56944411
+      },
+      {
+        "artwork_id": "cma:155627",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.56832381
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.5682705
+      },
+      {
+        "artwork_id": "aic:212492",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.56653927
+      },
+      {
+        "artwork_id": "cma:95171",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.56651733
+      },
+      {
+        "artwork_id": "cma:144829",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.56548116
+      },
+      {
+        "artwork_id": "cma:149605",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.56217612
+      },
+      {
+        "artwork_id": "cma:143776",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.55919977
+      },
+      {
+        "artwork_id": "aic:46423",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 97
+        },
+        "score_fusionado": 0.55844733
+      },
+      {
+        "artwork_id": "cma:142641",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.55842911
+      },
+      {
+        "artwork_id": "cma:149609",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.55351301
+      },
+      {
+        "artwork_id": "cma:149614",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.54869387
+      },
+      {
+        "artwork_id": "aic:50983",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.54833979
+      },
+      {
+        "artwork_id": "cma:144286",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.54831567
+      },
+      {
+        "artwork_id": "cma:86125",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.54717374
+      },
+      {
+        "artwork_id": "aic:46435",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.54638827
+      },
+      {
+        "artwork_id": "aic:7634",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.54577381
+      },
+      {
+        "artwork_id": "cma:149624",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.5436638
+      },
+      {
+        "artwork_id": "cma:149077",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.54176106
+      },
+      {
+        "artwork_id": "cma:156308",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.54168337
+      },
+      {
+        "artwork_id": "cma:135593",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.53835852
+      },
+      {
+        "artwork_id": "aic:46487",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.53732502
+      },
+      {
+        "artwork_id": "cma:149615",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.53662504
+      },
+      {
+        "artwork_id": "cma:149612",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.53542943
+      },
+      {
+        "artwork_id": "cma:149626",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.53187054
+      },
+      {
+        "artwork_id": "cma:149763",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.53108202
+      },
+      {
+        "artwork_id": "cma:136949",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.52745542
+      },
+      {
+        "artwork_id": "cma:149608",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.52668412
+      },
+      {
+        "artwork_id": "cma:136296",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.52216489
+      },
+      {
+        "artwork_id": "cma:149125",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.52129489
+      },
+      {
+        "artwork_id": "cma:86124",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.51775114
+      },
+      {
+        "artwork_id": "cma:160913",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.51492342
+      },
+      {
+        "artwork_id": "cma:149627",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.51153881
+      },
+      {
+        "artwork_id": "cma:150728",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.50444522
+      },
+      {
+        "artwork_id": "cma:149616",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.5017059
+      },
+      {
+        "artwork_id": "cma:149621",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.50057375
+      },
+      {
+        "artwork_id": "cma:149619",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.49879633
+      },
+      {
+        "artwork_id": "cma:149957",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.49696487
+      },
+      {
+        "artwork_id": "cma:135595",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.49601611
+      },
+      {
+        "artwork_id": "cma:132919",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.491374
+      },
+      {
+        "artwork_id": "cma:149607",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.4893256
+      },
+      {
+        "artwork_id": "cma:149603",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.47437025
+      },
+      {
+        "artwork_id": "cma:149604",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.47333246
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:149126",
+        "estado": "puntuado",
+        "justificacion": "La obra es una pintura china que muestra claramente una escena con agua y actividades relacionadas, cumpliendo plenamente el pedido de escenas de agua en la pintura china.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 1779,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:145426",
+        "estado": "puntuado",
+        "justificacion": "La obra es una pintura china que muestra una escena con agua, cumpliendo claramente el pedido de escenas de agua en la pintura china. Además, mantiene el estilo tradicional y la cultura solicitada.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2345,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:132931",
+        "estado": "puntuado",
+        "justificacion": "La obra es una pintura china que muestra una escena con agua, cumpliendo claramente el pedido de escenas de agua en la pintura china. Además, mantiene el estilo tradicional y la cultura solicitada.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2563,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:135953",
+        "estado": "puntuado",
+        "justificacion": "La obra es una pintura china que muestra una escena con agua claramente representada, cumpliendo el pedido de escenas de agua en la pintura china. Además, mantiene el estilo tradicional y cultural que se espera.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2167,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:149415",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra claramente una escena con agua y barcos, cumpliendo el pedido de escenas de agua en pintura china, además es de cultura china. La imagen mantiene el tema acuático sin alterar elementos esenciales.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2650,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:148237",
+        "estado": "puntuado",
+        "justificacion": "La obra es una pintura china que muestra una escena con agua, cumpliendo el pedido. Aunque el agua no es el foco principal, está presente y la cultura china está claramente representada.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2750,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:98261",
+        "estado": "puntuado",
+        "justificacion": "La obra es pintura china y muestra un paisaje con agua, cumpliendo el pedido de escenas de agua en pintura china; sin embargo, la escena es más un paisaje general que una escena centrada en el agua como en la imagen subida.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 1774,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:86111",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua y un barco, cumpliendo el pedido de escenas de agua en pintura china, pero la escena es muy minimalista y no tan evidente como la imagen subida; sin embargo, es una pintura china auténtica.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2247,
+          "tokens_out": 61
+        }
+      },
+      {
+        "artwork_id": "cma:132924",
+        "estado": "puntuado",
+        "justificacion": "La obra es de pintura china, pero no muestra claramente escenas de agua, solo un espacio vacío que podría interpretarse como agua, sin detalles evidentes de escenas acuáticas.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 2561,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "aic:105786",
+        "estado": "puntuado",
+        "justificacion": "La obra es pintura china y muestra un paisaje con agua, pero el agua no es el foco principal ni está claramente representado en escenas destacadas, por lo que cumple a medias el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 4034,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:155097",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena de agua con un bote, pero es de cultura coreana, no china como pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2648,
+          "tokens_out": 35
+        }
+      },
+      {
+        "artwork_id": "cma:159741",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua, pero es de cultura japonesa, no china como pide el pedido, por lo que no cumple con el requisito cultural.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2704,
+          "tokens_out": 41
+        }
+      },
+      {
+        "artwork_id": "cma:149097",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena de agua, pero es pintura japonesa, no china como pide el usuario, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2890,
+          "tokens_out": 42
+        }
+      },
+      {
+        "artwork_id": "cma:149960",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra escenas de agua, pero es de cultura japonesa, no china, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2385,
+          "tokens_out": 38
+        }
+      },
+      {
+        "artwork_id": "cma:149961",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua y es una pintura asiática, pero es japonesa, no china, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2386,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:172785",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua y es pintura asiática, pero es japonesa, no china como pide el pedido, por lo que no cumple completamente con la cultura solicitada.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2144,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:79590",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua, pero es de cultura japonesa, no china como pide el usuario, por lo que no cumple con el requisito cultural del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2098,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:149959",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua y es pintura asiática, pero es japonesa, no china como pide el pedido, por lo que no cumple con la cultura solicitada.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2384,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:86121",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra una escena con agua, pero es pintura japonesa, no china como pide el pedido, por lo que no cumple con el requisito cultural.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2131,
+          "tokens_out": 41
+        }
+      },
+      {
+        "artwork_id": "cma:154086",
+        "estado": "puntuado",
+        "justificacion": "La obra es pintura china, pero no muestra escenas de agua, que es lo que pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2173,
+          "tokens_out": 33
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c02-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:149126",
+          "ficha": {
+            "artist": "Qian Gu",
+            "culture": "China",
+            "date_display": "1572",
+            "medium": "Handscroll; ink and light color on paper",
+            "title": "Fisherman's Joy",
+            "year": 1572
+          },
+          "lineas": [
+            "La pintura muestra una escena con dos pequeñas embarcaciones, cada una con dos pescadores, practicando la pesca tradicional con cormoranes en el agua. [1]",
+            "La escena representa claramente una actividad relacionada con el agua, específicamente la pesca en un río."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Qian Gu",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149126::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1977.56",
+              "texto_citado": "This painting has a scene showing two small crafts, each manned by two fishermen, practicing a traditional fishing method. In one of them, a man uses a bamboo pole to direct the movements of a cormorant bird sent into the water. Cormorant fishing, witnessed in some areas of the lower Yangzi River, appears in Zhe school paintings. Qian Gu may have borrowed these narrative figure scenes from Zhe school paintings, while his vantage point, brushwork, and soft tones align with the Wu school style. Scenes of fishermen appealed to urban and educated audiences who idealized the self-sufficient independence of fisherfolk.",
+              "title": "Fisherman's Joy"
+            }
+          ],
+          "score": 0.6910215770106484,
+          "source_url": "https://clevelandart.org/art/1977.56"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:145426",
+          "ficha": {
+            "artist": "Lu Wenying",
+            "culture": "China",
+            "date_display": "c. 1480–1507",
+            "medium": "Hanging scroll; ink and slight color on silk",
+            "title": "River Village in a Rainstorm",
+            "year": 1475
+          },
+          "lineas": [
+            "La obra muestra una escena de lluvia intensa azotando un pueblo, capturando el poder de la naturaleza. [1]",
+            "La lluvia implica la presencia de agua en la escena, lo que la relaciona con el pedido de escenas de agua."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Lu Wenying",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:145426::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1970.76",
+              "texto_citado": "In this scene, windswept rain pelting a village captures the power of nature in a masterful composition. \n\nLü Wenying from Zhejiang served as a court painter during the Hongzhi era (1488–1505). Hardly known, with few remaining works, he is considered a Zhe school painter who followed the style of the Southern Song academy. Zhe school painters, named after the province of Zhejiang, transformed the poetic scenery of the Southern Song artists into dramatic, large-scale views. Active in the same region with frequent monsoon rains in the summer season, artists were familiar with outbreaks of rain and storms.",
+              "title": "River Village in a Rainstorm"
+            }
+          ],
+          "score": 0.6484951949275205,
+          "source_url": "https://clevelandart.org/art/1970.76"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:132931",
+          "ficha": {
+            "artist": "Zha Shibiao",
+            "culture": "China",
+            "date_display": "1684",
+            "medium": "album leaf, ink and light color on paper",
+            "title": "Landscape Album in Various Styles: Pleasure in a Mountain Brook",
+            "year": 1684
+          },
+          "lineas": [
+            "La obra incluye paisajes estacionales con escenas típicas de Jiangnan, la región del delta del Yangzi, incluyendo un niño pastoreando un búfalo que cruza el agua y paseos en bote por un arroyo. [1]",
+            "Las escenas de personas y animales interactuando con el agua en ríos y arroyos cumplen con el pedido de escenas de agua en la pintura china."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Zha Shibiao",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:132931::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1955.37.9",
+              "texto_citado": "Zha Shibiao, a native of Anhui province, moved to Yangzhou later in his career, like so many of his fellow countrymen. At age 68, he painted this album with seasonal landscapes in various styles. Painted in fresh colors and wet strokes, all depict typical scenes of Jiangnan, the Yangzi delta: a herdboy on a buffalo wading through water, boating on the stream to the Peach Blossom Spring at Wulin, a waterfront town shrouded in mist, a scholar on his donkey enjoying the red autumn leaves, and drinking tea on a boat while watching migrating birds.",
+              "title": "Landscape Album in Various Styles: Pleasure in a Mountain Brook"
+            }
+          ],
+          "score": 0.6231344012749354,
+          "source_url": "https://clevelandart.org/art/1955.37.9"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:135953",
+          "ficha": {
+            "artist": "Wu Bin",
+            "culture": "China",
+            "date_display": "1600",
+            "medium": "handscroll; ink and light color on paper",
+            "title": "Greeting the Spring",
+            "year": 1600
+          },
+          "lineas": [
+            "La pintura representa el paisaje rico en agua de la región de Jiangnan, con colinas, lagos y arroyos donde se desarrollan diversas actividades como la pesca. [1]",
+            "La presencia de lagos y arroyos en la composición indica escenas relacionadas con el agua."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Wu Bin",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:135953::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1959.45",
+              "texto_citado": "This masterfully composed landscape in light colors and delicate brushwork is an image of the water-rich Jiangnan region in southeast China, where Wu Bin was active as an artist. Embedded in rolling hills along lakesides and streams nestle cityscapes hosting numerous spring festivities. Lantern displays and street performances in the villages salute the New Year, and are interwoven with scenes of farming, fishing, and silk making. In one scene in the middle ground, an ox made of clay under a canopy is lead in a procession to an architectural compound, a ceremony known as whipping the spring ox in hope for a good harvest.",
+              "title": "Greeting the Spring"
+            }
+          ],
+          "score": 0.6205341467151884,
+          "source_url": "https://clevelandart.org/art/1959.45"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:149415",
+          "ficha": {
+            "culture": "China",
+            "date_display": "1150–1200",
+            "medium": "Album leaf; ink and color on silk",
+            "title": "Boats at Anchor on West Lake at the City Gate",
+            "year": 1150
+          },
+          "lineas": [
+            "La obra muestra un ambiente nocturno con barcos anclados en el Lago Oeste al pie de las murallas de la ciudad. [1]",
+            "La representación de barcos en un lago es una escena claramente relacionada con el agua."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149415::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1978.68",
+              "texto_citado": "Highlighted with a few bright accents, this fan painting conveys a nightly atmosphere with boats anchoring on West Lake at the foot of the city walls. Willow trees line the embankment, and the moon appears above the mountains. While the city is asleep, a figure wearing red inside a boat holds what appears to be a pipa (plucked stringed instrument), while a blue-robed gentleman nearby gazes toward the sound of music, evoking an association with Song of the Lute (Pipa xing) by Tang poet Bai Juyi (772–846) which tells the story of a romantic encounter on the Yangzi River.",
+              "title": "Boats at Anchor on West Lake at the City Gate"
+            }
+          ],
+          "score": 0.6768143784408083,
+          "source_url": "https://clevelandart.org/art/1978.68"
+        }
+      ],
+      "render": "1. **Fisherman's Joy**\n   Qian Gu · 1572 · Handscroll; ink and light color on paper\n   Ficha oficial: https://clevelandart.org/art/1977.56\n\n   La pintura muestra una escena con dos pequeñas embarcaciones, cada una con dos pescadores, practicando la pesca tradicional con cormoranes en el agua. [1]\n   La escena representa claramente una actividad relacionada con el agua, específicamente la pesca en un río.\n\n   **Fuentes**\n   [1] “This painting has a scene showing two small crafts, each manned by two fishermen, practicing a traditional fishing method. In one of them, a man uses a bamboo pole to direct the movements of a cormorant bird sent into the water. Cormorant fishing, witnessed in some areas of the lower Yangzi River, appears in Zhe school paintings. Qian Gu may have borrowed these narrative figure scenes from Zhe school paintings, while his vantage point, brushwork, and soft tones align with the Wu school style. Scenes of fishermen appealed to urban and educated audiences who idealized the self-sufficient independence of fisherfolk.”\n       https://clevelandart.org/art/1977.56 · CC0 1.0\n\n2. **River Village in a Rainstorm**\n   Lu Wenying · c. 1480–1507 · Hanging scroll; ink and slight color on silk\n   Ficha oficial: https://clevelandart.org/art/1970.76\n\n   La obra muestra una escena de lluvia intensa azotando un pueblo, capturando el poder de la naturaleza. [1]\n   La lluvia implica la presencia de agua en la escena, lo que la relaciona con el pedido de escenas de agua.\n\n   **Fuentes**\n   [1] “In this scene, windswept rain pelting a village captures the power of nature in a masterful composition. \n\nLü Wenying from Zhejiang served as a court painter during the Hongzhi era (1488–1505). Hardly known, with few remaining works, he is considered a Zhe school painter who followed the style of the Southern Song academy. Zhe school painters, named after the province of Zhejiang, transformed the poetic scenery of the Southern Song artists into dramatic, large-scale views. Active in the same region with frequent monsoon rains in the summer season, artists were familiar with outbreaks of rain and storms.”\n       https://clevelandart.org/art/1970.76 · CC0 1.0\n\n3. **Landscape Album in Various Styles: Pleasure in a Mountain Brook**\n   Zha Shibiao · 1684 · album leaf, ink and light color on paper\n   Ficha oficial: https://clevelandart.org/art/1955.37.9\n\n   La obra incluye paisajes estacionales con escenas típicas de Jiangnan, la región del delta del Yangzi, incluyendo un niño pastoreando un búfalo que cruza el agua y paseos en bote por un arroyo. [1]\n   Las escenas de personas y animales interactuando con el agua en ríos y arroyos cumplen con el pedido de escenas de agua en la pintura china.\n\n   **Fuentes**\n   [1] “Zha Shibiao, a native of Anhui province, moved to Yangzhou later in his career, like so many of his fellow countrymen. At age 68, he painted this album with seasonal landscapes in various styles. Painted in fresh colors and wet strokes, all depict typical scenes of Jiangnan, the Yangzi delta: a herdboy on a buffalo wading through water, boating on the stream to the Peach Blossom Spring at Wulin, a waterfront town shrouded in mist, a scholar on his donkey enjoying the red autumn leaves, and drinking tea on a boat while watching migrating birds.”\n       https://clevelandart.org/art/1955.37.9 · CC0 1.0\n\n4. **Greeting the Spring**\n   Wu Bin · 1600 · handscroll; ink and light color on paper\n   Ficha oficial: https://clevelandart.org/art/1959.45\n\n   La pintura representa el paisaje rico en agua de la región de Jiangnan, con colinas, lagos y arroyos donde se desarrollan diversas actividades como la pesca. [1]\n   La presencia de lagos y arroyos en la composición indica escenas relacionadas con el agua.\n\n   **Fuentes**\n   [1] “This masterfully composed landscape in light colors and delicate brushwork is an image of the water-rich Jiangnan region in southeast China, where Wu Bin was active as an artist. Embedded in rolling hills along lakesides and streams nestle cityscapes hosting numerous spring festivities. Lantern displays and street performances in the villages salute the New Year, and are interwoven with scenes of farming, fishing, and silk making. In one scene in the middle ground, an ox made of clay under a canopy is lead in a procession to an architectural compound, a ceremony known as whipping the spring ox in hope for a good harvest.”\n       https://clevelandart.org/art/1959.45 · CC0 1.0\n\n5. **Boats at Anchor on West Lake at the City Gate**\n   1150–1200 · Album leaf; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1978.68\n\n   La obra muestra un ambiente nocturno con barcos anclados en el Lago Oeste al pie de las murallas de la ciudad. [1]\n   La representación de barcos en un lago es una escena claramente relacionada con el agua.\n\n   **Fuentes**\n   [1] “Highlighted with a few bright accents, this fan painting conveys a nightly atmosphere with boats anchoring on West Lake at the foot of the city walls. Willow trees line the embankment, and the moon appears above the mountains. While the city is asleep, a figure wearing red inside a boat holds what appears to be a pipa (plucked stringed instrument), while a blue-robed gentleman nearby gazes toward the sound of music, evoking an association with Song of the Lute (Pipa xing) by Tang poet Bai Juyi (772–846) which tells the story of a romantic encounter on the Yangzi River.”\n       https://clevelandart.org/art/1978.68 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+      "config_id": "88368002659b48fd",
+      "corrida_id": "e99aa4968f32cee9-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:149126",
+      "cma:145426",
+      "cma:132931",
+      "cma:135953",
+      "cma:149415"
+    ]
+  },
+  "fecha": "2026-11-11T18:40:17+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 1.1898,
+      "generador": 5.1351,
+      "planificador": 0.0005,
+      "recolector_de_evidencia": 0.8236,
+      "recuperador_textual": 0.4513,
+      "recuperador_visual": 1.8884,
+      "renderizador": 0.0006,
+      "reranker": 27.6203
+    },
+    "segundos_de_la_corrida": 37.1124
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 3.041,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 1.206,
+      "tokens_in": 48,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.134,
+      "tokens_in": 3012,
+      "tokens_out": 679
+    },
+    "indice": {
+      "n_items": 327,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.101,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 27.516,
+      "tokens_in": 48813,
+      "tokens_out": 921
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 99,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 1.188,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.134,
+      "tokens_in": 3012,
+      "tokens_out": 679
+    },
+    "recolector_de_evidencia": {
+      "n_items": 14,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.822,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 198,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.45,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 1.887,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 27.516,
+      "tokens_in": 48813,
+      "tokens_out": 921
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+    "config_id": "88368002659b48fd",
+    "corrida_id": "e99aa4968f32cee9-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

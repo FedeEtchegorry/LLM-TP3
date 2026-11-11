@@ -1,0 +1,3287 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set proveedor.base_url"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "88368002659b48fd",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c06-conceptual",
+  "corrida_id": "ddadf8b4da917e09-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:145925",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c06-conceptual",
+      "imagen_hash": "sha256:b9b23f8cbc1703a2552f2b3b2e1163d1fa45537af9000fd5b313e5b98c6d7898",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:22270": [
+        {
+          "artist": "Andrea del Sarto",
+          "artwork_id": "aic:22270",
+          "chunk_index": 0,
+          "fragment_id": "aic:22270::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/22270",
+          "texto": "This casually posed and loosely rendered portrait originally made up part of the lower section, or predella, of an altarpiece for a church in Gambassi, near Florence. The images of the patron, Domenico, and his wife, Lucrezia, flanked additional, now-lost works. The painted strapwork around the portraits, discovered during recent conservation treatment, once formed part of a decorative pattern that would have extended throughout the predella; it indicates how all the individual paintings were interconnected. Andrea del Sarto added highlights at the bottom of each roundel, mimicking the natural light of the church, to create the illusion of the paintings being set within a three-dimensional frame.",
+          "title": "Lucrezia di Lippo di Iacopo Guidi"
+        },
+        {
+          "artist": "Andrea del Sarto",
+          "artwork_id": "aic:22270",
+          "chunk_index": 0,
+          "fragment_id": "aic:22270::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/22270",
+          "texto": "Probably incorporated into the Gambassi altarpiece, Church of Santi Lorenzo e Onofrio, Benedictine Convent of the Romite, Gambassi (near Volterra), by 1525/28 to no later than 1637 [see Lloyd 1993]. Probably Medici Collection, Palazzo Pitti, Florence, by 1637 [see Conti 1983–84, pp. 162–63]. Possibly Leopold de’Medici (died 1675), Villa del Poggio Imperiale, Florence, by 1655 [Trkulja 1976, p. 12 suggested that they could be identified with entries in the inventories of 1655 and 1692: Due quadretti in tavola, alti s. 7 lari 1/4 dipintovj in tondo di mano d’Andrea del Sarto, in uno il Suo rit., e nell’altro il ritr. della Sua Moglie” (Two small pictures on panel, 7 soldi high by 1/4 [braccio] wide painted in roundels by Andrea del Sarto, in one His portrait, and in the other portrait of His Wife); the measurements (approx. 8 x 6 inches) correspond closely; that the portraits were, by the seventeenth century, thought to be del Sarto and his wife does not necessarily invalidate the argument for their inclusion in the Gambassi altarpiece]. New York art market, 1963; Mrs. Murray S. Danforth, Providence, Rhode Island, 1963–64 [according to Freedberg 1966, p. 35, n. 1]; given to Art Institute, 1964.",
+          "title": "Lucrezia di Lippo di Iacopo Guidi"
+        }
+      ],
+      "cma:124091": [
+        {
+          "artist": "Andrea del Sarto",
+          "artwork_id": "cma:124091",
+          "chunk_index": 0,
+          "fragment_id": "cma:124091::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1944.92",
+          "texto": "King Francis I’s deep interest in Italian Renaissance culture manifested itself not only through acquiring important works of art but also by bringing leading architects, scholars, and artists to Paris. Chief among these figures was the Florentine painter Andrea del Sarto. The sitter’s distinctively French hood and black veil suggest that someone talented closely connected to the artist painted this work during his brief time in France.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Andrea del Sarto",
+          "artwork_id": "cma:124091",
+          "chunk_index": 0,
+          "fragment_id": "cma:124091::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1944.92",
+          "texto": "A. W. Young (sold, Christie's, London, February 26, 1910, lot 92, to Carfax Gallery)\nCarfax Gallery (London, England)\nJoseph Duveen, Lord Baron Duveen, 1869-1939 (New York, New York; London, England), by 1919, according to a letter of January 21, 1919, from Bernard Berenson to Duveen)\nJames P. Labey and Glenn Hall (New York, New York), 1920\nMrs. Francis F. Prentiss, Cleveland, 1920, upon her death, held in trust by the estate\nElisabeth Severance Prentiss Estate, by bequest to the Cleveland Museum of Art, 1944.",
+          "title": "Portrait of a Woman"
+        }
+      ],
+      "cma:146469": [
+        {
+          "artist": "Agnolo Bronzino",
+          "artwork_id": "cma:146469",
+          "chunk_index": 0,
+          "fragment_id": "cma:146469::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1972.121",
+          "texto": "Bronzino was court painter to Cosimo I de’Medici, the Duke of Florence. Though the woman cannot be definitively identified, she was likely affiliated with the Medici court. As in most of the portraits in this gallery, Bronzino emphasizes wealth, status, and courtly refinement above personality or individualized expression. The plain background further accentuates the work’s monumentality and grandeur, despite its small scale. The hand placed against the chest with elegantly spread fingers extends back to an ancient Greek pose of modesty, here emphasizing the proper comportment of a woman of high status. The sitter wears a linen partlet (collar) delicately embroidered in matt stitch, part of which is, like her cuffs, trimmed in fine lace.",
+          "title": "Portrait of a Woman"
+        },
+        {
+          "artist": "Agnolo Bronzino",
+          "artwork_id": "cma:146469",
+          "chunk_index": 0,
+          "fragment_id": "cma:146469::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1972.121",
+          "texto": "Stadelscher Museums-Verein, Frankfurt, in 1882;\nFreifau Mumm von Schwarzenstein, Frankfurt;\nBaron Max von Grunelius, Frankfurt;\n[David M. Koester, Zurich], sold to the Cleveland Museum of Art, 1972.",
+          "title": "Portrait of a Woman"
+        }
+      ],
+      "cma:153406": [
+        {
+          "artist": "Marco d'Oggiono",
+          "artwork_id": "cma:153406",
+          "chunk_index": 0,
+          "fragment_id": "cma:153406::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1986.9",
+          "texto": "Sebastian, a bodyguard for the ancient Roman emperor Diocletian, was shot with arrows and was eventually drowned for his commitment to Christianity. While the arrow alludes to Saint Sebastian, the young man’s clothing dates to the late 1400s, indicating that this is a contemporary portrait, rather than an image of the historical saint. This haunting image was influenced by the paintings of Leonardo da Vinci (1452–1519), particularly in the artist’s use of smoky shadows (called sfumato) to model the flesh. It was painted by Marco d’Oggiono, a Milanese artist who worked in Leonardo’s studio.",
+          "title": "Portrait of a Youth as Saint Sebastian"
+        },
+        {
+          "artist": "Marco d'Oggiono",
+          "artwork_id": "cma:153406",
+          "chunk_index": 0,
+          "fragment_id": "cma:153406::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1986.9",
+          "texto": "While Marco d'Oggiono made numerous copies of the masterpieces of his teacher Leonardo da Vinci, this is an original composition.",
+          "title": "Portrait of a Youth as Saint Sebastian"
+        },
+        {
+          "artist": "Marco d'Oggiono",
+          "artwork_id": "cma:153406",
+          "chunk_index": 0,
+          "fragment_id": "cma:153406::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1986.9",
+          "texto": "Stanley Mortimer, Sr. (1890-1947), New York (as attributed to de Predis)\n(Christie's, London, November 26, 1976, no. 68 [as by Boltraffio])\n(P. & D. Colnaghi & Co. Ltd., London [as by Ambrogio de Predis])\n(Eugene V. Thaw), sold to the Cleveland Museum of Art, 1986.",
+          "title": "Portrait of a Youth as Saint Sebastian"
+        }
+      ],
+      "cma:97167": [
+        {
+          "artist": "Dosso Dossi",
+          "artwork_id": "cma:97167",
+          "chunk_index": 0,
+          "fragment_id": "cma:97167::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1916.803",
+          "texto": "Like other paintings from the Dossi workshop, this work conveys the sitter's social status and self-confidence. He holds a crumpled letter written in Italian. The words Asto, meaning \"ship mast,\" and mare, meaning \"sea,\" suggest that trade was a topic of this letter. References to anatomy and the word bella imply a discussion of the magnificence of human anatomy, an interest that spread rapidly during the Renaissance. The letter likewise communicates the young man's considerable education. This work was formerly called Portrait of Giuliano de Medici; however, the sitter's lack of resemblance to Giuliano caused art historians to discount this argument. Portrait of a Young Man was earlier attributed to Dosso's brother, Battista, before recently being considered a work by Dosso or a member of his workshop. As first suggested by Roberto Longhi, Portrait of a Young Man is now considered likely to be a work of an unidentified follower of Dossi from Friuli, Italy. The Friulian follower worked from 1510 until after 1530 and had connections to Dossi's hometown of Ferrara, accounting for this work's resemblance to Dossi's style. The dark outlines and large forms of the work are of a later style than Dossi's, suggesting that the artist was a follower rather than Dossi himself.",
+          "title": "Portrait of a Young Man"
+        },
+        {
+          "artist": "Dosso Dossi",
+          "artwork_id": "cma:97167",
+          "chunk_index": 0,
+          "fragment_id": "cma:97167::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1916.803",
+          "texto": "James Jackson Jarves, 1818-1888, sold to Mrs. Liberty E. Holden, 1884.\nMrs. Liberty E. Holden, 1838-1932, by bequest to the Cleveland Museum of Art, 1916.",
+          "title": "Portrait of a Young Man"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:22270::description::0"
+            ],
+            "texto": "El retrato formaba parte de la predela de un retablo para una iglesia en Gambassi, cerca de Florencia, Italia, y representa a un patrón y su esposa, lo que indica un carácter conmemorativo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:22270::provenance::0"
+            ],
+            "texto": "La obra fue probablemente parte de la colección Medici en Florencia, lo que confirma su origen italiano.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato tiene una pose casual y una ejecución suelta, con detalles que crean la ilusión de un marco tridimensional, lo que puede reforzar su función conmemorativa.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:22270"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:146469::description::0"
+            ],
+            "texto": "El retrato fue realizado por Agnolo Bronzino, pintor de la corte de Cosimo I de’ Medici en Florencia, Italia.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:146469::description::0"
+            ],
+            "texto": "La mujer retratada probablemente estaba afiliada a la corte Medici, lo que sugiere un retrato conmemorativo de una persona de alto estatus en Italia.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato enfatiza la riqueza y el estatus social más que la expresión individual, característica común en retratos conmemorativos de la época.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:146469"
+      },
+      {
+        "abstencion": "No hay suficiente información para afirmar que este retrato sea conmemorativo en Italia, dado que la vestimenta y contexto son franceses.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:124091::description::0"
+            ],
+            "texto": "El retrato está vinculado a Andrea del Sarto, un pintor florentino, y fue realizado durante su estancia en Francia, pero la vestimenta del retratado es distintivamente francesa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Aunque el artista es italiano, el retrato no corresponde a un contexto conmemorativo en Italia, sino en Francia.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:124091"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:153406::description::0"
+            ],
+            "texto": "El retrato fue pintado por Marco d’Oggiono, un artista milanés que trabajó en el taller de Leonardo da Vinci, en Italia.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:153406::description::0"
+            ],
+            "texto": "La imagen representa a un joven vestido con ropas del siglo XV, y no al santo histórico, sugiriendo un retrato contemporáneo con posible carácter conmemorativo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El uso de técnicas leonardescas como el sfumato aporta un estilo refinado al retrato, típico de la pintura italiana renacentista.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:153406"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:97167::description::0"
+            ],
+            "texto": "El retrato fue realizado por un seguidor de Dosso o de su taller, con conexiones a Ferrara, Italia.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato comunica el estatus social y la educación del joven, lo que puede indicar un propósito conmemorativo.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [
+              "cma:97167::description::0"
+            ],
+            "texto": "La obra fue atribuida inicialmente a Giuliano de Medici, aunque esta identificación fue descartada, pero mantiene su origen italiano.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "cma:97167"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:97155",
+          "rank": 1,
+          "score": 0.6172626614570618
+        },
+        {
+          "artwork_id": "aic:11390",
+          "rank": 2,
+          "score": 0.5862573385238647
+        },
+        {
+          "artwork_id": "cma:150052",
+          "rank": 3,
+          "score": 0.5770689249038696
+        },
+        {
+          "artwork_id": "cma:125251",
+          "rank": 4,
+          "score": 0.5619798302650452
+        },
+        {
+          "artwork_id": "aic:149778",
+          "rank": 5,
+          "score": 0.5521333813667297
+        },
+        {
+          "artwork_id": "cma:97156",
+          "rank": 6,
+          "score": 0.549201488494873
+        },
+        {
+          "artwork_id": "aic:154037",
+          "rank": 7,
+          "score": 0.5488162040710449
+        },
+        {
+          "artwork_id": "aic:22270",
+          "rank": 8,
+          "score": 0.5488162040710449
+        },
+        {
+          "artwork_id": "cma:127571",
+          "rank": 9,
+          "score": 0.5487337112426758
+        },
+        {
+          "artwork_id": "aic:217534",
+          "rank": 10,
+          "score": 0.5457131266593933
+        },
+        {
+          "artwork_id": "cma:145923",
+          "rank": 11,
+          "score": 0.535407543182373
+        },
+        {
+          "artwork_id": "cma:131819",
+          "rank": 12,
+          "score": 0.5323845744132996
+        },
+        {
+          "artwork_id": "aic:250762",
+          "rank": 13,
+          "score": 0.5315302014350891
+        },
+        {
+          "artwork_id": "aic:27281",
+          "rank": 14,
+          "score": 0.5290919542312622
+        },
+        {
+          "artwork_id": "cma:132367",
+          "rank": 15,
+          "score": 0.5266085863113403
+        },
+        {
+          "artwork_id": "cma:150053",
+          "rank": 16,
+          "score": 0.5253714919090271
+        },
+        {
+          "artwork_id": "aic:86323",
+          "rank": 17,
+          "score": 0.5250908136367798
+        },
+        {
+          "artwork_id": "cma:144303",
+          "rank": 18,
+          "score": 0.5243547558784485
+        },
+        {
+          "artwork_id": "cma:109507",
+          "rank": 19,
+          "score": 0.524107813835144
+        },
+        {
+          "artwork_id": "cma:146469",
+          "rank": 20,
+          "score": 0.5218410491943359
+        },
+        {
+          "artwork_id": "cma:137135",
+          "rank": 21,
+          "score": 0.520233154296875
+        },
+        {
+          "artwork_id": "aic:44816",
+          "rank": 22,
+          "score": 0.5182563066482544
+        },
+        {
+          "artwork_id": "aic:116101",
+          "rank": 23,
+          "score": 0.5177500247955322
+        },
+        {
+          "artwork_id": "cma:97181",
+          "rank": 24,
+          "score": 0.5167900919914246
+        },
+        {
+          "artwork_id": "aic:14574",
+          "rank": 25,
+          "score": 0.5153889656066895
+        },
+        {
+          "artwork_id": "cma:97167",
+          "rank": 26,
+          "score": 0.5133070945739746
+        },
+        {
+          "artwork_id": "aic:16231",
+          "rank": 27,
+          "score": 0.5113120675086975
+        },
+        {
+          "artwork_id": "aic:23972",
+          "rank": 28,
+          "score": 0.5104780197143555
+        },
+        {
+          "artwork_id": "aic:16394",
+          "rank": 29,
+          "score": 0.5089923143386841
+        },
+        {
+          "artwork_id": "aic:19336",
+          "rank": 30,
+          "score": 0.5062654614448547
+        },
+        {
+          "artwork_id": "aic:16151",
+          "rank": 31,
+          "score": 0.5055591464042664
+        },
+        {
+          "artwork_id": "cma:137335",
+          "rank": 32,
+          "score": 0.5044369101524353
+        },
+        {
+          "artwork_id": "cma:97170",
+          "rank": 33,
+          "score": 0.5042375922203064
+        },
+        {
+          "artwork_id": "aic:36492",
+          "rank": 34,
+          "score": 0.5000341534614563
+        },
+        {
+          "artwork_id": "aic:51130",
+          "rank": 35,
+          "score": 0.49944472312927246
+        },
+        {
+          "artwork_id": "cma:130132",
+          "rank": 36,
+          "score": 0.4991075396537781
+        },
+        {
+          "artwork_id": "cma:97180",
+          "rank": 37,
+          "score": 0.49760526418685913
+        },
+        {
+          "artwork_id": "aic:110673",
+          "rank": 38,
+          "score": 0.49724745750427246
+        },
+        {
+          "artwork_id": "cma:150022",
+          "rank": 39,
+          "score": 0.4962247610092163
+        },
+        {
+          "artwork_id": "cma:110566",
+          "rank": 40,
+          "score": 0.4956803321838379
+        },
+        {
+          "artwork_id": "aic:864",
+          "rank": 41,
+          "score": 0.4949812889099121
+        },
+        {
+          "artwork_id": "cma:141594",
+          "rank": 42,
+          "score": 0.4928901195526123
+        },
+        {
+          "artwork_id": "aic:12891",
+          "rank": 43,
+          "score": 0.49224036931991577
+        },
+        {
+          "artwork_id": "aic:49422",
+          "rank": 44,
+          "score": 0.49216312170028687
+        },
+        {
+          "artwork_id": "cma:142472",
+          "rank": 45,
+          "score": 0.4920719861984253
+        },
+        {
+          "artwork_id": "cma:142473",
+          "rank": 46,
+          "score": 0.4920719861984253
+        },
+        {
+          "artwork_id": "cma:142474",
+          "rank": 47,
+          "score": 0.4920719861984253
+        },
+        {
+          "artwork_id": "cma:142475",
+          "rank": 48,
+          "score": 0.4920719861984253
+        },
+        {
+          "artwork_id": "cma:159309",
+          "rank": 49,
+          "score": 0.4919666051864624
+        },
+        {
+          "artwork_id": "cma:169662",
+          "rank": 50,
+          "score": 0.4916713237762451
+        },
+        {
+          "artwork_id": "aic:16298",
+          "rank": 51,
+          "score": 0.491346538066864
+        },
+        {
+          "artwork_id": "cma:153406",
+          "rank": 52,
+          "score": 0.49028539657592773
+        },
+        {
+          "artwork_id": "cma:170235",
+          "rank": 53,
+          "score": 0.4899566173553467
+        },
+        {
+          "artwork_id": "cma:146167",
+          "rank": 54,
+          "score": 0.48972582817077637
+        },
+        {
+          "artwork_id": "cma:688823",
+          "rank": 55,
+          "score": 0.48937028646469116
+        },
+        {
+          "artwork_id": "aic:59847",
+          "rank": 56,
+          "score": 0.48912590742111206
+        },
+        {
+          "artwork_id": "cma:153927",
+          "rank": 57,
+          "score": 0.4888530373573303
+        },
+        {
+          "artwork_id": "aic:87515",
+          "rank": 58,
+          "score": 0.48795223236083984
+        },
+        {
+          "artwork_id": "cma:148990",
+          "rank": 59,
+          "score": 0.4876270294189453
+        },
+        {
+          "artwork_id": "aic:111456",
+          "rank": 60,
+          "score": 0.4866703748703003
+        },
+        {
+          "artwork_id": "aic:190405",
+          "rank": 61,
+          "score": 0.48637300729751587
+        },
+        {
+          "artwork_id": "aic:111620",
+          "rank": 62,
+          "score": 0.48568952083587646
+        },
+        {
+          "artwork_id": "aic:21937",
+          "rank": 63,
+          "score": 0.48530107736587524
+        },
+        {
+          "artwork_id": "aic:4081",
+          "rank": 64,
+          "score": 0.48514068126678467
+        },
+        {
+          "artwork_id": "aic:28173",
+          "rank": 65,
+          "score": 0.4842890501022339
+        },
+        {
+          "artwork_id": "cma:171157",
+          "rank": 66,
+          "score": 0.48405760526657104
+        },
+        {
+          "artwork_id": "aic:59916",
+          "rank": 67,
+          "score": 0.4837033152580261
+        },
+        {
+          "artwork_id": "aic:16295",
+          "rank": 68,
+          "score": 0.48360252380371094
+        },
+        {
+          "artwork_id": "cma:144689",
+          "rank": 69,
+          "score": 0.48335522413253784
+        },
+        {
+          "artwork_id": "cma:172793",
+          "rank": 70,
+          "score": 0.48295092582702637
+        },
+        {
+          "artwork_id": "cma:172805",
+          "rank": 71,
+          "score": 0.4803043007850647
+        },
+        {
+          "artwork_id": "cma:172814",
+          "rank": 72,
+          "score": 0.4803043007850647
+        },
+        {
+          "artwork_id": "cma:111691",
+          "rank": 73,
+          "score": 0.4803035259246826
+        },
+        {
+          "artwork_id": "cma:97136",
+          "rank": 74,
+          "score": 0.47998976707458496
+        },
+        {
+          "artwork_id": "aic:22527",
+          "rank": 75,
+          "score": 0.4785909652709961
+        },
+        {
+          "artwork_id": "cma:130982",
+          "rank": 76,
+          "score": 0.47766566276550293
+        },
+        {
+          "artwork_id": "cma:159234",
+          "rank": 77,
+          "score": 0.4761773943901062
+        },
+        {
+          "artwork_id": "cma:135265",
+          "rank": 78,
+          "score": 0.4758930206298828
+        },
+        {
+          "artwork_id": "aic:243872",
+          "rank": 79,
+          "score": 0.47402435541152954
+        },
+        {
+          "artwork_id": "aic:64920",
+          "rank": 80,
+          "score": 0.47244781255722046
+        },
+        {
+          "artwork_id": "aic:48532",
+          "rank": 81,
+          "score": 0.47105926275253296
+        },
+        {
+          "artwork_id": "cma:122350",
+          "rank": 82,
+          "score": 0.4705880880355835
+        },
+        {
+          "artwork_id": "cma:150023",
+          "rank": 83,
+          "score": 0.47040462493896484
+        },
+        {
+          "artwork_id": "aic:16405",
+          "rank": 84,
+          "score": 0.4702761173248291
+        },
+        {
+          "artwork_id": "aic:90024",
+          "rank": 85,
+          "score": 0.4686368703842163
+        },
+        {
+          "artwork_id": "aic:110776",
+          "rank": 86,
+          "score": 0.4679458737373352
+        },
+        {
+          "artwork_id": "cma:124091",
+          "rank": 87,
+          "score": 0.46777671575546265
+        },
+        {
+          "artwork_id": "cma:114684",
+          "rank": 88,
+          "score": 0.46777230501174927
+        },
+        {
+          "artwork_id": "aic:4788",
+          "rank": 89,
+          "score": 0.4677000641822815
+        },
+        {
+          "artwork_id": "aic:158137",
+          "rank": 90,
+          "score": 0.46734893321990967
+        },
+        {
+          "artwork_id": "aic:31176",
+          "rank": 91,
+          "score": 0.4669010043144226
+        },
+        {
+          "artwork_id": "cma:100489",
+          "rank": 92,
+          "score": 0.46652960777282715
+        },
+        {
+          "artwork_id": "aic:213758",
+          "rank": 93,
+          "score": 0.4664362072944641
+        },
+        {
+          "artwork_id": "aic:181478",
+          "rank": 94,
+          "score": 0.4662508964538574
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:314448",
+          "rank": 1,
+          "score": 0.7021253705024719
+        },
+        {
+          "artwork_id": "cma:137333",
+          "rank": 2,
+          "score": 0.6935524940490723
+        },
+        {
+          "artwork_id": "cma:314500",
+          "rank": 3,
+          "score": 0.6927551627159119
+        },
+        {
+          "artwork_id": "cma:101356",
+          "rank": 4,
+          "score": 0.6913464069366455
+        },
+        {
+          "artwork_id": "cma:122336",
+          "rank": 5,
+          "score": 0.6844940185546875
+        },
+        {
+          "artwork_id": "cma:169341",
+          "rank": 6,
+          "score": 0.6780879497528076
+        },
+        {
+          "artwork_id": "cma:170881",
+          "rank": 7,
+          "score": 0.6739497184753418
+        },
+        {
+          "artwork_id": "cma:137334",
+          "rank": 8,
+          "score": 0.6708903908729553
+        },
+        {
+          "artwork_id": "cma:122337",
+          "rank": 9,
+          "score": 0.6630274653434753
+        },
+        {
+          "artwork_id": "cma:142475",
+          "rank": 10,
+          "score": 0.6614096164703369
+        },
+        {
+          "artwork_id": "aic:35686",
+          "rank": 11,
+          "score": 0.661247730255127
+        },
+        {
+          "artwork_id": "cma:153395",
+          "rank": 12,
+          "score": 0.6610567569732666
+        },
+        {
+          "artwork_id": "cma:146469",
+          "rank": 13,
+          "score": 0.6591016054153442
+        },
+        {
+          "artwork_id": "cma:162532",
+          "rank": 14,
+          "score": 0.6586402654647827
+        },
+        {
+          "artwork_id": "cma:142520",
+          "rank": 15,
+          "score": 0.6574519872665405
+        },
+        {
+          "artwork_id": "aic:90437",
+          "rank": 16,
+          "score": 0.6570655107498169
+        },
+        {
+          "artwork_id": "cma:688675",
+          "rank": 17,
+          "score": 0.6568818092346191
+        },
+        {
+          "artwork_id": "cma:170884",
+          "rank": 18,
+          "score": 0.6561038494110107
+        },
+        {
+          "artwork_id": "cma:162509",
+          "rank": 19,
+          "score": 0.6560567617416382
+        },
+        {
+          "artwork_id": "cma:170813",
+          "rank": 20,
+          "score": 0.6534377336502075
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Italian commemorative portrait painting, funerary tradition, Roman period, encaustic technique on wood, representing elite individuals with symbolic adornments",
+      "consulta_id": "c06-conceptual",
+      "consulta_visual": "Italian commemorative portrait of a woman with gold jewelry and laurel wreath, painted on wooden panel, frontal view",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:b9b23f8cbc1703a2552f2b3b2e1163d1fa45537af9000fd5b313e5b98c6d7898",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "retratos conmemorativos en Italia",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "1f208501f9afcf2a",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 1874,
+        "tokens_out": 63
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:142475",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 48,
+          "visual": 10
+        },
+        "score_fusionado": 0.66140972
+      },
+      {
+        "artwork_id": "cma:146469",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 20,
+          "visual": 13
+        },
+        "score_fusionado": 0.65910132
+      },
+      {
+        "artwork_id": "cma:145923",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.65040635
+      },
+      {
+        "artwork_id": "cma:124091",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.6381262
+      },
+      {
+        "artwork_id": "cma:150053",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.63307971
+      },
+      {
+        "artwork_id": "aic:22270",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.62877068
+      },
+      {
+        "artwork_id": "cma:110566",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.62858164
+      },
+      {
+        "artwork_id": "cma:153406",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.61613236
+      },
+      {
+        "artwork_id": "cma:137335",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.60776951
+      },
+      {
+        "artwork_id": "cma:97167",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.60645173
+      },
+      {
+        "artwork_id": "cma:148990",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.60388897
+      },
+      {
+        "artwork_id": "cma:172793",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.59719618
+      },
+      {
+        "artwork_id": "cma:172805",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.5967085
+      },
+      {
+        "artwork_id": "cma:144689",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.59139679
+      },
+      {
+        "artwork_id": "aic:111456",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.58320214
+      },
+      {
+        "artwork_id": "cma:142473",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.58292853
+      },
+      {
+        "artwork_id": "cma:142472",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.58269737
+      },
+      {
+        "artwork_id": "cma:97136",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.58218159
+      },
+      {
+        "artwork_id": "cma:142474",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.57545508
+      },
+      {
+        "artwork_id": "aic:116101",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.57176986
+      },
+      {
+        "artwork_id": "cma:172814",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.5714315
+      },
+      {
+        "artwork_id": "cma:159309",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.57003839
+      },
+      {
+        "artwork_id": "aic:59916",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.56981387
+      },
+      {
+        "artwork_id": "aic:11390",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.56793048
+      },
+      {
+        "artwork_id": "cma:97180",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.56296546
+      },
+      {
+        "artwork_id": "aic:110673",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.56220972
+      },
+      {
+        "artwork_id": "aic:16405",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.55950918
+      },
+      {
+        "artwork_id": "aic:27281",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.55944799
+      },
+      {
+        "artwork_id": "cma:688823",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.55916468
+      },
+      {
+        "artwork_id": "cma:132367",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.55883861
+      },
+      {
+        "artwork_id": "aic:22527",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.55702021
+      },
+      {
+        "artwork_id": "cma:114684",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.55674857
+      },
+      {
+        "artwork_id": "aic:16298",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.5564227
+      },
+      {
+        "artwork_id": "cma:135265",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.55473055
+      },
+      {
+        "artwork_id": "cma:153927",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.55348154
+      },
+      {
+        "artwork_id": "aic:154037",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.54946112
+      },
+      {
+        "artwork_id": "cma:130982",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.54803898
+      },
+      {
+        "artwork_id": "cma:131819",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.54109227
+      },
+      {
+        "artwork_id": "aic:864",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.54080736
+      },
+      {
+        "artwork_id": "aic:28173",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.53657514
+      },
+      {
+        "artwork_id": "aic:64920",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.53468532
+      },
+      {
+        "artwork_id": "cma:122350",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.53354052
+      },
+      {
+        "artwork_id": "cma:159234",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.5326097
+      },
+      {
+        "artwork_id": "cma:125251",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.53239481
+      },
+      {
+        "artwork_id": "aic:16151",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.52994073
+      },
+      {
+        "artwork_id": "cma:144303",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.52908614
+      },
+      {
+        "artwork_id": "aic:243872",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.5286477
+      },
+      {
+        "artwork_id": "cma:169662",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.52782769
+      },
+      {
+        "artwork_id": "aic:217534",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.5274611
+      },
+      {
+        "artwork_id": "cma:150022",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.5273031
+      },
+      {
+        "artwork_id": "aic:213758",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.52610619
+      },
+      {
+        "artwork_id": "aic:16231",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.52507918
+      },
+      {
+        "artwork_id": "cma:97155",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.52431663
+      },
+      {
+        "artwork_id": "aic:4788",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.52292024
+      },
+      {
+        "artwork_id": "aic:149778",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.52172583
+      },
+      {
+        "artwork_id": "aic:250762",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.52117616
+      },
+      {
+        "artwork_id": "aic:44816",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.52059709
+      },
+      {
+        "artwork_id": "aic:110776",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.51933108
+      },
+      {
+        "artwork_id": "aic:16295",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.51870122
+      },
+      {
+        "artwork_id": "cma:150023",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.51720022
+      },
+      {
+        "artwork_id": "aic:190405",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.51500121
+      },
+      {
+        "artwork_id": "aic:51130",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.51440494
+      },
+      {
+        "artwork_id": "cma:146167",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.51353838
+      },
+      {
+        "artwork_id": "aic:21937",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.51278099
+      },
+      {
+        "artwork_id": "aic:23972",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.51127174
+      },
+      {
+        "artwork_id": "aic:4081",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.50938716
+      },
+      {
+        "artwork_id": "aic:48532",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.50734423
+      },
+      {
+        "artwork_id": "aic:16394",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.50172881
+      },
+      {
+        "artwork_id": "cma:150052",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.50085763
+      },
+      {
+        "artwork_id": "cma:141594",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.49966711
+      },
+      {
+        "artwork_id": "aic:59847",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.49689502
+      },
+      {
+        "artwork_id": "aic:87515",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.49562022
+      },
+      {
+        "artwork_id": "cma:109507",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.49480242
+      },
+      {
+        "artwork_id": "aic:36492",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.49020063
+      },
+      {
+        "artwork_id": "cma:100489",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.48563834
+      },
+      {
+        "artwork_id": "aic:111620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.48535859
+      },
+      {
+        "artwork_id": "aic:90024",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.48508313
+      },
+      {
+        "artwork_id": "cma:97170",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.48186442
+      },
+      {
+        "artwork_id": "cma:137135",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.48121812
+      },
+      {
+        "artwork_id": "cma:111691",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.47874544
+      },
+      {
+        "artwork_id": "cma:130132",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.47741284
+      },
+      {
+        "artwork_id": "aic:31176",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.47741034
+      },
+      {
+        "artwork_id": "aic:19336",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.47590388
+      },
+      {
+        "artwork_id": "cma:127571",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.4748701
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.47441944
+      },
+      {
+        "artwork_id": "aic:49422",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.46975653
+      },
+      {
+        "artwork_id": "cma:170235",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.46702807
+      },
+      {
+        "artwork_id": "cma:97181",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.46334983
+      },
+      {
+        "artwork_id": "aic:86323",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.46028644
+      },
+      {
+        "artwork_id": "aic:158137",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.45618655
+      },
+      {
+        "artwork_id": "cma:97156",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.44936606
+      },
+      {
+        "artwork_id": "cma:171157",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.41848088
+      },
+      {
+        "artwork_id": "aic:14574",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.41717196
+      },
+      {
+        "artwork_id": "aic:181478",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.39423138
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "aic:22270",
+        "estado": "puntuado",
+        "justificacion": "Es un retrato conmemorativo realizado en Italia, cumpliendo con la cultura y el tipo de obra solicitados; sin embargo, el formato y estilo difieren del retrato original, aunque mantiene la esencia del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2235,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:146469",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo realizado en Italia, cumpliendo con el pedido. Sin embargo, el estilo y época son muy diferentes a la imagen original, aunque el pedido no especifica mantener ese aspecto.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2338,
+          "tokens_out": 56
+        }
+      },
+      {
+        "artwork_id": "cma:124091",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo realizado en Italia, cumpliendo con el pedido en cuanto a cultura y tipo de obra; sin embargo, no se puede confirmar si es conmemorativo en sentido estricto, aunque visualmente mantiene el estilo renacentista italiano solicitado.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2255,
+          "tokens_out": 66
+        }
+      },
+      {
+        "artwork_id": "cma:153406",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo y es de cultura italiana, cumpliendo el pedido. Sin embargo, no es un retrato funerario como la imagen subida, sino una representación de San Sebastián, por lo que cumple parcialmente.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2355,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:97167",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato italiano, cumpliendo con la cultura y el tipo de obra solicitado. Sin embargo, no se especifica que sea un retrato conmemorativo, por lo que cumple parcialmente el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2303,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "cma:145923",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo romano, pero no se especifica que sea de Italia, sino del Imperio Romano en general, por lo que no cumple plenamente el requisito geográfico del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2349,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:150053",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato, pero es de cultura francesa, no italiana, por lo que no cumple con el requisito de ser un retrato conmemorativo en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2349,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "cma:110566",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo sino una figura alegórica, por lo que no cumple el pedido específico de retratos conmemorativos en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2209,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "cma:137335",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo, pero es de cultura alemana, no italiana como pide el usuario, por lo que no cumple con el requisito geográfico del pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2214,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "cma:142475",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo, sino una imagen religiosa con figuras sagradas; no cumple el pedido de retratos conmemorativos en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 1701,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:111456",
+        "estado": "puntuado",
+        "justificacion": "La obra no es un retrato conmemorativo sino una imagen religiosa (Virgen y Niño), y además es de cultura neerlandesa, no italiana, por lo que no cumple con el pedido de retratos conmemorativos en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2883,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:142473",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo sino una imagen religiosa de la Virgen con el Niño, por lo que no cumple con el pedido específico de retratos conmemorativos en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2153,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:142472",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo sino una representación religiosa; por eso cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2094,
+          "tokens_out": 38
+        }
+      },
+      {
+        "artwork_id": "cma:142474",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo sino una escena religiosa; por eso cumple de costado con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 1743,
+          "tokens_out": 39
+        }
+      },
+      {
+        "artwork_id": "aic:116101",
+        "estado": "puntuado",
+        "justificacion": "La obra no es un retrato conmemorativo ni es de Italia, sino de Inglaterra y representa cabezas de almas condenadas, por lo que solo cumple de costado con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2942,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "cma:148990",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana, pero no es un retrato conmemorativo, sino una pintura religiosa de la Virgen con el Niño y ángeles, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 1987,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "cma:172793",
+        "estado": "puntuado",
+        "justificacion": "La obra no es un retrato conmemorativo ni es de Italia, sino que pertenece a la cultura coreana, por lo que no cumple el pedido en cuanto a cultura ni tipo de obra.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 1986,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:172805",
+        "estado": "puntuado",
+        "justificacion": "La obra es de cultura coreana, no italiana, y no es un retrato conmemorativo sino una representación mitológica, por lo que no cumple el pedido de retratos conmemorativos en Italia.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2031,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:144689",
+        "estado": "puntuado",
+        "justificacion": "La obra es un retrato conmemorativo pero pertenece a la cultura china, no a Italia como pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3067,
+          "tokens_out": 34
+        }
+      },
+      {
+        "artwork_id": "cma:97136",
+        "estado": "puntuado",
+        "justificacion": "La obra es italiana pero no es un retrato conmemorativo, sino una escena religiosa de la crucifixión, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 1808,
+          "tokens_out": 42
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c06-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "aic:22270",
+          "ficha": {
+            "artist": "Andrea del Sarto",
+            "culture": "Italy",
+            "date_display": "1525–28",
+            "medium": "Oil on panel",
+            "style": "sixteenth century",
+            "title": "Lucrezia di Lippo di Iacopo Guidi",
+            "year": 1525
+          },
+          "lineas": [
+            "El retrato formaba parte de la predela de un retablo para una iglesia en Gambassi, cerca de Florencia, Italia, y representa a un patrón y su esposa, lo que indica un carácter conmemorativo. [1]",
+            "La obra fue probablemente parte de la colección Medici en Florencia, lo que confirma su origen italiano. [2]",
+            "El retrato tiene una pose casual y una ejecución suelta, con detalles que crean la ilusión de un marco tridimensional, lo que puede reforzar su función conmemorativa."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Andrea del Sarto",
+              "atribucion": "“Lucrezia di Lippo di Iacopo Guidi”, Andrea del Sarto. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/22270",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:22270::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/22270",
+              "texto_citado": "This casually posed and loosely rendered portrait originally made up part of the lower section, or predella, of an altarpiece for a church in Gambassi, near Florence. The images of the patron, Domenico, and his wife, Lucrezia, flanked additional, now-lost works. The painted strapwork around the portraits, discovered during recent conservation treatment, once formed part of a decorative pattern that would have extended throughout the predella; it indicates how all the individual paintings were interconnected. Andrea del Sarto added highlights at the bottom of each roundel, mimicking the natural light of the church, to create the illusion of the paintings being set within a three-dimensional frame.",
+              "title": "Lucrezia di Lippo di Iacopo Guidi"
+            },
+            {
+              "artist": "Andrea del Sarto",
+              "atribucion": null,
+              "campos": [
+                "provenance"
+              ],
+              "fragment_id": "aic:22270::provenance::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 2,
+              "source_url": "https://www.artic.edu/artworks/22270",
+              "texto_citado": "Probably incorporated into the Gambassi altarpiece, Church of Santi Lorenzo e Onofrio, Benedictine Convent of the Romite, Gambassi (near Volterra), by 1525/28 to no later than 1637 [see Lloyd 1993]. Probably Medici Collection, Palazzo Pitti, Florence, by 1637 [see Conti 1983–84, pp. 162–63]. Possibly Leopold de’Medici (died 1675), Villa del Poggio Imperiale, Florence, by 1655 [Trkulja 1976, p. 12 suggested that they could be identified with entries in the inventories of 1655 and 1692: Due quadretti in tavola, alti s. 7 lari 1/4 dipintovj in tondo di mano d’Andrea del Sarto, in uno il Suo rit., e nell’altro il ritr. della Sua Moglie” (Two small pictures on panel, 7 soldi high by 1/4 [braccio] wide painted in roundels by Andrea del Sarto, in one His portrait, and in the other portrait of His Wife); the measurements (approx. 8 x 6 inches) correspond closely; that the portraits were, by the seventeenth century, thought to be del Sarto and his wife does not necessarily invalidate the argument for their inclusion in the Gambassi altarpiece]. New York art market, 1963; Mrs. Murray S. Danforth, Providence, Rhode Island, 1963–64 [according to Freedberg 1966, p. 35, n. 1]; given to Art Institute, 1964.",
+              "title": "Lucrezia di Lippo di Iacopo Guidi"
+            }
+          ],
+          "score": 0.6287706787389388,
+          "source_url": "https://www.artic.edu/artworks/22270"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:146469",
+          "ficha": {
+            "artist": "Agnolo Bronzino",
+            "culture": "Italy",
+            "date_display": "c. 1550",
+            "medium": "oil on wood",
+            "title": "Portrait of a Woman",
+            "year": 1550
+          },
+          "lineas": [
+            "El retrato fue realizado por Agnolo Bronzino, pintor de la corte de Cosimo I de’ Medici en Florencia, Italia. [1]",
+            "La mujer retratada probablemente estaba afiliada a la corte Medici, lo que sugiere un retrato conmemorativo de una persona de alto estatus en Italia. [1]",
+            "El retrato enfatiza la riqueza y el estatus social más que la expresión individual, característica común en retratos conmemorativos de la época."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Agnolo Bronzino",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:146469::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1972.121",
+              "texto_citado": "Bronzino was court painter to Cosimo I de’Medici, the Duke of Florence. Though the woman cannot be definitively identified, she was likely affiliated with the Medici court. As in most of the portraits in this gallery, Bronzino emphasizes wealth, status, and courtly refinement above personality or individualized expression. The plain background further accentuates the work’s monumentality and grandeur, despite its small scale. The hand placed against the chest with elegantly spread fingers extends back to an ancient Greek pose of modesty, here emphasizing the proper comportment of a woman of high status. The sitter wears a linen partlet (collar) delicately embroidered in matt stitch, part of which is, like her cuffs, trimmed in fine lace.",
+              "title": "Portrait of a Woman"
+            }
+          ],
+          "score": 0.6591013198275845,
+          "source_url": "https://clevelandart.org/art/1972.121"
+        },
+        {
+          "abstencion": "No hay suficiente información para afirmar que este retrato sea conmemorativo en Italia, dado que la vestimenta y contexto son franceses.",
+          "artwork_id": "cma:124091",
+          "ficha": {
+            "artist": "Andrea del Sarto",
+            "culture": "Italy",
+            "date_display": "c. 1518",
+            "medium": "oil on wood",
+            "title": "Portrait of a Woman",
+            "year": 1513
+          },
+          "lineas": [
+            "El retrato está vinculado a Andrea del Sarto, un pintor florentino, y fue realizado durante su estancia en Francia, pero la vestimenta del retratado es distintivamente francesa. [1]",
+            "Aunque el artista es italiano, el retrato no corresponde a un contexto conmemorativo en Italia, sino en Francia."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Andrea del Sarto",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:124091::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1944.92",
+              "texto_citado": "King Francis I’s deep interest in Italian Renaissance culture manifested itself not only through acquiring important works of art but also by bringing leading architects, scholars, and artists to Paris. Chief among these figures was the Florentine painter Andrea del Sarto. The sitter’s distinctively French hood and black veil suggest that someone talented closely connected to the artist painted this work during his brief time in France.",
+              "title": "Portrait of a Woman"
+            }
+          ],
+          "score": 0.6381261996754242,
+          "source_url": "https://clevelandart.org/art/1944.92"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:153406",
+          "ficha": {
+            "artist": "Marco d'Oggiono",
+            "culture": "Italy",
+            "date_display": "late 1480s",
+            "medium": "oil on wood, transferred to pressed wood",
+            "title": "Portrait of a Youth as Saint Sebastian",
+            "year": 1485
+          },
+          "lineas": [
+            "El retrato fue pintado por Marco d’Oggiono, un artista milanés que trabajó en el taller de Leonardo da Vinci, en Italia. [1]",
+            "La imagen representa a un joven vestido con ropas del siglo XV, y no al santo histórico, sugiriendo un retrato contemporáneo con posible carácter conmemorativo. [1]",
+            "El uso de técnicas leonardescas como el sfumato aporta un estilo refinado al retrato, típico de la pintura italiana renacentista."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Marco d'Oggiono",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:153406::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1986.9",
+              "texto_citado": "Sebastian, a bodyguard for the ancient Roman emperor Diocletian, was shot with arrows and was eventually drowned for his commitment to Christianity. While the arrow alludes to Saint Sebastian, the young man’s clothing dates to the late 1400s, indicating that this is a contemporary portrait, rather than an image of the historical saint. This haunting image was influenced by the paintings of Leonardo da Vinci (1452–1519), particularly in the artist’s use of smoky shadows (called sfumato) to model the flesh. It was painted by Marco d’Oggiono, a Milanese artist who worked in Leonardo’s studio.",
+              "title": "Portrait of a Youth as Saint Sebastian"
+            }
+          ],
+          "score": 0.6161323608644164,
+          "source_url": "https://clevelandart.org/art/1986.9"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:97167",
+          "ficha": {
+            "artist": "Dosso Dossi",
+            "culture": "Italy",
+            "date_display": "c. 1530",
+            "medium": "oil and gold on wood",
+            "title": "Portrait of a Young Man",
+            "year": 1525
+          },
+          "lineas": [
+            "El retrato fue realizado por un seguidor de Dosso o de su taller, con conexiones a Ferrara, Italia. [1]",
+            "El retrato comunica el estatus social y la educación del joven, lo que puede indicar un propósito conmemorativo.",
+            "La obra fue atribuida inicialmente a Giuliano de Medici, aunque esta identificación fue descartada, pero mantiene su origen italiano. [1]"
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Dosso Dossi",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:97167::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1916.803",
+              "texto_citado": "Like other paintings from the Dossi workshop, this work conveys the sitter's social status and self-confidence. He holds a crumpled letter written in Italian. The words Asto, meaning \"ship mast,\" and mare, meaning \"sea,\" suggest that trade was a topic of this letter. References to anatomy and the word bella imply a discussion of the magnificence of human anatomy, an interest that spread rapidly during the Renaissance. The letter likewise communicates the young man's considerable education. This work was formerly called Portrait of Giuliano de Medici; however, the sitter's lack of resemblance to Giuliano caused art historians to discount this argument. Portrait of a Young Man was earlier attributed to Dosso's brother, Battista, before recently being considered a work by Dosso or a member of his workshop. As first suggested by Roberto Longhi, Portrait of a Young Man is now considered likely to be a work of an unidentified follower of Dossi from Friuli, Italy. The Friulian follower worked from 1510 until after 1530 and had connections to Dossi's hometown of Ferrara, accounting for this work's resemblance to Dossi's style. The dark outlines and large forms of the work are of a later style than Dossi's, suggesting that the artist was a follower rather than Dossi himself.",
+              "title": "Portrait of a Young Man"
+            }
+          ],
+          "score": 0.6064517293547443,
+          "source_url": "https://clevelandart.org/art/1916.803"
+        }
+      ],
+      "render": "1. **Lucrezia di Lippo di Iacopo Guidi**\n   Andrea del Sarto · 1525–28 · Oil on panel · sixteenth century\n   Ficha oficial: https://www.artic.edu/artworks/22270\n\n   El retrato formaba parte de la predela de un retablo para una iglesia en Gambassi, cerca de Florencia, Italia, y representa a un patrón y su esposa, lo que indica un carácter conmemorativo. [1]\n   La obra fue probablemente parte de la colección Medici en Florencia, lo que confirma su origen italiano. [2]\n   El retrato tiene una pose casual y una ejecución suelta, con detalles que crean la ilusión de un marco tridimensional, lo que puede reforzar su función conmemorativa.\n\n   **Fuentes**\n   [1] “This casually posed and loosely rendered portrait originally made up part of the lower section, or predella, of an altarpiece for a church in Gambassi, near Florence. The images of the patron, Domenico, and his wife, Lucrezia, flanked additional, now-lost works. The painted strapwork around the portraits, discovered during recent conservation treatment, once formed part of a decorative pattern that would have extended throughout the predella; it indicates how all the individual paintings were interconnected. Andrea del Sarto added highlights at the bottom of each roundel, mimicking the natural light of the church, to create the illusion of the paintings being set within a three-dimensional frame.”\n       https://www.artic.edu/artworks/22270 · CC BY 4.0\n       “Lucrezia di Lippo di Iacopo Guidi”, Andrea del Sarto. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/22270\n   [2] “Probably incorporated into the Gambassi altarpiece, Church of Santi Lorenzo e Onofrio, Benedictine Convent of the Romite, Gambassi (near Volterra), by 1525/28 to no later than 1637 [see Lloyd 1993]. Probably Medici Collection, Palazzo Pitti, Florence, by 1637 [see Conti 1983–84, pp. 162–63]. Possibly Leopold de’Medici (died 1675), Villa del Poggio Imperiale, Florence, by 1655 [Trkulja 1976, p. 12 suggested that they could be identified with entries in the inventories of 1655 and 1692: Due quadretti in tavola, alti s. 7 lari 1/4 dipintovj in tondo di mano d’Andrea del Sarto, in uno il Suo rit., e nell’altro il ritr. della Sua Moglie” (Two small pictures on panel, 7 soldi high by 1/4 [braccio] wide painted in roundels by Andrea del Sarto, in one His portrait, and in the other portrait of His Wife); the measurements (approx. 8 x 6 inches) correspond closely; that the portraits were, by the seventeenth century, thought to be del Sarto and his wife does not necessarily invalidate the argument for their inclusion in the Gambassi altarpiece]. New York art market, 1963; Mrs. Murray S. Danforth, Providence, Rhode Island, 1963–64 [according to Freedberg 1966, p. 35, n. 1]; given to Art Institute, 1964.”\n       https://www.artic.edu/artworks/22270 · CC0 1.0\n\n2. **Portrait of a Woman**\n   Agnolo Bronzino · c. 1550 · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1972.121\n\n   El retrato fue realizado por Agnolo Bronzino, pintor de la corte de Cosimo I de’ Medici en Florencia, Italia. [1]\n   La mujer retratada probablemente estaba afiliada a la corte Medici, lo que sugiere un retrato conmemorativo de una persona de alto estatus en Italia. [1]\n   El retrato enfatiza la riqueza y el estatus social más que la expresión individual, característica común en retratos conmemorativos de la época.\n\n   **Fuentes**\n   [1] “Bronzino was court painter to Cosimo I de’Medici, the Duke of Florence. Though the woman cannot be definitively identified, she was likely affiliated with the Medici court. As in most of the portraits in this gallery, Bronzino emphasizes wealth, status, and courtly refinement above personality or individualized expression. The plain background further accentuates the work’s monumentality and grandeur, despite its small scale. The hand placed against the chest with elegantly spread fingers extends back to an ancient Greek pose of modesty, here emphasizing the proper comportment of a woman of high status. The sitter wears a linen partlet (collar) delicately embroidered in matt stitch, part of which is, like her cuffs, trimmed in fine lace.”\n       https://clevelandart.org/art/1972.121 · CC0 1.0\n\n3. **Portrait of a Woman**\n   Andrea del Sarto · c. 1518 · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1944.92\n\n   El retrato está vinculado a Andrea del Sarto, un pintor florentino, y fue realizado durante su estancia en Francia, pero la vestimenta del retratado es distintivamente francesa. [1]\n   Aunque el artista es italiano, el retrato no corresponde a un contexto conmemorativo en Italia, sino en Francia.\n   No hay suficiente información para afirmar que este retrato sea conmemorativo en Italia, dado que la vestimenta y contexto son franceses.\n\n   **Fuentes**\n   [1] “King Francis I’s deep interest in Italian Renaissance culture manifested itself not only through acquiring important works of art but also by bringing leading architects, scholars, and artists to Paris. Chief among these figures was the Florentine painter Andrea del Sarto. The sitter’s distinctively French hood and black veil suggest that someone talented closely connected to the artist painted this work during his brief time in France.”\n       https://clevelandart.org/art/1944.92 · CC0 1.0\n\n4. **Portrait of a Youth as Saint Sebastian**\n   Marco d'Oggiono · late 1480s · oil on wood, transferred to pressed wood\n   Ficha oficial: https://clevelandart.org/art/1986.9\n\n   El retrato fue pintado por Marco d’Oggiono, un artista milanés que trabajó en el taller de Leonardo da Vinci, en Italia. [1]\n   La imagen representa a un joven vestido con ropas del siglo XV, y no al santo histórico, sugiriendo un retrato contemporáneo con posible carácter conmemorativo. [1]\n   El uso de técnicas leonardescas como el sfumato aporta un estilo refinado al retrato, típico de la pintura italiana renacentista.\n\n   **Fuentes**\n   [1] “Sebastian, a bodyguard for the ancient Roman emperor Diocletian, was shot with arrows and was eventually drowned for his commitment to Christianity. While the arrow alludes to Saint Sebastian, the young man’s clothing dates to the late 1400s, indicating that this is a contemporary portrait, rather than an image of the historical saint. This haunting image was influenced by the paintings of Leonardo da Vinci (1452–1519), particularly in the artist’s use of smoky shadows (called sfumato) to model the flesh. It was painted by Marco d’Oggiono, a Milanese artist who worked in Leonardo’s studio.”\n       https://clevelandart.org/art/1986.9 · CC0 1.0\n\n5. **Portrait of a Young Man**\n   Dosso Dossi · c. 1530 · oil and gold on wood\n   Ficha oficial: https://clevelandart.org/art/1916.803\n\n   El retrato fue realizado por un seguidor de Dosso o de su taller, con conexiones a Ferrara, Italia. [1]\n   El retrato comunica el estatus social y la educación del joven, lo que puede indicar un propósito conmemorativo.\n   La obra fue atribuida inicialmente a Giuliano de Medici, aunque esta identificación fue descartada, pero mantiene su origen italiano. [1]\n\n   **Fuentes**\n   [1] “Like other paintings from the Dossi workshop, this work conveys the sitter's social status and self-confidence. He holds a crumpled letter written in Italian. The words Asto, meaning \"ship mast,\" and mare, meaning \"sea,\" suggest that trade was a topic of this letter. References to anatomy and the word bella imply a discussion of the magnificence of human anatomy, an interest that spread rapidly during the Renaissance. The letter likewise communicates the young man's considerable education. This work was formerly called Portrait of Giuliano de Medici; however, the sitter's lack of resemblance to Giuliano caused art historians to discount this argument. Portrait of a Young Man was earlier attributed to Dosso's brother, Battista, before recently being considered a work by Dosso or a member of his workshop. As first suggested by Roberto Longhi, Portrait of a Young Man is now considered likely to be a work of an unidentified follower of Dossi from Friuli, Italy. The Friulian follower worked from 1510 until after 1530 and had connections to Dossi's hometown of Ferrara, accounting for this work's resemblance to Dossi's style. The dark outlines and large forms of the work are of a later style than Dossi's, suggesting that the artist was a follower rather than Dossi himself.”\n       https://clevelandart.org/art/1916.803 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+      "config_id": "88368002659b48fd",
+      "corrida_id": "ddadf8b4da917e09-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "aic:22270",
+      "cma:146469",
+      "cma:124091",
+      "cma:153406",
+      "cma:97167"
+    ]
+  },
+  "fecha": "2026-11-11T18:49:08+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 1.6546,
+      "generador": 7.8563,
+      "planificador": 0.0006,
+      "recolector_de_evidencia": 0.775,
+      "recuperador_textual": 4.1482,
+      "recuperador_visual": 0.5764,
+      "renderizador": 0.0012,
+      "reranker": 30.9806
+    },
+    "segundos_de_la_corrida": 45.9955
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 2.189,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 4.823,
+      "tokens_in": 58,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.855,
+      "tokens_in": 3242,
+      "tokens_out": 1001
+    },
+    "indice": {
+      "n_items": 319,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.135,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 30.889,
+      "tokens_in": 45002,
+      "tokens_out": 992
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 96,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 1.652,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.855,
+      "tokens_in": 3242,
+      "tokens_out": 1001
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.773,
+      "tokens_in": 29,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 195,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 4.145,
+      "tokens_in": 29,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.576,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 30.889,
+      "tokens_in": 45002,
+      "tokens_out": 992
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+    "config_id": "88368002659b48fd",
+    "corrida_id": "ddadf8b4da917e09-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

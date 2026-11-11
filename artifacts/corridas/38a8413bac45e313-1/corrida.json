@@ -1,0 +1,3297 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (el registro de decisiones). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config/default.toml",
+    "config/c4.toml",
+    "--set proveedor.base_url"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "88368002659b48fd",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c02-visual",
+  "corrida_id": "38a8413bac45e313-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:111728",
+      "categoria": "visual_cromatico",
+      "consulta_id": "c02-visual",
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:4796": [
+        {
+          "artist": "Joseph Mallord William Turner",
+          "artwork_id": "aic:4796",
+          "chunk_index": 0,
+          "fragment_id": "aic:4796::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/4796",
+          "texto": "English artist J. M. W. Turner was fascinated by the sea. Here, a crowded fishing boat rides atop rolling, tumultuous waves. A smaller boat occupied by hucksters, or peddlers, navigates the churning waters as it approaches the larger vessel to negotiate the buying of fish to sell back at port. A steamship chugs along in the background, signaling the new industrial age.\nThis painting dates from a period when the artist was increasingly interested in atmospheric drama and the effects of light, exemplified here by the turbulent storm brewing in the background. The sunlit water in the foreground is dotted with a thick impasto, the heavy application of paint that results in painterly depth and surface texture. For this composition and others, Turner was inspired by the tradition of seventeenth-century Dutch marine painting and its leading painter, Willem van de Velde, whose work was popular in England. The subject itself and compositional elements such as the low horizon line are characteristic of earlier Dutch seascapes, but Turner cleverly laid claim to this painting by signing it on the white flag fluttering high on the mast of the fishing boat that pokes through to the sliver of clear blue sky.",
+          "title": "Fishing Boats with Hucksters Bargaining for Fish"
+        },
+        {
+          "artist": "Joseph Mallord William Turner",
+          "artwork_id": "aic:4796",
+          "chunk_index": 0,
+          "fragment_id": "aic:4796::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/4796",
+          "texto": "Bought from the artist by John Naylor (died 1889), Leighton Hall, Welshpool, Montgomeryshire, 1851 [based on inventory of Naylor’s collection begun in October 1856 citied in Butlin and Joll 1984, p. 145; see also Thornbury 1862]; by descent to Mrs. Naylor, presumably his widow; sold through Dyer and Sons to Thomas Agnew and Sons, London, 1910 [this and the following information according to Butlin and Joll 1984]; sold to Mrs. W. W. Kimball (died 1921), Chicago, 1910; bequeathed to the Art Institute, 1922.",
+          "title": "Fishing Boats with Hucksters Bargaining for Fish"
+        }
+      ],
+      "aic:495": [
+        {
+          "artist": "Reinier Nooms, called Zeeman",
+          "artwork_id": "aic:495",
+          "chunk_index": 0,
+          "fragment_id": "aic:495::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/495",
+          "texto": "The Dutch Republic’s pride in its successful maritime endeavors like fishing, shipbuilding, and foreign trade contributed to the great popularity of marine paintings like this one. Such coastal scenes were one of the most popular landscape genres on the market. Here, the fishing vessels used to catch herring, called herring busses, float atop a glassy sea that stretches to meet the low horizon, disappearing into the expansive sky full of billowing clouds. Atop the ships’ tall masts, Dutch flags flutter in the wind.",
+          "title": "Coast Scene"
+        },
+        {
+          "artist": "Reinier Nooms, called Zeeman",
+          "artwork_id": "aic:495",
+          "chunk_index": 0,
+          "fragment_id": "aic:495::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/495",
+          "texto": "Presumably Prince Anatole Demidoff, Villa San Donato, near Florence (died 1870); by descent to his nephew Prince Paul Demidoff (died 1885) and later to Paul Demidoff’s widow, Helen Troubetskoi, Pratolino, near Florence [the picture’s inclusion in the Demidoff collection according to a letter from Durand-Ruel to Charles L. Hutchinson dated July 29, 1890, Art Institute archives]; included in the group of 13 paintings from the Demidoff collection sold to trustees of the Art Institute through Durand-Ruel, Paris in 1890, as van de Capelle; purchase price reimbursed by Byron L. Smith, 1890.",
+          "title": "Coast Scene"
+        }
+      ],
+      "cma:148368": [
+        {
+          "artist": null,
+          "artwork_id": "cma:148368",
+          "chunk_index": 0,
+          "fragment_id": "cma:148368::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1975.80",
+          "texto": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.",
+          "title": "English Warship Firing a Salute"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:148368",
+          "chunk_index": 0,
+          "fragment_id": "cma:148368::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1975.80",
+          "texto": "-1751 Charles Cavert (1699-1751), Fifth Lord Baltimore\n1751-1771 Frederick Calvert (1731-1771), Sixth Lord Baltimore\n1771-1835 Henry Harford (d. 1771)\n1835-1885 Frederick Paul Harford, Down Place, Windsor, sold, Christie's London, 06/1885\n- Rufus L. Patterson (1872-1943), New York\n[Norton Galleries, New York]\n1968-1975 Mr. and Mrs. Noah L. Butkin, Cleveland, by gift to the Cleveland Museum of Art, 1975",
+          "title": "English Warship Firing a Salute"
+        }
+      ],
+      "cma:153388": [
+        {
+          "artist": "Eugène Boudin",
+          "artwork_id": "cma:153388",
+          "chunk_index": 0,
+          "fragment_id": "cma:153388::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1986.73",
+          "texto": "In 1873, Boudin made his first visit to the important port city of Bordeaux as a guest of the resident art collector Arthur Bourges. Between 1874 and 1876, Boudin made paintings of the city's harbor and docks. This was an especially stimulating time in Boudin's career, as he was invited to exhibit in 1874 with the newly-founded Société anonyme des artistes, soon to be known as the Impressionists. As in many of his views, Boudin concentrated here on the quais or working docks where goods were loaded and unloaded and sailors left in small dinghies for the larger vessels on which they worked. The low horizon line relegates much of the canvas to pure sky, but the soaring vertical and diagonal forms of the masts complement this horizontal thrust and open space. Many contemporaries greatly admired Boudin's ability to paint skies. Here, one can see the way in which he brushed on a tan color, then went over it, probably while it was still wet, with a thin but opaque application of white, to create a fresh, airy quality. For the darker areas representing water, Boudin laid in an olive-green tone.",
+          "title": "View of Bordeaux, from the Quai des Chartrons"
+        },
+        {
+          "artist": "Eugène Boudin",
+          "artwork_id": "cma:153388",
+          "chunk_index": 0,
+          "fragment_id": "cma:153388::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1986.73",
+          "texto": "Pentimenti, the visible trace of earlier painting, appears among the diagonal rigging of the small ship at the left, indicating that the artist did not thoroughly work out his composition before beginning his picture and slightly changed the position of these lines while painting.",
+          "title": "View of Bordeaux, from the Quai des Chartrons"
+        },
+        {
+          "artist": "Eugène Boudin",
+          "artwork_id": "cma:153388",
+          "chunk_index": 0,
+          "fragment_id": "cma:153388::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1986.73",
+          "texto": "(Boudin sale, Hôtel Drouot, Paris, Feb. 28, 1877, no. 30) 1\nAurélien Scholl [1833-1902], Paris 1\n(Sale, Hôtel Drouot, Paris, June 17, 1921 (no. 52), probably sold to Galerie Allard & Noël)\n(Probably Galerie Allard & Noël, Paris) 1\n(E. J. van Wisselingh & Co., Amsterdam) 1\nPrivate collection, Washington, D.C., to Wildenstein & Co.\n(Wildenstein & Co., New York, sold to Emily Blossom)\nEmily Blossom [1913-1991], Cleveland, OH, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "View of Bordeaux, from the Quai des Chartrons"
+        }
+      ],
+      "cma:163456": [
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.",
+          "title": "Harbor of Boston, with the City in the Distance"
+        },
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "For a long time, art historians mistakenly thought the artist’s middle name was Hugh.",
+          "title": "Harbor of Boston, with the City in the Distance"
+        },
+        {
+          "artist": "Fitz Henry Lane",
+          "artwork_id": "cma:163456",
+          "chunk_index": 0,
+          "fragment_id": "cma:163456::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2004.35",
+          "texto": "Dr. James H. Armsby, Albany, NY, acquired 1847; Joanna Perry Armsby March, sister of Dr. J.H. Armsby, Albany, NY; Joanna Armsby March Boyd, daughter of Joanna March, Albany, NY; Alden March Boyd, son of Joanna Armsby March Boyd, Santa Barbara, CA; Joanna March Boyd Bard, daugher of Alden March, Santa Barbara, CA; Henry Travers Newton, Jr, Joanna Newton Riccardi, and Georgia Newton Pulos, grandchildren of J.M.B. Bard, Santa Barbara, CA",
+          "title": "Harbor of Boston, with the City in the Distance"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:163456::description::0"
+            ],
+            "texto": "La obra muestra una escena de agua con luz difusa de la tarde que refleja el sol, evocando una calidad luminosa que podría interpretarse como dorada.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Se observa un puerto con barcos y agua iluminada por la luz del sol en un momento del día que sugiere una luz cálida y dorada.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:163456"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:153388::description::0"
+            ],
+            "texto": "La pintura representa un puerto con agua y cielo, donde el artista aplicó un color bronceado en el cielo y tonos oliva en el agua, creando una atmósfera luminosa y fresca.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La luz en la escena tiene una calidad clara y aireada, con un cielo amplio y tonos cálidos que podrían interpretarse como una luz dorada sobre el agua.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:153388"
+      },
+      {
+        "abstencion": "No hay información suficiente en los fragmentos para afirmar que la escena de agua tenga luz dorada.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:148368::description::0"
+            ],
+            "texto": "La obra representa barcos de guerra ingleses en el mar, pero no se menciona ni se describe una luz dorada o una escena con luz cálida sobre el agua.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "cma:148368"
+      },
+      {
+        "abstencion": "No hay datos que indiquen que la escena tenga luz dorada.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:495::description::0"
+            ],
+            "texto": "La pintura muestra una escena costera con barcos de pesca sobre un mar tranquilo que se extiende hasta un horizonte bajo y un cielo amplio con nubes.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No se menciona ni se observa una luz dorada específica en la escena, aunque el mar es descrito como vidrioso y el cielo es amplio y nublado.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:495"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:4796::description::0"
+            ],
+            "texto": "La obra representa barcos de pesca en un mar agitado con luz solar que ilumina el agua en primer plano, mostrando efectos atmosféricos y de luz.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La luz sobre el agua tiene una calidad luminosa y cálida, con reflejos que podrían interpretarse como luz dorada, acorde con el interés del artista en los efectos de luz.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:4796"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "aic:495",
+          "rank": 1,
+          "score": 0.6206052303314209
+        },
+        {
+          "artwork_id": "aic:4796",
+          "rank": 2,
+          "score": 0.5797475576400757
+        },
+        {
+          "artwork_id": "aic:81535",
+          "rank": 3,
+          "score": 0.5631044507026672
+        },
+        {
+          "artwork_id": "cma:118042",
+          "rank": 4,
+          "score": 0.5572904944419861
+        },
+        {
+          "artwork_id": "aic:84088",
+          "rank": 5,
+          "score": 0.5264996290206909
+        },
+        {
+          "artwork_id": "aic:81574",
+          "rank": 6,
+          "score": 0.5243266224861145
+        },
+        {
+          "artwork_id": "cma:144967",
+          "rank": 7,
+          "score": 0.5148175954818726
+        },
+        {
+          "artwork_id": "cma:119697",
+          "rank": 8,
+          "score": 0.5098556280136108
+        },
+        {
+          "artwork_id": "aic:244013",
+          "rank": 9,
+          "score": 0.5096192359924316
+        },
+        {
+          "artwork_id": "cma:148368",
+          "rank": 10,
+          "score": 0.5057045221328735
+        },
+        {
+          "artwork_id": "aic:39691",
+          "rank": 11,
+          "score": 0.4931045174598694
+        },
+        {
+          "artwork_id": "aic:14309",
+          "rank": 12,
+          "score": 0.4903455972671509
+        },
+        {
+          "artwork_id": "cma:163456",
+          "rank": 13,
+          "score": 0.4855446219444275
+        },
+        {
+          "artwork_id": "cma:137970",
+          "rank": 14,
+          "score": 0.4844628572463989
+        },
+        {
+          "artwork_id": "aic:56905",
+          "rank": 15,
+          "score": 0.4812898635864258
+        },
+        {
+          "artwork_id": "cma:150697",
+          "rank": 16,
+          "score": 0.4749077558517456
+        },
+        {
+          "artwork_id": "aic:16370",
+          "rank": 17,
+          "score": 0.46848994493484497
+        },
+        {
+          "artwork_id": "cma:148966",
+          "rank": 18,
+          "score": 0.46504437923431396
+        },
+        {
+          "artwork_id": "cma:95212",
+          "rank": 19,
+          "score": 0.4609563946723938
+        },
+        {
+          "artwork_id": "cma:138359",
+          "rank": 20,
+          "score": 0.45264512300491333
+        },
+        {
+          "artwork_id": "cma:146199",
+          "rank": 21,
+          "score": 0.4491223096847534
+        },
+        {
+          "artwork_id": "cma:106088",
+          "rank": 22,
+          "score": 0.44841909408569336
+        },
+        {
+          "artwork_id": "aic:258490",
+          "rank": 23,
+          "score": 0.44747495651245117
+        },
+        {
+          "artwork_id": "aic:25865",
+          "rank": 24,
+          "score": 0.4464219808578491
+        },
+        {
+          "artwork_id": "cma:153388",
+          "rank": 25,
+          "score": 0.44394755363464355
+        },
+        {
+          "artwork_id": "cma:74228",
+          "rank": 26,
+          "score": 0.443281352519989
+        },
+        {
+          "artwork_id": "cma:170773",
+          "rank": 27,
+          "score": 0.4419148564338684
+        },
+        {
+          "artwork_id": "aic:181702",
+          "rank": 28,
+          "score": 0.4402869939804077
+        },
+        {
+          "artwork_id": "aic:185185",
+          "rank": 29,
+          "score": 0.4392712116241455
+        },
+        {
+          "artwork_id": "aic:21682",
+          "rank": 30,
+          "score": 0.43842262029647827
+        },
+        {
+          "artwork_id": "aic:70118",
+          "rank": 31,
+          "score": 0.43819475173950195
+        },
+        {
+          "artwork_id": "cma:139815",
+          "rank": 32,
+          "score": 0.43816566467285156
+        },
+        {
+          "artwork_id": "cma:148369",
+          "rank": 33,
+          "score": 0.4379063844680786
+        },
+        {
+          "artwork_id": "aic:8971",
+          "rank": 34,
+          "score": 0.43643277883529663
+        },
+        {
+          "artwork_id": "cma:92844",
+          "rank": 35,
+          "score": 0.4359325170516968
+        },
+        {
+          "artwork_id": "cma:149410",
+          "rank": 36,
+          "score": 0.43208861351013184
+        },
+        {
+          "artwork_id": "cma:126243",
+          "rank": 37,
+          "score": 0.4279700517654419
+        },
+        {
+          "artwork_id": "cma:169673",
+          "rank": 38,
+          "score": 0.4279590845108032
+        },
+        {
+          "artwork_id": "aic:72398",
+          "rank": 39,
+          "score": 0.4275319576263428
+        },
+        {
+          "artwork_id": "aic:238272",
+          "rank": 40,
+          "score": 0.4269500970840454
+        },
+        {
+          "artwork_id": "aic:110761",
+          "rank": 41,
+          "score": 0.4259577989578247
+        },
+        {
+          "artwork_id": "aic:62460",
+          "rank": 42,
+          "score": 0.42547422647476196
+        },
+        {
+          "artwork_id": "cma:144743",
+          "rank": 43,
+          "score": 0.4253547787666321
+        },
+        {
+          "artwork_id": "cma:113202",
+          "rank": 44,
+          "score": 0.42437225580215454
+        },
+        {
+          "artwork_id": "cma:150035",
+          "rank": 45,
+          "score": 0.42309343814849854
+        },
+        {
+          "artwork_id": "cma:155097",
+          "rank": 46,
+          "score": 0.42222708463668823
+        },
+        {
+          "artwork_id": "aic:81540",
+          "rank": 47,
+          "score": 0.4220447540283203
+        },
+        {
+          "artwork_id": "aic:16293",
+          "rank": 48,
+          "score": 0.422041118144989
+        },
+        {
+          "artwork_id": "cma:122338",
+          "rank": 49,
+          "score": 0.42158377170562744
+        },
+        {
+          "artwork_id": "aic:59927",
+          "rank": 50,
+          "score": 0.4213167428970337
+        },
+        {
+          "artwork_id": "cma:159835",
+          "rank": 51,
+          "score": 0.41842955350875854
+        },
+        {
+          "artwork_id": "cma:141639",
+          "rank": 52,
+          "score": 0.41694939136505127
+        },
+        {
+          "artwork_id": "cma:125091",
+          "rank": 53,
+          "score": 0.41694825887680054
+        },
+        {
+          "artwork_id": "cma:152765",
+          "rank": 54,
+          "score": 0.4143702983856201
+        },
+        {
+          "artwork_id": "aic:863",
+          "rank": 55,
+          "score": 0.4141737222671509
+        },
+        {
+          "artwork_id": "cma:79932",
+          "rank": 56,
+          "score": 0.4135414958000183
+        },
+        {
+          "artwork_id": "cma:139730",
+          "rank": 57,
+          "score": 0.41297340393066406
+        },
+        {
+          "artwork_id": "cma:141166",
+          "rank": 58,
+          "score": 0.4124321937561035
+        },
+        {
+          "artwork_id": "cma:156615",
+          "rank": 59,
+          "score": 0.41243159770965576
+        },
+        {
+          "artwork_id": "aic:84096",
+          "rank": 60,
+          "score": 0.4122598171234131
+        },
+        {
+          "artwork_id": "cma:150043",
+          "rank": 61,
+          "score": 0.411396861076355
+        },
+        {
+          "artwork_id": "aic:111441",
+          "rank": 62,
+          "score": 0.4110460877418518
+        },
+        {
+          "artwork_id": "aic:110879",
+          "rank": 63,
+          "score": 0.4109482169151306
+        },
+        {
+          "artwork_id": "cma:124676",
+          "rank": 64,
+          "score": 0.4081825017929077
+        },
+        {
+          "artwork_id": "cma:91231",
+          "rank": 65,
+          "score": 0.4070662260055542
+        },
+        {
+          "artwork_id": "aic:105945",
+          "rank": 66,
+          "score": 0.40683114528656006
+        },
+        {
+          "artwork_id": "aic:111059",
+          "rank": 67,
+          "score": 0.40672188997268677
+        },
+        {
+          "artwork_id": "cma:112625",
+          "rank": 68,
+          "score": 0.40559446811676025
+        },
+        {
+          "artwork_id": "cma:127953",
+          "rank": 69,
+          "score": 0.4049985408782959
+        },
+        {
+          "artwork_id": "aic:256795",
+          "rank": 70,
+          "score": 0.40494513511657715
+        },
+        {
+          "artwork_id": "aic:146953",
+          "rank": 71,
+          "score": 0.4046909213066101
+        },
+        {
+          "artwork_id": "aic:117476",
+          "rank": 72,
+          "score": 0.4045470952987671
+        },
+        {
+          "artwork_id": "cma:150022",
+          "rank": 73,
+          "score": 0.40416663885116577
+        },
+        {
+          "artwork_id": "aic:100351",
+          "rank": 74,
+          "score": 0.4029977321624756
+        },
+        {
+          "artwork_id": "aic:15714",
+          "rank": 75,
+          "score": 0.4027770161628723
+        },
+        {
+          "artwork_id": "aic:100489",
+          "rank": 76,
+          "score": 0.40218567848205566
+        },
+        {
+          "artwork_id": "cma:146011",
+          "rank": 77,
+          "score": 0.40088415145874023
+        },
+        {
+          "artwork_id": "cma:150031",
+          "rank": 78,
+          "score": 0.4007551670074463
+        },
+        {
+          "artwork_id": "aic:5349",
+          "rank": 79,
+          "score": 0.4006613492965698
+        },
+        {
+          "artwork_id": "aic:65709",
+          "rank": 80,
+          "score": 0.40056419372558594
+        },
+        {
+          "artwork_id": "aic:264716",
+          "rank": 81,
+          "score": 0.399471640586853
+        },
+        {
+          "artwork_id": "aic:867",
+          "rank": 82,
+          "score": 0.3993266820907593
+        },
+        {
+          "artwork_id": "aic:16347",
+          "rank": 83,
+          "score": 0.398518443107605
+        },
+        {
+          "artwork_id": "aic:60514",
+          "rank": 84,
+          "score": 0.3980858325958252
+        },
+        {
+          "artwork_id": "aic:80539",
+          "rank": 85,
+          "score": 0.3979789614677429
+        },
+        {
+          "artwork_id": "aic:16539",
+          "rank": 86,
+          "score": 0.3967876434326172
+        },
+        {
+          "artwork_id": "cma:122340",
+          "rank": 87,
+          "score": 0.3965950012207031
+        },
+        {
+          "artwork_id": "aic:497",
+          "rank": 88,
+          "score": 0.39637744426727295
+        },
+        {
+          "artwork_id": "aic:145805",
+          "rank": 89,
+          "score": 0.39516305923461914
+        },
+        {
+          "artwork_id": "aic:84709",
+          "rank": 90,
+          "score": 0.39509618282318115
+        },
+        {
+          "artwork_id": "cma:134620",
+          "rank": 91,
+          "score": 0.3949177861213684
+        },
+        {
+          "artwork_id": "aic:209969",
+          "rank": 92,
+          "score": 0.39472949504852295
+        },
+        {
+          "artwork_id": "aic:14317",
+          "rank": 93,
+          "score": 0.3937528729438782
+        },
+        {
+          "artwork_id": "aic:8360",
+          "rank": 94,
+          "score": 0.3929588794708252
+        },
+        {
+          "artwork_id": "cma:87891",
+          "rank": 95,
+          "score": 0.39189088344573975
+        },
+        {
+          "artwork_id": "aic:212492",
+          "rank": 96,
+          "score": 0.3918299078941345
+        },
+        {
+          "artwork_id": "aic:44892",
+          "rank": 97,
+          "score": 0.39167511463165283
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:148368",
+          "rank": 1,
+          "score": 0.7527085542678833
+        },
+        {
+          "artwork_id": "cma:163456",
+          "rank": 2,
+          "score": 0.7447159290313721
+        },
+        {
+          "artwork_id": "aic:120163",
+          "rank": 3,
+          "score": 0.7233850955963135
+        },
+        {
+          "artwork_id": "aic:495",
+          "rank": 4,
+          "score": 0.7091930508613586
+        },
+        {
+          "artwork_id": "aic:244013",
+          "rank": 5,
+          "score": 0.7008481621742249
+        },
+        {
+          "artwork_id": "aic:4796",
+          "rank": 6,
+          "score": 0.6904165148735046
+        },
+        {
+          "artwork_id": "cma:118042",
+          "rank": 7,
+          "score": 0.6853556632995605
+        },
+        {
+          "artwork_id": "aic:16370",
+          "rank": 8,
+          "score": 0.6648542284965515
+        },
+        {
+          "artwork_id": "cma:150080",
+          "rank": 9,
+          "score": 0.6646657586097717
+        },
+        {
+          "artwork_id": "aic:238272",
+          "rank": 10,
+          "score": 0.6634973287582397
+        },
+        {
+          "artwork_id": "cma:153388",
+          "rank": 11,
+          "score": 0.6620147228240967
+        },
+        {
+          "artwork_id": "cma:140344",
+          "rank": 12,
+          "score": 0.6529742479324341
+        },
+        {
+          "artwork_id": "aic:181702",
+          "rank": 13,
+          "score": 0.6499446630477905
+        },
+        {
+          "artwork_id": "cma:147464",
+          "rank": 14,
+          "score": 0.6459910273551941
+        },
+        {
+          "artwork_id": "aic:30361",
+          "rank": 15,
+          "score": 0.6454843282699585
+        },
+        {
+          "artwork_id": "aic:100060",
+          "rank": 16,
+          "score": 0.6439599394798279
+        },
+        {
+          "artwork_id": "aic:57191",
+          "rank": 17,
+          "score": 0.6386038661003113
+        },
+        {
+          "artwork_id": "aic:185185",
+          "rank": 18,
+          "score": 0.6374379396438599
+        },
+        {
+          "artwork_id": "cma:126243",
+          "rank": 19,
+          "score": 0.6329606771469116
+        },
+        {
+          "artwork_id": "cma:152765",
+          "rank": 20,
+          "score": 0.632790207862854
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "maritime painting depicting ships and whaling scene with golden sunlight, European 17th-century naval art, oil on canvas",
+      "consulta_id": "c02-visual",
+      "consulta_visual": "water scene with ships and people under golden light, warm tones, dynamic composition, maritime activity",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:c736f434c4a48132b6610b3e6e0aa4320162006167b7eddebcd027d8d5a1556e",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "la misma escena de agua pero con luz dorada",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "cdd5063b53c94845",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2091,
+        "tokens_out": 56
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:148368",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 10,
+          "visual": 1
+        },
+        "score_fusionado": 0.75270853
+      },
+      {
+        "artwork_id": "cma:163456",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 13,
+          "visual": 2
+        },
+        "score_fusionado": 0.74471628
+      },
+      {
+        "artwork_id": "aic:495",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 1,
+          "visual": 4
+        },
+        "score_fusionado": 0.70919287
+      },
+      {
+        "artwork_id": "aic:244013",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 9,
+          "visual": 5
+        },
+        "score_fusionado": 0.70084826
+      },
+      {
+        "artwork_id": "aic:4796",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 2,
+          "visual": 6
+        },
+        "score_fusionado": 0.69041653
+      },
+      {
+        "artwork_id": "cma:118042",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 4,
+          "visual": 7
+        },
+        "score_fusionado": 0.68535566
+      },
+      {
+        "artwork_id": "aic:16370",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 17,
+          "visual": 8
+        },
+        "score_fusionado": 0.66485414
+      },
+      {
+        "artwork_id": "aic:238272",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 40,
+          "visual": 10
+        },
+        "score_fusionado": 0.66349717
+      },
+      {
+        "artwork_id": "cma:153388",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 25,
+          "visual": 11
+        },
+        "score_fusionado": 0.66201454
+      },
+      {
+        "artwork_id": "aic:181702",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 28,
+          "visual": 13
+        },
+        "score_fusionado": 0.64994461
+      },
+      {
+        "artwork_id": "aic:185185",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 29,
+          "visual": 18
+        },
+        "score_fusionado": 0.63743785
+      },
+      {
+        "artwork_id": "cma:126243",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 37,
+          "visual": 19
+        },
+        "score_fusionado": 0.63296055
+      },
+      {
+        "artwork_id": "cma:152765",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 54,
+          "visual": 20
+        },
+        "score_fusionado": 0.63279033
+      },
+      {
+        "artwork_id": "cma:169673",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.63249315
+      },
+      {
+        "artwork_id": "aic:25865",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.63182011
+      },
+      {
+        "artwork_id": "aic:81574",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.62398926
+      },
+      {
+        "artwork_id": "aic:81535",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.62027884
+      },
+      {
+        "artwork_id": "cma:155097",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.6076665
+      },
+      {
+        "artwork_id": "cma:119697",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.60270299
+      },
+      {
+        "artwork_id": "cma:144967",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.6004196
+      },
+      {
+        "artwork_id": "cma:122340",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.59996397
+      },
+      {
+        "artwork_id": "aic:72398",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.5982563
+      },
+      {
+        "artwork_id": "cma:148966",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.59003292
+      },
+      {
+        "artwork_id": "cma:139815",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.58589756
+      },
+      {
+        "artwork_id": "cma:156615",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.58446189
+      },
+      {
+        "artwork_id": "aic:117476",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.57091526
+      },
+      {
+        "artwork_id": "aic:39691",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.5702614
+      },
+      {
+        "artwork_id": "aic:100489",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.56399644
+      },
+      {
+        "artwork_id": "cma:106088",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.56176594
+      },
+      {
+        "artwork_id": "aic:497",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.56128964
+      },
+      {
+        "artwork_id": "cma:125091",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.55726436
+      },
+      {
+        "artwork_id": "cma:150035",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.55195441
+      },
+      {
+        "artwork_id": "aic:8971",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.54897957
+      },
+      {
+        "artwork_id": "aic:59927",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.54877508
+      },
+      {
+        "artwork_id": "aic:863",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.54669606
+      },
+      {
+        "artwork_id": "cma:141166",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.54571698
+      },
+      {
+        "artwork_id": "aic:81540",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.54359777
+      },
+      {
+        "artwork_id": "aic:145805",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.54220913
+      },
+      {
+        "artwork_id": "aic:209969",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.53890299
+      },
+      {
+        "artwork_id": "cma:150697",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.53726114
+      },
+      {
+        "artwork_id": "aic:62460",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.53604691
+      },
+      {
+        "artwork_id": "aic:16347",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.53209745
+      },
+      {
+        "artwork_id": "cma:95212",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.52926828
+      },
+      {
+        "artwork_id": "cma:134620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.528747
+      },
+      {
+        "artwork_id": "aic:258490",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.52760911
+      },
+      {
+        "artwork_id": "aic:14309",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.52605132
+      },
+      {
+        "artwork_id": "aic:84096",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.51746692
+      },
+      {
+        "artwork_id": "aic:111441",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.516911
+      },
+      {
+        "artwork_id": "aic:16293",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.51666869
+      },
+      {
+        "artwork_id": "aic:867",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.51487247
+      },
+      {
+        "artwork_id": "cma:79932",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.51431023
+      },
+      {
+        "artwork_id": "aic:84088",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.51421128
+      },
+      {
+        "artwork_id": "aic:110761",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.5059143
+      },
+      {
+        "artwork_id": "cma:159835",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.5037907
+      },
+      {
+        "artwork_id": "aic:56905",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.50344719
+      },
+      {
+        "artwork_id": "cma:74228",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.49800611
+      },
+      {
+        "artwork_id": "aic:146953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.49130717
+      },
+      {
+        "artwork_id": "aic:212492",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 96
+        },
+        "score_fusionado": 0.48943513
+      },
+      {
+        "artwork_id": "cma:141639",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.48828714
+      },
+      {
+        "artwork_id": "cma:150031",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.48690154
+      },
+      {
+        "artwork_id": "aic:16539",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.4852225
+      },
+      {
+        "artwork_id": "aic:8360",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.48217272
+      },
+      {
+        "artwork_id": "aic:111059",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.48180003
+      },
+      {
+        "artwork_id": "aic:84709",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.48038791
+      },
+      {
+        "artwork_id": "aic:21682",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.48032382
+      },
+      {
+        "artwork_id": "cma:92844",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.4672549
+      },
+      {
+        "artwork_id": "cma:150043",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.46711507
+      },
+      {
+        "artwork_id": "cma:138359",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.46528424
+      },
+      {
+        "artwork_id": "aic:5349",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.46148349
+      },
+      {
+        "artwork_id": "aic:70118",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.46081829
+      },
+      {
+        "artwork_id": "cma:150022",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.4557849
+      },
+      {
+        "artwork_id": "aic:256795",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.45574171
+      },
+      {
+        "artwork_id": "cma:146199",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.45377372
+      },
+      {
+        "artwork_id": "aic:264716",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.45233994
+      },
+      {
+        "artwork_id": "cma:124676",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.45216252
+      },
+      {
+        "artwork_id": "cma:148369",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.45149921
+      },
+      {
+        "artwork_id": "cma:127953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.45119777
+      },
+      {
+        "artwork_id": "cma:91231",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.45058316
+      },
+      {
+        "artwork_id": "aic:60514",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.44459461
+      },
+      {
+        "artwork_id": "cma:113202",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.4407188
+      },
+      {
+        "artwork_id": "cma:87891",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.43904403
+      },
+      {
+        "artwork_id": "aic:44892",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 97
+        },
+        "score_fusionado": 0.4369068
+      },
+      {
+        "artwork_id": "cma:170773",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.43443209
+      },
+      {
+        "artwork_id": "cma:137970",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.42647697
+      },
+      {
+        "artwork_id": "aic:65709",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.42526033
+      },
+      {
+        "artwork_id": "aic:80539",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.42374685
+      },
+      {
+        "artwork_id": "aic:100351",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.42349748
+      },
+      {
+        "artwork_id": "cma:146011",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.42150066
+      },
+      {
+        "artwork_id": "cma:149410",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.4175074
+      },
+      {
+        "artwork_id": "cma:139730",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.41732265
+      },
+      {
+        "artwork_id": "cma:122338",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.41401214
+      },
+      {
+        "artwork_id": "cma:112625",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.41061721
+      },
+      {
+        "artwork_id": "aic:105945",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.4037459
+      },
+      {
+        "artwork_id": "aic:15714",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.39567053
+      },
+      {
+        "artwork_id": "aic:14317",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.3814423
+      },
+      {
+        "artwork_id": "cma:144743",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.37892573
+      },
+      {
+        "artwork_id": "aic:110879",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.37752917
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:163456",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con luz dorada, cumpliendo el pedido de la luz, pero no es la misma escena ni composición que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2373,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:153388",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no es la misma escena ni tiene luz dorada, sino una luz más neutra y fría, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3081,
+          "tokens_out": 53
+        }
+      },
+      {
+        "artwork_id": "cma:148368",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena con barcos en el agua, pero no es la misma escena ni tiene luz dorada, sino una luz más neutra y fría, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3057,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "aic:495",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no tiene la luz dorada que pide el usuario, sino una luz más neutra y fría; cumple con la escena de agua pero no con el cambio de luz solicitado.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2840,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "aic:4796",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena con agua y barcos, pero no es la misma escena ni tiene una luz dorada evidente, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2451,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:118042",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no tiene la luz dorada que pide el usuario, sino una luz más neutra y fría, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2602,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:16370",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no tiene la luz dorada que pide el usuario, además la escena es diferente y no mantiene la misma atmósfera ni composición.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2271,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:238272",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua pero no tiene luz dorada, sino una iluminación más neutra y fría, por lo que no cumple con el pedido de cambiar la luz a dorada.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2363,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:181702",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con ganado y un pastor, diferente a la escena marítima de la primera imagen, y no presenta una luz dorada evidente, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2422,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:185185",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua, pero no es la misma escena ni tiene luz dorada, sino una luz más neutra y fría, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2407,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:25865",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con pescadores, pero no es la misma escena ni tiene luz dorada, sino una luz más neutra y oscura, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2267,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:81574",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no es la misma escena ni tiene luz dorada, sino una luz grisácea y fría, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2402,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:81535",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua con barcos, pero no es la misma escena ni tiene luz dorada, sino una luz fría y neutra, por lo que cumple de costado el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2451,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:155097",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena con agua y un bote, pero no tiene luz dorada, sino una iluminación tenue y monocromática; además, la escena es muy diferente a la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2650,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "cma:144967",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena de agua, pero no es la misma escena ni tiene luz dorada, sino una luz más fría y oscura; por eso cumple de costado al no respetar el pedido principal.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2947,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:244013",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena marítima con un barco en tormenta, no la misma escena de agua ni con luz dorada, que es lo que pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2313,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "cma:126243",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra la misma escena de agua, ni presenta luz dorada; la iluminación es oscura y dramática, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3202,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "cma:152765",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra una escena acuática diferente, sin la misma composición ni elementos de la primera imagen, y no presenta luz dorada, sino una iluminación neutra y fría.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3065,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "cma:169673",
+        "estado": "puntuado",
+        "justificacion": "La candidata no muestra una escena de agua similar ni presenta luz dorada; es un paisaje distinto sin relación con el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3108,
+          "tokens_out": 37
+        }
+      },
+      {
+        "artwork_id": "cma:119697",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra barcos en el agua pero no es la misma escena ni tiene luz dorada, sino una luz neutra y fría, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3077,
+          "tokens_out": 44
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c02-visual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:163456",
+          "ficha": {
+            "artist": "Fitz Henry Lane",
+            "culture": "United States",
+            "date_display": "c. 1846–47",
+            "medium": "oil on canvas",
+            "title": "Harbor of Boston, with the City in the Distance",
+            "year": 1846
+          },
+          "lineas": [
+            "La obra muestra una escena de agua con luz difusa de la tarde que refleja el sol, evocando una calidad luminosa que podría interpretarse como dorada. [1]",
+            "Se observa un puerto con barcos y agua iluminada por la luz del sol en un momento del día que sugiere una luz cálida y dorada."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Fitz Henry Lane",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:163456::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2004.35",
+              "texto_citado": "In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.",
+              "title": "Harbor of Boston, with the City in the Distance"
+            }
+          ],
+          "score": 0.7447162767807607,
+          "source_url": "https://clevelandart.org/art/2004.35"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:153388",
+          "ficha": {
+            "artist": "Eugène Boudin",
+            "culture": "France",
+            "date_display": "1874",
+            "medium": "oil on fabric",
+            "title": "View of Bordeaux, from the Quai des Chartrons",
+            "year": 1874
+          },
+          "lineas": [
+            "La pintura representa un puerto con agua y cielo, donde el artista aplicó un color bronceado en el cielo y tonos oliva en el agua, creando una atmósfera luminosa y fresca. [1]",
+            "La luz en la escena tiene una calidad clara y aireada, con un cielo amplio y tonos cálidos que podrían interpretarse como una luz dorada sobre el agua."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Eugène Boudin",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:153388::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1986.73",
+              "texto_citado": "In 1873, Boudin made his first visit to the important port city of Bordeaux as a guest of the resident art collector Arthur Bourges. Between 1874 and 1876, Boudin made paintings of the city's harbor and docks. This was an especially stimulating time in Boudin's career, as he was invited to exhibit in 1874 with the newly-founded Société anonyme des artistes, soon to be known as the Impressionists. As in many of his views, Boudin concentrated here on the quais or working docks where goods were loaded and unloaded and sailors left in small dinghies for the larger vessels on which they worked. The low horizon line relegates much of the canvas to pure sky, but the soaring vertical and diagonal forms of the masts complement this horizontal thrust and open space. Many contemporaries greatly admired Boudin's ability to paint skies. Here, one can see the way in which he brushed on a tan color, then went over it, probably while it was still wet, with a thin but opaque application of white, to create a fresh, airy quality. For the darker areas representing water, Boudin laid in an olive-green tone.",
+              "title": "View of Bordeaux, from the Quai des Chartrons"
+            }
+          ],
+          "score": 0.6620145376024538,
+          "source_url": "https://clevelandart.org/art/1986.73"
+        },
+        {
+          "abstencion": "No hay información suficiente en los fragmentos para afirmar que la escena de agua tenga luz dorada.",
+          "artwork_id": "cma:148368",
+          "ficha": {
+            "culture": "Netherlands",
+            "date_display": "1690",
+            "medium": "oil on canvas",
+            "title": "English Warship Firing a Salute",
+            "year": 1690
+          },
+          "lineas": [
+            "La obra representa barcos de guerra ingleses en el mar, pero no se menciona ni se describe una luz dorada o una escena con luz cálida sobre el agua. [1]"
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:148368::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1975.80",
+              "texto_citado": "Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.",
+              "title": "English Warship Firing a Salute"
+            }
+          ],
+          "score": 0.7527085260600747,
+          "source_url": "https://clevelandart.org/art/1975.80"
+        },
+        {
+          "abstencion": "No hay datos que indiquen que la escena tenga luz dorada.",
+          "artwork_id": "aic:495",
+          "ficha": {
+            "artist": "Reinier Nooms, called Zeeman",
+            "culture": "Netherlands",
+            "date_display": "c. 1655",
+            "medium": "Oil on canvas",
+            "style": "17th Century",
+            "title": "Coast Scene",
+            "year": 1645
+          },
+          "lineas": [
+            "La pintura muestra una escena costera con barcos de pesca sobre un mar tranquilo que se extiende hasta un horizonte bajo y un cielo amplio con nubes. [1]",
+            "No se menciona ni se observa una luz dorada específica en la escena, aunque el mar es descrito como vidrioso y el cielo es amplio y nublado."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Reinier Nooms, called Zeeman",
+              "atribucion": "“Coast Scene”, Reinier Nooms, called Zeeman. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/495",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:495::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/495",
+              "texto_citado": "The Dutch Republic’s pride in its successful maritime endeavors like fishing, shipbuilding, and foreign trade contributed to the great popularity of marine paintings like this one. Such coastal scenes were one of the most popular landscape genres on the market. Here, the fishing vessels used to catch herring, called herring busses, float atop a glassy sea that stretches to meet the low horizon, disappearing into the expansive sky full of billowing clouds. Atop the ships’ tall masts, Dutch flags flutter in the wind.",
+              "title": "Coast Scene"
+            }
+          ],
+          "score": 0.7091928746528038,
+          "source_url": "https://www.artic.edu/artworks/495"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:4796",
+          "ficha": {
+            "artist": "Joseph Mallord William Turner",
+            "culture": "England",
+            "date_display": "1837–38",
+            "medium": "Oil on canvas",
+            "style": "19th century",
+            "title": "Fishing Boats with Hucksters Bargaining for Fish",
+            "year": 1832
+          },
+          "lineas": [
+            "La obra representa barcos de pesca en un mar agitado con luz solar que ilumina el agua en primer plano, mostrando efectos atmosféricos y de luz. [1]",
+            "La luz sobre el agua tiene una calidad luminosa y cálida, con reflejos que podrían interpretarse como luz dorada, acorde con el interés del artista en los efectos de luz."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Joseph Mallord William Turner",
+              "atribucion": "“Fishing Boats with Hucksters Bargaining for Fish”, Joseph Mallord William Turner. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/4796",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:4796::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/4796",
+              "texto_citado": "English artist J. M. W. Turner was fascinated by the sea. Here, a crowded fishing boat rides atop rolling, tumultuous waves. A smaller boat occupied by hucksters, or peddlers, navigates the churning waters as it approaches the larger vessel to negotiate the buying of fish to sell back at port. A steamship chugs along in the background, signaling the new industrial age.\nThis painting dates from a period when the artist was increasingly interested in atmospheric drama and the effects of light, exemplified here by the turbulent storm brewing in the background. The sunlit water in the foreground is dotted with a thick impasto, the heavy application of paint that results in painterly depth and surface texture. For this composition and others, Turner was inspired by the tradition of seventeenth-century Dutch marine painting and its leading painter, Willem van de Velde, whose work was popular in England. The subject itself and compositional elements such as the low horizon line are characteristic of earlier Dutch seascapes, but Turner cleverly laid claim to this painting by signing it on the white flag fluttering high on the mast of the fishing boat that pokes through to the sliver of clear blue sky.",
+              "title": "Fishing Boats with Hucksters Bargaining for Fish"
+            }
+          ],
+          "score": 0.6904165251312753,
+          "source_url": "https://www.artic.edu/artworks/4796"
+        }
+      ],
+      "render": "1. **Harbor of Boston, with the City in the Distance**\n   Fitz Henry Lane · c. 1846–47 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/2004.35\n\n   La obra muestra una escena de agua con luz difusa de la tarde que refleja el sol, evocando una calidad luminosa que podría interpretarse como dorada. [1]\n   Se observa un puerto con barcos y agua iluminada por la luz del sol en un momento del día que sugiere una luz cálida y dorada.\n\n   **Fuentes**\n   [1] “In this late afternoon view of Boston Harbor, Lane masterfully evoked the diffuse quality of sunlight reflecting off water. The artist was a son of a shipbuilder, so perhaps it is not surprising that his renderings of ships and their intricate riggings are painstakingly accurate. On the far left side of the painting, evolving technology appears in the guise of a steamboat, which ferried passengers between Boston and Gloucester.”\n       https://clevelandart.org/art/2004.35 · CC0 1.0\n\n2. **View of Bordeaux, from the Quai des Chartrons**\n   Eugène Boudin · 1874 · oil on fabric\n   Ficha oficial: https://clevelandart.org/art/1986.73\n\n   La pintura representa un puerto con agua y cielo, donde el artista aplicó un color bronceado en el cielo y tonos oliva en el agua, creando una atmósfera luminosa y fresca. [1]\n   La luz en la escena tiene una calidad clara y aireada, con un cielo amplio y tonos cálidos que podrían interpretarse como una luz dorada sobre el agua.\n\n   **Fuentes**\n   [1] “In 1873, Boudin made his first visit to the important port city of Bordeaux as a guest of the resident art collector Arthur Bourges. Between 1874 and 1876, Boudin made paintings of the city's harbor and docks. This was an especially stimulating time in Boudin's career, as he was invited to exhibit in 1874 with the newly-founded Société anonyme des artistes, soon to be known as the Impressionists. As in many of his views, Boudin concentrated here on the quais or working docks where goods were loaded and unloaded and sailors left in small dinghies for the larger vessels on which they worked. The low horizon line relegates much of the canvas to pure sky, but the soaring vertical and diagonal forms of the masts complement this horizontal thrust and open space. Many contemporaries greatly admired Boudin's ability to paint skies. Here, one can see the way in which he brushed on a tan color, then went over it, probably while it was still wet, with a thin but opaque application of white, to create a fresh, airy quality. For the darker areas representing water, Boudin laid in an olive-green tone.”\n       https://clevelandart.org/art/1986.73 · CC0 1.0\n\n3. **English Warship Firing a Salute**\n   1690 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1975.80\n\n   La obra representa barcos de guerra ingleses en el mar, pero no se menciona ni se describe una luz dorada o una escena con luz cálida sobre el agua. [1]\n   No hay información suficiente en los fragmentos para afirmar que la escena de agua tenga luz dorada.\n\n   **Fuentes**\n   [1] “Van de Velde and his father picked up their lives in Amsterdam in 1672 and moved to England to paint for the king. Their paintings of the Royal Navy’s massive ships celebrated England’s power in war and trade.”\n       https://clevelandart.org/art/1975.80 · CC0 1.0\n\n4. **Coast Scene**\n   Reinier Nooms, called Zeeman · c. 1655 · Oil on canvas · 17th Century\n   Ficha oficial: https://www.artic.edu/artworks/495\n\n   La pintura muestra una escena costera con barcos de pesca sobre un mar tranquilo que se extiende hasta un horizonte bajo y un cielo amplio con nubes. [1]\n   No se menciona ni se observa una luz dorada específica en la escena, aunque el mar es descrito como vidrioso y el cielo es amplio y nublado.\n   No hay datos que indiquen que la escena tenga luz dorada.\n\n   **Fuentes**\n   [1] “The Dutch Republic’s pride in its successful maritime endeavors like fishing, shipbuilding, and foreign trade contributed to the great popularity of marine paintings like this one. Such coastal scenes were one of the most popular landscape genres on the market. Here, the fishing vessels used to catch herring, called herring busses, float atop a glassy sea that stretches to meet the low horizon, disappearing into the expansive sky full of billowing clouds. Atop the ships’ tall masts, Dutch flags flutter in the wind.”\n       https://www.artic.edu/artworks/495 · CC BY 4.0\n       “Coast Scene”, Reinier Nooms, called Zeeman. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/495\n\n5. **Fishing Boats with Hucksters Bargaining for Fish**\n   Joseph Mallord William Turner · 1837–38 · Oil on canvas · 19th century\n   Ficha oficial: https://www.artic.edu/artworks/4796\n\n   La obra representa barcos de pesca en un mar agitado con luz solar que ilumina el agua en primer plano, mostrando efectos atmosféricos y de luz. [1]\n   La luz sobre el agua tiene una calidad luminosa y cálida, con reflejos que podrían interpretarse como luz dorada, acorde con el interés del artista en los efectos de luz.\n\n   **Fuentes**\n   [1] “English artist J. M. W. Turner was fascinated by the sea. Here, a crowded fishing boat rides atop rolling, tumultuous waves. A smaller boat occupied by hucksters, or peddlers, navigates the churning waters as it approaches the larger vessel to negotiate the buying of fish to sell back at port. A steamship chugs along in the background, signaling the new industrial age.\nThis painting dates from a period when the artist was increasingly interested in atmospheric drama and the effects of light, exemplified here by the turbulent storm brewing in the background. The sunlit water in the foreground is dotted with a thick impasto, the heavy application of paint that results in painterly depth and surface texture. For this composition and others, Turner was inspired by the tradition of seventeenth-century Dutch marine painting and its leading painter, Willem van de Velde, whose work was popular in England. The subject itself and compositional elements such as the low horizon line are characteristic of earlier Dutch seascapes, but Turner cleverly laid claim to this painting by signing it on the white flag fluttering high on the mast of the fishing boat that pokes through to the sliver of clear blue sky.”\n       https://www.artic.edu/artworks/4796 · CC BY 4.0\n       “Fishing Boats with Hucksters Bargaining for Fish”, Joseph Mallord William Turner. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/4796\n"
+    },
+    "sellos": {
+      "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+      "config_id": "88368002659b48fd",
+      "corrida_id": "38a8413bac45e313-1",
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:163456",
+      "cma:153388",
+      "cma:148368",
+      "aic:495",
+      "aic:4796"
+    ]
+  },
+  "fecha": "2026-11-11T18:39:36+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.1156,
+      "generador": 5.5444,
+      "planificador": 0.0008,
+      "recolector_de_evidencia": 0.5856,
+      "recuperador_textual": 0.4873,
+      "recuperador_visual": 0.1114,
+      "renderizador": 0.0005,
+      "reranker": 33.7289
+    },
+    "segundos_de_la_corrida": 40.5771
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.196,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.974,
+      "tokens_in": 48,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.544,
+      "tokens_in": 3671,
+      "tokens_out": 739
+    },
+    "indice": {
+      "n_items": 326,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.124,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 33.245,
+      "tokens_in": 53349,
+      "tokens_out": 958
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 99,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.114,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.544,
+      "tokens_in": 3671,
+      "tokens_out": 739
+    },
+    "recolector_de_evidencia": {
+      "n_items": 13,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.584,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 198,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.486,
+      "tokens_in": 24,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.111,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 33.245,
+      "tokens_in": 53349,
+      "tokens_out": 958
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para **ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna, y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "cca76d61adf55e0b542b9bb5e84a9eae331bf98c",
+    "config_id": "88368002659b48fd",
+    "corrida_id": "38a8413bac45e313-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
