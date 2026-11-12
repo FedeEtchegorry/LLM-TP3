@@ -317,6 +317,24 @@ computa después de congelar. el pipeline base completo y andando no se rompe �
 📌 **La etiqueta describe, el `config_id` identifica.** Un brazo de barrido puede llevar la
 etiqueta `C3` y **no** ser la fila `C3` publicada; pasa, y en §5.4 cuesta una cifra.
 
+### 3.4 La interfaz local
+
+`ui/app.py` es una interfaz Gradio. Se instala con
+`poetry install --with modelos,ui` y se abre con `poetry run python ui/app.py` en
+`http://127.0.0.1:7860`. Arma el pipeline
+con el mismo armador y las mismas capas `config/c0.toml … c4.toml` que `tp3-responder adhoc`, sobre
+la variante de índice congelada.
+
+- **Consultar:** Se sube una imagen (o se carga una de las 30 consultas del set) y se escribe el
+  pedido. Un selector elige `C0`-`C4`, o sea la escalera de la ablación, y en `C3` y `C4` otro elige
+  entre la cascada y RRF. `C1` a `C4` gastan, y por eso `C3` y `C4` piden confirmar el gasto. `C0` usa
+  solo CLIP local y no gasta.
+- **Muestra por obra:** La foto, la ficha del museo, el puesto que le dio cada rama, la nota del
+  reranker con su justificación, la explicación y cada cita con su licencia y su atribución.
+  Debajo, el plan del pre-retrieval y el costo y los tokens por etapa.
+- **Usar ejecución guardada:** Abre cualquier corrida de `artifacts/corridas` sin gastar, así que
+  sirve para mostrar el resultado sin llamar al proveedor.
+
 ---
 
 ## 4. Los resultados comparados
@@ -1581,7 +1599,7 @@ las cifras del §5.5.
 | el criterio de la entrega en fecha y en formato | ⚠️ **Está en riesgo por una dependencia externa, no por el contenido.** El entregable es **el hash de un commit** y los artefactos **no van al remoto** (el repo publicado); lo que compensa eso es la promesa de regeneración del `README`, **y con el tope del proxy agotado esos comandos no corren**. No falla hoy, pero la afirmación del `README` tiene que llevar su condición |
 | el dataset documentado y reproducible | ⚠️ **Se cumple en `diseno-sdd` y se degrada en el repo entregado**, por el repo publicado. Las cifras existen y las emite el pipeline; lo que no existe en `main` es el artefacto que las versiona |
 | el criterio de honestidad | ⚠️ **Medido — y el veredicto cambió el 1/11, después de que el resto del informe estuviera escrito.** el conteo de referencias colgadas se cumple con umbral duro (**0 referencias colgadas**: 0/164 en las cinco filas, 0/27 en la muestra). **la revisión humana y la cita que respalda la afirmación ya tienen número** (§5.5, artefacto `revision-explicaciones/m13b-c1-5x5.json`): clasificación **39/51**, la cita se sostiene **20/27** (+4 parciales, 3 que no), la observación es defendible **12/16** (2 discutibles, 2 falsas). 🔴 **Las cifras van con dos salvedades que no son opcionales:** de las 6 fallas de tipo **2 están forzadas por el contrato** —la `ficha` no es citable—, así que **esa fracción mide el esquema de evidencia y no al modelo**; y el `%` de *separación observación / dato* de `la evaluación §D` **corta binario sobre tres clases**. ⚠️ **Y la letra falla en quién anota:** el criterio de honestidad dice *"muestra **humana**"* y la anotó IA (la anotación por IA), igual que los 379 juicios. **Entonces: el criterio pasó de *sin medir* a *medido con el resultado publicado y dos salvedades*, no a *cumplido*** |
-| el objetivo de la interfaz | ✅ **No se cumple y está bien que no se cumpla.** La UI murió por su disparador: el corte de la interfaz pedía la ronda piloto anotada por **al menos dos personas** y se estableció que no lo está. Es un extra, el disparador era objetivo, y **se cerró sin reabrir la discusión** — que era exactamente para lo que el disparador existía |
+| el objetivo de la interfaz | ✅ **Se cumple** La UI se construyó como interfaz local de consulta. |
 | el valor del juez | **No se cumple, y es un objetivo, no un criterio.** `κ` juez-consenso = **0,414 < 0,6**. la evaluación lo dice: *un κ bajo honestamente reportado es un hallazgo* |
 
 **Lo que sí cumplimos sin asterisco:** el pipeline base completo y andando (tag `v1`, 30/30, **self-retrieval 20/20 con `α = 1`**),
