@@ -46,6 +46,9 @@ langchain-text-splitters = "^1.1"
 umap-learn = "^0.5"
 matplotlib = "^3.10"
 
+[tool.poetry.group.ui.dependencies]
+gradio = "^6.31"
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0"
 nbclient = "^0.10"
