@@ -14,7 +14,6 @@ import io
 import json
 import os
 import re
-from collections import OrderedDict
 from functools import lru_cache
 from pathlib import Path
 
@@ -25,6 +24,7 @@ except ModuleNotFoundError:
 
 import gradio as gr
 
+import comparar  # ui/ queda en sys.path al correr python ui/app.py
 from tp3_rag.dominio.consulta import EntradaDeConsulta
 from tp3_rag.dominio.corrida import AlmacenDeCorridas
 from tp3_rag.dominio.plan import AlmacenDePlanes
@@ -39,13 +39,7 @@ from tp3_rag.puertos.almacenamiento import AlmacenamientoEnArchivos
 
 VARIANTE_ID = "c3274567371ff42b"  # variante de índice congelada
 CAPAS = {"C0": "config/c0.toml", "C1": None, "C2": "config/c2.toml", "C3": "config/c3.toml", "C4": "config/c4.toml"}
-ROTULOS = {
-    "C0": "C0  Solo imagen",
-    "C1": "C1  Pedido y evidencia citada",
-    "C2": "C2  Agrega el planificador",
-    "C3": "C3  Agrega la rama de texto",
-    "C4": "C4  Agrega el reranker",
-}
+ROTULOS = {k: f"{k}  {v}" for k, v in comparar.NOMBRES.items()}
 NOTAS = {
     "C0": "Usa solo CLIP local y no lee el pedido.",
     "C1": "Una llamada de generación con el pedido y la evidencia citada.",
@@ -61,58 +55,60 @@ IMAGENES = RAÍZ_DEL_REPO / "data" / "imagenes"
 CORRIDAS = RAÍZ_DEL_REPO / "artifacts" / "corridas"
 UMBRAL_PASA, UMBRAL_BUENO, MIN_QUE_PASAN = 5, 8, 3
 
-MAX_MONTAJES = 1
-_montajes: OrderedDict[tuple, tuple] = OrderedDict()
+COMPARACIONES = RAÍZ_DEL_REPO / "artifacts" / "comparaciones"
+
+_compartido: dict = {}
+_ejecutores: dict[tuple, EjecutorDeEtapas] = {}
 
 
-def _cerrar_uno(m, obs) -> None:
-    m.cerrar()
-    if hasattr(obs.trazas, "cerrar"):
-        obs.trazas.cerrar()
+def _montaje() -> tuple:
+    if not _compartido:
+        # Las capas c0 a c4 solo cambian la cadena de etapas, y la C4 las tiene todas: su montaje sirve a las cinco.
+        cfg = Configuración.cargar(archivo=RAÍZ_DEL_REPO / CAPAS["C4"])
+        almacén = AlmacenamientoEnArchivos(RAÍZ_DEL_REPO)
+        credenciales = Credenciales.desde_entorno()
+        obs = Observabilidad(silencioso=True)
+        obs.trazas = trazas_mod.armar(cfg, credenciales)
+        m = mnt.montar(cfg, almacén, variante_id=VARIANTE_ID, observabilidad=obs, credenciales=credenciales)
+        _compartido.update(m=m, obs=obs, almacén=almacén)
+    return _compartido["m"], _compartido["obs"], _compartido["almacén"]
 
 
 def _armar(nombre: str, fusion: str = "cascada"):
     fusion = fusion if (fusion == "rrf" and nombre in AVANZADAS) else "cascada"
     clave = (nombre, fusion)
-    if clave in _montajes:
-        _montajes.move_to_end(clave)
-        return _montajes[clave][0]
-    while len(_montajes) >= MAX_MONTAJES:
-        _cerrar_uno(*_montajes.popitem(last=False)[1][1:])
-    capa = CAPAS[nombre]
-    overrides = dict(RRF) if fusion == "rrf" else {}
-    cfg = Configuración.cargar(archivo=RAÍZ_DEL_REPO / capa if capa else None, overrides=overrides)
-    almacén = AlmacenamientoEnArchivos(RAÍZ_DEL_REPO)
-    credenciales = Credenciales.desde_entorno()
-    obs = Observabilidad(silencioso=True)
-    obs.trazas = trazas_mod.armar(cfg, credenciales)
-    ArmadorDePipeline(cfg).validar()
-    m = mnt.montar(cfg, almacén, variante_id=VARIANTE_ID, observabilidad=obs, credenciales=credenciales)
-    pipeline = ArmadorDePipeline(
-        cfg,
-        puerto_de_imagen=m.puerto_de_imagen,
-        indice=m.indice,
-        puerto_de_llm=m.puerto_de_llm,
-        embebedor_de_texto=m.embebedor_de_texto,
-        almacen_de_planes=AlmacenDePlanes(almacén, cfg["rutas.artefactos_planes"]),
-        bytes_de_la_imagen=mnt.bytes_del_corpus(cfg, almacén),
-        observabilidad=obs,
-    ).armar()
-    ejecutor = EjecutorDeEtapas(
-        cfg,
-        pipeline=pipeline,
-        almacen_de_corridas=AlmacenDeCorridas(almacén, cfg["rutas.artefactos_corridas"]),
-        observabilidad=obs,
-        variante_id=m.variante_id,
-        split_id=m.split_id,
-    )
-    _montajes[clave] = (ejecutor, m, obs)
-    return ejecutor
+    if clave not in _ejecutores:
+        m, obs, almacén = _montaje()
+        capa = CAPAS[nombre]
+        overrides = dict(RRF) if fusion == "rrf" else {}
+        cfg = Configuración.cargar(archivo=RAÍZ_DEL_REPO / capa if capa else None, overrides=overrides)
+        ArmadorDePipeline(cfg).validar()
+        pipeline = ArmadorDePipeline(
+            cfg,
+            puerto_de_imagen=m.puerto_de_imagen,
+            indice=m.indice,
+            puerto_de_llm=m.puerto_de_llm,
+            embebedor_de_texto=m.embebedor_de_texto,
+            almacen_de_planes=AlmacenDePlanes(almacén, cfg["rutas.artefactos_planes"]),
+            bytes_de_la_imagen=mnt.bytes_del_corpus(cfg, almacén),
+            observabilidad=obs,
+        ).armar()
+        _ejecutores[clave] = EjecutorDeEtapas(
+            cfg,
+            pipeline=pipeline,
+            almacen_de_corridas=AlmacenDeCorridas(almacén, cfg["rutas.artefactos_corridas"]),
+            observabilidad=obs,
+            variante_id=m.variante_id,
+            split_id=m.split_id,
+        )
+    return _ejecutores[clave]
 
 
 def _cerrar() -> None:
-    for _, m, obs in _montajes.values():
-        _cerrar_uno(m, obs)
+    if _compartido:
+        _compartido["m"].cerrar()
+        if hasattr(_compartido["obs"].trazas, "cerrar"):
+            _compartido["obs"].trazas.cerrar()
 
 
 atexit.register(_cerrar)
@@ -521,6 +517,78 @@ def _panel():
     return veredicto, obras, plan, costo
 
 
+def _aviso_grilla(titulo: str, detalle: str = "", tono: str = "info") -> str:
+    return _veredicto(tono, titulo, detalle)
+
+
+def _comparaciones() -> list[tuple[str, str]]:
+    filas = []
+    for ind in comparar.listar_indices(COMPARACIONES):
+        rid = next((ind["corridas"][c] for c in ("C4", "C3", "C2", "C1", "C0") if (ind.get("corridas") or {}).get(c)), None)
+        ruta = CORRIDAS / (rid or "-") / "corrida.json"
+        etiqueta = _etiqueta(ruta, ruta.stat().st_mtime)[3] if rid and ruta.exists() else ind["comparacion_id"]
+        filas.append((etiqueta, ind["comparacion_id"]))
+    return filas
+
+
+def comparar_todas(imagen: str | None, pedido: str, confirmado: bool):
+    sin_cambio = gr.update()
+    if not imagen or not (pedido or "").strip():
+        yield _aviso_grilla("Falta la imagen o el pedido"), {}, sin_cambio, sin_cambio
+        return
+    if not confirmado:
+        yield (
+            _aviso_grilla("La comparación requiere confirmación", 'Marcá "Confirmo el gasto" y compará de nuevo.', "parcial"),
+            {},
+            sin_cambio,
+            sin_cambio,
+        )
+        return
+    columnas: dict = {c: None for c in comparar.CONFIGURACIONES}
+    yield comparar.render_grilla(columnas, _miniatura, en_curso="C0"), {}, sin_cambio, sin_cambio
+    try:
+        _montaje()
+        entrada = EntradaDeConsulta.ad_hoc(datos_de_imagen=Path(imagen).read_bytes(), pedido=pedido.strip())
+    except Exception as e:
+        yield _aviso_grilla("No se pudo comparar", f"{type(e).__name__}: {e}", "error"), {}, sin_cambio, sin_cambio
+        return
+    ids: dict = {}
+    for i, (nombre, contenido, error) in enumerate(comparar.correr_todas(_armar, entrada), start=1):
+        columnas[nombre] = contenido if contenido is not None else error
+        if contenido is not None:
+            ids[nombre] = contenido["corrida_id"]
+        siguiente = comparar.CONFIGURACIONES[i] if i < len(comparar.CONFIGURACIONES) else None
+        yield comparar.render_grilla(columnas, _miniatura, en_curso=siguiente), dict(ids), sin_cambio, sin_cambio
+    comparacion_id = comparar.guardar_indice(COMPARACIONES, ids, "cascada") if ids else None
+    yield (
+        comparar.render_grilla(columnas, _miniatura),
+        dict(ids),
+        gr.update(value=next((c for c in reversed(comparar.CONFIGURACIONES) if c in ids), None)),
+        gr.update(choices=_comparaciones(), value=comparacion_id),
+    )
+
+
+def detalle_de(nombre: str | None, ids: dict):
+    if not ids:
+        return "", "", "", ""
+    if not nombre or not (ids or {}).get(nombre):
+        return _aviso("Elegí una configuración que haya corrido")
+    return abrir(ids[nombre])
+
+
+def abrir_comparacion(comparacion_id: str | None):
+    sin_cambio = gr.update()
+    if not comparacion_id:
+        return _aviso_grilla("Elegí una comparación"), {}, sin_cambio
+    try:
+        indice = comparar.leer_indice(COMPARACIONES, comparacion_id)
+    except (OSError, ValueError) as e:
+        return _aviso_grilla("No se pudo abrir la comparación", f"{type(e).__name__}: {e}", "error"), {}, sin_cambio
+    columnas = comparar.cargar_columnas(CORRIDAS, indice)
+    ids = {c: i for c, i in (indice.get("corridas") or {}).items() if i}
+    return comparar.render_grilla(columnas, _miniatura), ids, gr.update(value=next((c for c in reversed(comparar.CONFIGURACIONES) if c in ids), None))
+
+
 with gr.Blocks(title="TP3") as demo:
     gr.Markdown(
         "## Probar una consulta\n"
@@ -543,9 +611,54 @@ with gr.Blocks(title="TP3") as demo:
         config.change(_al_cambiar_config, config, [nota, fusion, confirma])
         (
             boton.click(lambda: gr.update(interactive=False, value="Consultando…"), None, boton, queue=False)
-            .then(responder, [config, fusion, imagen, pedido, confirma], list(salidas), concurrency_limit=1)
+            .then(
+                responder,
+                [config, fusion, imagen, pedido, confirma],
+                list(salidas),
+                concurrency_id="pipeline",
+                concurrency_limit=1,
+            )
             .then(lambda: gr.update(interactive=True, value="Consultar"), None, boton, queue=False)
         )
+    with gr.Tab("Comparar"):
+        with gr.Row():
+            with gr.Column(scale=1, min_width=320):
+                c_ejemplo = gr.Dropdown(list(EJEMPLOS), value=None, label="Ejemplo del set de evaluación")
+                c_imagen = gr.Image(type="filepath", sources=["upload", "clipboard"], label="Pintura de referencia")
+            with gr.Column(scale=2, min_width=420):
+                c_pedido = gr.Textbox(label="Pedido", placeholder="versiones más cálidas de este paisaje")
+                c_confirma = gr.Checkbox(label="Confirmo el gasto")
+                c_boton = gr.Button("Comparar C0 a C4", variant="primary")
+                with gr.Row():
+                    c_guardadas = gr.Dropdown([], value=None, label="Comparación guardada", scale=3)
+                    c_abrir = gr.Button("Abrir", scale=1)
+        c_grilla = gr.HTML(VACIO)
+        c_ids = gr.State({})
+        c_sel = gr.Radio([(ROTULOS[k], k) for k in comparar.CONFIGURACIONES], value=None, label="Detalle de")
+        c_detalle = _panel()
+        c_ejemplo.change(_cargar_ejemplo, c_ejemplo, [c_imagen, c_pedido])
+        (
+            c_boton.click(
+                lambda: (gr.update(interactive=False, value="Comparando…"), gr.update(value=None), "", "", "", ""),
+                None,
+                [c_boton, c_sel, *c_detalle],
+                queue=False,
+            )
+            .then(
+                comparar_todas,
+                [c_imagen, c_pedido, c_confirma],
+                [c_grilla, c_ids, c_sel, c_guardadas],
+                concurrency_id="pipeline",
+                concurrency_limit=1,
+            )
+            .then(detalle_de, [c_sel, c_ids], list(c_detalle))
+            .then(lambda: gr.update(interactive=True, value="Comparar C0 a C4"), None, c_boton, queue=False)
+        )
+        c_sel.input(detalle_de, [c_sel, c_ids], list(c_detalle))
+        c_abrir.click(abrir_comparacion, c_guardadas, [c_grilla, c_ids, c_sel]).then(
+            detalle_de, [c_sel, c_ids], list(c_detalle)
+        )
+        demo.load(lambda: gr.update(choices=_comparaciones()), None, c_guardadas)
     with gr.Tab("Usar ejecución guardada"):
         with gr.Row():
             elegida = gr.Dropdown([], value=None, label="Ejecución guardada", scale=3)
@@ -556,5 +669,5 @@ with gr.Blocks(title="TP3") as demo:
 
 if __name__ == "__main__":
     demo.launch(
-        server_name="127.0.0.1", server_port=int(os.environ.get("UI_PORT", 7860)), theme=TEMA, css=CSS
+        server_name="127.0.0.1", server_port=int(os.environ.get("UI_PORT", 7860)), theme=TEMA, css=CSS + comparar.CSS
     )
