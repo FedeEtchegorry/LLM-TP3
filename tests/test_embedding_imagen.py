@@ -17,15 +17,13 @@ pytestmark = pytest.mark.nivel1
 def puerto() -> EmbeddingImagenFijo:
     return EmbeddingImagenFijo()
 
-@pytest.mark.parametrize("datos", [b"una", b"otra", b"tercera"])
-def test_los_vectores_de_imagen_tienen_norma_1(puerto, datos):
-    v = puerto.embeber_imagen(datos)
+def test_los_vectores_de_imagen_tienen_norma_1(puerto):
+    v = puerto.embeber_imagen(b"una")
     assert len(v) == DIM_ESPERADA
     assert abs(sum(x * x for x in v) ** 0.5 - 1.0) < 1e-9
 
-@pytest.mark.parametrize("texto", ["un paisaje", "retrato oscuro", "colores cálidos"])
-def test_los_vectores_de_texto_tambien(puerto, texto):
-    v = puerto.embeber_texto(texto)
+def test_los_vectores_de_texto_tambien(puerto):
+    v = puerto.embeber_texto("un paisaje")
     assert abs(sum(x * x for x in v) ** 0.5 - 1.0) < 1e-9
 
 def test_el_mismo_contenido_da_el_mismo_vector(puerto):

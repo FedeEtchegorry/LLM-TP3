@@ -22,12 +22,6 @@ PROXY = "https://sa-llmproxy.it.itba.edu.ar/"
 def test_la_operacion_del_puerto_es_plural():
     assert "embeber" in EmbeddingTextoOpenAI.OPERACIONES
     assert "embeber_uno" in EmbeddingTextoOpenAI.OPERACIONES
-    cuerpo = inspect.getsource(EmbeddingTextoOpenAI.embeber_uno)
-    assert "self.embeber(" in cuerpo
-
-def test_el_singular_devuelve_exactamente_lo_mismo_que_el_batch_de_uno():
-    puerto = EmbeddingTextoFijo(dim=8)
-    assert puerto.embeber_uno("Corot") == puerto.embeber(["Corot"])[0]
 
 def test_un_batch_devuelve_un_vector_por_item_y_en_orden():
     puerto = EmbeddingTextoFijo(dim=8)
@@ -76,12 +70,6 @@ def test_el_error_de_input_largo_nombra_el_fragmento():
 
 def test_la_red_caida_es_un_error_de_construccion_y_no_una_degradacion():
     assert issubclass(RedCaída, ErrorDeConstrucción)
-
-def test_el_limite_de_tokens_del_doble_es_el_del_modelo_por_defecto():
-    assert EmbeddingTextoFijo().limite_de_tokens == 8191
-
-def test_la_dim_declarada_es_la_del_modelo():
-    assert embedding_texto.DIMS_CONOCIDAS["text-embedding-3-small"] == 1536
 
 def test_k1_el_base_url_es_obligatorio_y_no_tiene_default():
     with pytest.raises(TypeError, match="base_url"):

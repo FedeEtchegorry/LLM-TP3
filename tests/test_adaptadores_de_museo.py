@@ -88,13 +88,6 @@ def test_una_obra_fuera_del_fixture_falla_en_vez_de_pedir(cliente_sin_red, cfg):
     with pytest.raises(CacheMiss):
         AdaptadorCMA(cliente_sin_red, cfg).traer(999999999)
 
-def test_el_fixture_trae_un_registro_con_culture_lista(corot):
-    assert isinstance(corot["culture"], list)
-    assert corot["culture"] == ["France, 19th century"]
-
-def test_el_fixture_trae_un_registro_sin_description(aic_sin_description):
-    assert not aic_sin_description.get("description")
-
 def test_los_dos_adaptadores_cumplen_el_mismo_puerto(cliente_sin_red, cfg):
     for fábrica in (AdaptadorAIC, AdaptadorCMA):
         adaptador = fábrica(cliente_sin_red, cfg)

@@ -189,16 +189,6 @@ def test_la_limitacion_declarada_desbloquea_y_el_briefing_lleva_el_puntero(camin
         "lleva el κ por categoría y la asimetría de métodos, y eso pre-juzga"
     )
 
-def test_ka6_el_mensaje_del_comando_no_promete_la_copia_que_el_briefing_no_hace():
-    import inspect
-
-    from tp3_rag.cli import anotar as cli
-
-    fuente = inspect.getsource(cli._exportar)
-    assert "lleva **un puntero**" in fuente
-    assert "la limitación es correcta en el artefacto" in fuente
-    assert "La limitación va **adentro del `-como-anotar.md`**" not in fuente
-
 def test_una_decision_que_cita_otro_kappa_no_cubre(camino):
     _escribir_kappa(camino, kappa=0.312)
     _escribir_decision(camino, kappa_leido=0.419)

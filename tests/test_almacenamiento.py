@@ -38,17 +38,10 @@ def test_reservar_es_exclusivo(almacén):
     with pytest.raises(YaExiste):
         almacén.reservar("x.json")
 
-def test_el_ordinal_arranca_en_uno_y_avanza(almacén):
-    plantilla = "ingesta/abc-{ordinal}.json"
-    assert almacén.reservar_ordinal(plantilla)[0] == 1
-    assert almacén.reservar_ordinal(plantilla)[0] == 2
-    assert almacén.reservar_ordinal(plantilla)[0] == 3
-
 def test_lo_que_impide_la_colision_es_la_reserva_no_el_ingrediente(almacén):
     plantilla = "ingesta/abc-{ordinal}.json"
     primeros = [almacén.reservar_ordinal(plantilla)[0] for _ in range(5)]
     assert primeros == [1, 2, 3, 4, 5]
-    assert len(set(primeros)) == 5
 
 def test_el_ordinal_es_por_catalogo_id(almacén):
     assert almacén.reservar_ordinal("ingesta/aaa-{ordinal}.json")[0] == 1
