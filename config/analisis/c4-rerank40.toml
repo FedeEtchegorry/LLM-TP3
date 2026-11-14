@@ -1,0 +1,16 @@
+# Experimento: el reranker ve 40 candidatas en vez de 20 (el filtro queda en 100 fragmentos).
+# Con estas corridas, `analisis/cascada.py` simula también 25, 30 y 35.
+[consulta]
+configuracion = "C4"
+n_candidatos = 40
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]

@@ -1,0 +1,17 @@
+# Experimento: el mismo filtro estricto sin reranker, para separar el efecto del filtro
+# del efecto del reranker. No llama al reranker: cuesta lo mismo que C3.
+[consulta]
+configuracion = "C3"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+n_fragmentos_recuperados = 20

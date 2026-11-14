@@ -112,7 +112,8 @@ poetry run tp3-consultas plantilla            # emite el TOML para completar
 poetry run tp3-consultas autorar --declaracion <archivo.toml>
 
 # 6 · Consulta — responde una consulta del set o una ad-hoc.
-poetry run tp3-responder set --config config/c1.toml
+poetry run tp3-responder set                                  # C1, la configuración por defecto
+poetry run tp3-responder --config config/c4.toml set          # otra fila: --config va ANTES del subcomando
 poetry run tp3-responder adhoc --imagen <ruta.jpg> --pedido "algo más oscuro"
 poetry run tp3-responder mostrar --corrida <corrida_id>
 
@@ -134,7 +135,8 @@ poetry run tp3-metricas costo                 # el gasto medido, por rol y por e
 ```
 
 Todos los entrypoints aceptan `--config <archivo.toml>` para elegir la capa de
-configuración y `--set clave=valor` para pisar una clave suelta. Una clave
+configuración y `--set clave=valor` para pisar una clave suelta; las dos opciones
+van antes del subcomando. `config/` trae `c0`, `c2`, `c3` y `c4`: C1 es `default.toml`. Una clave
 desconocida es un error: `config/default.toml` es el esquema.
 
 ## Tests

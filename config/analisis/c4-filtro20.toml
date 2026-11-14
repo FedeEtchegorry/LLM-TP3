@@ -1,0 +1,18 @@
+# Experimento: filtro estricto. La rama de texto recupera 20 fragmentos en vez de 100,
+# así que quedan a lo sumo 20 obras elegibles y el reranker (20) las ve todas.
+[consulta]
+configuracion = "C4"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+n_fragmentos_recuperados = 20

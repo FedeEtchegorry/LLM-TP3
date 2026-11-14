@@ -1,0 +1,526 @@
+{
+  "juicios": 494,
+  "juicios_extra": [],
+  "experimentos": {
+    "C3·filtro100": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.615,
+        "visual": 0.562,
+        "ambiguo": 0.511,
+        "todas": 0.563
+      },
+      "ic95": [
+        0.477,
+        0.642
+      ],
+      "p5": 0.653,
+      "p5_estricta": 0.36,
+      "elegibles_medio": 96.9,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0028
+    },
+    "C3·filtro20": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.533,
+        "visual": 0.412,
+        "ambiguo": 0.398,
+        "todas": 0.448
+      },
+      "ic95": [
+        0.357,
+        0.533
+      ],
+      "p5": 0.42,
+      "p5_estricta": 0.3,
+      "elegibles_medio": 19.8,
+      "pct_sin_juzgar": 38.0,
+      "usd_por_consulta": 0.0028
+    },
+    "C4·filtro100·rerank20": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.831,
+        "visual": 0.64,
+        "ambiguo": 0.653,
+        "todas": 0.708
+      },
+      "ic95": [
+        0.607,
+        0.794
+      ],
+      "p5": 0.767,
+      "p5_estricta": 0.54,
+      "elegibles_medio": 96.9,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0273
+    },
+    "C4·filtro100·rerank40": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.763,
+        "visual": 0.607,
+        "ambiguo": 0.578,
+        "todas": 0.649
+      },
+      "ic95": [
+        0.544,
+        0.748
+      ],
+      "p5": 0.66,
+      "p5_estricta": 0.52,
+      "elegibles_medio": 96.9,
+      "pct_sin_juzgar": 17.3,
+      "usd_por_consulta": 0.0512
+    },
+    "C4·filtro20·rerank20": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.629,
+        "visual": 0.508,
+        "ambiguo": 0.387,
+        "todas": 0.508
+      },
+      "ic95": [
+        0.429,
+        0.585
+      ],
+      "p5": 0.48,
+      "p5_estricta": 0.373,
+      "elegibles_medio": 19.8,
+      "pct_sin_juzgar": 40.0,
+      "usd_por_consulta": 0.0264
+    }
+  },
+  "embudo_grado_2": {
+    "conceptual": {
+      "conocidas": 5.0,
+      "pasan_el_filtro": 4.5,
+      "top_n_de_clip": 3.2,
+      "top5_sin_reranker": 1.6,
+      "top5_con_reranker": 2.9,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.5
+    },
+    "todas": {
+      "conocidas": 5.17,
+      "pasan_el_filtro": 4.2,
+      "top_n_de_clip": 3.43,
+      "top5_sin_reranker": 1.8,
+      "top5_con_reranker": 2.7,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.93
+    },
+    "visual": {
+      "conocidas": 4.1,
+      "pasan_el_filtro": 2.9,
+      "top_n_de_clip": 2.5,
+      "top5_sin_reranker": 1.8,
+      "top5_con_reranker": 2.0,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.2
+    },
+    "ambiguo": {
+      "conocidas": 6.4,
+      "pasan_el_filtro": 5.2,
+      "top_n_de_clip": 4.6,
+      "top5_sin_reranker": 2.0,
+      "top5_con_reranker": 3.2,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.1
+    }
+  },
+  "embudo_grado_1_o_mas": {
+    "conceptual": {
+      "conocidas": 13.5,
+      "pasan_el_filtro": 9.5,
+      "top_n_de_clip": 6.9,
+      "top5_sin_reranker": 4.4,
+      "top5_con_reranker": 4.7,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 3.8
+    },
+    "todas": {
+      "conocidas": 9.9,
+      "pasan_el_filtro": 7.13,
+      "top_n_de_clip": 5.73,
+      "top5_sin_reranker": 3.27,
+      "top5_con_reranker": 3.83,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 2.67
+    },
+    "visual": {
+      "conocidas": 7.8,
+      "pasan_el_filtro": 5.4,
+      "top_n_de_clip": 4.6,
+      "top5_sin_reranker": 2.7,
+      "top5_con_reranker": 3.4,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 2.4
+    },
+    "ambiguo": {
+      "conocidas": 8.4,
+      "pasan_el_filtro": 6.5,
+      "top_n_de_clip": 5.7,
+      "top5_sin_reranker": 2.7,
+      "top5_con_reranker": 3.4,
+      "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.8
+    }
+  },
+  "barrido_del_filtro": [
+    {
+      "obras_elegibles": 5,
+      "ndcg": {
+        "conceptual": 0.626,
+        "visual": 0.306,
+        "ambiguo": 0.363,
+        "todas": 0.432
+      },
+      "ic95": [
+        0.337,
+        0.523
+      ],
+      "pct_sin_juzgar": 46.0
+    },
+    {
+      "obras_elegibles": 10,
+      "ndcg": {
+        "conceptual": 0.585,
+        "visual": 0.308,
+        "ambiguo": 0.369,
+        "todas": 0.421
+      },
+      "ic95": [
+        0.327,
+        0.512
+      ],
+      "pct_sin_juzgar": 40.0
+    },
+    {
+      "obras_elegibles": 15,
+      "ndcg": {
+        "conceptual": 0.555,
+        "visual": 0.386,
+        "ambiguo": 0.35,
+        "todas": 0.43
+      },
+      "ic95": [
+        0.333,
+        0.52
+      ],
+      "pct_sin_juzgar": 40.0
+    },
+    {
+      "obras_elegibles": 20,
+      "ndcg": {
+        "conceptual": 0.533,
+        "visual": 0.412,
+        "ambiguo": 0.398,
+        "todas": 0.448
+      },
+      "ic95": [
+        0.357,
+        0.533
+      ],
+      "pct_sin_juzgar": 38.0
+    },
+    {
+      "obras_elegibles": 30,
+      "ndcg": {
+        "conceptual": 0.591,
+        "visual": 0.407,
+        "ambiguo": 0.43,
+        "todas": 0.476
+      },
+      "ic95": [
+        0.386,
+        0.563
+      ],
+      "pct_sin_juzgar": 28.0
+    },
+    {
+      "obras_elegibles": 50,
+      "ndcg": {
+        "conceptual": 0.586,
+        "visual": 0.481,
+        "ambiguo": 0.452,
+        "todas": 0.506
+      },
+      "ic95": [
+        0.422,
+        0.585
+      ],
+      "pct_sin_juzgar": 16.7
+    },
+    {
+      "obras_elegibles": 75,
+      "ndcg": {
+        "conceptual": 0.596,
+        "visual": 0.532,
+        "ambiguo": 0.504,
+        "todas": 0.544
+      },
+      "ic95": [
+        0.461,
+        0.621
+      ],
+      "pct_sin_juzgar": 4.7
+    },
+    {
+      "obras_elegibles": 100,
+      "ndcg": {
+        "conceptual": 0.615,
+        "visual": 0.562,
+        "ambiguo": 0.511,
+        "todas": 0.563
+      },
+      "ic95": [
+        0.477,
+        0.642
+      ],
+      "pct_sin_juzgar": 0.0
+    },
+    {
+      "obras_elegibles": "solo_texto",
+      "ndcg": {
+        "conceptual": 0.598,
+        "visual": 0.338,
+        "ambiguo": 0.325,
+        "todas": 0.42
+      },
+      "ic95": [
+        0.328,
+        0.508
+      ],
+      "pct_sin_juzgar": 46.0
+    },
+    {
+      "obras_elegibles": "solo_visual",
+      "ndcg": {
+        "conceptual": 0.374,
+        "visual": 0.551,
+        "ambiguo": 0.518,
+        "todas": 0.481
+      },
+      "ic95": [
+        0.384,
+        0.573
+      ],
+      "pct_sin_juzgar": 0.0
+    }
+  ],
+  "barrido_del_reranker": [
+    {
+      "candidatas": 5,
+      "ndcg": {
+        "conceptual": 0.67,
+        "visual": 0.594,
+        "ambiguo": 0.516,
+        "todas": 0.593
+      },
+      "ic95": [
+        0.504,
+        0.675
+      ],
+      "pct_sin_juzgar": 0.0
+    },
+    {
+      "candidatas": 8,
+      "ndcg": {
+        "conceptual": 0.68,
+        "visual": 0.639,
+        "ambiguo": 0.529,
+        "todas": 0.616
+      },
+      "ic95": [
+        0.516,
+        0.707
+      ],
+      "pct_sin_juzgar": 6.7
+    },
+    {
+      "candidatas": 10,
+      "ndcg": {
+        "conceptual": 0.67,
+        "visual": 0.65,
+        "ambiguo": 0.566,
+        "todas": 0.629
+      },
+      "ic95": [
+        0.524,
+        0.725
+      ],
+      "pct_sin_juzgar": 8.7
+    },
+    {
+      "candidatas": 12,
+      "ndcg": {
+        "conceptual": 0.687,
+        "visual": 0.643,
+        "ambiguo": 0.566,
+        "todas": 0.632
+      },
+      "ic95": [
+        0.526,
+        0.729
+      ],
+      "pct_sin_juzgar": 10.7
+    },
+    {
+      "candidatas": 15,
+      "ndcg": {
+        "conceptual": 0.77,
+        "visual": 0.635,
+        "ambiguo": 0.587,
+        "todas": 0.664
+      },
+      "ic95": [
+        0.56,
+        0.757
+      ],
+      "pct_sin_juzgar": 7.3
+    },
+    {
+      "candidatas": 20,
+      "ndcg": {
+        "conceptual": 0.798,
+        "visual": 0.656,
+        "ambiguo": 0.631,
+        "todas": 0.695
+      },
+      "ic95": [
+        0.595,
+        0.786
+      ],
+      "pct_sin_juzgar": 8.0
+    },
+    {
+      "candidatas": 25,
+      "ndcg": {
+        "conceptual": 0.794,
+        "visual": 0.656,
+        "ambiguo": 0.623,
+        "todas": 0.691
+      },
+      "ic95": [
+        0.589,
+        0.784
+      ],
+      "pct_sin_juzgar": 10.0
+    },
+    {
+      "candidatas": 30,
+      "ndcg": {
+        "conceptual": 0.763,
+        "visual": 0.638,
+        "ambiguo": 0.595,
+        "todas": 0.666
+      },
+      "ic95": [
+        0.562,
+        0.76
+      ],
+      "pct_sin_juzgar": 15.3
+    },
+    {
+      "candidatas": 35,
+      "ndcg": {
+        "conceptual": 0.763,
+        "visual": 0.638,
+        "ambiguo": 0.578,
+        "todas": 0.66
+      },
+      "ic95": [
+        0.553,
+        0.758
+      ],
+      "pct_sin_juzgar": 16.0
+    },
+    {
+      "candidatas": 40,
+      "ndcg": {
+        "conceptual": 0.763,
+        "visual": 0.607,
+        "ambiguo": 0.578,
+        "todas": 0.649
+      },
+      "ic95": [
+        0.544,
+        0.748
+      ],
+      "pct_sin_juzgar": 17.3
+    }
+  ],
+  "calibracion_del_reranker": {
+    "0": {
+      "n": 85,
+      "score_medio": 4.06
+    },
+    "1": {
+      "n": 75,
+      "score_medio": 4.08
+    },
+    "2": {
+      "n": 112,
+      "score_medio": 6.86
+    }
+  },
+  "pareadas_contra_C3": {
+    "C3·filtro20 − C3·filtro100": {
+      "consultas": 30,
+      "delta": -0.115,
+      "ic95": [
+        -0.182,
+        -0.051
+      ]
+    }
+  },
+  "pareadas_contra_C4": {
+    "C4·filtro20·rerank20 − C4·filtro100·rerank20": {
+      "consultas": 30,
+      "delta": -0.2,
+      "ic95": [
+        -0.268,
+        -0.132
+      ]
+    },
+    "C4·filtro100·rerank40 − C4·filtro100·rerank20": {
+      "consultas": 30,
+      "delta": -0.058,
+      "ic95": [
+        -0.106,
+        -0.013
+      ]
+    }
+  },
+  "C4_menos_C3": {
+    "C4·filtro100·rerank20 − C3·filtro100": {
+      "consultas": 30,
+      "delta": 0.145,
+      "ic95": [
+        0.068,
+        0.217
+      ]
+    }
+  },
+  "politica_adaptativa": {
+    "C3": {
+      "eleccion": {
+        "conceptual": "C3·filtro100",
+        "visual": "C3·filtro100",
+        "ambiguo": "C3·filtro100"
+      },
+      "ndcg": 0.563,
+      "ic95": [
+        0.474,
+        0.641
+      ]
+    },
+    "C4": {
+      "eleccion": {
+        "conceptual": "C4·filtro100·rerank20",
+        "visual": "C4·filtro100·rerank20",
+        "ambiguo": "C4·filtro100·rerank20"
+      },
+      "ndcg": 0.708,
+      "ic95": [
+        0.607,
+        0.799
+      ]
+    }
+  }
+}
