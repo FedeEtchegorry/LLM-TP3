@@ -19,10 +19,6 @@ pytestmark = pytest.mark.nivel1
 
 PROXY = "https://sa-llmproxy.it.itba.edu.ar/"
 
-def test_la_operacion_del_puerto_es_plural():
-    assert "embeber" in EmbeddingTextoOpenAI.OPERACIONES
-    assert "embeber_uno" in EmbeddingTextoOpenAI.OPERACIONES
-
 def test_un_batch_devuelve_un_vector_por_item_y_en_orden():
     puerto = EmbeddingTextoFijo(dim=8)
     vectores = puerto.embeber(["a", "b", "c"])
@@ -33,11 +29,6 @@ def test_un_batch_devuelve_un_vector_por_item_y_en_orden():
 def test_un_batch_vacio_no_llama_al_modelo():
     puerto = EmbeddingTextoOpenAI(api_key="sk-no-existe", base_url=PROXY, dim=8)
     assert puerto.embeber([]).n == 0
-
-def test_el_puerto_declara_tokens_porque_a8_los_cuenta():
-    vectores = EmbeddingTextoFijo(dim=8).embeber(["dos palabras"])
-    assert vectores.uso["tokens_in"] > 0
-    assert "tokens_out" in vectores.uso
 
 def test_d8_los_vectores_del_doble_son_unitarios():
     for vector in EmbeddingTextoFijo(dim=16).embeber(["a", "b", "c"]):

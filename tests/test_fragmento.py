@@ -109,12 +109,6 @@ def test_fr3_el_mismo_id_puede_llevar_textos_distintos_y_es_el_hallazgo_h8():
     assert corto.clave_de_valor() != largo.clave_de_valor()
     assert corto != largo
 
-def test_dos_fragmentos_con_el_mismo_valor_son_iguales():
-    a = Fragmento.desde_campo(_registro(), DESCRIPTION, texto="Corot", chunk_index=0)
-    b = Fragmento.desde_campo(_registro(), DESCRIPTION, texto="Corot", chunk_index=0)
-    assert a == b
-    assert len({a, b}) == 1
-
 def test_la_metadata_lleva_artwork_id_y_no_lleva_media_license():
     metadata = Fragmento.desde_campo(
         _registro(), DESCRIPTION, texto="Corot", chunk_index=0

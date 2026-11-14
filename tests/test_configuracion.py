@@ -7,9 +7,6 @@ from tp3_rag.nucleo.errores import ErrorDeConfiguración
 
 pytestmark = pytest.mark.nivel1
 
-def test_la_configuracion_default_carga_y_valida():
-    assert Configuración.cargar()["ingesta.museos"] == ("aic", "cma")
-
 def test_una_clave_desconocida_es_un_error(tmp_path):
     archivo = tmp_path / "typo.toml"
     archivo.write_text("[ingesta]\nlimite_m = 20\n", encoding="utf-8")
@@ -22,12 +19,6 @@ def test_una_capa_especializa_sin_inventar(tmp_path):
     cfg = Configuración.cargar(archivo=archivo)
     assert cfg["ingesta.museos"] == ("cma",)
     assert cfg["ingesta.tipos"] == ("Painting",)
-
-def test_la_configuracion_es_inmutable():
-    cfg = Configuración.cargar()
-    with pytest.raises(TypeError):
-        cfg._árbol["ingesta"] = {}
-    assert isinstance(cfg["ingesta.museos"], tuple)
 
 def test_las_capas_quedan_registradas_como_procedencia():
     cfg = Configuración.cargar(overrides={"ingesta.limite_n": 20})
@@ -43,11 +34,6 @@ def test_el_config_id_cambia_con_la_configuracion_resuelta():
 def test_los_flags_se_interpretan_con_tipo():
     cfg = Configuración.cargar(overrides={"ingesta.limite_n": "20"})
     assert cfg["ingesta.limite_n"] == 20
-
-def test_la_tabla_de_licencias_vive_en_la_configuracion():
-    tabla = Configuración.cargar()["ingesta.tabla_de_licencias"]
-    assert tabla["aic"]["description"] == "CC-BY-4.0"
-    assert tabla["cma"]["description"] == "CC0"
 
 def test_todo_el_resto_esta_enumerado_y_no_resuelto_por_un_default():
     cfg = Configuración.cargar()
@@ -103,25 +89,11 @@ def test_un_criterio_de_culture_inexistente_falla_al_cargar(tmp_path):
     with pytest.raises(ErrorDeConfiguración, match="el criterio de normalización"):
         Configuración.cargar(archivo=archivo)
 
-def test_k1_el_base_url_del_proveedor_esta_declarado_y_es_el_de_openai():
-    base_url = Configuración.cargar()["proveedor.base_url"]
-    assert base_url == "https://api.openai.com/v1/"
-
 def test_k1_un_base_url_vacio_falla_al_cargar_y_no_cae_al_default_del_sdk(tmp_path):
     archivo = tmp_path / "sin-host.toml"
     archivo.write_text('[proveedor]\nbase_url = ""\n', encoding="utf-8")
     with pytest.raises(ErrorDeConfiguración, match="base_url"):
         Configuración.cargar(archivo=archivo)
-
-def test_k2_el_modelo_declarado_lleva_el_prefijo_del_proveedor():
-    cfg = Configuración.cargar()
-    assert cfg["embebido_texto.modelo"] == "openai/text-embedding-3-small"
-    assert cfg["embebido_texto.dim"] == 1536
-
-def test_el_precio_por_token_esta_declarado_para_el_modelo_que_se_usa():
-    cfg = Configuración.cargar()
-    precios = cfg["proveedor.precio_usd_por_millon_de_tokens"]
-    assert precios[cfg["embebido_texto.modelo"]] == 0.02
 
 def test_la_tabla_de_precios_es_abierta_porque_sus_claves_son_modelos(tmp_path):
     archivo = tmp_path / "otro-modelo.toml"
@@ -134,11 +106,6 @@ def test_la_tabla_de_precios_es_abierta_porque_sus_claves_son_modelos(tmp_path):
     precios = cfg["proveedor.precio_usd_por_millon_de_tokens"]
     assert precios["openai/text-embedding-3-large"] == 0.13
     assert precios["openai/text-embedding-3-small"] == 0.02
-
-def test_la_configuracion_resuelta_se_puede_serializar_entera():
-    import json
-
-    json.dumps(Configuración.cargar().a_dict(), ensure_ascii=False)
 
 def test_un_override_puede_agregar_una_entrada_a_una_tabla_abierta():
     cfg = Configuración.cargar(

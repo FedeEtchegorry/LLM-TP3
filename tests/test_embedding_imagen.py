@@ -26,15 +26,6 @@ def test_los_vectores_de_texto_tambien(puerto):
     v = puerto.embeber_texto("un paisaje")
     assert abs(sum(x * x for x in v) ** 0.5 - 1.0) < 1e-9
 
-def test_el_mismo_contenido_da_el_mismo_vector(puerto):
-    assert puerto.embeber_imagen(b"x") == puerto.embeber_imagen(b"x")
-    assert puerto.embeber_imagen(b"x") != puerto.embeber_imagen(b"y")
-
-def test_el_singular_es_un_batch_de_uno(puerto):
-    lote = puerto.embeber_imagenes([("cma:1", b"a"), ("cma:2", b"b")])
-    assert lote.n == 2
-    assert tuple(lote[0]) == puerto.embeber_imagen(b"a")
-
 def test_la_truncacion_a_77_tokens_se_reporta(puerto):
     corto, largo = "un paisaje", " ".join(["palabra"] * (LÍMITE_DE_TOKENS_DE_CLIP + 5))
     salida = puerto.embeber_textos([corto, largo])

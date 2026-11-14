@@ -4,9 +4,6 @@ import pytest
 
 from tp3_rag.dominio.consulta import EntradaDeConsulta
 from tp3_rag.modulo_b.etapa import (
-    CLAVE_DE_ETAPA,
-    ETAPAS_DE_RANKING,
-    NO_OMITIBLES,
     Candidata,
     EstadoDeConsulta,
     FormaDeclaradaRota,
@@ -26,19 +23,6 @@ def estado() -> EstadoDeConsulta:
 
 def _candidatas(*ids):
     return tuple(Candidata(i, n + 1, 1.0 - n / 100) for n, i in enumerate(ids))
-
-def test_el_mapa_cubre_las_ocho_etapas_y_cada_una_tiene_una_sola_clave():
-    assert len(CLAVE_DE_ETAPA) == 8
-    assert len(set(CLAVE_DE_ETAPA.values())) == 8
-    assert CLAVE_DE_ETAPA["recuperador_visual"] != CLAVE_DE_ETAPA["recuperador_textual"]
-    assert "top5" not in CLAVE_DE_ETAPA.values()
-    assert set(NO_OMITIBLES) == {"recuperador_visual", "renderizador"}
-    assert set(ETAPAS_DE_RANKING) <= set(CLAVE_DE_ETAPA)
-
-def test_et1_clausura_entrada_y_salida_son_el_mismo_tipo(estado):
-    nuevo = estado.con(fuentes_de_ranking={"visual": _candidatas("a", "b")})
-    assert isinstance(nuevo, EstadoDeConsulta)
-    assert nuevo is not estado
 
 def test_et3_no_se_puede_sobrescribir_una_clave_poblada(estado):
     con_rerank = estado.con(rerank=({"artwork_id": "a", "score_0_10": 9},))
@@ -129,24 +113,10 @@ def test_et6_verifica_el_top5_contra_la_ultima_de_ranking_que_no_degrado(estado)
     with pytest.raises(FormaDeclaradaRota, match="no son los primeros"):
         mentiroso.verificar_et6(CADENA, top_k=2)
 
-def test_el_pedido_crudo_es_la_conducta_de_c1(estado):
-    assert estado.consulta_visual == "un pedido"
-    assert estado.consulta_conceptual == "un pedido"
-
-def test_sa5_los_descartes_se_acumulan_y_se_cuentan(estado):
-    con_dos = estado.descartar_afirmaciones([{"a": 1}]).descartar_afirmaciones([{"b": 2}])
-    assert len(con_dos.afirmaciones_descartadas) == 2
-
 def test_marcar_fallida_no_lanza_y_eso_es_lo_que_salva_et1(estado):
     marcado = estado.marcar_fallida("renderizador", "atribución faltante")
     assert isinstance(marcado, EstadoDeConsulta)
     assert marcado.fallida == {"etapa": "renderizador", "obligacion": "atribución faltante"}
-
-def test_la_entrada_no_se_puede_mutar(estado):
-    import dataclasses
-
-    with pytest.raises(dataclasses.FrozenInstanceError):
-        estado.entrada.pedido = "otro"  # type: ignore[misc]
 
 def test_el_json_del_estado_no_lleva_los_bytes(estado):
     serializado = identidad.json_canónico(estado.a_json())

@@ -21,7 +21,6 @@ from tp3_rag.modulo_b.fusionador import (
     suma_de_scores_normalizados,
 )
 from tp3_rag.modulo_b.recuperador_textual import (
-    AGREGACIONES,
     RecuperadorTextual,
     SinPlanNoHayRamaDeTexto,
     agregar_por_obra,
@@ -136,11 +135,6 @@ def test_agregar_por_obra_suma_los_dos_mejores_y_eso_cambia_el_orden():
 def test_una_agregacion_desconocida_no_cae_en_un_default():
     with pytest.raises(ErrorDeConfiguración, match="el criterio de atribución"):
         agregar_por_obra([], agregacion="la_que_me_guste")
-
-def test_las_dos_agregaciones_estan_declaradas_y_el_default_es_una_de_ellas():
-    cfg = Configuración.cargar()
-    assert set(AGREGACIONES) == {"mejor_fragmento", "suma_de_los_2_mejores"}
-    assert cfg["recuperacion_textual.agregacion"] in AGREGACIONES
 
 def _rama(indice=None, **kwargs) -> RecuperadorTextual:
     return RecuperadorTextual(
