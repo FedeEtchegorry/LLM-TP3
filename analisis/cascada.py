@@ -62,6 +62,8 @@ def etiqueta(cfg: dict) -> str:
     consulta = cfg["consulta"]
     nombre = consulta["configuracion"]
     partes = [nombre, f"filtro{cfg['recuperacion_textual']['n_fragmentos_recuperados']}"]
+    if cfg["recuperacion_textual"].get("filtro_por_metadata"):
+        partes.append("metadata")
     if "reranker" in consulta["etapas"]:
         partes.append(f"rerank{consulta['n_candidatos']}")
     if float(consulta["alfa"]) != 0.5:

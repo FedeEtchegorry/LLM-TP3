@@ -73,3 +73,21 @@ Escribe `artifacts/analisis/planilla-juicios.html` con los pares de `pares-sin-j
 la imagen original, el pedido y cada obra, sin decir qué configuración la recuperó. Se abre
 en el navegador desde esa carpeta, guarda el avance y exporta un CSV por anotador que
 `cascada.py --juicios-extra` lee directamente.
+
+## Filtro por metadata en pre-retrieval
+
+Si el pedido nombra una cultura o un país, la búsqueda de texto se restringe con un `where`
+de ChromaDB a las obras con esa `culture`, antes de la búsqueda por similitud (Clase 7.2:
+metadata filtering). El detalle y sus límites están en `src/tp3_rag/modulo_b/filtro_de_metadata.py`.
+
+Se activa con `recuperacion_textual.filtro_por_metadata = true`. La clave es opcional: como no
+está en `default.toml`, las filas ya corridas conservan su `config_id`.
+
+```bash
+poetry run tp3-responder --config config/analisis/c3-filtro-metadata.toml --variante-id c3274567371ff42b set
+poetry run tp3-responder --config config/analisis/c4-filtro-metadata.toml --variante-id c3274567371ff42b set
+python analisis/cascada.py
+```
+
+Solo cambia el resultado de las 10 consultas culturales; en las otras 20 el filtro no se
+aplica. Cada corrida registra qué filtro usó en `estado.sellos.filtro_por_metadata`.
