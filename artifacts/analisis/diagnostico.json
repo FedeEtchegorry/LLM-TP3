@@ -1,0 +1,179 @@
+{
+  "experimento": "C4·filtro100·metadata·rerank20",
+  "confianza": {
+    "spearman_con_ndcg": 0.62,
+    "spearman_con_obras_de_grado_2": 0.67,
+    "umbral": 7.0,
+    "debajo_del_umbral": {
+      "consultas": 16,
+      "ndcg": 0.625,
+      "obras_de_grado_2_por_top5": 2.19,
+      "por_categoria": {
+        "conceptual": 4,
+        "visual": 9,
+        "ambiguo": 3
+      }
+    },
+    "sobre_el_umbral": {
+      "consultas": 14,
+      "ndcg": 0.884,
+      "obras_de_grado_2_por_top5": 4.07,
+      "por_categoria": {
+        "ambiguo": 7,
+        "visual": 1,
+        "conceptual": 6
+      }
+    },
+    "por_consulta": {
+      "c01-ambiguo": {
+        "confianza": 8.4,
+        "ndcg": 0.66
+      },
+      "c01-conceptual": {
+        "confianza": 4.8,
+        "ndcg": 0.93
+      },
+      "c01-visual": {
+        "confianza": 7.4,
+        "ndcg": 0.93
+      },
+      "c02-ambiguo": {
+        "confianza": 9.0,
+        "ndcg": 1.0
+      },
+      "c02-conceptual": {
+        "confianza": 9.0,
+        "ndcg": 0.92
+      },
+      "c02-visual": {
+        "confianza": 3.4,
+        "ndcg": 0.75
+      },
+      "c03-ambiguo": {
+        "confianza": 8.4,
+        "ndcg": 0.85
+      },
+      "c03-conceptual": {
+        "confianza": 6.8,
+        "ndcg": 1.0
+      },
+      "c03-visual": {
+        "confianza": 3.8,
+        "ndcg": 0.82
+      },
+      "c04-ambiguo": {
+        "confianza": 6.6,
+        "ndcg": 0.0
+      },
+      "c04-conceptual": {
+        "confianza": 4.0,
+        "ndcg": 0.92
+      },
+      "c04-visual": {
+        "confianza": 3.0,
+        "ndcg": 0.49
+      },
+      "c05-ambiguo": {
+        "confianza": 5.2,
+        "ndcg": 0.0
+      },
+      "c05-conceptual": {
+        "confianza": 9.2,
+        "ndcg": 1.0
+      },
+      "c05-visual": {
+        "confianza": 3.4,
+        "ndcg": 0.48
+      },
+      "c06-ambiguo": {
+        "confianza": 9.0,
+        "ndcg": 0.51
+      },
+      "c06-conceptual": {
+        "confianza": 7.4,
+        "ndcg": 0.86
+      },
+      "c06-visual": {
+        "confianza": 2.0,
+        "ndcg": 0.4
+      },
+      "c07-ambiguo": {
+        "confianza": 9.0,
+        "ndcg": 1.0
+      },
+      "c07-conceptual": {
+        "confianza": 6.0,
+        "ndcg": 0.75
+      },
+      "c07-visual": {
+        "confianza": 2.6,
+        "ndcg": 0.34
+      },
+      "c08-ambiguo": {
+        "confianza": 7.4,
+        "ndcg": 0.93
+      },
+      "c08-conceptual": {
+        "confianza": 8.8,
+        "ndcg": 0.93
+      },
+      "c08-visual": {
+        "confianza": 2.0,
+        "ndcg": 0.65
+      },
+      "c09-ambiguo": {
+        "confianza": 8.4,
+        "ndcg": 0.77
+      },
+      "c09-conceptual": {
+        "confianza": 8.6,
+        "ndcg": 1.0
+      },
+      "c09-visual": {
+        "confianza": 5.8,
+        "ndcg": 0.86
+      },
+      "c10-ambiguo": {
+        "confianza": 5.0,
+        "ndcg": 0.79
+      },
+      "c10-conceptual": {
+        "confianza": 9.2,
+        "ndcg": 1.0
+      },
+      "c10-visual": {
+        "confianza": 2.0,
+        "ndcg": 0.82
+      }
+    }
+  },
+  "calibracion_por_categoria": {
+    "conceptual": {
+      "puntaje_medio_por_grado": {
+        "0": 2.7,
+        "1": 4.6,
+        "2": 6.8
+      },
+      "auc_del_reranker_grado2_vs_grado0": 0.94,
+      "auc_del_orden_de_clip_grado2_vs_resto": 0.48
+    },
+    "visual": {
+      "puntaje_medio_por_grado": {
+        "0": 2.3,
+        "1": 2.8,
+        "2": 4.1
+      },
+      "auc_del_reranker_grado2_vs_grado0": 0.75,
+      "auc_del_orden_de_clip_grado2_vs_resto": 0.61
+    },
+    "ambiguo": {
+      "puntaje_medio_por_grado": {
+        "0": 5.2,
+        "1": 4.7,
+        "2": 7.4
+      },
+      "auc_del_reranker_grado2_vs_grado0": 0.78,
+      "auc_del_orden_de_clip_grado2_vs_resto": 0.41
+    }
+  }
+}

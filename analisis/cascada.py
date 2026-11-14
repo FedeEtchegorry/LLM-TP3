@@ -379,6 +379,10 @@ def main() -> None:
     p.add_argument("--sin-figuras", action="store_true")
     args = p.parse_args()
 
+    # Los juicios hechos a mano con la planilla se suman solos: después del consenso y de
+    # los juicios de IA, así que nunca pisan un par que ya estaba juzgado.
+    a_mano = sorted(SALIDA.glob("juicios-*.csv"))
+    args.juicios_extra = [*a_mano, *[a for a in args.juicios_extra if a.resolve() not in {m.resolve() for m in a_mano}]]
     ev = Evaluador(cargar_juicios([*JUICIOS_BASE, *args.juicios_extra]))
     experimentos = cargar_corridas()
     c3 = experimentos.get(BASE_C3, {})
@@ -388,7 +392,7 @@ def main() -> None:
 
     resultados = {
         "juicios": len(ev.gt),
-        "juicios_extra": [str(a) for a in args.juicios_extra],
+        "juicios_extra": [str(a.relative_to(RAIZ)) if a.is_absolute() and RAIZ in a.parents else str(a) for a in args.juicios_extra],
         "experimentos": tabla_de_experimentos(ev, experimentos),
         "embudo_grado_2": embudo(ev, c3, c4, 2) if c4 else {},
         "embudo_grado_1_o_mas": embudo(ev, c3, c4, 1) if c4 else {},
