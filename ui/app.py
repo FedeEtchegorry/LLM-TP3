@@ -14,7 +14,7 @@ import io
 import json
 import os
 import re
-from functools import lru_cache
+from functools import lru_cache, partial
 from pathlib import Path
 
 try:
@@ -25,6 +25,7 @@ except ModuleNotFoundError:
 import gradio as gr
 
 import comparar  # ui/ queda en sys.path al correr python ui/app.py
+import clasificador
 from tp3_rag.dominio.consulta import EntradaDeConsulta
 from tp3_rag.dominio.corrida import AlmacenDeCorridas
 from tp3_rag.dominio.plan import AlmacenDePlanes
@@ -189,6 +190,42 @@ CSS = """
   .tp3 .tp3-fotoc, .tp3 .tp3-cab, .tp3 .tp3-ev { grid-column: 2; }
   .tp3 .tp3-cab { margin-top: .8rem; }
   .tp3 .tp3-expl { grid-column: 1 / -1; }
+}
+
+.tp3-judge-tools { align-items: center !important; gap: 10px !important; }
+.tp3-judge-tools button { white-space: nowrap; height: 44px; }
+.tp3-judge-layout { align-items: start !important; gap: 24px !important; }
+.tp3-judge-reference { position: sticky; top: 16px; flex: 0 0 280px !important;
+  border: 1px solid var(--border-color-primary); border-radius: 12px; padding: 16px !important;
+  background: var(--block-background-fill); gap: 12px !important; }
+.tp3-judge-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1 1 0 !important; min-width: 0 !important; gap: 16px !important; }
+.tp3-judge-card { min-width: 0 !important; padding: 16px !important; gap: 12px !important;
+  border: 1px solid var(--border-color-primary); border-radius: 12px;
+  background: var(--block-background-fill); }
+.tp3-judge-card.juzgada { border-color: var(--primary-400); }
+.tp3-judge-status p { margin: 0 !important; font-size: 12px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--body-text-color-subdued); }
+.tp3-judge-caption { height: 64px; overflow: hidden; }
+.tp3-judge-caption p { margin: 0 0 4px !important; }
+.tp3-judge-caption p:first-child { display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+.tp3-judge-caption p + p { font-size: 13px; color: var(--body-text-color-subdued);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tp3-judge-grades .wrap { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px !important; }
+.tp3-judge-grades label { margin: 0 !important; padding: 8px 4px !important; min-width: 0; white-space: nowrap; justify-content: center; }
+.tp3-judge-grades label span { font-size: 12px; }
+.tp3-judge-reference .prose p { overflow-wrap: anywhere; }
+@media (max-width: 1350px) {
+  .tp3-judge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 960px) {
+  .tp3-judge-reference { position: static; flex: 1 1 100% !important; }
+  .tp3-judge-layout { flex-wrap: wrap !important; }
+  .tp3-judge-grid { flex-basis: 100% !important; }
+}
+@media (max-width: 600px) {
+  .tp3-judge-grid { grid-template-columns: minmax(0, 1fr); }
 }
 """
 
@@ -589,6 +626,44 @@ def abrir_comparacion(comparacion_id: str | None):
     return comparar.render_grilla(columnas, _miniatura), ids, gr.update(value=next((c for c in reversed(comparar.CONFIGURACIONES) if c in ids), None))
 
 
+def cargar_clasificacion():
+    try:
+        pares, consultas, fichas, aviso = clasificador.cargar()
+        datos = {"pares": pares, "consultas": consultas, "fichas": fichas}
+        ids = list(dict.fromkeys(c for c, _ in pares))
+        opciones = [(f"{i:02} · {consultas[c]['pedido']}", c) for i, c in enumerate(ids, 1)]
+        return datos, gr.update(choices=opciones, value=ids[0] if ids else None), aviso
+    except (OSError, ValueError, KeyError) as e:
+        return {"pares": [], "consultas": {}, "fichas": {}}, gr.update(choices=[], value=None), f"No se pudo cargar la clasificación: {e}"
+
+
+def ficha_clasificacion(f):
+    url = f.get("source_url") or ""
+    enlace = f' · [Ficha del museo]({url})' if url.startswith(("https://", "http://")) else ""
+    ficha = " · ".join(str(f[k]) for k in ("title", "artist", "culture", "date_display", "medium") if f.get(k))
+    return f"{ficha}{enlace}"
+
+
+def guardar_juicio(clave, grado, nota, estado):
+    estado = dict(estado or {})
+    estado[clave] = {"grado": grado, "nota": nota or ""}
+    return estado
+
+
+def mover_consulta(consulta, datos, paso):
+    consultas = list(dict.fromkeys(c for c, _ in datos["pares"]))
+    if consulta not in consultas:
+        return consulta
+    return consultas[max(0, min(len(consultas) - 1, consultas.index(consulta) + paso))]
+
+
+def exportar_juicios(datos, estado, anotador):
+    ruta = clasificador.exportar(datos["pares"], estado or {}, anotador)
+    if not ruta:
+        raise gr.Error("Todavía no hay juicios para descargar.")
+    return ruta
+
+
 with gr.Blocks(title="TP3") as demo:
     gr.Markdown(
         "## Probar una consulta\n"
@@ -660,12 +735,74 @@ with gr.Blocks(title="TP3") as demo:
         )
         demo.load(lambda: gr.update(choices=_comparaciones()), None, c_guardadas)
     with gr.Tab("Usar ejecución guardada"):
-        with gr.Row():
-            elegida = gr.Dropdown([], value=None, label="Ejecución guardada", scale=3)
-            abrir_btn = gr.Button("Usar", scale=1)
+        elegida = gr.Dropdown([], value=None, label="Ejecución guardada")
         salidas_2 = _panel()
-        abrir_btn.click(abrir, elegida, list(salidas_2))
+        elegida.input(abrir, elegida, list(salidas_2))
         demo.load(lambda: gr.update(choices=_ids_de_corridas()), None, elegida)
+    with gr.Tab("Clasificar a mano") as clasificar_tab:
+        datos_j = gr.State({"pares": [], "consultas": {}, "fichas": {}})
+        estado_j = gr.BrowserState({}, storage_key="tp3-juicios-gradio-v1", secret="tp3-juicios-local-v1")
+        with gr.Row(elem_classes="tp3-judge-tools"):
+            consulta_j = gr.Dropdown(label="Imagen y pedido", show_label=False, container=False, choices=[], scale=4)
+            anterior_j = gr.Button("← Anterior", scale=0, min_width=125)
+            siguiente_j = gr.Button("Siguiente →", variant="primary", scale=0, min_width=125)
+        with gr.Accordion("Anotador y descarga CSV", open=False):
+            with gr.Row():
+                anotador_j = gr.Textbox(label="Anotador")
+                exportar_j = gr.Button("Preparar CSV", scale=0)
+                archivo_j = gr.File(label="Descargar juicios", interactive=False)
+            recuperar_j = gr.Button("Recuperar avance de la versión anterior", size="sm")
+        aviso_j = gr.Markdown()
+
+        # Gradio asigna ids globales al crear las tarjetas; serializar evita colisiones entre sesiones.
+        @gr.render(inputs=[datos_j, consulta_j, estado_j], concurrency_limit=1, concurrency_id="juicios", show_progress="hidden")
+        def mostrar_consulta(datos, consulta, estado):
+            if not consulta or consulta not in datos["consultas"]:
+                return
+            c = datos["consultas"][consulta]
+            obras = [o for q, o in datos["pares"] if q == consulta]
+            estado = estado or {}
+            hechos = sum(1 for o in obras if estado.get(f"{consulta}|{o}", {}).get("grado") in (0, 1, 2))
+            gr.Markdown(f"**{hechos} de {len(obras)} evaluadas** · Los cambios se guardan en este navegador.")
+            with gr.Row(elem_classes="tp3-judge-layout"):
+                with gr.Column(min_width=260, elem_classes="tp3-judge-reference"):
+                    gr.Markdown("Imagen original", elem_classes="tp3-judge-status")
+                    ruta = IMAGENES / (c["imagen"].replace(":", "_") + ".jpg")
+                    gr.Image(value=str(ruta) if ruta.is_file() else None, label="Imagen original", show_label=False,
+                             interactive=False, height=260, buttons=["fullscreen"])
+                    gr.Markdown(f"**Pedido**\n\n{_esc(c['pedido'])}")
+                    gr.Markdown("**0** No cumple o es la imagen original.\n\n**1** Cumple parcialmente o hay dudas.\n\n**2** Cumple claramente el pedido.")
+                with gr.Column(min_width=0, elem_classes="tp3-judge-grid"):
+                    for obra in obras:
+                        clave = f"{consulta}|{obra}"
+                        juicio = estado.get(clave, {})
+                        evaluada = juicio.get("grado") in (0, 1, 2)
+                        with gr.Column(min_width=0, elem_classes=["tp3-judge-card", "juzgada" if evaluada else "pendiente"]):
+                            gr.Markdown("Evaluada" if evaluada else "Pendiente", elem_classes="tp3-judge-status")
+                            ruta = IMAGENES / (obra.replace(":", "_") + ".jpg")
+                            gr.Image(value=str(ruta) if ruta.is_file() else None, label="Obra a evaluar", show_label=False,
+                                     interactive=False, height=260, buttons=["fullscreen"])
+                            f = datos["fichas"].get(obra, {})
+                            gr.Markdown(f"**{_esc(f.get('title') or obra)}**\n\n{_esc(f.get('artist') or 'Artista no registrado')}",
+                                        elem_classes="tp3-judge-caption")
+                            grado = gr.Radio([("0 · No", 0), ("1 · Parcial", 1), ("2 · Sí", 2)],
+                                             value=juicio.get("grado"), label="Evaluación", container=False,
+                                             elem_classes="tp3-judge-grades", key=f"grado-{clave}")
+                            nota = gr.Textbox(value=juicio.get("nota", ""), label="Nota opcional", placeholder="Añadir un comentario…", key=f"nota-{clave}")
+                            with gr.Accordion("Ficha de la obra", open=False):
+                                gr.Markdown(ficha_clasificacion(f) or obra)
+                            guardar = partial(guardar_juicio, clave)
+                            grado.input(guardar, [grado, nota, estado_j], estado_j, concurrency_id="juicios", concurrency_limit=1)
+                            nota.blur(guardar, [grado, nota, estado_j], estado_j, concurrency_id="juicios", concurrency_limit=1)
+        clasificar_tab.select(cargar_clasificacion, None, [datos_j, consulta_j, aviso_j])
+        for boton_j, paso in ((anterior_j, -1), (siguiente_j, 1)):
+            boton_j.click(lambda consulta, datos, paso=paso: mover_consulta(consulta, datos, paso),
+                          [consulta_j, datos_j], consulta_j)
+        recuperar_j.click(lambda estado: estado, estado_j, estado_j, js="""(estado) => {
+            try { return {...JSON.parse(localStorage.getItem('planilla-juicios-v1') || '{}'), ...estado}; }
+            catch (e) { return estado; }
+        }""")
+        exportar_j.click(exportar_juicios, [datos_j, estado_j, anotador_j], archivo_j)
 
 if __name__ == "__main__":
     demo.launch(
