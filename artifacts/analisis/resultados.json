@@ -20,6 +20,24 @@
       "pct_sin_juzgar": 0.0,
       "usd_por_consulta": 0.0028
     },
+    "C3·filtro100·metadata": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.625,
+        "visual": 0.562,
+        "ambiguo": 0.511,
+        "todas": 0.566
+      },
+      "ic95": [
+        0.479,
+        0.645
+      ],
+      "p5": 0.58,
+      "p5_estricta": 0.407,
+      "elegibles_medio": 96.6,
+      "pct_sin_juzgar": 11.3,
+      "usd_por_consulta": 0.0028
+    },
     "C3·filtro20": {
       "consultas": 30,
       "ndcg": {
@@ -37,6 +55,24 @@
       "elegibles_medio": 19.8,
       "pct_sin_juzgar": 38.0,
       "usd_por_consulta": 0.0028
+    },
+    "C4·filtro100·metadata·rerank20": {
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.739,
+        "visual": 0.647,
+        "ambiguo": 0.639,
+        "todas": 0.675
+      },
+      "ic95": [
+        0.576,
+        0.766
+      ],
+      "p5": 0.707,
+      "p5_estricta": 0.533,
+      "elegibles_medio": 96.6,
+      "pct_sin_juzgar": 10.7,
+      "usd_por_consulta": 0.0271
     },
     "C4·filtro100·rerank20": {
       "consultas": 30,
@@ -467,9 +503,25 @@
         -0.182,
         -0.051
       ]
+    },
+    "C3·filtro100·metadata − C3·filtro100": {
+      "consultas": 30,
+      "delta": 0.003,
+      "ic95": [
+        -0.017,
+        0.023
+      ]
     }
   },
   "pareadas_contra_C4": {
+    "C4·filtro100·metadata·rerank20 − C4·filtro100·rerank20": {
+      "consultas": 30,
+      "delta": -0.033,
+      "ic95": [
+        -0.069,
+        -0.002
+      ]
+    },
     "C4·filtro20·rerank20 − C4·filtro100·rerank20": {
       "consultas": 30,
       "delta": -0.2,
@@ -500,26 +552,26 @@
   "politica_adaptativa": {
     "C3": {
       "eleccion": {
-        "conceptual": "C3·filtro100",
+        "conceptual": "C3·filtro100·metadata",
         "visual": "C3·filtro100",
         "ambiguo": "C3·filtro100"
       },
-      "ndcg": 0.563,
+      "ndcg": 0.566,
       "ic95": [
-        0.474,
-        0.641
+        0.481,
+        0.645
       ]
     },
     "C4": {
       "eleccion": {
         "conceptual": "C4·filtro100·rerank20",
-        "visual": "C4·filtro100·rerank20",
+        "visual": "C4·filtro100·metadata·rerank20",
         "ambiguo": "C4·filtro100·rerank20"
       },
-      "ndcg": 0.708,
+      "ndcg": 0.71,
       "ic95": [
-        0.607,
-        0.799
+        0.615,
+        0.796
       ]
     }
   }

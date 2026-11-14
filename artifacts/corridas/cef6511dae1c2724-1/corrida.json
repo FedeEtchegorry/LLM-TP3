@@ -1,0 +1,3021 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C3"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 25,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 8,
+      "embedding": 6,
+      "llm": 1,
+      "retriever": 10
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c3-filtro-metadata.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "53f5e551942b025d",
+  "configuracion_resuelta": {
+    "bindings": {
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C3",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c07-conceptual",
+  "corrida_id": "cef6511dae1c2724-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:155431",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c07-conceptual",
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:241750": [
+        {
+          "artist": "Gu Jianlong",
+          "artwork_id": "aic:241750",
+          "chunk_index": 0,
+          "fragment_id": "aic:241750::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/241750",
+          "texto": "Gu Jianlong completed this portrait after he became a court painter or “painter-in-waiting” for Emperor Shunzhi (reigned 1644–61) at the royal palace in Beijing. In its attention to fine detail, this portrait reflects the opulence of Gu’s surroundings at court. His sitter, a Manchu prince, sits on a gold lacquer chair wearing a blue court robe embroidered with a large four-clawed dragon on the chest; on the robe’s skirt, small dragons race over multicolored waves, clouds, water. His red hat has a gold filigree ornament studded with pearls and a large ruby finial. He looks directly at the viewer, holding his necklace of coral and large crystal beads delicately in his left hand. In contrast to the garment rendered with bold outlines and vibrant colors, the facial features, including individual characteristics such as angular eyebrows, a broad nose, and gray hair, are subtly shaped through multiple layers of muted color washes. Gu also incorporated Western methods such as shading to carefully depict the sitter’s face and enhance the lifelike appearance.",
+          "title": "Portrait of an Official"
+        }
+      ],
+      "cma:149621": [
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149621",
+          "chunk_index": 0,
+          "fragment_id": "cma:149621::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1979.27.2.16",
+          "texto": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+          "title": "Paintings after Ancient Masters: A Lady"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149621",
+          "chunk_index": 0,
+          "fragment_id": "cma:149621::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1979.27.2.16",
+          "texto": "Weng Tonghe 翁同龢 [1830–1904], by descent to Wango H. C. Weng\n(Wango H. C. Weng 翁萬戈 [1918–2020], Lyme, NH, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Paintings after Ancient Masters: A Lady"
+        }
+      ],
+      "cma:150844": [
+        {
+          "artist": null,
+          "artwork_id": "cma:150844",
+          "chunk_index": 0,
+          "fragment_id": "cma:150844::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1982.25",
+          "texto": "The historic Buddha Shakyamuni is seated on an elaborately decorated pedestal and flanked by two attendants making gestures of devotion. The unknown artist used gold and deeply hued pigments to depict the luxurious fabrics, particularly the golden medallions of swirling dragons and clouds on the Buddha’s red robe. \n\nThe painting itself is mounted in a Buddhist style with two tiers of fine silk borders. The inner border of gold brocade on a cream background surrounds the painting. The outer border is yellow silk; decorative silk strips, called futai, dangle from the top hanging bar.",
+          "title": "Shakyamuni with two attendants"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150844",
+          "chunk_index": 0,
+          "fragment_id": "cma:150844::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1982.25",
+          "texto": "This painting was made on 3 vertical panels of silk stitched together. The joins are visible just outside of Shakyamuni's left and right shoulders.",
+          "title": "Shakyamuni with two attendants"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150844",
+          "chunk_index": 0,
+          "fragment_id": "cma:150844::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1982.25",
+          "texto": "(Fugendo Co., Ltd., Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Shakyamuni with two attendants"
+        }
+      ],
+      "cma:150944": [
+        {
+          "artist": null,
+          "artwork_id": "cma:150944",
+          "chunk_index": 0,
+          "fragment_id": "cma:150944::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1982.35",
+          "texto": "This official's portrait was done in the portrait painting style of the Ming dynasty.",
+          "title": "Portrait of an Official"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150944",
+          "chunk_index": 0,
+          "fragment_id": "cma:150944::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1982.35",
+          "texto": "(Bunzo Nakanishi, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of an Official"
+        }
+      ],
+      "cma:167663": [
+        {
+          "artist": null,
+          "artwork_id": "cma:167663",
+          "chunk_index": 0,
+          "fragment_id": "cma:167663::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2009.342.2",
+          "texto": "This triptych is a rare example of Yuan Buddhist painting. It depicts the historic Buddha Shakyamuni flanked by two attending bodhisattvas, Manjushri (the bodhisattva of wisdom, riding a lion) and Samantabhadra (the bodhisattva of universal virtue, riding an elephant). Below them are others seeking enlightenment: two disciples of the Buddha (Ananada and Kasyapa), two non-Chinese people, a boy with topknots, and a female worshiper. \n\nThe clouds above and around the divine beings form one scene that illustrates Shakyamuni’s sermon from the Lotus Sutra. This text became an important basis for Buddhist faith throughout East Asia and was central to the Mahayana school of Buddhism.",
+          "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:167663",
+          "chunk_index": 0,
+          "fragment_id": "cma:167663::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2009.342.2",
+          "texto": "Reportedly from the Enman-in 円満院 located inside the Onjo-ji temple (also known as the Miidera temple) in Otsu City, Shiga prefecture, Japan\nPrivate collection, Japan\nTakashi Yanagi of Yanagi Fine Art Shop, Kyoto, Japan, to Koichi Yanagi\n(Koichi Yanagi Oriental Fine Art, Kyoto, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:167663",
+          "chunk_index": 0,
+          "fragment_id": "cma:167663::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/2009.342.2",
+          "texto": "Shakyamuni is seated cross-legged on the throne with the hand gesture (mudra) of giving instruction.",
+          "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:150944::description::0"
+            ],
+            "texto": "Este retrato representa a un funcionario en el estilo de pintura de retratos de la dinastía Ming en China.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No se trata de un retrato de un monje o sabio, sino de un oficial, por lo que no responde directamente al pedido.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:150944"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:150844::description::0"
+            ],
+            "texto": "La obra representa al Buda histórico Shakyamuni acompañado por dos asistentes, figuras centrales en la tradición budista china.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Shakyamuni es una figura religiosa y sabia, por lo que este retrato encaja con el pedido de retratos de monjes y sabios en China.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:150844"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:241750::description::0"
+            ],
+            "texto": "Este retrato fue realizado por Gu Jianlong durante la dinastía Qing y representa a un príncipe manchú en la corte imperial de Beijing.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No es un retrato de un monje o sabio, sino de un príncipe, por lo que no cumple con el pedido.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:241750"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149621::description::0"
+            ],
+            "texto": "El álbum contiene pinturas de paisajes, figuras y flores, incluyendo una hoja con la imagen de una mujer.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "No hay indicios de que incluya retratos de monjes o sabios, por lo que no responde al pedido.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149621"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:167663::description::0"
+            ],
+            "texto": "Esta obra es un tríptico budista de la dinastía Yuan que muestra al Buda histórico Shakyamuni acompañado por dos bodhisattvas, figuras sabias y espirituales en la tradición budista china.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:167663::did_you_know::0"
+            ],
+            "texto": "El Buda Shakyamuni está representado en una postura de enseñanza, lo que refuerza su carácter de sabio y maestro espiritual.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Por lo tanto, esta obra cumple con el pedido de retratos de monjes y sabios en China.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:167663"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:151970",
+          "rank": 1,
+          "score": 0.5961146354675293
+        },
+        {
+          "artwork_id": "cma:145964",
+          "rank": 2,
+          "score": 0.593488872051239
+        },
+        {
+          "artwork_id": "cma:134789",
+          "rank": 3,
+          "score": 0.5899145603179932
+        },
+        {
+          "artwork_id": "cma:147572",
+          "rank": 4,
+          "score": 0.5849888324737549
+        },
+        {
+          "artwork_id": "cma:154086",
+          "rank": 5,
+          "score": 0.5819855332374573
+        },
+        {
+          "artwork_id": "cma:162867",
+          "rank": 6,
+          "score": 0.5751636028289795
+        },
+        {
+          "artwork_id": "aic:61483",
+          "rank": 7,
+          "score": 0.558342456817627
+        },
+        {
+          "artwork_id": "cma:140155",
+          "rank": 8,
+          "score": 0.5570482015609741
+        },
+        {
+          "artwork_id": "aic:241750",
+          "rank": 9,
+          "score": 0.5564072132110596
+        },
+        {
+          "artwork_id": "cma:150844",
+          "rank": 10,
+          "score": 0.5501830577850342
+        },
+        {
+          "artwork_id": "cma:139746",
+          "rank": 11,
+          "score": 0.5477177500724792
+        },
+        {
+          "artwork_id": "cma:132308",
+          "rank": 12,
+          "score": 0.5463712215423584
+        },
+        {
+          "artwork_id": "cma:160133",
+          "rank": 13,
+          "score": 0.5459464192390442
+        },
+        {
+          "artwork_id": "cma:167661",
+          "rank": 14,
+          "score": 0.5449562668800354
+        },
+        {
+          "artwork_id": "cma:167662",
+          "rank": 15,
+          "score": 0.5449562668800354
+        },
+        {
+          "artwork_id": "cma:167663",
+          "rank": 16,
+          "score": 0.5449562668800354
+        },
+        {
+          "artwork_id": "cma:167664",
+          "rank": 17,
+          "score": 0.5449562668800354
+        },
+        {
+          "artwork_id": "cma:143755",
+          "rank": 18,
+          "score": 0.5436810255050659
+        },
+        {
+          "artwork_id": "cma:144920",
+          "rank": 19,
+          "score": 0.5428358316421509
+        },
+        {
+          "artwork_id": "cma:148395",
+          "rank": 20,
+          "score": 0.5392557382583618
+        },
+        {
+          "artwork_id": "cma:150944",
+          "rank": 21,
+          "score": 0.5373076796531677
+        },
+        {
+          "artwork_id": "cma:135595",
+          "rank": 22,
+          "score": 0.5357232689857483
+        },
+        {
+          "artwork_id": "aic:212492",
+          "rank": 23,
+          "score": 0.5341315269470215
+        },
+        {
+          "artwork_id": "cma:144689",
+          "rank": 24,
+          "score": 0.5334181189537048
+        },
+        {
+          "artwork_id": "aic:105786",
+          "rank": 25,
+          "score": 0.5328136086463928
+        },
+        {
+          "artwork_id": "aic:75361",
+          "rank": 26,
+          "score": 0.532453179359436
+        },
+        {
+          "artwork_id": "cma:94983",
+          "rank": 27,
+          "score": 0.5321916937828064
+        },
+        {
+          "artwork_id": "cma:149590",
+          "rank": 28,
+          "score": 0.5320993661880493
+        },
+        {
+          "artwork_id": "cma:150728",
+          "rank": 29,
+          "score": 0.5317533016204834
+        },
+        {
+          "artwork_id": "cma:149624",
+          "rank": 30,
+          "score": 0.5285089612007141
+        },
+        {
+          "artwork_id": "cma:149627",
+          "rank": 31,
+          "score": 0.5285089612007141
+        },
+        {
+          "artwork_id": "cma:149607",
+          "rank": 32,
+          "score": 0.5284839272499084
+        },
+        {
+          "artwork_id": "cma:149609",
+          "rank": 33,
+          "score": 0.5284839272499084
+        },
+        {
+          "artwork_id": "cma:149610",
+          "rank": 34,
+          "score": 0.5284839272499084
+        },
+        {
+          "artwork_id": "cma:149603",
+          "rank": 35,
+          "score": 0.528462290763855
+        },
+        {
+          "artwork_id": "cma:149604",
+          "rank": 36,
+          "score": 0.528462290763855
+        },
+        {
+          "artwork_id": "cma:149616",
+          "rank": 37,
+          "score": 0.528462290763855
+        },
+        {
+          "artwork_id": "cma:149612",
+          "rank": 38,
+          "score": 0.528194010257721
+        },
+        {
+          "artwork_id": "cma:149621",
+          "rank": 39,
+          "score": 0.5278601050376892
+        },
+        {
+          "artwork_id": "cma:149623",
+          "rank": 40,
+          "score": 0.5278601050376892
+        },
+        {
+          "artwork_id": "cma:149625",
+          "rank": 41,
+          "score": 0.5278601050376892
+        },
+        {
+          "artwork_id": "cma:149626",
+          "rank": 42,
+          "score": 0.5278601050376892
+        },
+        {
+          "artwork_id": "cma:149605",
+          "rank": 43,
+          "score": 0.5277988314628601
+        },
+        {
+          "artwork_id": "cma:149606",
+          "rank": 44,
+          "score": 0.5277988314628601
+        },
+        {
+          "artwork_id": "cma:149614",
+          "rank": 45,
+          "score": 0.5277988314628601
+        },
+        {
+          "artwork_id": "cma:149619",
+          "rank": 46,
+          "score": 0.5277988314628601
+        },
+        {
+          "artwork_id": "cma:149620",
+          "rank": 47,
+          "score": 0.5277988314628601
+        },
+        {
+          "artwork_id": "cma:149613",
+          "rank": 48,
+          "score": 0.5276472568511963
+        },
+        {
+          "artwork_id": "cma:149608",
+          "rank": 49,
+          "score": 0.5276422500610352
+        },
+        {
+          "artwork_id": "cma:149615",
+          "rank": 50,
+          "score": 0.5267684459686279
+        },
+        {
+          "artwork_id": "cma:155051",
+          "rank": 51,
+          "score": 0.5254992842674255
+        },
+        {
+          "artwork_id": "cma:149880",
+          "rank": 52,
+          "score": 0.5254330635070801
+        },
+        {
+          "artwork_id": "cma:149391",
+          "rank": 53,
+          "score": 0.5250893831253052
+        },
+        {
+          "artwork_id": "cma:148384",
+          "rank": 54,
+          "score": 0.5233010649681091
+        },
+        {
+          "artwork_id": "cma:135430",
+          "rank": 55,
+          "score": 0.521034836769104
+        },
+        {
+          "artwork_id": "aic:62536",
+          "rank": 56,
+          "score": 0.5196953415870667
+        },
+        {
+          "artwork_id": "cma:148222",
+          "rank": 57,
+          "score": 0.5183725357055664
+        },
+        {
+          "artwork_id": "aic:76267",
+          "rank": 58,
+          "score": 0.5183613300323486
+        },
+        {
+          "artwork_id": "aic:46487",
+          "rank": 59,
+          "score": 0.5179311633110046
+        },
+        {
+          "artwork_id": "cma:142642",
+          "rank": 60,
+          "score": 0.516425371170044
+        },
+        {
+          "artwork_id": "cma:95080",
+          "rank": 61,
+          "score": 0.5158951282501221
+        },
+        {
+          "artwork_id": "aic:79507",
+          "rank": 62,
+          "score": 0.5157493352890015
+        },
+        {
+          "artwork_id": "cma:147571",
+          "rank": 63,
+          "score": 0.5155946612358093
+        },
+        {
+          "artwork_id": "cma:138688",
+          "rank": 64,
+          "score": 0.5140793323516846
+        },
+        {
+          "artwork_id": "aic:76279",
+          "rank": 65,
+          "score": 0.5126041769981384
+        },
+        {
+          "artwork_id": "cma:149109",
+          "rank": 66,
+          "score": 0.5105361938476562
+        },
+        {
+          "artwork_id": "cma:132908",
+          "rank": 67,
+          "score": 0.5101949572563171
+        },
+        {
+          "artwork_id": "cma:163114",
+          "rank": 68,
+          "score": 0.5100964307785034
+        },
+        {
+          "artwork_id": "cma:163147",
+          "rank": 69,
+          "score": 0.5100964307785034
+        },
+        {
+          "artwork_id": "cma:163148",
+          "rank": 70,
+          "score": 0.5100964307785034
+        },
+        {
+          "artwork_id": "cma:163149",
+          "rank": 71,
+          "score": 0.5100964307785034
+        },
+        {
+          "artwork_id": "cma:163117",
+          "rank": 72,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163129",
+          "rank": 73,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163130",
+          "rank": 74,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163131",
+          "rank": 75,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163132",
+          "rank": 76,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163133",
+          "rank": 77,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163135",
+          "rank": 78,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163136",
+          "rank": 79,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163137",
+          "rank": 80,
+          "score": 0.5100513696670532
+        },
+        {
+          "artwork_id": "cma:163140",
+          "rank": 81,
+          "score": 0.510032057762146
+        },
+        {
+          "artwork_id": "cma:163150",
+          "rank": 82,
+          "score": 0.510032057762146
+        },
+        {
+          "artwork_id": "cma:163151",
+          "rank": 83,
+          "score": 0.510032057762146
+        },
+        {
+          "artwork_id": "cma:163138",
+          "rank": 84,
+          "score": 0.510023832321167
+        },
+        {
+          "artwork_id": "cma:163145",
+          "rank": 85,
+          "score": 0.5100119709968567
+        },
+        {
+          "artwork_id": "cma:163105",
+          "rank": 86,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163107",
+          "rank": 87,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163142",
+          "rank": 88,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163144",
+          "rank": 89,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163152",
+          "rank": 90,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163153",
+          "rank": 91,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "cma:163155",
+          "rank": 92,
+          "score": 0.5099526643753052
+        },
+        {
+          "artwork_id": "aic:79716",
+          "rank": 93,
+          "score": 0.5095123052597046
+        },
+        {
+          "artwork_id": "cma:145953",
+          "rank": 94,
+          "score": 0.5093814134597778
+        },
+        {
+          "artwork_id": "cma:152556",
+          "rank": 95,
+          "score": 0.5093035697937012
+        },
+        {
+          "artwork_id": "cma:136295",
+          "rank": 96,
+          "score": 0.5080142617225647
+        },
+        {
+          "artwork_id": "cma:130940",
+          "rank": 97,
+          "score": 0.5077276229858398
+        },
+        {
+          "artwork_id": "cma:152822",
+          "rank": 98,
+          "score": 0.5076256394386292
+        },
+        {
+          "artwork_id": "cma:543427",
+          "rank": 99,
+          "score": 0.5059463977813721
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:153777",
+          "rank": 1,
+          "score": 0.7545595765113831
+        },
+        {
+          "artwork_id": "cma:151529",
+          "rank": 2,
+          "score": 0.7527927160263062
+        },
+        {
+          "artwork_id": "aic:147005",
+          "rank": 3,
+          "score": 0.752442479133606
+        },
+        {
+          "artwork_id": "cma:79600",
+          "rank": 4,
+          "score": 0.7497034668922424
+        },
+        {
+          "artwork_id": "cma:151007",
+          "rank": 5,
+          "score": 0.7440915703773499
+        },
+        {
+          "artwork_id": "cma:140321",
+          "rank": 6,
+          "score": 0.7423663139343262
+        },
+        {
+          "artwork_id": "cma:146713",
+          "rank": 7,
+          "score": 0.7410863637924194
+        },
+        {
+          "artwork_id": "cma:147927",
+          "rank": 8,
+          "score": 0.7408257722854614
+        },
+        {
+          "artwork_id": "cma:149079",
+          "rank": 9,
+          "score": 0.7381088733673096
+        },
+        {
+          "artwork_id": "cma:146174",
+          "rank": 10,
+          "score": 0.7366265058517456
+        },
+        {
+          "artwork_id": "cma:160470",
+          "rank": 11,
+          "score": 0.736473560333252
+        },
+        {
+          "artwork_id": "cma:150944",
+          "rank": 12,
+          "score": 0.7354766130447388
+        },
+        {
+          "artwork_id": "cma:161323",
+          "rank": 13,
+          "score": 0.7313166856765747
+        },
+        {
+          "artwork_id": "cma:151480",
+          "rank": 14,
+          "score": 0.7251719832420349
+        },
+        {
+          "artwork_id": "cma:153395",
+          "rank": 15,
+          "score": 0.723901629447937
+        },
+        {
+          "artwork_id": "cma:160859",
+          "rank": 16,
+          "score": 0.722076416015625
+        },
+        {
+          "artwork_id": "cma:170786",
+          "rank": 17,
+          "score": 0.721700131893158
+        },
+        {
+          "artwork_id": "cma:688675",
+          "rank": 18,
+          "score": 0.7215410470962524
+        },
+        {
+          "artwork_id": "cma:152428",
+          "rank": 19,
+          "score": 0.7213988900184631
+        },
+        {
+          "artwork_id": "cma:149943",
+          "rank": 20,
+          "score": 0.7179645299911499
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Chinese portraiture of Buddhist monks and scholars, traditional ink and color on silk, emphasizing spiritual and scholarly attributes in historical Chinese art",
+      "consulta_id": "c07-conceptual",
+      "consulta_visual": "Chinese portrait of a monk in traditional robes seated with scrolls and ritual objects, detailed brushwork, warm tones",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "retratos de monjes y sabios en China",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "1202fc831e1732df",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2125,
+        "tokens_out": 61
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:150944",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 21,
+          "visual": 12
+        },
+        "score_fusionado": 0.73547642
+      },
+      {
+        "artwork_id": "cma:150844",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.714305
+      },
+      {
+        "artwork_id": "aic:241750",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.70842227
+      },
+      {
+        "artwork_id": "cma:149621",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.69820388
+      },
+      {
+        "artwork_id": "cma:167663",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.69162246
+      },
+      {
+        "artwork_id": "cma:147572",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.68985768
+      },
+      {
+        "artwork_id": "cma:144689",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.68731452
+      },
+      {
+        "artwork_id": "cma:148384",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.68117207
+      },
+      {
+        "artwork_id": "cma:149391",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.67157993
+      },
+      {
+        "artwork_id": "cma:167662",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.66822906
+      },
+      {
+        "artwork_id": "cma:167664",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.66806165
+      },
+      {
+        "artwork_id": "cma:149608",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.66544521
+      },
+      {
+        "artwork_id": "aic:75361",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.66520711
+      },
+      {
+        "artwork_id": "cma:155051",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.65802007
+      },
+      {
+        "artwork_id": "cma:149624",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.65020598
+      },
+      {
+        "artwork_id": "cma:147571",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.64855658
+      },
+      {
+        "artwork_id": "cma:138688",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.64733761
+      },
+      {
+        "artwork_id": "cma:149609",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.64549331
+      },
+      {
+        "artwork_id": "cma:149620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.64085237
+      },
+      {
+        "artwork_id": "cma:145964",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.63794287
+      },
+      {
+        "artwork_id": "cma:149613",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.63143935
+      },
+      {
+        "artwork_id": "cma:149612",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.6293729
+      },
+      {
+        "artwork_id": "cma:163117",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.62747902
+      },
+      {
+        "artwork_id": "aic:212492",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.62723203
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.62680855
+      },
+      {
+        "artwork_id": "aic:46487",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.62586083
+      },
+      {
+        "artwork_id": "cma:154086",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.62532588
+      },
+      {
+        "artwork_id": "cma:148222",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.62499689
+      },
+      {
+        "artwork_id": "aic:76279",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.62183043
+      },
+      {
+        "artwork_id": "aic:61483",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.61647154
+      },
+      {
+        "artwork_id": "cma:134789",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.61397747
+      },
+      {
+        "artwork_id": "cma:162867",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.60968945
+      },
+      {
+        "artwork_id": "cma:94983",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.60590722
+      },
+      {
+        "artwork_id": "cma:142642",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.60398079
+      },
+      {
+        "artwork_id": "cma:149627",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.60383541
+      },
+      {
+        "artwork_id": "cma:149614",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.60162841
+      },
+      {
+        "artwork_id": "cma:160133",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.60143358
+      },
+      {
+        "artwork_id": "cma:149619",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.60064094
+      },
+      {
+        "artwork_id": "aic:105786",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.59947625
+      },
+      {
+        "artwork_id": "cma:149615",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.59765786
+      },
+      {
+        "artwork_id": "cma:163155",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.59760886
+      },
+      {
+        "artwork_id": "aic:76267",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.59613454
+      },
+      {
+        "artwork_id": "cma:149605",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.59471751
+      },
+      {
+        "artwork_id": "cma:163132",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.59367575
+      },
+      {
+        "artwork_id": "cma:149606",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.59343436
+      },
+      {
+        "artwork_id": "aic:79507",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.59328078
+      },
+      {
+        "artwork_id": "cma:149623",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.59278558
+      },
+      {
+        "artwork_id": "cma:149626",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.5919239
+      },
+      {
+        "artwork_id": "cma:163133",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.59076094
+      },
+      {
+        "artwork_id": "cma:132908",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.58998887
+      },
+      {
+        "artwork_id": "cma:140155",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.58706054
+      },
+      {
+        "artwork_id": "cma:163131",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.58629737
+      },
+      {
+        "artwork_id": "cma:163151",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.58605447
+      },
+      {
+        "artwork_id": "cma:149607",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.58571031
+      },
+      {
+        "artwork_id": "cma:152822",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 98
+        },
+        "score_fusionado": 0.5856317
+      },
+      {
+        "artwork_id": "cma:149610",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.58483831
+      },
+      {
+        "artwork_id": "cma:152556",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.58470205
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.58253589
+      },
+      {
+        "artwork_id": "cma:163138",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.58182725
+      },
+      {
+        "artwork_id": "cma:163107",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.58054308
+      },
+      {
+        "artwork_id": "cma:135430",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.57816856
+      },
+      {
+        "artwork_id": "cma:136295",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 96
+        },
+        "score_fusionado": 0.57811263
+      },
+      {
+        "artwork_id": "cma:148395",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.57729212
+      },
+      {
+        "artwork_id": "cma:139746",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.57671933
+      },
+      {
+        "artwork_id": "cma:163150",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.57545767
+      },
+      {
+        "artwork_id": "cma:163148",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.5732538
+      },
+      {
+        "artwork_id": "cma:163130",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.57040642
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.56923361
+      },
+      {
+        "artwork_id": "cma:149616",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.56871882
+      },
+      {
+        "artwork_id": "cma:167661",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.5665992
+      },
+      {
+        "artwork_id": "cma:163153",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.56530611
+      },
+      {
+        "artwork_id": "cma:144920",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.56498383
+      },
+      {
+        "artwork_id": "cma:149603",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.56134389
+      },
+      {
+        "artwork_id": "cma:149880",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.56114525
+      },
+      {
+        "artwork_id": "cma:163135",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.55796399
+      },
+      {
+        "artwork_id": "cma:163142",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.55641332
+      },
+      {
+        "artwork_id": "cma:163140",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.55347459
+      },
+      {
+        "artwork_id": "cma:163114",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.55253797
+      },
+      {
+        "artwork_id": "cma:130940",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 97
+        },
+        "score_fusionado": 0.55154517
+      },
+      {
+        "artwork_id": "cma:163136",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.55086506
+      },
+      {
+        "artwork_id": "cma:149604",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.55067276
+      },
+      {
+        "artwork_id": "cma:163147",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.55040488
+      },
+      {
+        "artwork_id": "cma:95080",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.54413623
+      },
+      {
+        "artwork_id": "cma:150728",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.54178543
+      },
+      {
+        "artwork_id": "cma:163129",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.54159654
+      },
+      {
+        "artwork_id": "cma:151970",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.53882266
+      },
+      {
+        "artwork_id": "cma:149109",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.53805338
+      },
+      {
+        "artwork_id": "cma:163152",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.53654474
+      },
+      {
+        "artwork_id": "cma:135595",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.53605397
+      },
+      {
+        "artwork_id": "cma:163105",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.51767945
+      },
+      {
+        "artwork_id": "cma:163144",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.50787104
+      },
+      {
+        "artwork_id": "cma:163145",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.5026111
+      },
+      {
+        "artwork_id": "cma:163149",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.50066826
+      },
+      {
+        "artwork_id": "cma:163137",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.49802349
+      },
+      {
+        "artwork_id": "cma:143755",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.49392435
+      },
+      {
+        "artwork_id": "cma:149590",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.49338947
+      },
+      {
+        "artwork_id": "cma:543427",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 99
+        },
+        "score_fusionado": 0.46655535
+      },
+      {
+        "artwork_id": "cma:132308",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.44353518
+      },
+      {
+        "artwork_id": "cma:145953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.39593089
+      }
+    ],
+    "rerank": null,
+    "salida": {
+      "consulta_id": "c07-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:150944",
+          "ficha": {
+            "culture": "China",
+            "date_display": "1600s–1700s",
+            "medium": "hanging scroll; ink and color on silk",
+            "title": "Portrait of an Official",
+            "year": 1600
+          },
+          "lineas": [
+            "Este retrato representa a un funcionario en el estilo de pintura de retratos de la dinastía Ming en China. [1]",
+            "No se trata de un retrato de un monje o sabio, sino de un oficial, por lo que no responde directamente al pedido."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:150944::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1982.35",
+              "texto_citado": "This official's portrait was done in the portrait painting style of the Ming dynasty.",
+              "title": "Portrait of an Official"
+            }
+          ],
+          "score": 0.7354764234726332,
+          "source_url": "https://clevelandart.org/art/1982.35"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:150844",
+          "ficha": {
+            "culture": "China",
+            "date_display": "1300s",
+            "medium": "Hanging scroll; ink, color, and gold on silk",
+            "title": "Shakyamuni with two attendants",
+            "year": 1300
+          },
+          "lineas": [
+            "La obra representa al Buda histórico Shakyamuni acompañado por dos asistentes, figuras centrales en la tradición budista china. [1]",
+            "Shakyamuni es una figura religiosa y sabia, por lo que este retrato encaja con el pedido de retratos de monjes y sabios en China."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:150844::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1982.25",
+              "texto_citado": "The historic Buddha Shakyamuni is seated on an elaborately decorated pedestal and flanked by two attendants making gestures of devotion. The unknown artist used gold and deeply hued pigments to depict the luxurious fabrics, particularly the golden medallions of swirling dragons and clouds on the Buddha’s red robe. \n\nThe painting itself is mounted in a Buddhist style with two tiers of fine silk borders. The inner border of gold brocade on a cream background surrounds the painting. The outer border is yellow silk; decorative silk strips, called futai, dangle from the top hanging bar.",
+              "title": "Shakyamuni with two attendants"
+            }
+          ],
+          "score": 0.7143049991830493,
+          "source_url": "https://clevelandart.org/art/1982.25"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:241750",
+          "ficha": {
+            "artist": "Gu Jianlong",
+            "culture": "China",
+            "date_display": "Qing dynasty (1644-1911), 17th century",
+            "medium": "Hanging scroll; ink and color on silk",
+            "title": "Portrait of an Official",
+            "year": 1600
+          },
+          "lineas": [
+            "Este retrato fue realizado por Gu Jianlong durante la dinastía Qing y representa a un príncipe manchú en la corte imperial de Beijing. [1]",
+            "No es un retrato de un monje o sabio, sino de un príncipe, por lo que no cumple con el pedido."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Gu Jianlong",
+              "atribucion": "“Portrait of an Official”, Gu Jianlong. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/241750",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:241750::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/241750",
+              "texto_citado": "Gu Jianlong completed this portrait after he became a court painter or “painter-in-waiting” for Emperor Shunzhi (reigned 1644–61) at the royal palace in Beijing. In its attention to fine detail, this portrait reflects the opulence of Gu’s surroundings at court. His sitter, a Manchu prince, sits on a gold lacquer chair wearing a blue court robe embroidered with a large four-clawed dragon on the chest; on the robe’s skirt, small dragons race over multicolored waves, clouds, water. His red hat has a gold filigree ornament studded with pearls and a large ruby finial. He looks directly at the viewer, holding his necklace of coral and large crystal beads delicately in his left hand. In contrast to the garment rendered with bold outlines and vibrant colors, the facial features, including individual characteristics such as angular eyebrows, a broad nose, and gray hair, are subtly shaped through multiple layers of muted color washes. Gu also incorporated Western methods such as shading to carefully depict the sitter’s face and enhance the lifelike appearance.",
+              "title": "Portrait of an Official"
+            }
+          ],
+          "score": 0.708422268505238,
+          "source_url": "https://www.artic.edu/artworks/241750"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:149621",
+          "ficha": {
+            "artist": "Chen Hongshou",
+            "culture": "China",
+            "date_display": "1598–1652",
+            "medium": "album leaf, ink and color on silk",
+            "title": "Paintings after Ancient Masters: A Lady",
+            "year": 1598
+          },
+          "lineas": [
+            "El álbum contiene pinturas de paisajes, figuras y flores, incluyendo una hoja con la imagen de una mujer. [1]",
+            "No hay indicios de que incluya retratos de monjes o sabios, por lo que no responde al pedido."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Chen Hongshou",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149621::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1979.27.2.16",
+              "texto_citado": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+              "title": "Paintings after Ancient Masters: A Lady"
+            }
+          ],
+          "score": 0.6982038785653881,
+          "source_url": "https://clevelandart.org/art/1979.27.2.16"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:167663",
+          "ficha": {
+            "culture": "China",
+            "date_display": "late 1300s",
+            "medium": "Hanging scroll; ink and color on silk",
+            "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)",
+            "year": 1350
+          },
+          "lineas": [
+            "Esta obra es un tríptico budista de la dinastía Yuan que muestra al Buda histórico Shakyamuni acompañado por dos bodhisattvas, figuras sabias y espirituales en la tradición budista china. [1]",
+            "El Buda Shakyamuni está representado en una postura de enseñanza, lo que refuerza su carácter de sabio y maestro espiritual. [2]",
+            "Por lo tanto, esta obra cumple con el pedido de retratos de monjes y sabios en China."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:167663::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2009.342.2",
+              "texto_citado": "This triptych is a rare example of Yuan Buddhist painting. It depicts the historic Buddha Shakyamuni flanked by two attending bodhisattvas, Manjushri (the bodhisattva of wisdom, riding a lion) and Samantabhadra (the bodhisattva of universal virtue, riding an elephant). Below them are others seeking enlightenment: two disciples of the Buddha (Ananada and Kasyapa), two non-Chinese people, a boy with topknots, and a female worshiper. \n\nThe clouds above and around the divine beings form one scene that illustrates Shakyamuni’s sermon from the Lotus Sutra. This text became an important basis for Buddhist faith throughout East Asia and was central to the Mahayana school of Buddhism.",
+              "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)"
+            },
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "did_you_know"
+              ],
+              "fragment_id": "cma:167663::did_you_know::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/2009.342.2",
+              "texto_citado": "Shakyamuni is seated cross-legged on the throne with the hand gesture (mudra) of giving instruction.",
+              "title": "Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)"
+            }
+          ],
+          "score": 0.6916224633913877,
+          "source_url": "https://clevelandart.org/art/2009.342.2"
+        }
+      ],
+      "render": "1. **Portrait of an Official**\n   1600s–1700s · hanging scroll; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1982.35\n\n   Este retrato representa a un funcionario en el estilo de pintura de retratos de la dinastía Ming en China. [1]\n   No se trata de un retrato de un monje o sabio, sino de un oficial, por lo que no responde directamente al pedido.\n\n   **Fuentes**\n   [1] “This official's portrait was done in the portrait painting style of the Ming dynasty.”\n       https://clevelandart.org/art/1982.35 · CC0 1.0\n\n2. **Shakyamuni with two attendants**\n   1300s · Hanging scroll; ink, color, and gold on silk\n   Ficha oficial: https://clevelandart.org/art/1982.25\n\n   La obra representa al Buda histórico Shakyamuni acompañado por dos asistentes, figuras centrales en la tradición budista china. [1]\n   Shakyamuni es una figura religiosa y sabia, por lo que este retrato encaja con el pedido de retratos de monjes y sabios en China.\n\n   **Fuentes**\n   [1] “The historic Buddha Shakyamuni is seated on an elaborately decorated pedestal and flanked by two attendants making gestures of devotion. The unknown artist used gold and deeply hued pigments to depict the luxurious fabrics, particularly the golden medallions of swirling dragons and clouds on the Buddha’s red robe. \n\nThe painting itself is mounted in a Buddhist style with two tiers of fine silk borders. The inner border of gold brocade on a cream background surrounds the painting. The outer border is yellow silk; decorative silk strips, called futai, dangle from the top hanging bar.”\n       https://clevelandart.org/art/1982.25 · CC0 1.0\n\n3. **Portrait of an Official**\n   Gu Jianlong · Qing dynasty (1644-1911), 17th century · Hanging scroll; ink and color on silk\n   Ficha oficial: https://www.artic.edu/artworks/241750\n\n   Este retrato fue realizado por Gu Jianlong durante la dinastía Qing y representa a un príncipe manchú en la corte imperial de Beijing. [1]\n   No es un retrato de un monje o sabio, sino de un príncipe, por lo que no cumple con el pedido.\n\n   **Fuentes**\n   [1] “Gu Jianlong completed this portrait after he became a court painter or “painter-in-waiting” for Emperor Shunzhi (reigned 1644–61) at the royal palace in Beijing. In its attention to fine detail, this portrait reflects the opulence of Gu’s surroundings at court. His sitter, a Manchu prince, sits on a gold lacquer chair wearing a blue court robe embroidered with a large four-clawed dragon on the chest; on the robe’s skirt, small dragons race over multicolored waves, clouds, water. His red hat has a gold filigree ornament studded with pearls and a large ruby finial. He looks directly at the viewer, holding his necklace of coral and large crystal beads delicately in his left hand. In contrast to the garment rendered with bold outlines and vibrant colors, the facial features, including individual characteristics such as angular eyebrows, a broad nose, and gray hair, are subtly shaped through multiple layers of muted color washes. Gu also incorporated Western methods such as shading to carefully depict the sitter’s face and enhance the lifelike appearance.”\n       https://www.artic.edu/artworks/241750 · CC BY 4.0\n       “Portrait of an Official”, Gu Jianlong. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/241750\n\n4. **Paintings after Ancient Masters: A Lady**\n   Chen Hongshou · 1598–1652 · album leaf, ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1979.27.2.16\n\n   El álbum contiene pinturas de paisajes, figuras y flores, incluyendo una hoja con la imagen de una mujer. [1]\n   No hay indicios de que incluya retratos de monjes o sabios, por lo que no responde al pedido.\n\n   **Fuentes**\n   [1] “The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.”\n       https://clevelandart.org/art/1979.27.2.16 · CC0 1.0\n\n5. **Shakyamuni Triad: Buddha Attended by Manjushri and Samantabhadra (Buddha)**\n   late 1300s · Hanging scroll; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/2009.342.2\n\n   Esta obra es un tríptico budista de la dinastía Yuan que muestra al Buda histórico Shakyamuni acompañado por dos bodhisattvas, figuras sabias y espirituales en la tradición budista china. [1]\n   El Buda Shakyamuni está representado en una postura de enseñanza, lo que refuerza su carácter de sabio y maestro espiritual. [2]\n   Por lo tanto, esta obra cumple con el pedido de retratos de monjes y sabios en China.\n\n   **Fuentes**\n   [1] “This triptych is a rare example of Yuan Buddhist painting. It depicts the historic Buddha Shakyamuni flanked by two attending bodhisattvas, Manjushri (the bodhisattva of wisdom, riding a lion) and Samantabhadra (the bodhisattva of universal virtue, riding an elephant). Below them are others seeking enlightenment: two disciples of the Buddha (Ananada and Kasyapa), two non-Chinese people, a boy with topknots, and a female worshiper. \n\nThe clouds above and around the divine beings form one scene that illustrates Shakyamuni’s sermon from the Lotus Sutra. This text became an important basis for Buddhist faith throughout East Asia and was central to the Mahayana school of Buddhism.”\n       https://clevelandart.org/art/2009.342.2 · CC0 1.0\n   [2] “Shakyamuni is seated cross-legged on the throne with the hand gesture (mudra) of giving instruction.”\n       https://clevelandart.org/art/2009.342.2 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "d9e597978de49c1665ab666132976ef5ec82d3bd",
+      "config_id": "53f5e551942b025d",
+      "corrida_id": "cef6511dae1c2724-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "n_obras": 368,
+        "terminos": [
+          "China"
+        ],
+        "valores": [
+          "China",
+          "South China"
+        ]
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:150944",
+      "cma:150844",
+      "aic:241750",
+      "cma:149621",
+      "cma:167663"
+    ]
+  },
+  "fecha": "2026-11-14T20:15:27+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "fusionador",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.1468,
+      "generador": 5.7598,
+      "planificador": 0.001,
+      "recolector_de_evidencia": 0.3725,
+      "recuperador_textual": 0.5257,
+      "recuperador_visual": 0.1174,
+      "renderizador": 0.001
+    },
+    "segundos_de_la_corrida": 6.9253
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.217,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.759,
+      "tokens_in": 52,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.756,
+      "tokens_in": 3141,
+      "tokens_out": 753
+    },
+    "indice": {
+      "n_items": 697,
+      "n_llamadas": 10,
+      "resultados": {
+        "ok": 10
+      },
+      "roles": {
+        "indice": 10
+      },
+      "segundos": 0.178,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 101,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.145,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 5.756,
+      "tokens_in": 3141,
+      "tokens_out": 753
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.371,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 568,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 3
+      },
+      "segundos": 0.523,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.116,
+      "tokens_in": 0,
+      "tokens_out": 0
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida"
+    },
+    "configuracion": "C3",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "d9e597978de49c1665ab666132976ef5ec82d3bd",
+    "config_id": "53f5e551942b025d",
+    "corrida_id": "cef6511dae1c2724-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
