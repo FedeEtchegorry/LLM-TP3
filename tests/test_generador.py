@@ -97,6 +97,23 @@ def test_el_mensaje_lleva_los_fragment_id_literales_y_el_texto_en_ingles():
     assert TEXTO in usuario
     assert "versiones más cálidas" in usuario
 
+def test_la_ficha_llega_aunque_la_obra_no_este_en_la_rama_visual():
+    entrada = EntradaDeConsulta.ad_hoc(datos_de_imagen=b"\x89PNGbytes", pedido="en la pintura japonesa")
+    estado = (
+        EstadoDeConsulta(entrada=entrada)
+        .con(
+            fuentes_de_ranking={
+                "visual": (Candidata("cma:1", 1, 0.9, {"title": "Tcma:1", "museum": "cma"}),),
+                "texto": (Candidata("cma:9", 1, 0.6, {"title": "Tcma:9", "museum": "cma"}),),
+            }
+        )
+        .proyectar_top5(["cma:9", "cma:1"], por="fusionador")
+        .con(evidencia={"cma:9": (_fragmento("cma:9"),), "cma:1": (_fragmento("cma:1"),)})
+    )
+    usuario = [m for m in armar_mensajes(estado) if m["rol"] == "usuario"][0]["texto"]
+    assert "title: Tcma:9" in usuario
+    assert "title: Tcma:1" in usuario
+
 def test_el_mensaje_no_lleva_media_license_ni_el_score():
     usuario = [m for m in armar_mensajes(_estado()) if m["rol"] == "usuario"][0]["texto"]
     assert "media_license" not in usuario

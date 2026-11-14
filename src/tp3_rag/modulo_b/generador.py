@@ -65,18 +65,18 @@ def _ficha(metadata: Mapping) -> str:
 def armar_mensajes(estado: EstadoDeConsulta) -> list[dict]:
     evidencia = dict(estado.evidencia or {})
     bloques: list[str] = [f"Pedido de la persona: «{estado.entrada.pedido}»", ""]
+    # En cascada el top-5 sale de las obras elegibles por texto, que pueden no estar en el
+    # top-N visual: la ficha se busca en todas las ramas, igual que en el reranker y el
+    # renderizador (la visual pisa a las demás).
+    fichas: dict[str, Mapping] = {}
+    for nombre in ("texto", *sorted(estado.fuentes_de_ranking), "visual"):
+        for c in estado.fuentes_de_ranking.get(nombre, ()):
+            if c.metadata:
+                fichas[c.artwork_id] = c.metadata
     for i, artwork_id in enumerate(estado.top5 or (), start=1):
-        candidata = next(
-            (
-                c
-                for c in estado.fuentes_de_ranking.get("visual", ())
-                if c.artwork_id == artwork_id
-            ),
-            None,
-        )
         bloques.append(f"### Obra {i} · artwork_id: {artwork_id}")
-        if candidata is not None:
-            bloques.append(_ficha(candidata.metadata))
+        if artwork_id in fichas:
+            bloques.append(_ficha(fichas[artwork_id]))
         fragmentos = evidencia.get(artwork_id) or ()
         if not fragmentos:
             bloques.append(
