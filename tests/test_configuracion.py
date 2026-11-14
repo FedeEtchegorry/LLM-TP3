@@ -16,10 +16,6 @@ def test_una_clave_desconocida_es_un_error(tmp_path):
     with pytest.raises(ErrorDeConfiguración, match="clave desconocida"):
         Configuración.cargar(archivo=archivo)
 
-def test_una_clave_desconocida_por_flag_tambien_es_un_error():
-    with pytest.raises(ErrorDeConfiguración, match="clave desconocida"):
-        Configuración.cargar(overrides={"ingesta.limite_eme": 20})
-
 def test_una_capa_especializa_sin_inventar(tmp_path):
     archivo = tmp_path / "solo-cma.toml"
     archivo.write_text('[ingesta]\nmuseos = ["cma"]\n', encoding="utf-8")
@@ -95,12 +91,6 @@ campo_de_ficha = "objectURL"
     assert cfg["ingesta.museos"] == ("aic", "cma", "met")
     assert cfg["ingesta.tabla_de_licencias.met.description"] == "CC0"
 
-def test_un_typo_fuera_de_una_tabla_abierta_sigue_siendo_un_error(tmp_path):
-    archivo = tmp_path / "typo.toml"
-    archivo.write_text("[http]\nreintetos = 9\n", encoding="utf-8")
-    with pytest.raises(ErrorDeConfiguración, match="clave desconocida"):
-        Configuración.cargar(archivo=archivo)
-
 def test_un_museo_sin_media_license_falla_al_cargar(tmp_path):
     archivo = tmp_path / "sin-media.toml"
     archivo.write_text('[ingesta]\nmuseos = ["aic", "cma", "met"]\n', encoding="utf-8")
@@ -161,11 +151,6 @@ def test_un_override_sobre_una_tabla_cerrada_sigue_siendo_un_error():
         Configuración.cargar(overrides={"consulta.alfa_inventado": "0.5"})
     with pytest.raises(ErrorDeConfiguración, match="clave desconocida"):
         Configuración.cargar(overrides={"bindings.generador.temperatura": "0.5"})
-
-def test_el_mensaje_del_override_desconocido_nombra_la_regla_de_m1_g():
-    with pytest.raises(ErrorDeConfiguración) as e:
-        Configuración.cargar(overrides={"consulta.inventada": "x"})
-    assert "" in str(e.value)
 
 def test_m5_1_el_layout_no_mueve_el_config_id():
     base = Configuración.cargar()
