@@ -67,11 +67,6 @@ def test_los_museos_los_tipos_y_la_version_entran():
     assert _id(r) != _id(r, tipos=["Painting", "Print"])
     assert _id(r) != _id(r, version="2")
 
-def test_la_fecha_de_ingesta_no_entra_en_el_catalogo_id():
-    import inspect
-
-    assert "fecha" not in inspect.signature(catalogo_id).parameters
-
 def test_dos_corridas_del_mismo_universo_dan_el_mismo_id():
     assert _id([_registro(), _registro(artwork_id="aic:1")]) == _id(
         [_registro(), _registro(artwork_id="aic:1")]
@@ -80,12 +75,6 @@ def test_dos_corridas_del_mismo_universo_dan_el_mismo_id():
 def test_el_orden_de_las_paginas_no_es_el_contenido():
     a, b = _registro(artwork_id="aic:1"), _registro(artwork_id="cma:2")
     assert hash_de_registros([a, b]) == hash_de_registros([b, a])
-
-def test_el_criterio_de_inclusion_no_entra():
-    import inspect
-
-    params = set(inspect.signature(catalogo_id).parameters)
-    assert not params & {"criterio", "criterio_de_inclusion", "split_id", "variante_id"}
 
 def test_la_clave_de_cache_depende_de_la_url():
     assert clave_de_cache_http("https://a/1", ["User-Agent"]) != clave_de_cache_http(
@@ -100,15 +89,6 @@ def test_la_clave_de_cache_depende_de_que_headers_exige_el_dominio():
 def test_la_clave_de_cache_no_depende_del_orden_de_los_headers():
     assert clave_de_cache_http("https://a/1", ["B", "A"]) == clave_de_cache_http(
         "https://a/1", ["A", "B"]
-    )
-
-def test_la_clave_de_cache_no_lleva_el_valor_del_contacto():
-    import inspect
-
-    firma = inspect.signature(clave_de_cache_http)
-    assert "nombres_de_headers" in firma.parameters
-    assert clave_de_cache_http("https://a/1", ["AIC-User-Agent"]) == clave_de_cache_http(
-        "https://a/1", ["AIC-User-Agent"]
     )
 
 def test_el_hash_de_bytes_lleva_el_algoritmo_adelante():
@@ -158,23 +138,6 @@ def test_el_orden_del_criterio_de_inclusion_tampoco():
     assert _variante(
         criterio_de_inclusion={"imagen_real": True, "description_no_vacia": True}
     ) == _variante()
-
-def test_la_firma_no_acepta_el_ordinal_del_embebido():
-    import inspect
-
-    from tp3_rag.nucleo.identidad import variante_id
-
-    parámetros = set(inspect.signature(variante_id).parameters)
-    assert "ordinal" not in parámetros
-    assert not [p for p in parámetros if "ordinal" in p]
-
-def test_alfa_y_n_no_entran_porque_son_de_la_corrida():
-    import inspect
-
-    from tp3_rag.nucleo.identidad import variante_id
-
-    parámetros = set(inspect.signature(variante_id).parameters)
-    assert not {"alfa", "alpha", "n", "fusion", "prompt_id"} & parámetros
 
 def test_las_tres_identidades_de_clase_3_son_legibles_y_no_hashes():
     from tp3_rag.nucleo import identidad

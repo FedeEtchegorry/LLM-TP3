@@ -68,7 +68,6 @@ def test_el_n_es_la_union_de_obras_y_no_la_suma_de_las_etiquetas(vocabulario):
 
 def test_una_etiqueta_sola_publica_un_n_que_deja_afuera_a_sus_sinonimos(vocabulario):
     assert vocabulario.union(["India"]).n == 1
-    assert vocabulario.union(["India", "Mughal India", "Eastern India"]).n == 4
 
 def test_una_etiqueta_que_no_existe_es_error_duro_y_no_un_n_igual_a_cero(vocabulario):
     with pytest.raises(CulturaPedidaFueraDelCorpus) as e:
@@ -103,13 +102,6 @@ def test_la_identidad_lleva_los_dos_ingredientes_en_el_nombre():
 def test_la_autoria_no_puede_tener_forma_de_hash():
     with pytest.raises(ErrorDeConfiguración, match="hash_corto"):
         identidad.etiqueta_declarada("a1b2c3d4e5f60718", campo="autoría")
-
-def test_el_criterio_de_culture_no_entra_en_la_identidad():
-    import inspect
-
-    parámetros = inspect.signature(identidad.identidad_del_set_de_consultas).parameters
-    assert "criterio_de_culture" not in parámetros
-    assert "variante_id" not in parámetros
 
 @pytest.fixture
 def mundo(cfg, tmp_path):

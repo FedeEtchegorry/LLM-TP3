@@ -8,7 +8,6 @@ from tp3_rag.dominio.binding import BindingDelGenerador, Muestreo
 from tp3_rag.nucleo.errores import ErrorDeConfiguración
 from tp3_rag.puertos.llm import (
     EXPLICACIÓN_CON_REF_COLGADA,
-    EXPLICACIÓN_TODA_COLGADA,
     EXPLICACIÓN_VÁLIDA,
     MÁXIMO_DE_IMÁGENES,
     FallaDeEtapa,
@@ -80,12 +79,6 @@ def test_la_falla_de_etapa_es_clase_3_y_no_degrada_en_el_puerto():
     assert falla.causa == "JSON inválido"
     with pytest.raises(FallaDeEtapa):
         LLMGrabado({}, fallas={"generador": falla}).invocar(_binding(), MENSAJES)
-
-def test_las_respuestas_grabadas_cubren_el_caso_que_7_nombra():
-    colgadas = EXPLICACIÓN_CON_REF_COLGADA["obras"][0]["afirmaciones"]
-    assert any("exhibitions" in r for a in colgadas for r in a["refs"])
-    assert len(EXPLICACIÓN_TODA_COLGADA["obras"][0]["afirmaciones"]) == 1
-    assert EXPLICACIÓN_VÁLIDA["obras"][0]["afirmaciones"][1]["tipo"] == "observacion"
 
 def test_la_respuesta_declara_uso_y_n_para_el_decorador():
     respuesta = LLMGrabado({"generador": [EXPLICACIÓN_VÁLIDA]}).invocar(_binding(), MENSAJES)

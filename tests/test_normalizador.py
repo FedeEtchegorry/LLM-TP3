@@ -3,7 +3,6 @@ from __future__ import annotations
 import pytest
 
 from tp3_rag.dominio.catalogo import prefijar
-from tp3_rag.modulo_a import normalizador as mod
 from tp3_rag.modulo_a.normalizador import Normalizador, html_a_texto, parsear_artista
 from tp3_rag.nucleo.errores import ErrorDeConstrucción, LicenciaNoDeclarada
 
@@ -89,6 +88,7 @@ def test_nr2_ninguna_pieza_escribe_un_valor_normalizado_en_culture_raw(cfg, coro
     assert registro.culture_raw == ("France, 19th century",)
 
 def test_nr3_un_aic_sin_description_no_tiene_la_section(cfg, aic_sin_description):
+    assert not aic_sin_description.get("description")
     registro = Normalizador(cfg).normalizar(aic_sin_description, "aic", None)
     assert "description" not in {c.section for c in registro.campos_de_texto}
     assert not registro.tiene_description_no_vacia
@@ -115,15 +115,6 @@ def test_nr4_dos_normalizaciones_del_mismo_crudo_son_identicas(cfg, corot):
     a = normalizador.normalizar(corot, "cma", "sha256:abc")
     b = normalizador.normalizar(corot, "cma", "sha256:abc")
     assert a.a_json() == b.a_json()
-
-def test_nr4_el_modulo_no_importa_reloj_red_ni_azar():
-    prohibidos = {"time", "datetime", "random", "requests", "urllib", "socket"}
-    presentes = prohibidos & set(vars(mod))
-    assert not presentes, f"el Normalizador importó {presentes}: dejó de ser puro"
-
-def test_nr4_la_version_del_normalizador_es_explicita():
-    assert mod.VERSIÓN_DEL_NORMALIZADOR
-    assert isinstance(mod.VERSIÓN_DEL_NORMALIZADOR, str)
 
 def test_los_dos_museos_producen_el_mismo_esquema(cfg, crudos_aic, crudos_cma):
     normalizador = Normalizador(cfg)

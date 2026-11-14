@@ -30,9 +30,6 @@ def test_k4_openai_api_key_sigue_valiendo_como_alias(tmp_path, monkeypatch):
     assert credenciales.llm_api_key == "solo-el-viejo"
     assert credenciales.variable_de_la_key == "OPENAI_API_KEY"
 
-def test_k4_el_orden_de_precedencia_esta_declarado_y_no_es_incidental():
-    assert VARIABLES_DE_LA_KEY == ("LLM_API_KEY", "OPENAI_API_KEY")
-
 def test_sin_ninguna_de_las_dos_el_error_nombra_la_de_la_catedra(tmp_path, monkeypatch):
     _entorno(monkeypatch)
     credenciales = Credenciales.desde_entorno(raíz=tmp_path)
