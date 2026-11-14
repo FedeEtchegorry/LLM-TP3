@@ -330,6 +330,7 @@ class Etapa:
     NOMBRE: str = ""
     PRECONDICIONES: tuple[str, ...] = ()
     CLAVES_DE_CONFIGURACIÓN: tuple[str, ...] = ()
+    CLAVES_OPCIONALES_DE_CONFIGURACIÓN: tuple[str, ...] = ()
     DEGRADA: bool = True
     POLÍTICA: str = ""
 

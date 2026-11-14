@@ -324,6 +324,9 @@ class ArmadorDePipeline:
                 ),
                 n_fragmentos=int(self.cfg["recuperacion_textual.n_fragmentos_recuperados"]),
                 agregacion=self.cfg["recuperacion_textual.agregacion"],
+                filtro_por_metadata=self.cfg.get(
+                    "recuperacion_textual.filtro_por_metadata", False
+                ),
             )
         if nombre == "fusionador":
             estrategia = self.cfg["fusion.estrategia"]
@@ -384,7 +387,8 @@ def _precondiciones_de(etapa: str) -> tuple[str, ...]:
     return CLASE_DE_ETAPA[etapa].PRECONDICIONES
 
 def claves_de_configuracion_de(etapa: str) -> tuple[str, ...]:
-    return CLASE_DE_ETAPA[etapa].CLAVES_DE_CONFIGURACIÓN
+    clase = CLASE_DE_ETAPA[etapa]
+    return tuple(clase.CLAVES_DE_CONFIGURACIÓN) + tuple(clase.CLAVES_OPCIONALES_DE_CONFIGURACIÓN)
 
 def alcance_de_la_cadena(cadena: Sequence[str]) -> tuple[str, ...]:
     desconocidas = [e for e in cadena if e not in CLASE_DE_ETAPA]

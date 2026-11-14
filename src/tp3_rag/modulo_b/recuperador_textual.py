@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Sequence
 
+from tp3_rag.modulo_b import filtro_de_metadata as fm
 from tp3_rag.modulo_b.etapa import Candidata, Etapa, EstadoDeConsulta
 from tp3_rag.nucleo.errores import ErrorDeConfiguración, ErrorDelProyecto
 from tp3_rag.puertos.indice_vectorial import ARTWORKS, KNOWLEDGE
@@ -43,6 +44,7 @@ class RecuperadorTextual(Etapa):
         "recuperacion_textual.n_fragmentos_recuperados",
         "recuperacion_textual.agregacion",
     )
+    CLAVES_OPCIONALES_DE_CONFIGURACIÓN = ("recuperacion_textual.filtro_por_metadata",)
     DEGRADA = True
     POLÍTICA = (
         "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa "
@@ -58,6 +60,7 @@ class RecuperadorTextual(Etapa):
         embebedor_de_texto,
         n_fragmentos: int,
         agregacion: str,
+        filtro_por_metadata: bool = False,
     ) -> None:
         if embebedor_de_texto is None:
             raise ErrorDeConfiguración(
@@ -82,6 +85,43 @@ class RecuperadorTextual(Etapa):
                 f"{list(AGREGACIONES)} (el criterio de atribución, **abierto**)."
             )
         self.agregacion = agregacion
+        if not isinstance(filtro_por_metadata, bool):
+            raise ErrorDeConfiguración(
+                f"`recuperacion_textual.filtro_por_metadata = {filtro_por_metadata!r}` tiene "
+                f"que ser `true` o `false`."
+            )
+        self.filtro_por_metadata = filtro_por_metadata
+        self._culturas_por_obra: dict[str, str] | None = None
+
+    def _filtro(self, pedido: str) -> tuple[dict | None, dict]:
+        """El `where` sobre `knowledge` que restringe la búsqueda, y su registro.
+
+        Dos pasos, los dos antes de la búsqueda por similitud: el pedido se traduce en
+        valores de `culture` que existen en `artworks`, un `where` sobre `artworks` da
+        las obras que cumplen, y la búsqueda en `knowledge` se limita a sus fragmentos.
+        """
+        registro: dict = {"campo": fm.CAMPO, "terminos": [], "valores": [], "aplicado": False}
+        terminos = fm.terminos_pedidos(pedido)
+        if not terminos:
+            return None, {**registro, "motivo": "el pedido no nombra una cultura conocida"}
+        registro["terminos"] = list(terminos)
+        if self._culturas_por_obra is None:
+            fichas = self.indice.metadatas(ARTWORKS, list(self.indice.ids(ARTWORKS)))
+            self._culturas_por_obra = {
+                i: str(m.get(fm.CAMPO) or "") for i, m in fichas.items()
+            }
+        valores = fm.valores_que_cumplen(terminos, self._culturas_por_obra.values())
+        if not valores:
+            return None, {**registro, "motivo": "ninguna obra del índice tiene esa cultura"}
+        registro["valores"] = list(valores)
+        obras = sorted(r.id for r in self.indice.traer(ARTWORKS, where=fm.where_de(valores)))
+        registro["n_obras"] = len(obras)
+        if len(obras) < fm.MÍNIMO_DE_OBRAS:
+            return None, {
+                **registro,
+                "motivo": f"menos de {fm.MÍNIMO_DE_OBRAS} obras cumplen el filtro",
+            }
+        return {"artwork_id": {"$in": obras}}, {**registro, "aplicado": True}
 
     def correr(self, estado: EstadoDeConsulta) -> EstadoDeConsulta:
         if estado.plan is None:
@@ -99,7 +139,10 @@ class RecuperadorTextual(Etapa):
             [consulta], etiquetas=[f"texto:{estado.entrada.consulta_id}"]
         )
 
-        resultados = self.indice.consultar(KNOWLEDGE, vectores[0], self.n_fragmentos)
+        where, registro = (
+            self._filtro(estado.entrada.pedido or "") if self.filtro_por_metadata else (None, None)
+        )
+        resultados = self.indice.consultar(KNOWLEDGE, vectores[0], self.n_fragmentos, where)
         hits = [
             (r.metadata.get("artwork_id") or "", float(r.score or 0.0), r.id)
             for r in resultados
@@ -142,13 +185,17 @@ class RecuperadorTextual(Etapa):
                 f"la variante tiene `knowledge` y `artworks` desalineados — y una obra sin "
                 f"ficha sale **sin `source_url`**, que es el criterio de trazabilidad roto."
             )
-        return estado.con(fuentes_de_ranking={"texto": candidatas})
+        nuevo = estado.con(fuentes_de_ranking={"texto": candidatas})
+        if registro is not None:
+            nuevo = nuevo.con(sellos={**dict(nuevo.sellos), "filtro_por_metadata": registro})
+        return nuevo
 
     def a_json(self) -> dict:
         return {
             "etapa": self.NOMBRE,
             "n_fragmentos": self.n_fragmentos,
             "agregacion": self.agregacion,
+            "filtro_por_metadata": self.filtro_por_metadata,
             "agregaciones_declaradas": list(AGREGACIONES),
             "degrada": self.DEGRADA,
             "politica": self.POLÍTICA,

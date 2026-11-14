@@ -1,0 +1,19 @@
+# Experimento: filtro por metadata en pre-retrieval. Si el pedido nombra una cultura, la
+# búsqueda de texto se restringe a las obras con esa `culture` (ver modulo_b/filtro_de_metadata.py).
+# El resto es la fila C4 en cascada, sin cambios.
+[consulta]
+configuracion = "C4"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+filtro_por_metadata = true

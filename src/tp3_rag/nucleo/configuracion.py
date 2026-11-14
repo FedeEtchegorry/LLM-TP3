@@ -77,6 +77,13 @@ TABLAS_ABIERTAS = (
     "medicion.terminos_de_cultura",
 )
 
+# Claves que una capa o un `--set` pueden declarar aunque `default.toml` no las traiga.
+# Existen para agregar un punto de variación **sin mover el `config_id` de las filas ya
+# corridas**: una clave ausente no entra al hash (`_recortar_a` la saltea), así que C0–C4
+# conservan su identidad, y cuando la clave está presente sí la determina, porque la
+# etapa que la lee la declara en `CLAVES_OPCIONALES_DE_CONFIGURACIÓN`.
+CLAVES_OPCIONALES: tuple[str, ...] = ("recuperacion_textual.filtro_por_metadata",)
+
 NO_DETERMINAN_EL_CONFIG_ID: tuple[str, ...] = (
     "rutas",
     "embebido.threads",
@@ -180,7 +187,7 @@ def _fusionar(base: dict, encima: dict, prefijo: str = "") -> dict:
     abierta = prefijo and _es_tabla_abierta(prefijo.rstrip("."))
     for clave, valor in encima.items():
         ruta = f"{prefijo}{clave}"
-        if clave not in base and not abierta:
+        if clave not in base and not abierta and ruta not in CLAVES_OPCIONALES:
             raise ErrorDeConfiguración(
                 f"clave desconocida en la configuración: {ruta!r}. "
                 f"`config/default.toml` es el esquema; declarala ahí primero "
@@ -300,7 +307,11 @@ class Configuración:
                     )
                 nodo = nodo[parte]
             padre = ".".join(partes[:-1])
-            if partes[-1] not in nodo and not _es_tabla_abierta(padre):
+            if (
+                partes[-1] not in nodo
+                and not _es_tabla_abierta(padre)
+                and ruta not in CLAVES_OPCIONALES
+            ):
                 raise ErrorDeConfiguración(
                     f"clave desconocida en la configuración: {ruta!r} "
                     f"(`config/default.toml` es el esquema). Si {padre!r} fuera un **mapa "
