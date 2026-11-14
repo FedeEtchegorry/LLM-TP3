@@ -45,6 +45,7 @@ Requiere **Python 3.10** y [Poetry](https://python-poetry.org/).
 poetry install                       # núcleo + dependencias de test
 poetry install --with modelos        # torch/CLIP, chromadb, openai, langchain
 poetry install --with figuras        # solo si vas a generar la figura UMAP
+poetry install --with modelos,ui     # interfaz local, se corre con: poetry run python ui/app.py
 ```
 
 `torch` se instala desde el índice CPU de PyTorch: el modelo de imagen corre en
@@ -58,7 +59,7 @@ versionan.**
 | Variable | Para qué | ¿Obligatoria? |
 |---|---|---|
 | `TP3_CONTACTO_AIC` | contacto del header `AIC-User-Agent`, que AIC exige en API e imágenes | sí, para la ingesta |
-| `LLM_API_KEY` | key del proxy de modelos (se acepta `OPENAI_API_KEY` como alias) | sí, desde el indexado de texto |
+| `LLM_API_KEY` | key de OpenAI, que va a `api.openai.com` (se acepta `OPENAI_API_KEY` como alias) | sí, desde el indexado de texto |
 | `LANGSMITH_API_KEY` | trazas | solo si `trazas.proveedor = "langsmith"` |
 
 El host del proveedor **no** es un secreto: sale de `proveedor.base_url` en
