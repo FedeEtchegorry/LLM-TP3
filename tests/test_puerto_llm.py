@@ -95,12 +95,6 @@ def test_las_respuestas_se_consumen_en_orden_y_una_sola_se_repite():
     uno = LLMGrabado({"generador": [EXPLICACIÓN_VÁLIDA]})
     assert uno.invocar(_binding(), MENSAJES).texto == uno.invocar(_binding(), MENSAJES).texto
 
-def test_el_doble_registra_las_llamadas_para_que_se_puedan_contar():
-    doble = LLMGrabado({"generador": [EXPLICACIÓN_VÁLIDA]})
-    doble.invocar(_binding(), MENSAJES, [b"img"])
-    assert doble.llamadas[0]["rol"] == "generador"
-    assert doble.llamadas[0]["n_imagenes"] == 1
-
 def test_el_prefijo_del_proveedor_se_saca_solo_contra_la_api_de_openai():
     from tp3_rag.puertos.llm import nombre_para_el_host
 

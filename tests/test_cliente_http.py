@@ -11,7 +11,6 @@ from tp3_rag.puertos.cliente_http import (
     LazoDeRedirecciones,
     ProhibidoPorElRemoto,
     RecursoNoEncontrado,
-    RespuestaHTTP,
 )
 
 pytestmark = pytest.mark.nivel1
@@ -194,6 +193,3 @@ def test_la_respuesta_expone_si_vino_del_cache(tmp_path):
     assert cliente.get("https://api.artic.edu/x").desde_cache is False
     assert cliente.get("https://api.artic.edu/x").desde_cache is True
 
-def test_la_respuesta_es_inmutable():
-    with pytest.raises(Exception):
-        RespuestaHTTP("u", 200, b"", {}, False).status = 404

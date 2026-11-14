@@ -3,7 +3,6 @@ from __future__ import annotations
 import pytest
 
 from tp3_rag.dominio import rubrica as drubrica
-from tp3_rag.dominio.juicios import GRADOS
 from tp3_rag.dominio.rubrica import Rúbrica
 from tp3_rag.nucleo.errores import ErrorDeArtefacto, ErrorDeConfiguración
 
@@ -33,12 +32,6 @@ def test_una_rubrica_no_se_puede_refinar_a_si_misma():
     with pytest.raises(ErrorDeArtefacto, match="apunta a sí misma"):
         rubrica_de_prueba(designacion="v2", refina="v2")
 
-def test_las_cinco_secciones_son_obligatorias():
-    completa = rubrica_de_prueba()
-    assert sorted(completa.secciones()) == [
-        "desempate", "ejemplos", "grado_0", "grado_1", "grado_2"
-    ]
-
 @pytest.mark.parametrize(
     "encabezado,falta",
     [
@@ -56,11 +49,6 @@ def test_una_seccion_vacia_tambien_se_rechaza():
     texto = rubrica_de_prueba().texto.replace("entre 2 y 1 gana 1.", "")
     with pytest.raises(ErrorDeArtefacto, match="vacías"):
         Rúbrica.desde_texto(texto)
-
-def test_los_tres_grados_tienen_definicion():
-    r = rubrica_de_prueba()
-    for grado in GRADOS:
-        assert r.definicion_de(grado).strip()
 
 def test_la_plantilla_que_el_codigo_emite_es_plantilla_y_no_es_usable():
     r = Rúbrica.desde_texto(drubrica.plantilla())

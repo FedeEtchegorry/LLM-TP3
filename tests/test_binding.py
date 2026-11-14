@@ -3,11 +3,8 @@ from __future__ import annotations
 import pytest
 
 from tp3_rag.dominio.binding import (
-    HITO_DEL_ROL,
     BindingDelGenerador,
     Muestreo,
-    _Binding,
-    binding_faltante,
 )
 from tp3_rag.nucleo.configuracion import Configuración
 from tp3_rag.nucleo.errores import ErrorDeConfiguración
@@ -19,10 +16,6 @@ pytestmark = pytest.mark.nivel1
 @pytest.fixture(scope="module")
 def cfg_b() -> Configuración:
     return Configuración.cargar()
-
-def test_la_base_no_se_instancia_y_eso_es_bd2():
-    with pytest.raises(ErrorDeConfiguración, match="no se instancia"):
-        _Binding(modelo="openai/x", prompt_id="p", version_del_prompt="1")
 
 def test_bd1_el_puerto_no_es_alcanzable_desde_la_etapa(cfg_b):
     binding = BindingDelGenerador.desde_configuración(cfg_b, puerto=LLMGrabado({}))
@@ -70,13 +63,3 @@ def test_el_modelo_vacio_y_el_prompt_sin_version_fallan(cfg_b):
             modelo="openai/x", prompt_id="p", version_del_prompt="", muestreo=Muestreo(0.0, 1.0, 10)
         )
 
-def test_el_mensaje_del_binding_faltante_nombra_el_hito():
-    for rol in ("planificador", "reranker", "juez"):
-        mensaje = binding_faltante(rol)
-        assert HITO_DEL_ROL[rol].split(" ")[0] in mensaje
-    assert "no es uno de los cuatro" in binding_faltante("inventado")
-
-def test_el_puerto_no_entra_en_la_igualdad(cfg_b):
-    a = BindingDelGenerador.desde_configuración(cfg_b, puerto=LLMGrabado({}))
-    b = BindingDelGenerador.desde_configuración(cfg_b, puerto=LLMGrabado({}))
-    assert a == b

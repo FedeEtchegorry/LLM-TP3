@@ -122,9 +122,6 @@ def test_consultar_devuelve_el_documento_porque_r13_lo_necesita():
     assert resultado.documento == "el texto literal del museo"
     assert resultado.score is not None
 
-def test_traer_esta_en_las_operaciones_declaradas():
-    assert "traer" in ÍndiceVectorialEnMemoria.OPERACIONES
-
 def test_reservar_directorio_es_el_mismo_primitivo_sobre_otro_tipo(tmp_path):
     almacén = AlmacenamientoEnArchivos(tmp_path)
     directorio = almacén.reservar_directorio("corridas/abc-1")

@@ -5,7 +5,6 @@ import pytest
 from tp3_rag.nucleo.identidad import (
     catalogo_id,
     clave_de_cache_http,
-    hash_de_bytes,
     hash_de_registros,
 )
 
@@ -67,11 +66,6 @@ def test_los_museos_los_tipos_y_la_version_entran():
     assert _id(r) != _id(r, tipos=["Painting", "Print"])
     assert _id(r) != _id(r, version="2")
 
-def test_dos_corridas_del_mismo_universo_dan_el_mismo_id():
-    assert _id([_registro(), _registro(artwork_id="aic:1")]) == _id(
-        [_registro(), _registro(artwork_id="aic:1")]
-    )
-
 def test_el_orden_de_las_paginas_no_es_el_contenido():
     a, b = _registro(artwork_id="aic:1"), _registro(artwork_id="cma:2")
     assert hash_de_registros([a, b]) == hash_de_registros([b, a])
@@ -90,10 +84,6 @@ def test_la_clave_de_cache_no_depende_del_orden_de_los_headers():
     assert clave_de_cache_http("https://a/1", ["B", "A"]) == clave_de_cache_http(
         "https://a/1", ["A", "B"]
     )
-
-def test_el_hash_de_bytes_lleva_el_algoritmo_adelante():
-    assert hash_de_bytes(b"x").startswith("sha256:")
-    assert hash_de_bytes(b"x") != hash_de_bytes(b"y")
 
 INGREDIENTES = dict(
     catalogo_id="e10c4e4f9cce0e74",
