@@ -5,13 +5,14 @@ from typing import Any, Mapping, Sequence
 
 from tp3_rag.nucleo.errores import ErrorDeConfiguración
 
-ROLES: tuple[str, ...] = ("planificador", "reranker", "generador", "juez")
+ROLES: tuple[str, ...] = ("planificador", "reranker", "generador", "juez", "aclarador")
 
 HITO_DEL_ROL = {
     "planificador": "(C2 · pre-retrieval con LLM) — existe",
     "reranker": "(C4 · reranking multimodal, 1 candidato por llamada) — existe",
     "generador": "(C1 = v1) — existe",
     "juez": "(Módulo C) · y su binding solo es construible desde ahí (un tipo de binding por rol)",
+    "aclarador": "(prefiltro de pedidos vagos, antes de la cadena) — existe",
 }
 
 ESQUEMAS_DE_SALIDA: tuple[str, ...] = ("json", "texto")
@@ -76,7 +77,7 @@ class _Binding:
             )
         if self.ROL not in ROLES:
             raise ErrorDeConfiguración(
-                f"`ROL = {self.ROL!r}` no es uno de los cuatro de la tabla de bindings: {list(ROLES)}."
+                f"`ROL = {self.ROL!r}` no es uno de los roles de la tabla de bindings: {list(ROLES)}."
             )
         if self.esquema_de_salida not in ESQUEMAS_DE_SALIDA:
             raise ErrorDeConfiguración(
@@ -167,13 +168,18 @@ class BindingDelPlanificador(_Binding):
     CLAVE_DE_CONFIGURACIÓN: str = "bindings.planificador"
 
 @dataclass(frozen=True)
+class BindingDelAclarador(_Binding):
+    ROL: str = "aclarador"
+    CLAVE_DE_CONFIGURACIÓN: str = "bindings.aclarador"
+
+@dataclass(frozen=True)
 class BindingDelReranker(_Binding):
     ROL: str = "reranker"
     CLAVE_DE_CONFIGURACIÓN: str = "bindings.reranker"
 
 def binding_faltante(rol: str) -> str:
     if rol not in ROLES:
-        return f"{rol!r} no es uno de los cuatro roles de la tabla de bindings: {list(ROLES)}"
+        return f"{rol!r} no es uno de los roles de la tabla de bindings: {list(ROLES)}"
     return (
         f"el binding de `{rol}` no existe todavía: llega con {HITO_DEL_ROL[rol]}. "
         f"`el enunciado § Aclaración de orden` exige que **v1 esté completo antes** de agregar "

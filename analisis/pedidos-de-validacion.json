@@ -1,0 +1,17 @@
+{
+  "nota": "Pedidos para validar el prefiltro fuera del set de evaluación. La etiqueta se fijó ANTES de correr el prefiltro y la puso quien armó el arnés, siguiendo la definición de tres niveles. concreto: nombra una cultura, época, técnica, motivo o color determinado. medio: pide cambiar en términos relativos un atributo visible sin decir hacia dónde. vago: solo una cualidad abstracta, emoción o juicio de valor. 'imagen' es el cNN del set cuya imagen se manda.",
+  "pedidos": [
+    {"imagen": "c01", "pedido": "el mismo paisaje pero en la pintura holandesa", "esperado": "concreto"},
+    {"imagen": "c05", "pedido": "retratos de mujeres con sombrero", "esperado": "concreto"},
+    {"imagen": "c08", "pedido": "escenas de batalla en el siglo XIX", "esperado": "concreto"},
+    {"imagen": "c09", "pedido": "el mismo motivo pintado sobre seda", "esperado": "concreto"},
+    {"imagen": "c04", "pedido": "más colorido", "esperado": "medio"},
+    {"imagen": "c06", "pedido": "con el fondo más oscuro", "esperado": "medio"},
+    {"imagen": "c10", "pedido": "con las figuras más grandes", "esperado": "medio"},
+    {"imagen": "c02", "pedido": "con pinceladas más sueltas", "esperado": "medio"},
+    {"imagen": "c01", "pedido": "más melancólico", "esperado": "vago"},
+    {"imagen": "c03", "pedido": "más sagrado", "esperado": "vago"},
+    {"imagen": "c05", "pedido": "más sofisticado", "esperado": "vago"},
+    {"imagen": "c08", "pedido": "más heroico", "esperado": "vago"}
+  ]
+}

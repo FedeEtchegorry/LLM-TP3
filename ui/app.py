@@ -26,9 +26,13 @@ import gradio as gr
 
 import comparar  # ui/ queda en sys.path al correr python ui/app.py
 import clasificador
+from tp3_rag.dominio.binding import BindingDelAclarador
 from tp3_rag.dominio.consulta import EntradaDeConsulta
 from tp3_rag.dominio.corrida import AlmacenDeCorridas
 from tp3_rag.dominio.plan import AlmacenDePlanes
+from tp3_rag.modulo_b import aclarador
+from tp3_rag.modulo_b import confianza as conf
+from tp3_rag.modulo_b import filtro_de_metadata as fm
 from tp3_rag.modulo_b import montaje as mnt
 from tp3_rag.modulo_b.armador import ArmadorDePipeline
 from tp3_rag.modulo_b.ejecutor import EjecutorDeEtapas
@@ -37,15 +41,23 @@ from tp3_rag.nucleo.credenciales import Credenciales
 from tp3_rag.nucleo.observabilidad import Observabilidad
 from tp3_rag.puertos import trazas as trazas_mod
 from tp3_rag.puertos.almacenamiento import AlmacenamientoEnArchivos
+from tp3_rag.puertos.indice_vectorial import ARTWORKS
 
 VARIANTE_ID = "c3274567371ff42b"  # variante de índice congelada
-CAPAS = {"C0": "config/c0.toml", "C1": None, "C2": "config/c2.toml", "C3": "config/c3.toml", "C4": "config/c4.toml"}
+# C3 y C4 con filtro por metadata, así C4 es la final y C3 → C4 solo agrega el reranker
+CAPAS = {
+    "C0": "config/c0.toml",
+    "C1": None,
+    "C2": "config/c2.toml",
+    "C3": "config/analisis/c3-filtro-metadata.toml",
+    "C4": "config/analisis/c4-filtro-metadata.toml",
+}
 ROTULOS = {k: f"{k}  {v}" for k, v in comparar.NOMBRES.items()}
 NOTAS = {
     "C0": "Usa solo CLIP local y no lee el pedido.",
     "C1": "Una llamada de generación con el pedido y la evidencia citada.",
     "C2": "Agrega el planificador.",
-    "C3": "Agrega la rama de texto.",
+    "C3": "Agrega la rama de texto. Si el pedido nombra una cultura, busca solo entre sus obras.",
     "C4": "Agrega el reranker, que mira las imágenes de los candidatos.",
 }
 FUSIONES = [("Cascada: el texto filtra y CLIP ordena", "cascada"), ("RRF: mezcla los rankings de texto e imagen", "rrf")]
@@ -54,7 +66,7 @@ RRF = {"fusion.estrategia": "rrf", "recuperacion_textual.n_fragmentos_recuperado
 
 IMAGENES = RAÍZ_DEL_REPO / "data" / "imagenes"
 CORRIDAS = RAÍZ_DEL_REPO / "artifacts" / "corridas"
-UMBRAL_PASA, UMBRAL_BUENO, MIN_QUE_PASAN = 5, 8, 3
+UMBRAL_PASA, UMBRAL_BUENO = 5, 8  # colores del medidor de cada obra
 
 COMPARACIONES = RAÍZ_DEL_REPO / "artifacts" / "comparaciones"
 
@@ -64,7 +76,7 @@ _ejecutores: dict[tuple, EjecutorDeEtapas] = {}
 
 def _montaje() -> tuple:
     if not _compartido:
-        # Las capas c0 a c4 solo cambian la cadena de etapas, y la C4 las tiene todas: su montaje sirve a las cinco.
+        # el montaje de C4 sirve a las cinco capas
         cfg = Configuración.cargar(archivo=RAÍZ_DEL_REPO / CAPAS["C4"])
         almacén = AlmacenamientoEnArchivos(RAÍZ_DEL_REPO)
         credenciales = Credenciales.desde_entorno()
@@ -138,6 +150,12 @@ CSS = """
 .tp3 .tp3-vtitulo { margin: 0; font-size: 1.15rem; font-weight: 650; color: var(--tono); }
 .tp3 .tp3-vdetalle { margin: .15rem 0 0; }
 .tp3 .tp3-vnota { margin: .45rem 0 0; font-size: .86rem; color: var(--tp-mute); }
+.tp3 .tp3-vlectura { margin: .45rem 0 0; font-size: .9rem; }
+.tp3 .tp3-vlectura b, .tp3 .tp3-guia b { font-weight: 600; }
+.tp3 .tp3-guia { margin: .7rem 0 0; padding-top: .6rem; border-top: 1px solid var(--tp-line); font-size: .9rem; }
+.tp3 .tp3-gtitulo { margin: 0 0 .25rem; font-weight: 650; }
+.tp3 .tp3-guia ul { margin: 0; padding-left: 1.1rem; }
+.tp3 .tp3-guia li { margin: .2rem 0; }
 .tp3 .tp3-meta { display: flex; flex-wrap: wrap; gap: .1rem 1.4rem; margin: .6rem 0 0; font-size: .86rem; }
 .tp3 .tp3-meta span { color: var(--tp-mute); }
 .tp3 .tp3-meta b { font-weight: 600; color: var(--tp-ink); }
@@ -337,11 +355,15 @@ def _obra(o: dict, rr: dict | None, rangos: dict, largos: dict, fusion: int | No
     )
 
 
-def _veredicto(tono: str, titulo: str, detalle: str = "", nota: str = "", meta: str = "") -> str:
+def _veredicto(
+    tono: str, titulo: str, detalle: str = "", nota: str = "", meta: str = "", lectura: str = "", guia: str = ""
+) -> str:
     return (
         f'<div class="tp3"><div class="tp3-veredicto tp3-{tono}" role="status"><p class="tp3-vtitulo">{_esc(titulo)}</p>'
         + (f'<p class="tp3-vdetalle">{_esc(detalle)}</p>' if detalle else "")
         + (f'<p class="tp3-vnota">{_esc(nota)}</p>' if nota else "")
+        + (f'<p class="tp3-vlectura"><b>Lectura del pedido.</b> {_esc(lectura)}</p>' if lectura else "")
+        + guia
         + (f'<div class="tp3-meta">{meta}</div>' if meta else "")
         + "</div></div>"
     )
@@ -350,28 +372,67 @@ def _veredicto(tono: str, titulo: str, detalle: str = "", nota: str = "", meta: 
 VACIO = '<div class="tp3"><p class="tp3-vacio"><b>Sin resultados.</b> Elegí un ejemplo o subí una pintura.</p></div>'
 
 
-def _juicio(e: dict, obras: list, puntajes: dict) -> tuple[str, str, str, str]:
+def _juicio(e: dict, c: conf.Confianza | None) -> tuple[str, str, str, str]:
     problemas = []
     if e.get("fallida"):
         problemas.append(f"Falló la ejecución: {e['fallida']}")
     for d in e.get("degradaciones") or []:
         problemas.append(f"Se degradó la etapa {d.get('etapa')}: {str(d.get('causa'))[:200]}")
-    vals = [puntajes[o["artwork_id"]] for o in obras if o["artwork_id"] in puntajes]
-    if not vals:
+    if c is None:
         return (
             "error" if problemas else "info",
             "Sin puntaje",
             "Solo C4 usa reranker.",
             " ".join(problemas),
         )
-    mejor, pasan = max(vals), sum(v >= UMBRAL_PASA for v in vals)
-    if mejor < UMBRAL_PASA:
-        tono, titulo = "debil", "Coincidencia débil"
-    elif mejor < UMBRAL_BUENO or pasan < MIN_QUE_PASAN:
-        tono, titulo = "parcial", "Coincidencia parcial"
-    else:
-        tono, titulo = "bueno", "Coincidencia buena"
-    return tono, titulo, "", " ".join(problemas)
+    if not c.baja:
+        return "bueno", "Coincidencia buena", "", " ".join(problemas)
+    detalle = (
+        f"El reranker puntuó estas {c.n_obras} obras con un promedio de {_n(c.puntaje_medio)} sobre 10, "
+        f"por debajo de {_n(conf.UMBRAL_DE_CONFIANZA, 0)}. Puede que el corpus no tenga obras que cumplan bien el pedido, "
+        "o que el pedido necesite precisarse."
+    )
+    tono, titulo = ("debil", "Coincidencia débil") if c.puntaje_medio < UMBRAL_PASA else ("parcial", "Coincidencia parcial")
+    return tono, titulo, detalle, " ".join(problemas)
+
+
+def _lectura(e: dict) -> str:
+    p = e.get("plan") or {}
+    rotulos = (("Concepto buscado", "consulta_conceptual"), ("Aspecto visual buscado", "consulta_visual"))
+    return " ".join(f"{rotulo}: «{p[clave]}»." for rotulo, clave in rotulos if p.get(clave))
+
+
+@lru_cache(maxsize=1)
+def _culturas_del_corpus() -> tuple[tuple[str, int], ...]:
+    """Las culturas que activan el filtro, con sus obras. Vacío si no se puede leer el índice."""
+    try:
+        indice = _montaje()[0].indice
+        fichas = indice.metadatas(ARTWORKS, list(indice.ids(ARTWORKS)))
+        return tuple(fm.culturas_reconocidas({i: str(m.get(fm.CAMPO) or "") for i, m in fichas.items()}))
+    except Exception:
+        return ()
+
+
+def _guia(e: dict, filtro_por_cultura: bool) -> str:
+    """Cómo precisar un pedido con confianza baja."""
+    items = []
+    sello = (e.get("sellos") or {}).get("filtro_por_metadata") or {}
+    if filtro_por_cultura and sello.get("aplicado"):
+        nombres = ", ".join(_esc(t) for t in sello.get("terminos") or [])
+        items.append(
+            f"<li><b>Cultura.</b> El filtro por cultura se aplicó a {nombres} ({_miles(sello.get('n_obras', 0))} obras). "
+            "Si la cultura no era lo que importaba, sacarla del pedido.</li>"
+        )
+    elif filtro_por_cultura and (lista := ", ".join(f"{_esc(nombre)} ({_miles(n)})" for nombre, n in _culturas_del_corpus())):
+        items.append(
+            "<li><b>Cultura.</b> El filtro por cultura no se aplicó. Nombrar una de estas culturas lo activa "
+            f"(entre paréntesis, sus obras en el corpus): {lista}.</li>"
+        )
+    items.append(
+        "<li><b>Aspecto a cambiar.</b> Nombrar qué debe cambiar respecto de la imagen: la paleta, la luz, "
+        "la época, la técnica o el motivo.</li>"
+    )
+    return f'<div class="tp3-guia"><p class="tp3-gtitulo">Precisar el pedido</p><ul>{"".join(items)}</ul></div>'
 
 
 def _plan(e: dict) -> str:
@@ -431,7 +492,6 @@ def render_corrida(c: dict) -> tuple[str, str, str, str]:
     e = c["estado"]
     obras = e["salida"]["obras"] if e.get("salida") else []
     rerank = {x["artwork_id"]: x for x in e.get("rerank") or []}
-    puntajes = {a: x["score_0_10"] for a, x in rerank.items() if x.get("score_0_10") is not None}
     fusionado = e.get("ranking_fusionado") or []
     de_fusion = {x["artwork_id"]: x for x in fusionado}
     por_rama = {k: {x["artwork_id"]: x.get("rank") for x in v} for k, v in (e.get("fuentes_de_ranking") or {}).items()}
@@ -450,7 +510,9 @@ def render_corrida(c: dict) -> tuple[str, str, str, str]:
         _obra(o, rerank.get(o["artwork_id"]), rangos(o["artwork_id"]), largos, pos_fusion(o["artwork_id"])) for o in obras
     )
     total, costo, segundos = _costo(c)
-    tono, titulo, detalle, nota = _juicio(e, obras, puntajes)
+    confianza = conf.confianza_del_top5(e.get("rerank"), [o["artwork_id"] for o in obras])
+    filtro = bool((c["configuracion_resuelta"].get("recuperacion_textual") or {}).get("filtro_por_metadata"))
+    tono, titulo, detalle, nota = _juicio(e, confianza)
     cadena = c["pipeline"].get("cadena") or []
     meta = [("Configuración", c["pipeline"]["configuracion"])]
     if "fusionador" in cadena:
@@ -460,7 +522,8 @@ def render_corrida(c: dict) -> tuple[str, str, str, str]:
     meta.append(("Costo", f"USD {_n(total, 4)}" if total is not None else "sin gasto"))
     meta.append(("Ejecución", c["corrida_id"]))
     meta_html = "".join(f"<div><span>{_esc(k)}</span> <b>{_esc(v)}</b></div>" for k, v in meta)
-    return _veredicto(tono, titulo, detalle, nota, meta_html), f'<div class="tp3">{cuerpo}</div>', _plan(e), costo
+    veredicto = _veredicto(tono, titulo, detalle, nota, meta_html, lectura=_lectura(e), guia=_guia(e, filtro) if confianza and confianza.baja else "")
+    return veredicto, f'<div class="tp3">{cuerpo}</div>', _plan(e), costo
 
 
 def _aviso(titulo: str, detalle: str = "", tono: str = "info") -> tuple[str, str, str, str]:
@@ -484,6 +547,28 @@ def responder(config: str, fusion: str, imagen: str | None, pedido: str, confirm
         return render_corrida(corrida.contenido)
     except Exception as e:
         return _aviso("No se pudo consultar", f"{type(e).__name__}: {e}", "error")
+
+
+def _aclarador() -> BindingDelAclarador:
+    if "aclarador" not in _compartido:
+        m, obs, _ = _montaje()
+        cfg = Configuración.cargar(archivo=RAÍZ_DEL_REPO / CAPAS["C4"])
+        _compartido["aclarador"] = BindingDelAclarador.desde_configuración(cfg, puerto=m.puerto_de_llm, observabilidad=obs)
+    return _compartido["aclarador"]
+
+
+def consultar(config: str, fusion: str, imagen: str | None, pedido: str, confirmado: bool, sugerir: bool):
+    """Si el pedido es vago, muestra una sugerencia en vez de buscar. Devuelve las salidas de `responder`, el panel y la sugerencia."""
+    listo = imagen and (pedido or "").strip() and config != "C0" and (config not in AVANZADAS or confirmado)
+    if sugerir and listo:
+        try:
+            a = aclarador.aclarar(_aclarador(), pedido=pedido.strip(), datos_de_imagen=Path(imagen).read_bytes())
+        except Exception:
+            a = None  # si el prefiltro falla, se busca con el pedido tal cual
+        if a is not None and a.vago:
+            detalle = f"{a.motivo} Se puede buscar con la versión sugerida, con una editada o con el pedido original."
+            return (*_aviso("Pedido poco concreto", detalle, "parcial"), gr.update(visible=True), a.sugerencia)
+    return (*responder(config, fusion, imagen, pedido, confirmado), gr.update(visible=False), gr.update())
 
 
 @lru_cache(maxsize=4096)
@@ -675,17 +760,44 @@ with gr.Blocks(title="TP3") as demo:
                 ejemplo = gr.Dropdown(list(EJEMPLOS), value=None, label="Ejemplo del set de evaluación")
                 imagen = gr.Image(type="filepath", sources=["upload", "clipboard"], label="Pintura de referencia")
                 pedido = gr.Textbox(label="Pedido", placeholder="versiones más cálidas de este paisaje")
+                sugerir = gr.Checkbox(value=True, label="Sugerir un pedido más concreto si el mío es vago")
                 config = gr.Radio([(ROTULOS[k], k) for k in CAPAS], value="C1", label="Configuración")
                 nota = gr.Markdown(NOTAS["C1"])
                 fusion = gr.Radio(FUSIONES, value="cascada", label="Combinación de texto e imagen", visible=False)
                 confirma = gr.Checkbox(label="Confirmo el gasto", visible=False)
                 boton = gr.Button("Consultar", variant="primary")
             with gr.Column(scale=2, min_width=420):
+                with gr.Group(visible=False) as panel_aclara:
+                    sugerencia = gr.Textbox(label="Pedido sugerido", info="Se puede editar antes de buscar.", lines=2)
+                    with gr.Row():
+                        usar = gr.Button("Buscar con el pedido sugerido", variant="primary")
+                        mantener = gr.Button("Buscar con mi pedido")
                 salidas = _panel()
         ejemplo.change(_cargar_ejemplo, ejemplo, [imagen, pedido])
         config.change(_al_cambiar_config, config, [nota, fusion, confirma])
         (
             boton.click(lambda: gr.update(interactive=False, value="Consultando…"), None, boton, queue=False)
+            .then(
+                consultar,
+                [config, fusion, imagen, pedido, confirma, sugerir],
+                [*salidas, panel_aclara, sugerencia],
+                concurrency_id="pipeline",
+                concurrency_limit=1,
+            )
+            .then(lambda: gr.update(interactive=True, value="Consultar"), None, boton, queue=False)
+        )
+        (
+            usar.click(lambda texto: (gr.update(visible=False), texto), sugerencia, [panel_aclara, pedido], queue=False)
+            .then(
+                responder,
+                [config, fusion, imagen, sugerencia, confirma],
+                list(salidas),
+                concurrency_id="pipeline",
+                concurrency_limit=1,
+            )
+        )
+        (
+            mantener.click(lambda: gr.update(visible=False), None, panel_aclara, queue=False)
             .then(
                 responder,
                 [config, fusion, imagen, pedido, confirma],
@@ -693,7 +805,6 @@ with gr.Blocks(title="TP3") as demo:
                 concurrency_id="pipeline",
                 concurrency_limit=1,
             )
-            .then(lambda: gr.update(interactive=True, value="Consultar"), None, boton, queue=False)
         )
     with gr.Tab("Comparar"):
         with gr.Row():

@@ -100,6 +100,7 @@ NO_DETERMINAN_EL_CONFIG_ID: tuple[str, ...] = (
     "trazas.timeout_segundos",
     "consulta.alfa_congelado",
     "bindings.juez",
+    "bindings.aclarador",  # corre antes de la cadena
 )
 
 CLAVES_DE_TODA_CORRIDA: tuple[str, ...] = (

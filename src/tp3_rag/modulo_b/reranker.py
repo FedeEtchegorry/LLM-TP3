@@ -59,6 +59,73 @@ Devolvé EXCLUSIVAMENTE un objeto JSON con esta forma, sin texto alrededor:
 {"score": <entero de 0 a 10>, "justificacion": "..."}\
 """
 
+SISTEMA_V2 = """\
+Sos la etapa de reranking de un buscador multimodal de obras de arte. Recibís:
+
+1. LA IMAGEN QUE SUBIÓ LA PERSONA (la primera imagen),
+2. su PEDIDO en español, tal como lo escribió,
+3. UNA obra candidata del catálogo: su IMAGEN (la segunda) y su ficha de museo.
+
+Tu tarea: puntuar DE 0 A 10 cuánto cumple ESA candidata el pedido de la persona, tomando la \
+primera imagen como punto de partida.
+
+PRIMERO COMPARÁ Y DESPUÉS PUNTUÁ. Antes del puntaje, completá "comparacion" con lo que pasa \
+entre las dos imágenes en el aspecto que el pedido nombra:
+
+  ORIGINAL:  cómo es ese aspecto en la primera imagen.
+  CANDIDATA: cómo es ese mismo aspecto en la segunda imagen.
+  CAMBIO:    si de la primera a la segunda el aspecto se movió en la dirección que el pedido \
+pide, y cuánto.
+
+El aspecto es el que el pedido toca: paleta, luz, estación, ánimo, motivo, técnica o época. \
+Un pedido relativo ("más cálido", "más oscuro", "más tranquilo", "con más vida") se mide CONTRA \
+LA PRIMERA IMAGEN y no contra una idea general de cálido, oscuro o tranquilo: una candidata tan \
+fría como la primera no cumple "más cálida", aunque tenga un detalle dorado.
+
+Si el pedido habla de color, luz o paleta, decidí mirando las dos imágenes: la ficha casi no \
+informa sobre eso. Fijate en el tono dominante (cálido o frío), la claridad, la saturación y \
+dónde está la luz.
+
+CÓMO PUNTUAR, y la escala es la misma para todos los candidatos:
+
+  0-2  no cumple el pedido: ni lo que el pedido nombra ni lo que la imagen aporta.
+  3-4  cumple de costado: se parece a la imagen pero el aspecto pedido no se movió o se movió
+       al revés, o cumple el pedido y no tiene nada que ver con la imagen.
+  5-6  cumple a medias: el aspecto se movió en la dirección pedida pero poco, o cumple el
+       pedido y se aleja mucho de lo que la imagen aporta.
+  7-8  cumple: el aspecto se movió en la dirección pedida, y lo que el pedido no cambia se
+       mantiene.
+  9-10 cumple de lleno y es un resultado que la persona querría ver primero.
+
+REGLAS, y son obligatorias:
+
+1. Juzgá contra EL PEDIDO, no contra el parecido visual con la primera imagen. El parecido
+   cuenta solo en lo que el pedido NO pide cambiar.
+2. Si el pedido nombra una cultura, un país, una región o un período, una candidata que NO
+   es de eso NO puede pasar de 4, aunque se parezca mucho a la imagen.
+3. Si el pedido pide cambiar un aspecto visual y la candidata lo tiene igual que la primera
+   imagen o movido al revés, NO puede pasar de 4.
+4. Puntuá ESTA candidata sola, contra la escala de arriba. No la compares con otras
+   candidatas: no las viste y no las vas a ver.
+5. Sé breve: "comparacion" de hasta 40 palabras en total y "justificacion" de una sola oración,
+   las dos en ESPAÑOL. No repitas la ficha ni describas la obra entera.
+6. No inventes datos de la obra: lo que no está en la ficha ni se ve en la imagen, no se
+   afirma.
+
+Devolvé EXCLUSIVAMENTE un objeto JSON con esta forma, sin texto alrededor:
+
+{"comparacion": "ORIGINAL: ... CANDIDATA: ... CAMBIO: ...", "score": <entero de 0 a 10>, "justificacion": "..."}\
+"""
+
+# v1 queda porque es la que midió la tabla de ablación
+PROMPTS: dict[str, str] = {"1": SISTEMA, "2": SISTEMA_V2}
+
+def sistema(version: str) -> str:
+    texto = PROMPTS.get(str(version))
+    if texto is None:
+        raise RerankInválido(f"`[bindings.reranker] version_del_prompt = {version!r}` y este módulo tiene {sorted(PROMPTS)}.")
+    return texto
+
 class RerankInválido(ErrorDelProyecto):
     pass
 
@@ -91,9 +158,11 @@ def _ficha(metadata: Mapping[str, Any]) -> str:
     partes = [f"{c}: {metadata[c]}" for c in CAMPOS_DE_LA_FICHA if metadata.get(c)]
     return " · ".join(partes) or "(el catálogo no publica ficha para esta obra)"
 
-def armar_mensajes(estado: EstadoDeConsulta, *, artwork_id: str, metadata) -> list[dict]:
+def armar_mensajes(
+    estado: EstadoDeConsulta, *, artwork_id: str, metadata, version: str = VERSIÓN_DEL_PROMPT
+) -> list[dict]:
     return [
-        {"rol": "sistema", "texto": SISTEMA},
+        {"rol": "sistema", "texto": sistema(version)},
         {
             "rol": "usuario",
             "texto": (
@@ -138,14 +207,12 @@ class Reranker(Etapa):
 
     def __init__(self, *, binding, bytes_de_la_imagen, n_candidatos: int, top_k: int = 5):
         self.binding = binding
-        if (
-            binding.prompt_id != PROMPT_ID
-            or str(binding.version_del_prompt) != VERSIÓN_DEL_PROMPT
-        ):
+        self.version_del_prompt = str(binding.version_del_prompt)
+        if binding.prompt_id != PROMPT_ID or self.version_del_prompt not in PROMPTS:
             raise RerankInválido(
                 f"`[bindings.reranker]` declara `prompt_id = {binding.prompt_id!r}` "
                 f"v{binding.version_del_prompt} y este módulo tiene {PROMPT_ID!r} "
-                f"v{VERSIÓN_DEL_PROMPT}. **El prompt es parte de la identidad del binding** "
+                f"con las versiones {sorted(PROMPTS)}. **El prompt es parte de la identidad del binding** "
                 f"(el binding como único camino al puerto): si el texto y el id pueden discrepar, dos corridas con el mismo "
                 f"`config_id` pudieron correr con prompts distintos, y el `config_id` "
                 f"dejaría de reproducir la fila **C4** de la tabla de ablación."
@@ -258,7 +325,9 @@ class Reranker(Etapa):
                 n_intentos=0,
             )
 
-        mensajes = armar_mensajes(estado, artwork_id=artwork_id, metadata=metadata)
+        mensajes = armar_mensajes(
+            estado, artwork_id=artwork_id, metadata=metadata, version=self.version_del_prompt
+        )
         tokens_in = tokens_out = 0
         último: Exception | None = None
         intento = 0
@@ -352,6 +421,9 @@ class Reranker(Etapa):
                 "el estado y por lo tanto en la corrida*: el artefacto de la 4ª técnica es "
                 "el par, no el número."
             )
+        comparación = crudo.get("comparacion")
+        if isinstance(comparación, str) and comparación.strip():
+            justificación = f"{comparación.strip()} {justificación}"
         return score, justificación
 
     def a_json(self) -> dict:

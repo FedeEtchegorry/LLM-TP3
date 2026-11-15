@@ -66,6 +66,9 @@ def etiqueta(cfg: dict) -> str:
         partes.append("metadata")
     if "reranker" in consulta["etapas"]:
         partes.append(f"rerank{consulta['n_candidatos']}")
+        version = str(((cfg.get("bindings") or {}).get("reranker") or {}).get("version_del_prompt", "1"))
+        if version != "1":
+            partes.append(f"prompt{version}")
     if float(consulta["alfa"]) != 0.5:
         partes.append(f"alfa{consulta['alfa']}")
     return "·".join(partes)
@@ -81,6 +84,8 @@ def cargar_corridas() -> dict[str, dict[str, dict]]:
         if (cfg.get("fusion") or {}).get("estrategia") != "cascada":
             continue
         if not corrida.get("agrega_a_la_tabla", True):
+            continue
+        if ((corrida["estado"].get("entrada") or {}).get("procedencia")) == "ad_hoc":
             continue
         estado = corrida["estado"]
         if not estado.get("ranking_fusionado") or not estado.get("top5"):

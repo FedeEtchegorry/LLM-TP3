@@ -1,0 +1,20 @@
+# La fila final con el prompt v2 del reranker
+[consulta]
+configuracion = "C4"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+filtro_por_metadata = true
+
+[bindings.reranker]
+version_del_prompt = "2"

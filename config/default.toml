@@ -258,6 +258,19 @@ top_p = 1.0
 seed = 7369
 max_tokens = 300
 
+[bindings.aclarador]
+modelo = "openai/gpt-4.1-mini"
+prompt_id = "aclarador-pedido-vago"
+version_del_prompt = "3"
+esquema_de_salida = "json"
+reintentos = 2
+
+[bindings.aclarador.muestreo]
+temperature = 0.2
+top_p = 1.0
+seed = 7369
+max_tokens = 300
+
 [bindings.reranker]
 modelo = "openai/gpt-4.1-mini"
 prompt_id = "reranker-score-0-10-un-candidato"

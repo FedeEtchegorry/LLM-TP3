@@ -108,3 +108,18 @@ def valores_que_cumplen(terminos: Sequence[str], vocabulario: Iterable[str]) -> 
 def where_de(valores: Sequence[str]) -> dict:
     """El `where` de ChromaDB sobre `artworks`."""
     return {CAMPO: {"$in": list(valores)}}
+
+
+def culturas_reconocidas(culturas_por_obra: Mapping[str, str]) -> list[tuple[str, int]]:
+    """Culturas que activan el filtro y sus obras, de más a menos. Los alias compartidos van juntos."""
+    vocabulario = set(culturas_por_obra.values())
+    grupos: dict[tuple[str, ...], list[str]] = {}
+    for termino, formas in ALIAS_DE_CULTURA.items():
+        grupos.setdefault(formas, []).append(termino)
+    filas = []
+    for terminos in grupos.values():
+        valores = set(valores_que_cumplen(terminos, vocabulario))
+        n = sum(1 for cultura in culturas_por_obra.values() if cultura in valores)
+        if n >= MÍNIMO_DE_OBRAS:
+            filas.append((terminos[0], n))
+    return sorted(filas, key=lambda f: (-f[1], f[0]))
