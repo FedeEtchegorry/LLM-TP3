@@ -1,0 +1,194 @@
+{
+  "juicios": 634,
+  "filas": {
+    "C0": {
+      "clave": "C0",
+      "agrega": "solo imagen",
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.279,
+        "visual": 0.415,
+        "ambiguo": 0.4,
+        "todas": 0.365
+      },
+      "ic95": [
+        0.271,
+        0.458
+      ],
+      "p5": 0.46,
+      "p5_estricta": 0.213,
+      "mrr": 0.605,
+      "qs": 0.0,
+      "grado2_por_top5": 1.07,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0,
+      "usd_por_rol": {},
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "llamadas_llm": 0.0,
+      "segundos_media": 0.6,
+      "segundos_p95": 2.2,
+      "plan_de_cache": false
+    },
+    "C1": {
+      "clave": "C1",
+      "agrega": "+ pedido crudo",
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.295,
+        "visual": 0.411,
+        "ambiguo": 0.352,
+        "todas": 0.353
+      },
+      "ic95": [
+        0.265,
+        0.441
+      ],
+      "p5": 0.487,
+      "p5_estricta": 0.2,
+      "mrr": 0.592,
+      "qs": 0.419,
+      "grado2_por_top5": 1.0,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0029,
+      "usd_por_rol": {
+        "embedding_texto": 0.0,
+        "generador": 0.0029
+      },
+      "tokens_in": 3722,
+      "tokens_out": 865,
+      "llamadas_llm": 1.03,
+      "segundos_media": 11.0,
+      "segundos_p95": 15.3,
+      "plan_de_cache": false,
+      "delta_ndcg_contra_la_anterior": {
+        "delta": -0.012,
+        "ic95": [
+          -0.064,
+          0.041
+        ]
+      }
+    },
+    "C2": {
+      "clave": "C2",
+      "agrega": "+ query rewriting",
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.367,
+        "visual": 0.542,
+        "ambiguo": 0.506,
+        "todas": 0.472
+      },
+      "ic95": [
+        0.374,
+        0.563
+      ],
+      "p5": 0.607,
+      "p5_estricta": 0.287,
+      "mrr": 0.684,
+      "qs": 0.426,
+      "grado2_por_top5": 1.43,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0038,
+      "usd_por_rol": {
+        "embedding_texto": 0.0,
+        "generador": 0.0027,
+        "planificador": 0.001
+      },
+      "tokens_in": 5943,
+      "tokens_out": 871,
+      "llamadas_llm": 2.0,
+      "segundos_media": 11.0,
+      "segundos_p95": 19.8,
+      "plan_de_cache": true,
+      "delta_ndcg_contra_la_anterior": {
+        "delta": 0.119,
+        "ic95": [
+          0.054,
+          0.19
+        ]
+      }
+    },
+    "C3": {
+      "clave": "C3·filtro100·metadata",
+      "agrega": "+ cascada con filtro",
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.834,
+        "visual": 0.553,
+        "ambiguo": 0.499,
+        "todas": 0.629
+      },
+      "ic95": [
+        0.536,
+        0.712
+      ],
+      "p5": 0.687,
+      "p5_estricta": 0.487,
+      "mrr": 0.853,
+      "qs": 0.826,
+      "grado2_por_top5": 2.43,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0038,
+      "usd_por_rol": {
+        "embedding_texto": 0.0,
+        "generador": 0.0028,
+        "planificador": 0.001
+      },
+      "tokens_in": 6062,
+      "tokens_out": 892,
+      "llamadas_llm": 2.0,
+      "segundos_media": 7.5,
+      "segundos_p95": 9.4,
+      "plan_de_cache": true,
+      "delta_ndcg_contra_la_anterior": {
+        "delta": 0.157,
+        "ic95": [
+          0.057,
+          0.268
+        ]
+      }
+    },
+    "C4": {
+      "clave": "C4·filtro100·metadata·rerank20",
+      "agrega": "+ reranker",
+      "consultas": 30,
+      "ndcg": {
+        "conceptual": 0.931,
+        "visual": 0.655,
+        "ambiguo": 0.652,
+        "todas": 0.746
+      },
+      "ic95": [
+        0.644,
+        0.833
+      ],
+      "p5": 0.8,
+      "p5_estricta": 0.613,
+      "mrr": 0.861,
+      "qs": 0.917,
+      "grado2_por_top5": 3.07,
+      "pct_sin_juzgar": 0.0,
+      "usd_por_consulta": 0.0282,
+      "usd_por_rol": {
+        "embedding_texto": 0.0,
+        "generador": 0.0028,
+        "planificador": 0.001,
+        "reranker": 0.0243
+      },
+      "tokens_in": 63009,
+      "tokens_out": 1865,
+      "llamadas_llm": 22.0,
+      "segundos_media": 35.6,
+      "segundos_p95": 43.5,
+      "plan_de_cache": true,
+      "delta_ndcg_contra_la_anterior": {
+        "delta": 0.117,
+        "ic95": [
+          0.052,
+          0.188
+        ]
+      }
+    }
+  }
+}
