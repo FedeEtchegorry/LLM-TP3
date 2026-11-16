@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Sequence
 
 from tp3_rag.modulo_b import filtro_de_metadata as fm
+from tp3_rag.modulo_c.candidatas import familia_de_tecnica
 from tp3_rag.modulo_b.etapa import Candidata, Etapa, EstadoDeConsulta
 from tp3_rag.nucleo.errores import ErrorDeConfiguración, ErrorDelProyecto
 from tp3_rag.puertos.indice_vectorial import ARTWORKS, KNOWLEDGE
@@ -91,37 +92,78 @@ class RecuperadorTextual(Etapa):
                 f"que ser `true` o `false`."
             )
         self.filtro_por_metadata = filtro_por_metadata
-        self._culturas_por_obra: dict[str, str] | None = None
+        self._fichas: dict | None = None
 
     def _filtro(self, pedido: str) -> tuple[dict | None, dict]:
         """El `where` sobre `knowledge` que restringe la búsqueda, y su registro.
 
-        Dos pasos, los dos antes de la búsqueda por similitud: el pedido se traduce en
-        valores de `culture` que existen en `artworks`, un `where` sobre `artworks` da
-        las obras que cumplen, y la búsqueda en `knowledge` se limita a sus fragmentos.
+        El pedido se traduce en ejes (cultura, técnica, artista, período). Cada eje nombrado
+        da un conjunto de obras de `artworks` y la búsqueda en `knowledge` se limita a la
+        intersección de los que se pudieron aplicar, antes de la similitud. Un eje que no
+        encuentra valores o deja pocas obras no filtra y queda dicho en el registro.
         """
         registro: dict = {"campo": fm.CAMPO, "terminos": [], "valores": [], "aplicado": False}
+        if self._fichas is None:
+            self._fichas = self.indice.metadatas(ARTWORKS, list(self.indice.ids(ARTWORKS)))
+        fichas = self._fichas
+        conjuntos: list[set[str]] = []
+        motivo = "el pedido no nombra cultura, técnica, artista ni período conocidos"
+
+        def aplicar(obras: set[str], minimo: int, eje: str) -> dict:
+            if len(obras) < minimo:
+                return {"n_obras": len(obras), "motivo": f"menos de {minimo} obras cumplen el filtro"}
+            conjuntos.append(obras)
+            return {"n_obras": len(obras)}
+
         terminos = fm.terminos_pedidos(pedido)
-        if not terminos:
-            return None, {**registro, "motivo": "el pedido no nombra una cultura conocida"}
-        registro["terminos"] = list(terminos)
-        if self._culturas_por_obra is None:
-            fichas = self.indice.metadatas(ARTWORKS, list(self.indice.ids(ARTWORKS)))
-            self._culturas_por_obra = {
-                i: str(m.get(fm.CAMPO) or "") for i, m in fichas.items()
+        if terminos:
+            registro["terminos"] = list(terminos)
+            valores = fm.valores_que_cumplen(terminos, [str(m.get(fm.CAMPO) or "") for m in fichas.values()])
+            if not valores:
+                motivo = "ninguna obra del índice tiene esa cultura"
+            else:
+                registro["valores"] = list(valores)
+                obras = {r.id for r in self.indice.traer(ARTWORKS, where=fm.where_de(valores))}
+                resultado = aplicar(obras, fm.MÍNIMO_DE_OBRAS, "cultura")
+                registro["n_obras"] = resultado["n_obras"]
+                motivo = resultado.get("motivo", motivo)
+
+        familias = fm.tecnicas_pedidas(pedido)
+        if familias:
+            obras = {i for i, m in fichas.items() if familia_de_tecnica(m.get("medium")) in familias}
+            registro["tecnica"] = {"familias": list(familias), **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "tecnica")}
+
+        artistas = fm.artistas_pedidos(pedido, [str(m.get("artist") or "") for m in fichas.values()])
+        if artistas:
+            obras = {i for i, m in fichas.items() if m.get("artist") in artistas}
+            registro["artista"] = {"valores": list(artistas), **aplicar(obras, fm.MÍNIMO_DE_OBRAS_ARTISTA, "artista")}
+
+        rangos = fm.periodos_pedidos(pedido)
+        if rangos:
+            obras = {
+                i for i, m in fichas.items()
+                if m.get("year") is not None and any(d <= m["year"] <= h for d, h in rangos)
             }
-        valores = fm.valores_que_cumplen(terminos, self._culturas_por_obra.values())
-        if not valores:
-            return None, {**registro, "motivo": "ninguna obra del índice tiene esa cultura"}
-        registro["valores"] = list(valores)
-        obras = sorted(r.id for r in self.indice.traer(ARTWORKS, where=fm.where_de(valores)))
-        registro["n_obras"] = len(obras)
-        if len(obras) < fm.MÍNIMO_DE_OBRAS:
-            return None, {
-                **registro,
-                "motivo": f"menos de {fm.MÍNIMO_DE_OBRAS} obras cumplen el filtro",
+            registro["periodo"] = {"rangos": [list(r) for r in rangos], **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "periodo")}
+
+        epocas = fm.epocas_pedidas(pedido)
+        if epocas:
+            culturas = {i: str(m.get(fm.CAMPO) or "") for i, m in fichas.items()}
+            obras = set()
+            for terminos_de_la_epoca, desde, hasta in epocas:
+                valores = set(fm.valores_que_cumplen(terminos_de_la_epoca, culturas.values()))
+                obras |= {
+                    i for i, m in fichas.items()
+                    if culturas[i] in valores and m.get("year") is not None and desde <= m["year"] <= hasta
+                }
+            registro["epoca"] = {
+                "epocas": [[list(c), d, h] for c, d, h in epocas],
+                **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "epoca"),
             }
-        return {"artwork_id": {"$in": obras}}, {**registro, "aplicado": True}
+
+        if not conjuntos:
+            return None, {**registro, "motivo": motivo}
+        return {"artwork_id": {"$in": sorted(set.intersection(*conjuntos))}}, {**registro, "aplicado": True}
 
     def correr(self, estado: EstadoDeConsulta) -> EstadoDeConsulta:
         if estado.plan is None:
