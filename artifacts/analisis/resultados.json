@@ -1,11 +1,12 @@
 {
-  "juicios": 936,
+  "juicios": 939,
   "juicios_extra": [
     "artifacts/analisis/juicios-Julieta-Federico.csv",
     "artifacts/analisis/juicios-mixtas-Fede-v2.csv",
     "artifacts/analisis/juicios-mixtas-Fede.csv",
     "artifacts/analisis/juicios-mixtas-Julieta-Federico.csv",
-    "artifacts/analisis/juicios-pendientes-Julieta-Federico.csv"
+    "artifacts/analisis/juicios-pendientes-Julieta-Federico.csv",
+    "artifacts/analisis/juicios-pendientes-terra-Julieta.csv"
   ],
   "experimentos": {
     "C3·filtro100": {
@@ -102,18 +103,18 @@
       "consultas": 30,
       "ndcg": {
         "conceptual": 0.944,
-        "visual": 0.73,
-        "ambiguo": 0.669,
-        "todas": 0.781
+        "visual": 0.744,
+        "ambiguo": 0.684,
+        "todas": 0.791
       },
       "ic95": [
-        0.704,
-        0.851
+        0.713,
+        0.862
       ],
-      "p5": 0.833,
-      "p5_estricta": 0.64,
+      "p5": 0.853,
+      "p5_estricta": 0.647,
       "elegibles_medio": 96.6,
-      "pct_sin_juzgar": 2.0,
+      "pct_sin_juzgar": 0.0,
       "usd_por_consulta": 0.0585
     },
     "C4·filtro100·metadata·rerank20·prompt2": {
@@ -235,17 +236,17 @@
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.4
     },
     "todas": {
-      "conocidas": 8.5,
-      "pasan_el_filtro": 7.47,
-      "top_n_de_clip": 5.83,
+      "conocidas": 8.53,
+      "pasan_el_filtro": 7.5,
+      "top_n_de_clip": 5.87,
       "top5_sin_reranker": 2.43,
       "top5_con_reranker": 3.03,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.9
     },
     "ambiguo": {
-      "conocidas": 8.4,
-      "pasan_el_filtro": 7.2,
-      "top_n_de_clip": 5.8,
+      "conocidas": 8.5,
+      "pasan_el_filtro": 7.3,
+      "top_n_de_clip": 5.9,
       "top5_sin_reranker": 2.0,
       "top5_con_reranker": 3.1,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.1
@@ -269,25 +270,25 @@
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 5.2
     },
     "todas": {
-      "conocidas": 16.03,
-      "pasan_el_filtro": 12.4,
-      "top_n_de_clip": 9.33,
+      "conocidas": 16.13,
+      "pasan_el_filtro": 12.5,
+      "top_n_de_clip": 9.43,
       "top5_sin_reranker": 3.43,
       "top5_con_reranker": 3.97,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 3.13
     },
     "ambiguo": {
-      "conocidas": 13.2,
-      "pasan_el_filtro": 11.3,
-      "top_n_de_clip": 8.4,
+      "conocidas": 13.3,
+      "pasan_el_filtro": 11.4,
+      "top_n_de_clip": 8.5,
       "top5_sin_reranker": 2.7,
       "top5_con_reranker": 3.6,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.8
     },
     "visual": {
-      "conocidas": 13.5,
-      "pasan_el_filtro": 11.1,
-      "top_n_de_clip": 8.6,
+      "conocidas": 13.7,
+      "pasan_el_filtro": 11.3,
+      "top_n_de_clip": 8.8,
       "top5_sin_reranker": 2.7,
       "top5_con_reranker": 3.5,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 2.4
@@ -583,12 +584,12 @@
       "score_medio": 3.84
     },
     "1": {
-      "n": 129,
-      "score_medio": 3.77
+      "n": 131,
+      "score_medio": 3.75
     },
     "2": {
-      "n": 206,
-      "score_medio": 6.33
+      "n": 207,
+      "score_medio": 6.35
     }
   },
   "pareadas_contra_C3": {
@@ -612,10 +613,10 @@
   "pareadas_contra_C4": {
     "C4·filtro100·metadata·rerank20·gpt-6.1-terra − C4·filtro100·metadata·rerank20": {
       "consultas": 30,
-      "delta": 0.032,
+      "delta": 0.042,
       "ic95": [
-        -0.016,
-        0.087
+        -0.007,
+        0.096
       ]
     },
     "C4·filtro100·rerank20 − C4·filtro100·metadata·rerank20": {
