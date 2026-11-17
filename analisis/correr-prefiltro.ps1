@@ -11,7 +11,7 @@ $env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $R   = "py -3.10 -m poetry run"
-$LOG = "artifacts\analisis\prefiltro-log.txt"
+$LOG = Join-Path (Get-Location) "artifacts\analisis\prefiltro-log.txt"
 $INICIO = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 
 function Paso($titulo, $cmd) {

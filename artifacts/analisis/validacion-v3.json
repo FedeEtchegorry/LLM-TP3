@@ -1,0 +1,146 @@
+[
+  {
+    "imagen": "c01",
+    "pedido": "el mismo paisaje pero en la pintura holandesa",
+    "esperado": "concreto",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona una cultura artística específica, la pintura holandesa, que es un atributo concreto relacionado con el estilo o la escuela pictórica.",
+    "sugerencia": "el mismo paisaje pero en la pintura holandesa",
+    "uso": {
+      "tokens_in": 2362,
+      "tokens_out": 59
+    }
+  },
+  {
+    "imagen": "c05",
+    "pedido": "retratos de mujeres con sombrero",
+    "esperado": "concreto",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico y visible en la pintura: retratos de mujeres con sombrero.",
+    "sugerencia": "retratos de mujeres con sombrero",
+    "uso": {
+      "tokens_in": 2162,
+      "tokens_out": 47
+    }
+  },
+  {
+    "imagen": "c08",
+    "pedido": "escenas de batalla en el siglo XIX",
+    "esperado": "concreto",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona una época histórica específica, el siglo XIX, que es un dato concreto y verificable en una pintura.",
+    "sugerencia": "escenas de batalla en el siglo XIX",
+    "uso": {
+      "tokens_in": 1521,
+      "tokens_out": 52
+    }
+  },
+  {
+    "imagen": "c09",
+    "pedido": "el mismo motivo pintado sobre seda",
+    "esperado": "concreto",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un soporte específico, la seda, que es un atributo concreto y verificable en una pintura.",
+    "sugerencia": "el mismo motivo pintado sobre seda",
+    "uso": {
+      "tokens_in": 1310,
+      "tokens_out": 49
+    }
+  },
+  {
+    "imagen": "c04",
+    "pedido": "más colorido",
+    "esperado": "medio",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el colorido, que es un atributo visible, pero no especifica hacia dónde ni cómo.",
+    "sugerencia": "más colorido",
+    "uso": {
+      "tokens_in": 1895,
+      "tokens_out": 47
+    }
+  },
+  {
+    "imagen": "c06",
+    "pedido": "con el fondo más oscuro",
+    "esperado": "medio",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el fondo visible, pidiendo que sea más oscuro, sin especificar un color o época concreta.",
+    "sugerencia": "con el fondo más oscuro",
+    "uso": {
+      "tokens_in": 1377,
+      "tokens_out": 50
+    }
+  },
+  {
+    "imagen": "c10",
+    "pedido": "con las figuras más grandes",
+    "esperado": "medio",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el tamaño visible de las figuras, sin especificar un atributo concreto más allá del tamaño.",
+    "sugerencia": "con las figuras más grandes",
+    "uso": {
+      "tokens_in": 2728,
+      "tokens_out": 48
+    }
+  },
+  {
+    "imagen": "c02",
+    "pedido": "con pinceladas más sueltas",
+    "esperado": "medio",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio en el trazo visible de la pintura, pidiendo pinceladas más sueltas, que es un atributo relativo del trazo.",
+    "sugerencia": "con pinceladas más sueltas",
+    "uso": {
+      "tokens_in": 1593,
+      "tokens_out": 57
+    }
+  },
+  {
+    "imagen": "c01",
+    "pedido": "más melancólico",
+    "esperado": "vago",
+    "nivel": "vago",
+    "motivo": "El pedido expresa una cualidad emocional abstracta sin mencionar atributos visibles específicos.",
+    "sugerencia": "más melancólico, con colores apagados y luz tenue que transmitan una sensación de nostalgia y tristeza.",
+    "uso": {
+      "tokens_in": 2356,
+      "tokens_out": 56
+    }
+  },
+  {
+    "imagen": "c03",
+    "pedido": "más sagrado",
+    "esperado": "vago",
+    "nivel": "vago",
+    "motivo": "El pedido usa una cualidad abstracta, 'más sagrado', que no nombra ningún atributo visible específico para modificar.",
+    "sugerencia": "más sagrado, con una luz más intensa y dorada que resalte el altar y cree una atmósfera reverente",
+    "uso": {
+      "tokens_in": 1850,
+      "tokens_out": 69
+    }
+  },
+  {
+    "imagen": "c05",
+    "pedido": "más sofisticado",
+    "esperado": "vago",
+    "nivel": "vago",
+    "motivo": "El pedido 'más sofisticado' es un juicio de valor abstracto que no nombra ningún atributo visible específico de la pintura.",
+    "sugerencia": "más sofisticado, con detalles más finos y una paleta de colores más rica y elegante",
+    "uso": {
+      "tokens_in": 2158,
+      "tokens_out": 64
+    }
+  },
+  {
+    "imagen": "c08",
+    "pedido": "más heroico",
+    "esperado": "vago",
+    "nivel": "vago",
+    "motivo": "El pedido 'más heroico' es una cualidad abstracta que no nombra ningún atributo visible específico en la pintura.",
+    "sugerencia": "más heroico, con figuras en poses más dinámicas y expresiones decididas que transmitan valentía",
+    "uso": {
+      "tokens_in": 1516,
+      "tokens_out": 65
+    }
+  }
+]

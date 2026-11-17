@@ -1,0 +1,332 @@
+{
+  "c01-visual": {
+    "categoria": "visual",
+    "pedido": "versiones más cálidas de este paisaje",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el color hacia tonos más cálidos, que es un atributo visible y modificable en la imagen.",
+    "sugerencia": "versiones más cálidas de este paisaje",
+    "uso": {
+      "tokens_in": 2360,
+      "tokens_out": 53
+    }
+  },
+  "c01-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "el mismo paisaje pero pintado en Japón",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un lugar específico, Japón, que es un dato cultural y geográfico concreto.",
+    "sugerencia": "el mismo paisaje pero pintado en Japón",
+    "uso": {
+      "tokens_in": 2360,
+      "tokens_out": 47
+    }
+  },
+  "c01-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "con más vida",
+    "nivel": "vago",
+    "motivo": "El pedido 'con más vida' es una cualidad abstracta que no especifica ningún atributo visible concreto para modificar.",
+    "sugerencia": "con más vida, con colores más vivos y luz más brillante",
+    "uso": {
+      "tokens_in": 2355,
+      "tokens_out": 55
+    }
+  },
+  "c02-visual": {
+    "categoria": "visual",
+    "pedido": "la misma escena de agua pero con luz dorada",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio en la luz de la escena, un atributo visible, pero no especifica cómo debe ser esa luz dorada en términos técnicos o de intensidad.",
+    "sugerencia": "la misma escena de agua pero con luz dorada",
+    "uso": {
+      "tokens_in": 1596,
+      "tokens_out": 62
+    }
+  },
+  "c02-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "escenas de agua en la pintura china",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona una cultura específica (pintura china) y un motivo visible (escenas de agua), lo que es un criterio concreto.",
+    "sugerencia": "escenas de agua en la pintura china",
+    "uso": {
+      "tokens_in": 1594,
+      "tokens_out": 57
+    }
+  },
+  "c02-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más tranquilo",
+    "nivel": "vago",
+    "motivo": "El pedido usa una cualidad abstracta (más tranquilo) sin mencionar ningún atributo visible específico para modificar.",
+    "sugerencia": "más tranquilo, con colores más suaves y una atmósfera serena",
+    "uso": {
+      "tokens_in": 1588,
+      "tokens_out": 54
+    }
+  },
+  "c03-visual": {
+    "categoria": "visual",
+    "pedido": "el mismo interior pero en tonos fríos",
+    "nivel": "medio",
+    "motivo": "El pedido indica cambiar la paleta de colores a tonos fríos, que es un atributo visible relativo al color, sin especificar más detalles.",
+    "sugerencia": "el mismo interior pero en tonos fríos",
+    "uso": {
+      "tokens_in": 1855,
+      "tokens_out": 55
+    }
+  },
+  "c03-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "interiores arquitectónicos en la pintura italiana",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (interiores arquitectónicos) y una cultura/pais (pintura italiana), que son atributos visibles y verificables en una pintura.",
+    "sugerencia": "interiores arquitectónicos en la pintura italiana",
+    "uso": {
+      "tokens_in": 1855,
+      "tokens_out": 62
+    }
+  },
+  "c03-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más imponente",
+    "nivel": "vago",
+    "motivo": "El pedido usa un adjetivo abstracto que no nombra ningún atributo visible específico de la pintura.",
+    "sugerencia": "más imponente, con una perspectiva más dramática y un contraste de luces y sombras más marcado",
+    "uso": {
+      "tokens_in": 1850,
+      "tokens_out": 59
+    }
+  },
+  "c04-visual": {
+    "categoria": "visual",
+    "pedido": "composiciones geométricas pero en tonos tierra",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (composiciones geométricas) y un color o paleta determinada (tonos tierra), ambos atributos visibles y concretos en una pintura.",
+    "sugerencia": "composiciones geométricas pero en tonos tierra",
+    "uso": {
+      "tokens_in": 1902,
+      "tokens_out": 66
+    }
+  },
+  "c04-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "composiciones geométricas en el arte de la India",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona una cultura específica (India) y un motivo concreto (composiciones geométricas), ambos atributos visibles y verificables en una pintura.",
+    "sugerencia": "composiciones geométricas en el arte de la India",
+    "uso": {
+      "tokens_in": 1904,
+      "tokens_out": 63
+    }
+  },
+  "c04-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más ordenado",
+    "nivel": "vago",
+    "motivo": "El pedido 'más ordenado' es una cualidad abstracta que no especifica ningún atributo visible concreto para modificar.",
+    "sugerencia": "más ordenado, con líneas más definidas y una composición más simétrica",
+    "uso": {
+      "tokens_in": 1895,
+      "tokens_out": 58
+    }
+  },
+  "c05-visual": {
+    "categoria": "visual",
+    "pedido": "el mismo retrato con una paleta más luminosa",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el color, específicamente en la luminosidad de la paleta, que es un atributo visible.",
+    "sugerencia": "el mismo retrato con una paleta más luminosa",
+    "uso": {
+      "tokens_in": 2166,
+      "tokens_out": 55
+    }
+  },
+  "c05-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "retratos de mujeres en la pintura francesa",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (retratos de mujeres) y una cultura o país (pintura francesa), que son atributos verificables en una pintura.",
+    "sugerencia": "retratos de mujeres en la pintura francesa",
+    "uso": {
+      "tokens_in": 2163,
+      "tokens_out": 60
+    }
+  },
+  "c05-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más cercano",
+    "nivel": "vago",
+    "motivo": "El pedido 'más cercano' es una cualidad abstracta que no especifica un atributo visible concreto para modificar en la pintura.",
+    "sugerencia": "más cercano, con la figura retratada en un plano más próximo y de mayor tamaño en la composición",
+    "uso": {
+      "tokens_in": 2157,
+      "tokens_out": 65
+    }
+  },
+  "c06-visual": {
+    "categoria": "visual",
+    "pedido": "el mismo rostro pero con colores más apagados",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el color, pidiendo que sean más apagados, lo cual es un atributo visible y cuantificable.",
+    "sugerencia": "el mismo rostro pero con colores más apagados",
+    "uso": {
+      "tokens_in": 1381,
+      "tokens_out": 56
+    }
+  },
+  "c06-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "retratos conmemorativos en Italia",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (retratos conmemorativos) y un lugar (Italia), que son atributos concretos y verificables en pinturas.",
+    "sugerencia": "retratos conmemorativos en Italia",
+    "uso": {
+      "tokens_in": 1379,
+      "tokens_out": 57
+    }
+  },
+  "c06-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más humano",
+    "nivel": "vago",
+    "motivo": "El pedido 'más humano' es una cualidad abstracta que no nombra ningún atributo visible específico de la pintura.",
+    "sugerencia": "más humano, con expresiones faciales más naturales y detalles que reflejen emociones reales",
+    "uso": {
+      "tokens_in": 1374,
+      "tokens_out": 60
+    }
+  },
+  "c07-visual": {
+    "categoria": "visual",
+    "pedido": "el mismo retrato en tonos más fríos",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el color, específicamente hacia tonos más fríos, que es un atributo visible y modificable en la imagen.",
+    "sugerencia": "el mismo retrato en tonos más fríos",
+    "uso": {
+      "tokens_in": 1629,
+      "tokens_out": 56
+    }
+  },
+  "c07-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "retratos de monjes y sabios en China",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (retratos de monjes y sabios) y una ubicación cultural concreta (China), lo que lo hace concreto.",
+    "sugerencia": "retratos de monjes y sabios en China",
+    "uso": {
+      "tokens_in": 1630,
+      "tokens_out": 60
+    }
+  },
+  "c07-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más austero",
+    "nivel": "vago",
+    "motivo": "El pedido 'más austero' es un juicio de valor abstracto que no especifica ningún atributo visible concreto para modificar.",
+    "sugerencia": "más austero, con menos detalles ornamentales y colores más sobrios",
+    "uso": {
+      "tokens_in": 1623,
+      "tokens_out": 58
+    }
+  },
+  "c08-visual": {
+    "categoria": "visual",
+    "pedido": "la misma escena pero con colores apagados",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en el color, específicamente hacia tonos más apagados, sin especificar colores concretos.",
+    "sugerencia": "la misma escena pero con colores apagados",
+    "uso": {
+      "tokens_in": 1521,
+      "tokens_out": 50
+    }
+  },
+  "c08-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "escenas de batalla en la pintura francesa",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona un motivo específico (escenas de batalla) y una cultura o país (pintura francesa), que son atributos concretos y verificables en una pintura.",
+    "sugerencia": "escenas de batalla en la pintura francesa",
+    "uso": {
+      "tokens_in": 1521,
+      "tokens_out": 63
+    }
+  },
+  "c08-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más caótico",
+    "nivel": "vago",
+    "motivo": "El pedido usa un término abstracto que no nombra ningún atributo visible específico de la pintura.",
+    "sugerencia": "más caótico, con una composición más desordenada y elementos superpuestos que transmitan confusión visual",
+    "uso": {
+      "tokens_in": 1516,
+      "tokens_out": 59
+    }
+  },
+  "c09-visual": {
+    "categoria": "visual",
+    "pedido": "el mismo motivo pero con color",
+    "nivel": "concreto",
+    "motivo": "El pedido especifica un cambio visible concreto: agregar color al mismo motivo.",
+    "sugerencia": "el mismo motivo pero con color",
+    "uso": {
+      "tokens_in": 1309,
+      "tokens_out": 40
+    }
+  },
+  "c09-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "el mismo tema en la pintura china",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona explícitamente una cultura específica, la pintura china.",
+    "sugerencia": "el mismo tema en la pintura china",
+    "uso": {
+      "tokens_in": 1310,
+      "tokens_out": 40
+    }
+  },
+  "c09-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más delicado",
+    "nivel": "vago",
+    "motivo": "El pedido 'más delicado' es una cualidad abstracta que no especifica ningún atributo visible concreto de la pintura.",
+    "sugerencia": "más delicado, con líneas más finas y suaves y una paleta de colores más tenue",
+    "uso": {
+      "tokens_in": 1306,
+      "tokens_out": 63
+    }
+  },
+  "c10-visual": {
+    "categoria": "visual",
+    "pedido": "la misma escena con una paleta más oscura",
+    "nivel": "medio",
+    "motivo": "El pedido indica un cambio relativo en la paleta de colores hacia tonos más oscuros, que es un atributo visible y modificable en la imagen.",
+    "sugerencia": "la misma escena con una paleta más oscura",
+    "uso": {
+      "tokens_in": 2733,
+      "tokens_out": 59
+    }
+  },
+  "c10-conceptual": {
+    "categoria": "conceptual",
+    "pedido": "escenas con jinetes en el arte mogol",
+    "nivel": "concreto",
+    "motivo": "El pedido menciona una cultura y un motivo específicos: 'escenas con jinetes' y 'arte mogol', que son atributos concretos y verificables en una pintura.",
+    "sugerencia": "escenas con jinetes en el arte mogol",
+    "uso": {
+      "tokens_in": 2734,
+      "tokens_out": 67
+    }
+  },
+  "c10-ambiguo": {
+    "categoria": "ambiguo",
+    "pedido": "más generoso",
+    "nivel": "vago",
+    "motivo": "El pedido 'más generoso' es una cualidad abstracta que no nombra ningún atributo visible específico de la pintura.",
+    "sugerencia": "más generoso, con una composición más abierta y colores cálidos que transmitan abundancia y amabilidad.",
+    "uso": {
+      "tokens_in": 2726,
+      "tokens_out": 66
+    }
+  }
+}
