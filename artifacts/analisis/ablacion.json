@@ -1,5 +1,5 @@
 {
-  "juicios": 634,
+  "juicios": 755,
   "filas": {
     "C0": {
       "clave": "C0",
@@ -136,10 +136,10 @@
         "planificador": 0.001
       },
       "tokens_in": 6062,
-      "tokens_out": 892,
+      "tokens_out": 883,
       "llamadas_llm": 2.0,
       "segundos_media": 7.5,
-      "segundos_p95": 9.4,
+      "segundos_p95": 8.9,
       "plan_de_cache": true,
       "delta_ndcg_contra_la_anterior": {
         "delta": 0.157,
@@ -154,21 +154,21 @@
       "agrega": "+ reranker",
       "consultas": 30,
       "ndcg": {
-        "conceptual": 0.931,
-        "visual": 0.655,
-        "ambiguo": 0.652,
-        "todas": 0.746
+        "conceptual": 0.884,
+        "visual": 0.649,
+        "ambiguo": 0.649,
+        "todas": 0.727
       },
       "ic95": [
-        0.644,
-        0.833
+        0.626,
+        0.816
       ],
-      "p5": 0.8,
-      "p5_estricta": 0.613,
-      "mrr": 0.861,
-      "qs": 0.917,
-      "grado2_por_top5": 3.07,
-      "pct_sin_juzgar": 0.0,
+      "p5": 0.76,
+      "p5_estricta": 0.593,
+      "mrr": 0.867,
+      "qs": 0.897,
+      "grado2_por_top5": 2.97,
+      "pct_sin_juzgar": 4.0,
       "usd_por_consulta": 0.0282,
       "usd_por_rol": {
         "embedding_texto": 0.0,
@@ -176,17 +176,17 @@
         "planificador": 0.001,
         "reranker": 0.0243
       },
-      "tokens_in": 63009,
-      "tokens_out": 1865,
+      "tokens_in": 62955,
+      "tokens_out": 1895,
       "llamadas_llm": 22.0,
-      "segundos_media": 35.6,
-      "segundos_p95": 43.5,
+      "segundos_media": 35.5,
+      "segundos_p95": 41.2,
       "plan_de_cache": true,
       "delta_ndcg_contra_la_anterior": {
-        "delta": 0.117,
+        "delta": 0.098,
         "ic95": [
-          0.052,
-          0.188
+          0.033,
+          0.167
         ]
       }
     }
