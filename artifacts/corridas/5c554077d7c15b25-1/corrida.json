@@ -1,0 +1,3360 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-reranker-v2.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "1cc2dba21da9b371",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c08-mixto",
+  "corrida_id": "5c554077d7c15b25-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:314432",
+      "categoria": "mixto",
+      "consulta_id": "c08-mixto",
+      "imagen_hash": "sha256:c5c4d8c30b79c5754ea4e35d42bfb70110f9154f09bed22e92986ee225eebf9e",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:8044": [
+        {
+          "artist": null,
+          "artwork_id": "aic:8044",
+          "chunk_index": 0,
+          "fragment_id": "aic:8044::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/8044",
+          "texto": "The large building complex depicted here contains a bathhouse, teahouse, kitchen, puppet-show theater, and a games room. Inside, commoners and aristocrats alike enjoy the various forms of entertainment, while outside, people dance, play music, and wrestle. A kasamawashi, a street performer who balances objects on a spinning umbrella, performs to the left of the dancers. In scenes of merriment like this one, Japanese artists often depicted figures fighting—this painting includes a sumo match and people arguing over a game of shōgi—to emphasize the heightened levels of energy and excitement.",
+          "title": "Genre Scenes (Fūzoku byōbu)"
+        }
+      ],
+      "cma:144293": [
+        {
+          "artist": null,
+          "artwork_id": "cma:144293",
+          "chunk_index": 0,
+          "fragment_id": "cma:144293::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1969.127.1",
+          "texto": "While the 11th-century Tale of Genji is universally regarded as Japan's literary masterpiece, the source for visual imagery in Japanese culture is rivaled by another literary classic, the Tales of Ise. A 10th-century anthology of poems interspersed with commentary, the Ise portrays the emotional and geographical journey of a courtier from the capital (Kyoto) into the countryside and beyond. The poems describe features of the natural, untamed terrain, linking them to the rather melancholy state of the traveler. \n\nSince the Tales of Ise was—and remains today—well read by educated Japanese, a person viewing these folding screens would immediately recognize its subject, organized as a series of discrete scenes read from right to left. Neither a signature nor a seal identifies the artist, but judging from related paintings, the work can be ascribed to an artist working in Kyoto during the first quarter of the 17th century in the manner of the painter Iwasa Matabei (1578–1650). This type of historical narrative composition became quite popular around 1600 among patrons favoring a distinctly Japanese style of painting which employed rich mineral pigments and a liberal use of gold.",
+          "title": "Scenes from the Tales of Ise"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:144293",
+          "chunk_index": 0,
+          "fragment_id": "cma:144293::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1969.127.1",
+          "texto": "(Elm and Company, Osaka, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Scenes from the Tales of Ise"
+        }
+      ],
+      "cma:156111": [
+        {
+          "artist": "Sakai Basai",
+          "artwork_id": "cma:156111",
+          "chunk_index": 0,
+          "fragment_id": "cma:156111::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1991.44",
+          "texto": "Dredging waterways to preserve their function once required the cooperation of large numbers of people, seen at the top of this painting. Sand-carrying festivals were historically associated with religious rites or gathering alms to construct places of worship, and involved not only the labor of collecting sand from rivers but also parades and performances marking the event. Kyoto’s Kamo River has been dredged many times over the centuries, including in 1856, the year this image was made. Although the title at the upper right says Taihei Kakan, or “Peaceful, Beautiful View,” the painter’s delightful scene reminds his audience that at the best of times, peace may have little to do with quiet. \n\nSakai Baisai was a student of literati painter Yamamoto Baiitsu (1783–1856). He was active until around 1879, when he relocated to Kobe to make his living as a design painter on porcelains destined for export.",
+          "title": "The Sand-Carrying Festival (Sunamochi Matsuri)"
+        },
+        {
+          "artist": "Sakai Basai",
+          "artwork_id": "cma:156111",
+          "chunk_index": 0,
+          "fragment_id": "cma:156111::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1991.44",
+          "texto": "(Andreas Leisinger, Tokyo, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "The Sand-Carrying Festival (Sunamochi Matsuri)"
+        }
+      ],
+      "cma:163546": [
+        {
+          "artist": "Tawaraya Sōtatsu",
+          "artwork_id": "cma:163546",
+          "chunk_index": 0,
+          "fragment_id": "cma:163546::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2004.86",
+          "texto": "Such depictions of the God of Thunder originated in Buddhist art. Here, the image was painted on paper covered with gold dust, a technique often found in paintings by Tawaraya Sotatsu or of the Sotatsu school. This gold technique and the \"Inen\" seal here suggest that the anonymous painter of this screen was probably associated with the Sotatsu workshop. The artist used a prototype borrowed from earlier Japanese narrative painting—rather than mechanically reproducing Sotatsu’s image—and created a bold, innovative image that served the world of play and leisure in early Edo Japan. \n\nThe theme of \"God of Thunder\" was often paired with \"God of Wind\" and has been frequently reinterpreted by generations of Rimpa artists. Unfortunately, the screen God of Wind which would have accompanied this God of Thunder cannot be located.",
+          "title": "God of Thunder (Raijin)"
+        },
+        {
+          "artist": "Tawaraya Sōtatsu",
+          "artwork_id": "cma:163546",
+          "chunk_index": 0,
+          "fragment_id": "cma:163546::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2004.86",
+          "texto": "(Leighton R. Longhi Inc., New York, NY, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "God of Thunder (Raijin)"
+        }
+      ],
+      "cma:173072": [
+        {
+          "artist": "Hakuen",
+          "artwork_id": "cma:173072",
+          "chunk_index": 0,
+          "fragment_id": "cma:173072::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2016.306",
+          "texto": "The painting parodies the traditional representation of this subject. The death of Buddha is actually the moment he achieves nirvana and escapes the endless cycle of death and rebirth. Hakuen transformed this serious moment (see The Death of the Buddha, CMA 1916.1141) into a lively parody with otsu-e subjects. Mourners surround the Buddha. An oni, who pretends to be a priest, holds his gong in the air as he beats his drums and chants prayers. The wisteria maiden appears at the left, bringing water to the mourners. Behind her is an oni in the guise of a thunder god beating his drums. The animals along the foreground represent other otsu-e characters and models. The painting would have amused 19th-century viewers familiar with the usual Buddhist imagery.",
+          "title": "Ōtsu-e Nirvana of the Buddha (Ōtsu-e Butsu Nehanzu)"
+        },
+        {
+          "artist": "Hakuen",
+          "artwork_id": "cma:173072",
+          "chunk_index": 0,
+          "fragment_id": "cma:173072::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2016.306",
+          "texto": "Mizuno, Otsu City, Japan\nDr. Daniel [1921–1996] and Mitzie Verne [1922–2016], Cleveland, OH, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Ōtsu-e Nirvana of the Buddha (Ōtsu-e Butsu Nehanzu)"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay evidencia que indique que la escena sea caótica o que los colores sean apagados.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:163546::description::0"
+            ],
+            "texto": "La obra fue creada a mediados del siglo XVII, dentro del periodo Edo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:163546::description::0"
+            ],
+            "texto": "La técnica incluye papel cubierto con polvo de oro, lo que da un efecto brillante y no apagado.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición es bastante ordenada y presenta una imagen audaz e innovadora, no caótica.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [],
+            "texto": "Los colores no son apagados, sino que el uso del oro resalta la luminosidad de la obra.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:163546"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:8044::description::0"
+            ],
+            "texto": "La obra data de alrededor de 1640, dentro del periodo Edo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:8044::description::0"
+            ],
+            "texto": "La escena representa un complejo con múltiples actividades y mucha energía, incluyendo peleas y discusiones, lo que aporta caos a la escena.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena muestra un alto nivel de actividad y movimiento, lo que puede interpretarse como caótico.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [],
+            "texto": "No hay información sobre la paleta de colores, pero visualmente los colores parecen vivos más que apagados.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:8044"
+      },
+      {
+        "abstencion": "No cumple con la época Edo ni con colores apagados.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:173072::description::0"
+            ],
+            "texto": "La obra fue realizada en el siglo XIX, posterior al periodo Edo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:173072::description::0"
+            ],
+            "texto": "La escena es una parodia animada de la muerte de Buda, con personajes y animales en una composición dinámica.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Aunque la escena es animada y algo caótica, no corresponde a la época Edo ni presenta colores apagados.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:173072"
+      },
+      {
+        "abstencion": "No hay evidencia de que la escena sea caótica o que los colores sean apagados.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:144293::description::0"
+            ],
+            "texto": "La obra fue creada a mediados del siglo XVII, dentro del periodo Edo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:144293::description::0"
+            ],
+            "texto": "La obra utiliza pigmentos minerales ricos y un uso liberal del oro, lo que da colores vivos y brillantes, no apagados.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición está organizada en escenas discretas y no presenta una sensación caótica.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:144293"
+      },
+      {
+        "abstencion": "No hay evidencia clara de que los colores sean apagados.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:156111::description::0"
+            ],
+            "texto": "La obra fue realizada en 1856, ya en el periodo tardío Edo.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:156111::description::0"
+            ],
+            "texto": "La escena representa un festival con muchas personas y actividades, lo que puede interpretarse como caótico.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:156111::description::0"
+            ],
+            "texto": "El título indica una vista pacífica y hermosa, pero la escena muestra que la paz no siempre es tranquila, sugiriendo dinamismo y cierto desorden.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "Los colores no se describen como apagados y visualmente parecen vivos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:156111"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "aic:11272",
+          "rank": 1,
+          "score": 0.5614932179450989
+        },
+        {
+          "artwork_id": "cma:151064",
+          "rank": 2,
+          "score": 0.5323652625083923
+        },
+        {
+          "artwork_id": "cma:152436",
+          "rank": 3,
+          "score": 0.530025839805603
+        },
+        {
+          "artwork_id": "cma:148857",
+          "rank": 4,
+          "score": 0.524940013885498
+        },
+        {
+          "artwork_id": "cma:156864",
+          "rank": 5,
+          "score": 0.5112090110778809
+        },
+        {
+          "artwork_id": "cma:143879",
+          "rank": 6,
+          "score": 0.5013937950134277
+        },
+        {
+          "artwork_id": "cma:156810",
+          "rank": 7,
+          "score": 0.500694990158081
+        },
+        {
+          "artwork_id": "cma:152292",
+          "rank": 8,
+          "score": 0.49928247928619385
+        },
+        {
+          "artwork_id": "cma:173072",
+          "rank": 9,
+          "score": 0.49761152267456055
+        },
+        {
+          "artwork_id": "cma:156808",
+          "rank": 10,
+          "score": 0.49758291244506836
+        },
+        {
+          "artwork_id": "cma:156809",
+          "rank": 11,
+          "score": 0.49755823612213135
+        },
+        {
+          "artwork_id": "aic:35677",
+          "rank": 12,
+          "score": 0.4962213635444641
+        },
+        {
+          "artwork_id": "aic:76645",
+          "rank": 13,
+          "score": 0.4933072328567505
+        },
+        {
+          "artwork_id": "cma:147410",
+          "rank": 14,
+          "score": 0.49059516191482544
+        },
+        {
+          "artwork_id": "cma:147411",
+          "rank": 15,
+          "score": 0.49059516191482544
+        },
+        {
+          "artwork_id": "aic:271418",
+          "rank": 16,
+          "score": 0.4823521375656128
+        },
+        {
+          "artwork_id": "aic:271417",
+          "rank": 17,
+          "score": 0.48232197761535645
+        },
+        {
+          "artwork_id": "cma:152441",
+          "rank": 18,
+          "score": 0.48009300231933594
+        },
+        {
+          "artwork_id": "aic:8044",
+          "rank": 19,
+          "score": 0.4791737198829651
+        },
+        {
+          "artwork_id": "cma:156865",
+          "rank": 20,
+          "score": 0.4787120819091797
+        },
+        {
+          "artwork_id": "cma:160300",
+          "rank": 21,
+          "score": 0.4761698842048645
+        },
+        {
+          "artwork_id": "cma:143752",
+          "rank": 22,
+          "score": 0.47377002239227295
+        },
+        {
+          "artwork_id": "cma:143753",
+          "rank": 23,
+          "score": 0.47377002239227295
+        },
+        {
+          "artwork_id": "cma:143751",
+          "rank": 24,
+          "score": 0.47351551055908203
+        },
+        {
+          "artwork_id": "cma:136297",
+          "rank": 25,
+          "score": 0.47231221199035645
+        },
+        {
+          "artwork_id": "cma:98293",
+          "rank": 26,
+          "score": 0.467637300491333
+        },
+        {
+          "artwork_id": "cma:149765",
+          "rank": 27,
+          "score": 0.4674268960952759
+        },
+        {
+          "artwork_id": "cma:149766",
+          "rank": 28,
+          "score": 0.4674268960952759
+        },
+        {
+          "artwork_id": "cma:156976",
+          "rank": 29,
+          "score": 0.4655265808105469
+        },
+        {
+          "artwork_id": "cma:149764",
+          "rank": 30,
+          "score": 0.4652571678161621
+        },
+        {
+          "artwork_id": "cma:156866",
+          "rank": 31,
+          "score": 0.4641796350479126
+        },
+        {
+          "artwork_id": "cma:154040",
+          "rank": 32,
+          "score": 0.4640597105026245
+        },
+        {
+          "artwork_id": "cma:150855",
+          "rank": 33,
+          "score": 0.46362388134002686
+        },
+        {
+          "artwork_id": "cma:156867",
+          "rank": 34,
+          "score": 0.46263182163238525
+        },
+        {
+          "artwork_id": "cma:159733",
+          "rank": 35,
+          "score": 0.4591594934463501
+        },
+        {
+          "artwork_id": "cma:146036",
+          "rank": 36,
+          "score": 0.45708519220352173
+        },
+        {
+          "artwork_id": "cma:140435",
+          "rank": 37,
+          "score": 0.45513445138931274
+        },
+        {
+          "artwork_id": "cma:156111",
+          "rank": 38,
+          "score": 0.45350176095962524
+        },
+        {
+          "artwork_id": "cma:152447",
+          "rank": 39,
+          "score": 0.4528017044067383
+        },
+        {
+          "artwork_id": "cma:152333",
+          "rank": 40,
+          "score": 0.4489154815673828
+        },
+        {
+          "artwork_id": "cma:140096",
+          "rank": 41,
+          "score": 0.44770538806915283
+        },
+        {
+          "artwork_id": "cma:144293",
+          "rank": 42,
+          "score": 0.44440531730651855
+        },
+        {
+          "artwork_id": "cma:144294",
+          "rank": 43,
+          "score": 0.44440531730651855
+        },
+        {
+          "artwork_id": "cma:144292",
+          "rank": 44,
+          "score": 0.44254469871520996
+        },
+        {
+          "artwork_id": "cma:170474",
+          "rank": 45,
+          "score": 0.4423224925994873
+        },
+        {
+          "artwork_id": "cma:170475",
+          "rank": 46,
+          "score": 0.4423224925994873
+        },
+        {
+          "artwork_id": "cma:170476",
+          "rank": 47,
+          "score": 0.4423224925994873
+        },
+        {
+          "artwork_id": "cma:148538",
+          "rank": 48,
+          "score": 0.44133293628692627
+        },
+        {
+          "artwork_id": "cma:156124",
+          "rank": 49,
+          "score": 0.44104093313217163
+        },
+        {
+          "artwork_id": "aic:74242",
+          "rank": 50,
+          "score": 0.4407752752304077
+        },
+        {
+          "artwork_id": "cma:136419",
+          "rank": 51,
+          "score": 0.4406670331954956
+        },
+        {
+          "artwork_id": "cma:153777",
+          "rank": 52,
+          "score": 0.4397645592689514
+        },
+        {
+          "artwork_id": "cma:149417",
+          "rank": 53,
+          "score": 0.4391062259674072
+        },
+        {
+          "artwork_id": "cma:159734",
+          "rank": 54,
+          "score": 0.4375218152999878
+        },
+        {
+          "artwork_id": "cma:159735",
+          "rank": 55,
+          "score": 0.4375218152999878
+        },
+        {
+          "artwork_id": "cma:159736",
+          "rank": 56,
+          "score": 0.4375218152999878
+        },
+        {
+          "artwork_id": "aic:145673",
+          "rank": 57,
+          "score": 0.4362403154373169
+        },
+        {
+          "artwork_id": "aic:198906",
+          "rank": 58,
+          "score": 0.43550002574920654
+        },
+        {
+          "artwork_id": "cma:153727",
+          "rank": 59,
+          "score": 0.43453389406204224
+        },
+        {
+          "artwork_id": "cma:151447",
+          "rank": 60,
+          "score": 0.43415045738220215
+        },
+        {
+          "artwork_id": "cma:151448",
+          "rank": 61,
+          "score": 0.43415045738220215
+        },
+        {
+          "artwork_id": "cma:151446",
+          "rank": 62,
+          "score": 0.434099018573761
+        },
+        {
+          "artwork_id": "cma:146211",
+          "rank": 63,
+          "score": 0.4335838556289673
+        },
+        {
+          "artwork_id": "cma:146212",
+          "rank": 64,
+          "score": 0.4335838556289673
+        },
+        {
+          "artwork_id": "cma:146213",
+          "rank": 65,
+          "score": 0.4335838556289673
+        },
+        {
+          "artwork_id": "cma:163546",
+          "rank": 66,
+          "score": 0.4329068660736084
+        },
+        {
+          "artwork_id": "aic:130205",
+          "rank": 67,
+          "score": 0.4317408800125122
+        },
+        {
+          "artwork_id": "aic:39117",
+          "rank": 68,
+          "score": 0.4317150115966797
+        },
+        {
+          "artwork_id": "cma:153776",
+          "rank": 69,
+          "score": 0.43048787117004395
+        },
+        {
+          "artwork_id": "cma:153778",
+          "rank": 70,
+          "score": 0.43048787117004395
+        },
+        {
+          "artwork_id": "cma:153779",
+          "rank": 71,
+          "score": 0.43048787117004395
+        },
+        {
+          "artwork_id": "cma:135333",
+          "rank": 72,
+          "score": 0.42995935678482056
+        },
+        {
+          "artwork_id": "cma:148539",
+          "rank": 73,
+          "score": 0.4297892451286316
+        },
+        {
+          "artwork_id": "cma:148540",
+          "rank": 74,
+          "score": 0.4297892451286316
+        },
+        {
+          "artwork_id": "aic:198910",
+          "rank": 75,
+          "score": 0.4279751777648926
+        },
+        {
+          "artwork_id": "cma:152409",
+          "rank": 76,
+          "score": 0.4275040030479431
+        },
+        {
+          "artwork_id": "cma:150533",
+          "rank": 77,
+          "score": 0.4266279935836792
+        },
+        {
+          "artwork_id": "cma:147592",
+          "rank": 78,
+          "score": 0.4248300790786743
+        },
+        {
+          "artwork_id": "cma:707624",
+          "rank": 79,
+          "score": 0.42367470264434814
+        },
+        {
+          "artwork_id": "cma:157681",
+          "rank": 80,
+          "score": 0.42353641986846924
+        },
+        {
+          "artwork_id": "cma:152429",
+          "rank": 81,
+          "score": 0.42331963777542114
+        },
+        {
+          "artwork_id": "cma:141727",
+          "rank": 82,
+          "score": 0.4232555031776428
+        },
+        {
+          "artwork_id": "aic:249461",
+          "rank": 83,
+          "score": 0.42172980308532715
+        },
+        {
+          "artwork_id": "cma:152451",
+          "rank": 84,
+          "score": 0.41947269439697266
+        },
+        {
+          "artwork_id": "cma:90269",
+          "rank": 85,
+          "score": 0.4191817045211792
+        },
+        {
+          "artwork_id": "aic:36550",
+          "rank": 86,
+          "score": 0.4189426302909851
+        },
+        {
+          "artwork_id": "aic:127644",
+          "rank": 87,
+          "score": 0.4184141159057617
+        },
+        {
+          "artwork_id": "aic:160015",
+          "rank": 88,
+          "score": 0.4182168245315552
+        },
+        {
+          "artwork_id": "cma:444412",
+          "rank": 89,
+          "score": 0.41775578260421753
+        },
+        {
+          "artwork_id": "cma:444765",
+          "rank": 90,
+          "score": 0.41775578260421753
+        },
+        {
+          "artwork_id": "cma:444766",
+          "rank": 91,
+          "score": 0.41775578260421753
+        },
+        {
+          "artwork_id": "cma:155064",
+          "rank": 92,
+          "score": 0.41725683212280273
+        },
+        {
+          "artwork_id": "cma:161322",
+          "rank": 93,
+          "score": 0.4168780446052551
+        },
+        {
+          "artwork_id": "cma:161323",
+          "rank": 94,
+          "score": 0.4168780446052551
+        },
+        {
+          "artwork_id": "cma:161324",
+          "rank": 95,
+          "score": 0.4168780446052551
+        },
+        {
+          "artwork_id": "cma:132048",
+          "rank": 96,
+          "score": 0.4152836203575134
+        },
+        {
+          "artwork_id": "cma:132049",
+          "rank": 97,
+          "score": 0.4152836203575134
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:677526",
+          "rank": 1,
+          "score": 0.7517176270484924
+        },
+        {
+          "artwork_id": "cma:145966",
+          "rank": 2,
+          "score": 0.741076648235321
+        },
+        {
+          "artwork_id": "cma:163206",
+          "rank": 3,
+          "score": 0.7376737594604492
+        },
+        {
+          "artwork_id": "cma:314442",
+          "rank": 4,
+          "score": 0.7319263219833374
+        },
+        {
+          "artwork_id": "cma:144104",
+          "rank": 5,
+          "score": 0.7238909602165222
+        },
+        {
+          "artwork_id": "cma:133294",
+          "rank": 6,
+          "score": 0.7227988839149475
+        },
+        {
+          "artwork_id": "cma:314429",
+          "rank": 7,
+          "score": 0.7177736759185791
+        },
+        {
+          "artwork_id": "aic:49195",
+          "rank": 8,
+          "score": 0.7164769768714905
+        },
+        {
+          "artwork_id": "cma:170784",
+          "rank": 9,
+          "score": 0.7155858278274536
+        },
+        {
+          "artwork_id": "cma:170774",
+          "rank": 10,
+          "score": 0.7140376567840576
+        },
+        {
+          "artwork_id": "cma:147948",
+          "rank": 11,
+          "score": 0.708305299282074
+        },
+        {
+          "artwork_id": "cma:314486",
+          "rank": 12,
+          "score": 0.7078723907470703
+        },
+        {
+          "artwork_id": "aic:198899",
+          "rank": 13,
+          "score": 0.7062188982963562
+        },
+        {
+          "artwork_id": "cma:162494",
+          "rank": 14,
+          "score": 0.7055579423904419
+        },
+        {
+          "artwork_id": "cma:170798",
+          "rank": 15,
+          "score": 0.7035180926322937
+        },
+        {
+          "artwork_id": "cma:314439",
+          "rank": 16,
+          "score": 0.7031617760658264
+        },
+        {
+          "artwork_id": "cma:314457",
+          "rank": 17,
+          "score": 0.7021495699882507
+        },
+        {
+          "artwork_id": "cma:146184",
+          "rank": 18,
+          "score": 0.7021211385726929
+        },
+        {
+          "artwork_id": "cma:314436",
+          "rank": 19,
+          "score": 0.7006964683532715
+        },
+        {
+          "artwork_id": "cma:159482",
+          "rank": 20,
+          "score": 0.7001098394393921
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Japanese Edo period painting depicting a chaotic battle scene, traditional samurai warfare, historical context, muted color palette, dynamic composition",
+      "consulta_id": "c08-mixto",
+      "consulta_visual": "Edo period chaotic battle scene with muted colors, multiple warriors fighting dynamically, traditional Japanese weapons and armor, dense composition",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:c5c4d8c30b79c5754ea4e35d42bfb70110f9154f09bed22e92986ee225eebf9e",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "esta escena con colores más apagados, en la época Edo, más caótica",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "ae8ca43d945dd5d3",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2024,
+        "tokens_out": 61
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:163546",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.68615323
+      },
+      {
+        "artwork_id": "aic:8044",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.68435698
+      },
+      {
+        "artwork_id": "cma:173072",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.68239135
+      },
+      {
+        "artwork_id": "cma:136297",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.68050761
+      },
+      {
+        "artwork_id": "cma:144293",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.68004648
+      },
+      {
+        "artwork_id": "cma:156111",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.67981038
+      },
+      {
+        "artwork_id": "cma:152451",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.67684656
+      },
+      {
+        "artwork_id": "cma:144294",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.66836359
+      },
+      {
+        "artwork_id": "cma:151064",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.65933424
+      },
+      {
+        "artwork_id": "cma:152292",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.65658128
+      },
+      {
+        "artwork_id": "cma:152441",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.64850614
+      },
+      {
+        "artwork_id": "cma:170476",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.64270294
+      },
+      {
+        "artwork_id": "cma:148857",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.63726816
+      },
+      {
+        "artwork_id": "cma:154040",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.63330959
+      },
+      {
+        "artwork_id": "cma:150855",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.63224989
+      },
+      {
+        "artwork_id": "aic:145673",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.63217498
+      },
+      {
+        "artwork_id": "cma:153778",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.62874417
+      },
+      {
+        "artwork_id": "cma:170475",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.62813874
+      },
+      {
+        "artwork_id": "cma:153776",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.62449786
+      },
+      {
+        "artwork_id": "cma:146212",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.62385872
+      },
+      {
+        "artwork_id": "aic:36550",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.62044944
+      },
+      {
+        "artwork_id": "cma:160300",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.61932653
+      },
+      {
+        "artwork_id": "cma:151448",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.61899479
+      },
+      {
+        "artwork_id": "cma:153779",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.61880688
+      },
+      {
+        "artwork_id": "cma:444765",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.61561256
+      },
+      {
+        "artwork_id": "cma:707624",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.61502283
+      },
+      {
+        "artwork_id": "cma:152429",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.61468266
+      },
+      {
+        "artwork_id": "cma:148538",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.61427731
+      },
+      {
+        "artwork_id": "cma:156865",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.61184888
+      },
+      {
+        "artwork_id": "cma:98293",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.61166908
+      },
+      {
+        "artwork_id": "cma:144292",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.61111173
+      },
+      {
+        "artwork_id": "cma:170474",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.60892812
+      },
+      {
+        "artwork_id": "cma:136419",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.60892147
+      },
+      {
+        "artwork_id": "cma:146213",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.60725271
+      },
+      {
+        "artwork_id": "cma:132049",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 97
+        },
+        "score_fusionado": 0.60470526
+      },
+      {
+        "artwork_id": "aic:35677",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.60285704
+      },
+      {
+        "artwork_id": "cma:149766",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.6003376
+      },
+      {
+        "artwork_id": "cma:149764",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.59946692
+      },
+      {
+        "artwork_id": "aic:127644",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.59392505
+      },
+      {
+        "artwork_id": "cma:157681",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.59377143
+      },
+      {
+        "artwork_id": "cma:444766",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.59143113
+      },
+      {
+        "artwork_id": "cma:444412",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.59140571
+      },
+      {
+        "artwork_id": "cma:156864",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.58901646
+      },
+      {
+        "artwork_id": "cma:153727",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.58834808
+      },
+      {
+        "artwork_id": "aic:76645",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.58427726
+      },
+      {
+        "artwork_id": "cma:149417",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.58329851
+      },
+      {
+        "artwork_id": "cma:151447",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.5832385
+      },
+      {
+        "artwork_id": "cma:146211",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.58251116
+      },
+      {
+        "artwork_id": "cma:151446",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.58249582
+      },
+      {
+        "artwork_id": "aic:130205",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.58197721
+      },
+      {
+        "artwork_id": "aic:39117",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.58197721
+      },
+      {
+        "artwork_id": "cma:152436",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.58035446
+      },
+      {
+        "artwork_id": "cma:161322",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.57902194
+      },
+      {
+        "artwork_id": "cma:148540",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.57749094
+      },
+      {
+        "artwork_id": "cma:153777",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.5748832
+      },
+      {
+        "artwork_id": "cma:155064",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.57441507
+      },
+      {
+        "artwork_id": "cma:156810",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.57415984
+      },
+      {
+        "artwork_id": "cma:143752",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.57288532
+      },
+      {
+        "artwork_id": "cma:156867",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.57282334
+      },
+      {
+        "artwork_id": "cma:143753",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.57153482
+      },
+      {
+        "artwork_id": "cma:149765",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.57124987
+      },
+      {
+        "artwork_id": "cma:152447",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.56985216
+      },
+      {
+        "artwork_id": "cma:156866",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.56909623
+      },
+      {
+        "artwork_id": "cma:90269",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.56704175
+      },
+      {
+        "artwork_id": "cma:161323",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.56603507
+      },
+      {
+        "artwork_id": "cma:147411",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.56247506
+      },
+      {
+        "artwork_id": "cma:143879",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.56119069
+      },
+      {
+        "artwork_id": "cma:148539",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.56104598
+      },
+      {
+        "artwork_id": "aic:249461",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.55723335
+      },
+      {
+        "artwork_id": "cma:159735",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.556384
+      },
+      {
+        "artwork_id": "cma:156809",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.55549808
+      },
+      {
+        "artwork_id": "aic:74242",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.55345454
+      },
+      {
+        "artwork_id": "cma:135333",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.5533008
+      },
+      {
+        "artwork_id": "cma:152333",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.55265384
+      },
+      {
+        "artwork_id": "aic:198906",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.55249339
+      },
+      {
+        "artwork_id": "cma:140096",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.54904236
+      },
+      {
+        "artwork_id": "cma:159733",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.54652185
+      },
+      {
+        "artwork_id": "aic:271417",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.54596717
+      },
+      {
+        "artwork_id": "cma:159736",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.53742689
+      },
+      {
+        "artwork_id": "cma:147410",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.53482468
+      },
+      {
+        "artwork_id": "cma:161324",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.53463855
+      },
+      {
+        "artwork_id": "cma:147592",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.53376731
+      },
+      {
+        "artwork_id": "cma:150533",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.53166349
+      },
+      {
+        "artwork_id": "cma:156808",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.53078661
+      },
+      {
+        "artwork_id": "cma:132048",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 96
+        },
+        "score_fusionado": 0.52923308
+      },
+      {
+        "artwork_id": "aic:160015",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.52638564
+      },
+      {
+        "artwork_id": "aic:271418",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.52376285
+      },
+      {
+        "artwork_id": "cma:159734",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.51540833
+      },
+      {
+        "artwork_id": "cma:143751",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.51488576
+      },
+      {
+        "artwork_id": "cma:152409",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.51246242
+      },
+      {
+        "artwork_id": "cma:156124",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.51052033
+      },
+      {
+        "artwork_id": "cma:141727",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.50651217
+      },
+      {
+        "artwork_id": "cma:140435",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.5016652
+      },
+      {
+        "artwork_id": "aic:11272",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.49286377
+      },
+      {
+        "artwork_id": "aic:198910",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.48194749
+      },
+      {
+        "artwork_id": "cma:146036",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.463407
+      },
+      {
+        "artwork_id": "cma:156976",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.37024811
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:163546",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, sin caos visible, no es época Edo. CANDIDATA: colores apagados, dorados y oscuros, escena con movimiento y energía caótica, sí es época Edo. CAMBIO: colores más apagados, época correcta, aumento notable de caos. Cumple bien el pedido con colores apagados, estilo Edo y una composición más caótica.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3022,
+          "tokens_out": 105
+        }
+      },
+      {
+        "artwork_id": "aic:8044",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, dorados y ocres dominan, escena muy poblada y caótica, sí es época Edo. CAMBIO: colores más apagados y escena más caótica, además cumple con la época Edo. La candidata cumple bien con colores apagados, caos en la escena y es de la época Edo, ajustándose al pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2317,
+          "tokens_out": 112
+        }
+      },
+      {
+        "artwork_id": "cma:173072",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena ordenada. CANDIDATA: colores apagados, predominan grises y negros, escena muy caótica con muchos personajes. CAMBIO: cumple el pedido de colores más apagados y mayor caos en la escena. La candidata tiene colores más apagados y una composición mucho más caótica, acorde al pedido y es de época Edo.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2452,
+          "tokens_out": 96
+        }
+      },
+      {
+        "artwork_id": "cma:144293",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, sin caos. CANDIDATA: colores apagados, predominan tonos dorados y verdes oscuros, escena compleja con muchos personajes y elementos, sensación más caótica. CAMBIO: la paleta se apagó y la escena es más caótica, además es de época Edo. Cumple bien el pedido de colores apagados, época Edo y mayor caos visual en la escena.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2692,
+          "tokens_out": 112
+        }
+      },
+      {
+        "artwork_id": "cma:156111",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena ordenada y clara, no es época Edo. CANDIDATA: colores apagados, escena muy caótica con multitud de figuras, es de época Edo (1856). CAMBIO: colores más apagados y escena más caótica, además cumple con la época Edo. La candidata cumple bien con colores apagados, caos y época Edo, ajustándose al pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2376,
+          "tokens_out": 102
+        }
+      },
+      {
+        "artwork_id": "cma:152451",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena ordenada y clara, sin indicios de caos, no es de época Edo. CANDIDATA: colores más apagados y dorados, escena muy poblada y caótica, claramente de época Edo. CAMBIO: colores más apagados y caos aumentados, además cumple con la época Edo. La candidata cumple bien con colores apagados, caos y época Edo, ajustándose al pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2532,
+          "tokens_out": 108
+        }
+      },
+      {
+        "artwork_id": "cma:144294",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, sin caos. CANDIDATA: colores apagados, dorados y oscuros, escena compleja y con muchos elementos, sensación más caótica. CAMBIO: colores más apagados y escena más caótica, cumple bien; además es de época Edo. La candidata cumple el pedido con colores apagados, mayor caos visual y es de la época Edo.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2821,
+          "tokens_out": 106
+        }
+      },
+      {
+        "artwork_id": "cma:151064",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, paleta más tenue, escena caótica con muchas figuras y acciones, sí es época Edo. CAMBIO: la candidata cumple con colores más apagados, época Edo y mayor caos en la escena. La candidata cumple bien con los colores apagados, la época Edo y la escena caótica que pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2209,
+          "tokens_out": 109
+        }
+      },
+      {
+        "artwork_id": "cma:148857",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, época no Edo, escena clara y ordenada. CANDIDATA: colores más apagados, época Edo (early to mid-1600s), escena muy caótica con mucha gente y acción. CAMBIO: cumple el pedido en colores apagados, época y caos. La candidata cumple bien con colores apagados, época Edo y una escena caótica, ajustándose al pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3052,
+          "tokens_out": 104
+        }
+      },
+      {
+        "artwork_id": "aic:145673",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: escena con colores vivos y saturados, poco caótica. CANDIDATA: colores más apagados, escena muy caótica con muchos personajes y detalles. CAMBIO: cumple el pedido de colores más apagados y mayor caos visual. La candidata es de época Edo, con colores más apagados y una escena mucho más caótica, cumpliendo bien el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2096,
+          "tokens_out": 95
+        }
+      },
+      {
+        "artwork_id": "cma:136297",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, paleta más neutra y oscura, época Edo confirmada, escena con muchas figuras pero no caótica. CAMBIO: colores más apagados y época correcta, pero la escena es más tranquila que caótica. Cumple en colores apagados y época Edo, pero la escena no es más caótica que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3196,
+          "tokens_out": 112
+        }
+      },
+      {
+        "artwork_id": "cma:154040",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: escena colorida, saturada y con figuras claras y definidas; época no especificada. CANDIDATA: colores muy apagados, monocromáticos en tinta negra, época Edo (c. 1615–1868). CAMBIO: cumple con colores más apagados y época Edo, pero la escena es menos caótica, más dispersa y simple. Cumple con colores apagados y época Edo, pero la escena es menos caótica que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3598,
+          "tokens_out": 116
+        }
+      },
+      {
+        "artwork_id": "cma:153776",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, tonos suaves y pálidos, escena con varias figuras pero tranquila, sí es época Edo. CAMBIO: colores más apagados y época Edo cumplidos, pero la escena es menos caótica que la original. Cumple la época Edo y colores apagados, pero la escena es menos caótica que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 2864,
+          "tokens_out": 110
+        }
+      },
+      {
+        "artwork_id": "cma:152441",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, tonos marrones y grises, escena tranquila y ordenada, sí es época Edo. CAMBIO: colores más apagados y época Edo cumplidos, pero la escena es menos caótica, más tranquila. Cumple en colores apagados y época Edo, pero no en caos, que es menor que en la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2376,
+          "tokens_out": 111
+        }
+      },
+      {
+        "artwork_id": "cma:150855",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: escena colorida, saturada y clara, con figuras en acción y composición dinámica. CANDIDATA: colores apagados, tonos oscuros y terrosos, figura estática y composición simple. CAMBIO: cumple el pedido de colores más apagados, pero no es una escena caótica sino tranquila y estática, y sí es de época Edo. La candidata cumple con colores apagados y época Edo, pero no con la caoticidad pedida en la escena.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2339,
+          "tokens_out": 118
+        }
+      },
+      {
+        "artwork_id": "cma:170475",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: escena con colores vivos y saturados, época no japonesa, caótica con muchas figuras en acción. CANDIDATA: colores apagados y suaves, época Edo (1700s Japón), escena tranquila y ordenada con pocas figuras. CAMBIO: cumple la época Edo y colores más apagados, pero no es más caótica sino más serena. Cumple la época y colores apagados, pero la escena es menos caótica que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2957,
+          "tokens_out": 112
+        }
+      },
+      {
+        "artwork_id": "cma:146212",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, dorados y marrones dominan, escena tranquila y ordenada, sí es época Edo. CAMBIO: colores más apagados y época Edo cumplidos, pero la escena es menos caótica. Cumple en colores apagados y época Edo, pero no en mayor caos, por eso cumple a medias.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2449,
+          "tokens_out": 108
+        }
+      },
+      {
+        "artwork_id": "cma:152292",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena ordenada. CANDIDATA: colores apagados, tonos tierra y escena tranquila. CAMBIO: colores más apagados, pero la escena es menos caótica, más serena. Cumple la época Edo y colores más apagados, pero la escena es menos caótica que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2754,
+          "tokens_out": 87
+        }
+      },
+      {
+        "artwork_id": "cma:170476",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: colores vivos y saturados, escena clara y ordenada, no es época Edo. CANDIDATA: colores apagados, tonos beige y dorados, escena tranquila y ordenada, sí época Edo. CAMBIO: colores más apagados y época Edo sí, pero no es más caótica sino más serena. Cumple la época Edo y colores apagados, pero no la mayor caoticidad pedida.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2958,
+          "tokens_out": 105
+        }
+      },
+      {
+        "artwork_id": "cma:153778",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: escena colorida, tonos vivos y saturados, con composición dinámica y caótica. CANDIDATA: colores muy apagados, tonos suaves y pálidos, escena tranquila y simple. CAMBIO: colores más apagados sí, pero la escena es menos caótica y no corresponde a la época Edo. La candidata tiene colores apagados pero no es caótica ni claramente de la época Edo, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2343,
+          "tokens_out": 109
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c08-mixto",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay evidencia que indique que la escena sea caótica o que los colores sean apagados.",
+          "artwork_id": "cma:163546",
+          "ficha": {
+            "artist": "Tawaraya Sōtatsu",
+            "culture": "Japan",
+            "date_display": "mid-1600s",
+            "medium": "six-panel folding screen; ink, color, and gold on paper",
+            "title": "God of Thunder (Raijin)",
+            "year": 1640
+          },
+          "lineas": [
+            "La obra fue creada a mediados del siglo XVII, dentro del periodo Edo. [1]",
+            "La técnica incluye papel cubierto con polvo de oro, lo que da un efecto brillante y no apagado. [1]",
+            "La composición es bastante ordenada y presenta una imagen audaz e innovadora, no caótica.",
+            "Los colores no son apagados, sino que el uso del oro resalta la luminosidad de la obra."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Tawaraya Sōtatsu",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:163546::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2004.86",
+              "texto_citado": "Such depictions of the God of Thunder originated in Buddhist art. Here, the image was painted on paper covered with gold dust, a technique often found in paintings by Tawaraya Sotatsu or of the Sotatsu school. This gold technique and the \"Inen\" seal here suggest that the anonymous painter of this screen was probably associated with the Sotatsu workshop. The artist used a prototype borrowed from earlier Japanese narrative painting—rather than mechanically reproducing Sotatsu’s image—and created a bold, innovative image that served the world of play and leisure in early Edo Japan. \n\nThe theme of \"God of Thunder\" was often paired with \"God of Wind\" and has been frequently reinterpreted by generations of Rimpa artists. Unfortunately, the screen God of Wind which would have accompanied this God of Thunder cannot be located.",
+              "title": "God of Thunder (Raijin)"
+            }
+          ],
+          "score": 0.6861532282134579,
+          "source_url": "https://clevelandart.org/art/2004.86"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:8044",
+          "ficha": {
+            "culture": "Japan",
+            "date_display": "About 1640",
+            "medium": "Six-fold screen; ink, color, gold and silver on paper",
+            "style": "Japanese (culture or style)",
+            "title": "Genre Scenes (Fūzoku byōbu)",
+            "year": 1640
+          },
+          "lineas": [
+            "La obra data de alrededor de 1640, dentro del periodo Edo. [1]",
+            "La escena representa un complejo con múltiples actividades y mucha energía, incluyendo peleas y discusiones, lo que aporta caos a la escena. [1]",
+            "La escena muestra un alto nivel de actividad y movimiento, lo que puede interpretarse como caótico.",
+            "No hay información sobre la paleta de colores, pero visualmente los colores parecen vivos más que apagados."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": "“Genre Scenes (Fūzoku byōbu)”, autor no declarado por el museo. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/8044",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:8044::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/8044",
+              "texto_citado": "The large building complex depicted here contains a bathhouse, teahouse, kitchen, puppet-show theater, and a games room. Inside, commoners and aristocrats alike enjoy the various forms of entertainment, while outside, people dance, play music, and wrestle. A kasamawashi, a street performer who balances objects on a spinning umbrella, performs to the left of the dancers. In scenes of merriment like this one, Japanese artists often depicted figures fighting—this painting includes a sumo match and people arguing over a game of shōgi—to emphasize the heightened levels of energy and excitement.",
+              "title": "Genre Scenes (Fūzoku byōbu)"
+            }
+          ],
+          "score": 0.6843569760162053,
+          "source_url": "https://www.artic.edu/artworks/8044"
+        },
+        {
+          "abstencion": "No cumple con la época Edo ni con colores apagados.",
+          "artwork_id": "cma:173072",
+          "ficha": {
+            "artist": "Hakuen",
+            "culture": "Japan",
+            "date_display": "1800s",
+            "medium": "hanging scroll; ink and color on paper",
+            "title": "Ōtsu-e Nirvana of the Buddha (Ōtsu-e Butsu Nehanzu)",
+            "year": 1800
+          },
+          "lineas": [
+            "La obra fue realizada en el siglo XIX, posterior al periodo Edo. [1]",
+            "La escena es una parodia animada de la muerte de Buda, con personajes y animales en una composición dinámica. [1]",
+            "Aunque la escena es animada y algo caótica, no corresponde a la época Edo ni presenta colores apagados."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Hakuen",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:173072::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2016.306",
+              "texto_citado": "The painting parodies the traditional representation of this subject. The death of Buddha is actually the moment he achieves nirvana and escapes the endless cycle of death and rebirth. Hakuen transformed this serious moment (see The Death of the Buddha, CMA 1916.1141) into a lively parody with otsu-e subjects. Mourners surround the Buddha. An oni, who pretends to be a priest, holds his gong in the air as he beats his drums and chants prayers. The wisteria maiden appears at the left, bringing water to the mourners. Behind her is an oni in the guise of a thunder god beating his drums. The animals along the foreground represent other otsu-e characters and models. The painting would have amused 19th-century viewers familiar with the usual Buddhist imagery.",
+              "title": "Ōtsu-e Nirvana of the Buddha (Ōtsu-e Butsu Nehanzu)"
+            }
+          ],
+          "score": 0.6823913534461057,
+          "source_url": "https://clevelandart.org/art/2016.306"
+        },
+        {
+          "abstencion": "No hay evidencia de que la escena sea caótica o que los colores sean apagados.",
+          "artwork_id": "cma:144293",
+          "ficha": {
+            "culture": "Japan",
+            "date_display": "mid-1600s",
+            "medium": "One of a pair of six-panel folding screens; ink, color and gold on paper",
+            "title": "Scenes from the Tales of Ise",
+            "year": 1625
+          },
+          "lineas": [
+            "La obra fue creada a mediados del siglo XVII, dentro del periodo Edo. [1]",
+            "La obra utiliza pigmentos minerales ricos y un uso liberal del oro, lo que da colores vivos y brillantes, no apagados. [1]",
+            "La composición está organizada en escenas discretas y no presenta una sensación caótica."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:144293::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1969.127.1",
+              "texto_citado": "While the 11th-century Tale of Genji is universally regarded as Japan's literary masterpiece, the source for visual imagery in Japanese culture is rivaled by another literary classic, the Tales of Ise. A 10th-century anthology of poems interspersed with commentary, the Ise portrays the emotional and geographical journey of a courtier from the capital (Kyoto) into the countryside and beyond. The poems describe features of the natural, untamed terrain, linking them to the rather melancholy state of the traveler. \n\nSince the Tales of Ise was—and remains today—well read by educated Japanese, a person viewing these folding screens would immediately recognize its subject, organized as a series of discrete scenes read from right to left. Neither a signature nor a seal identifies the artist, but judging from related paintings, the work can be ascribed to an artist working in Kyoto during the first quarter of the 17th century in the manner of the painter Iwasa Matabei (1578–1650). This type of historical narrative composition became quite popular around 1600 among patrons favoring a distinctly Japanese style of painting which employed rich mineral pigments and a liberal use of gold.",
+              "title": "Scenes from the Tales of Ise"
+            }
+          ],
+          "score": 0.6800464799429116,
+          "source_url": "https://clevelandart.org/art/1969.127.1"
+        },
+        {
+          "abstencion": "No hay evidencia clara de que los colores sean apagados.",
+          "artwork_id": "cma:156111",
+          "ficha": {
+            "artist": "Sakai Basai",
+            "culture": "Japan",
+            "date_display": "1856",
+            "medium": "hanging scroll; ink and color on silk",
+            "title": "The Sand-Carrying Festival (Sunamochi Matsuri)",
+            "year": 1856
+          },
+          "lineas": [
+            "La obra fue realizada en 1856, ya en el periodo tardío Edo. [1]",
+            "La escena representa un festival con muchas personas y actividades, lo que puede interpretarse como caótico. [1]",
+            "El título indica una vista pacífica y hermosa, pero la escena muestra que la paz no siempre es tranquila, sugiriendo dinamismo y cierto desorden. [1]",
+            "Los colores no se describen como apagados y visualmente parecen vivos."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Sakai Basai",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:156111::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1991.44",
+              "texto_citado": "Dredging waterways to preserve their function once required the cooperation of large numbers of people, seen at the top of this painting. Sand-carrying festivals were historically associated with religious rites or gathering alms to construct places of worship, and involved not only the labor of collecting sand from rivers but also parades and performances marking the event. Kyoto’s Kamo River has been dredged many times over the centuries, including in 1856, the year this image was made. Although the title at the upper right says Taihei Kakan, or “Peaceful, Beautiful View,” the painter’s delightful scene reminds his audience that at the best of times, peace may have little to do with quiet. \n\nSakai Baisai was a student of literati painter Yamamoto Baiitsu (1783–1856). He was active until around 1879, when he relocated to Kobe to make his living as a design painter on porcelains destined for export.",
+              "title": "The Sand-Carrying Festival (Sunamochi Matsuri)"
+            }
+          ],
+          "score": 0.6798103803472947,
+          "source_url": "https://clevelandart.org/art/1991.44"
+        }
+      ],
+      "render": "1. **God of Thunder (Raijin)**\n   Tawaraya Sōtatsu · mid-1600s · six-panel folding screen; ink, color, and gold on paper\n   Ficha oficial: https://clevelandart.org/art/2004.86\n\n   La obra fue creada a mediados del siglo XVII, dentro del periodo Edo. [1]\n   La técnica incluye papel cubierto con polvo de oro, lo que da un efecto brillante y no apagado. [1]\n   La composición es bastante ordenada y presenta una imagen audaz e innovadora, no caótica.\n   Los colores no son apagados, sino que el uso del oro resalta la luminosidad de la obra.\n   No hay evidencia que indique que la escena sea caótica o que los colores sean apagados.\n\n   **Fuentes**\n   [1] “Such depictions of the God of Thunder originated in Buddhist art. Here, the image was painted on paper covered with gold dust, a technique often found in paintings by Tawaraya Sotatsu or of the Sotatsu school. This gold technique and the \"Inen\" seal here suggest that the anonymous painter of this screen was probably associated with the Sotatsu workshop. The artist used a prototype borrowed from earlier Japanese narrative painting—rather than mechanically reproducing Sotatsu’s image—and created a bold, innovative image that served the world of play and leisure in early Edo Japan. \n\nThe theme of \"God of Thunder\" was often paired with \"God of Wind\" and has been frequently reinterpreted by generations of Rimpa artists. Unfortunately, the screen God of Wind which would have accompanied this God of Thunder cannot be located.”\n       https://clevelandart.org/art/2004.86 · CC0 1.0\n\n2. **Genre Scenes (Fūzoku byōbu)**\n   About 1640 · Six-fold screen; ink, color, gold and silver on paper · Japanese (culture or style)\n   Ficha oficial: https://www.artic.edu/artworks/8044\n\n   La obra data de alrededor de 1640, dentro del periodo Edo. [1]\n   La escena representa un complejo con múltiples actividades y mucha energía, incluyendo peleas y discusiones, lo que aporta caos a la escena. [1]\n   La escena muestra un alto nivel de actividad y movimiento, lo que puede interpretarse como caótico.\n   No hay información sobre la paleta de colores, pero visualmente los colores parecen vivos más que apagados.\n\n   **Fuentes**\n   [1] “The large building complex depicted here contains a bathhouse, teahouse, kitchen, puppet-show theater, and a games room. Inside, commoners and aristocrats alike enjoy the various forms of entertainment, while outside, people dance, play music, and wrestle. A kasamawashi, a street performer who balances objects on a spinning umbrella, performs to the left of the dancers. In scenes of merriment like this one, Japanese artists often depicted figures fighting—this painting includes a sumo match and people arguing over a game of shōgi—to emphasize the heightened levels of energy and excitement.”\n       https://www.artic.edu/artworks/8044 · CC BY 4.0\n       “Genre Scenes (Fūzoku byōbu)”, autor no declarado por el museo. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/8044\n\n3. **Ōtsu-e Nirvana of the Buddha (Ōtsu-e Butsu Nehanzu)**\n   Hakuen · 1800s · hanging scroll; ink and color on paper\n   Ficha oficial: https://clevelandart.org/art/2016.306\n\n   La obra fue realizada en el siglo XIX, posterior al periodo Edo. [1]\n   La escena es una parodia animada de la muerte de Buda, con personajes y animales en una composición dinámica. [1]\n   Aunque la escena es animada y algo caótica, no corresponde a la época Edo ni presenta colores apagados.\n   No cumple con la época Edo ni con colores apagados.\n\n   **Fuentes**\n   [1] “The painting parodies the traditional representation of this subject. The death of Buddha is actually the moment he achieves nirvana and escapes the endless cycle of death and rebirth. Hakuen transformed this serious moment (see The Death of the Buddha, CMA 1916.1141) into a lively parody with otsu-e subjects. Mourners surround the Buddha. An oni, who pretends to be a priest, holds his gong in the air as he beats his drums and chants prayers. The wisteria maiden appears at the left, bringing water to the mourners. Behind her is an oni in the guise of a thunder god beating his drums. The animals along the foreground represent other otsu-e characters and models. The painting would have amused 19th-century viewers familiar with the usual Buddhist imagery.”\n       https://clevelandart.org/art/2016.306 · CC0 1.0\n\n4. **Scenes from the Tales of Ise**\n   mid-1600s · One of a pair of six-panel folding screens; ink, color and gold on paper\n   Ficha oficial: https://clevelandart.org/art/1969.127.1\n\n   La obra fue creada a mediados del siglo XVII, dentro del periodo Edo. [1]\n   La obra utiliza pigmentos minerales ricos y un uso liberal del oro, lo que da colores vivos y brillantes, no apagados. [1]\n   La composición está organizada en escenas discretas y no presenta una sensación caótica.\n   No hay evidencia de que la escena sea caótica o que los colores sean apagados.\n\n   **Fuentes**\n   [1] “While the 11th-century Tale of Genji is universally regarded as Japan's literary masterpiece, the source for visual imagery in Japanese culture is rivaled by another literary classic, the Tales of Ise. A 10th-century anthology of poems interspersed with commentary, the Ise portrays the emotional and geographical journey of a courtier from the capital (Kyoto) into the countryside and beyond. The poems describe features of the natural, untamed terrain, linking them to the rather melancholy state of the traveler. \n\nSince the Tales of Ise was—and remains today—well read by educated Japanese, a person viewing these folding screens would immediately recognize its subject, organized as a series of discrete scenes read from right to left. Neither a signature nor a seal identifies the artist, but judging from related paintings, the work can be ascribed to an artist working in Kyoto during the first quarter of the 17th century in the manner of the painter Iwasa Matabei (1578–1650). This type of historical narrative composition became quite popular around 1600 among patrons favoring a distinctly Japanese style of painting which employed rich mineral pigments and a liberal use of gold.”\n       https://clevelandart.org/art/1969.127.1 · CC0 1.0\n\n5. **The Sand-Carrying Festival (Sunamochi Matsuri)**\n   Sakai Basai · 1856 · hanging scroll; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1991.44\n\n   La obra fue realizada en 1856, ya en el periodo tardío Edo. [1]\n   La escena representa un festival con muchas personas y actividades, lo que puede interpretarse como caótico. [1]\n   El título indica una vista pacífica y hermosa, pero la escena muestra que la paz no siempre es tranquila, sugiriendo dinamismo y cierto desorden. [1]\n   Los colores no se describen como apagados y visualmente parecen vivos.\n   No hay evidencia clara de que los colores sean apagados.\n\n   **Fuentes**\n   [1] “Dredging waterways to preserve their function once required the cooperation of large numbers of people, seen at the top of this painting. Sand-carrying festivals were historically associated with religious rites or gathering alms to construct places of worship, and involved not only the labor of collecting sand from rivers but also parades and performances marking the event. Kyoto’s Kamo River has been dredged many times over the centuries, including in 1856, the year this image was made. Although the title at the upper right says Taihei Kakan, or “Peaceful, Beautiful View,” the painter’s delightful scene reminds his audience that at the best of times, peace may have little to do with quiet. \n\nSakai Baisai was a student of literati painter Yamamoto Baiitsu (1783–1856). He was active until around 1879, when he relocated to Kobe to make his living as a design painter on porcelains destined for export.”\n       https://clevelandart.org/art/1991.44 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "d148f9d60992e0d80adfe489f781cd3ed906be73",
+      "config_id": "1cc2dba21da9b371",
+      "corrida_id": "5c554077d7c15b25-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "epoca": {
+          "epocas": [
+            [
+              [
+                "Japan"
+              ],
+              1615,
+              1868
+            ]
+          ],
+          "n_obras": 195
+        },
+        "terminos": [],
+        "valores": []
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:163546",
+      "aic:8044",
+      "cma:173072",
+      "cma:144293",
+      "cma:156111"
+    ]
+  },
+  "fecha": "2026-11-17T04:18:59+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.1218,
+      "generador": 8.598,
+      "planificador": 0.001,
+      "recolector_de_evidencia": 0.4249,
+      "recuperador_textual": 0.5427,
+      "recuperador_visual": 0.0997,
+      "renderizador": 0.001,
+      "reranker": 36.8853
+    },
+    "segundos_de_la_corrida": 46.6763
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.18,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.782,
+      "tokens_in": 50,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.594,
+      "tokens_in": 3091,
+      "tokens_out": 1090
+    },
+    "indice": {
+      "n_items": 323,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.136,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 36.761,
+      "tokens_in": 53403,
+      "tokens_out": 2137
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 99,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.121,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.594,
+      "tokens_in": 3091,
+      "tokens_out": 1090
+    },
+    "recolector_de_evidencia": {
+      "n_items": 10,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.423,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 198,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.455,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.1,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 36.761,
+      "tokens_in": 53403,
+      "tokens_out": 2137
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "d148f9d60992e0d80adfe489f781cd3ed906be73",
+    "config_id": "1cc2dba21da9b371",
+    "corrida_id": "5c554077d7c15b25-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

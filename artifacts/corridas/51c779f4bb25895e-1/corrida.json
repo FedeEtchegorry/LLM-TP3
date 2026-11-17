@@ -1,0 +1,3381 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 46,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 10
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-filtro-metadata.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "c594148ceba902de",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c01-mixto",
+  "corrida_id": "51c779f4bb25895e-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:109240",
+      "categoria": "mixto",
+      "consulta_id": "c01-mixto",
+      "imagen_hash": "sha256:4ba1a411e0bea2e1ab694abafbff09fa834b112792bc612f05ac3605fc6efd55",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:151108": [
+        {
+          "artist": "George Inness",
+          "artwork_id": "aic:151108",
+          "chunk_index": 0,
+          "fragment_id": "aic:151108::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/151108",
+          "texto": "A distinctive landscape painter of the 19th century, George Inness excelled at capturing the poetics and mood of his environs, finding spiritual resonances in nature, from its grand vistas to its quiet nooks. The Mill Pond depicts a sylvan setting, in which a small figure rows a boat in the pond at middle distance. Brilliant pigments of orange, green, and blue electrify an otherwise tranquil scene. Through color and atmosphere rather than line or detail, Inness communicated an intensity of vision, fueled by an individual encounter with nature.",
+          "title": "The Mill Pond"
+        },
+        {
+          "artist": "George Inness",
+          "artwork_id": "aic:151108",
+          "chunk_index": 0,
+          "fragment_id": "aic:151108::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/151108",
+          "texto": "Thomas B. Clarke (sale, American Art Association, New York, February 14-18, 1899); Emerson McMillin, New York, from 1899 to 1911; Knoedler & Co., New York, 1911; Reinhardt Galleries, Chicago, 1911; sold to Edward B. Butler, Chicago, 1911; given to the Art Institute of Chicago, 1911.",
+          "title": "The Mill Pond"
+        }
+      ],
+      "aic:57163": [
+        {
+          "artist": "Thomas Cole",
+          "artwork_id": "aic:57163",
+          "chunk_index": 0,
+          "fragment_id": "aic:57163::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/57163",
+          "texto": "Although Thomas Cole is best known for his scenes of the American wilderness, he also rendered pastoral vistas of cultivated landscapes. This work depicts New Hampshire’s White Mountains, an area that Cole traveled to and painted on numerous occasions, as did other 19th-century landscape artists. The prominent church spire at middle distance emphasizes the role of religion in agrarian society and the glow of the low sun expresses a sense of optimism for a rural America. The painting conveys an ideal that was increasingly far from reality, however, as the United States was then being transformed by rapid urbanization and the Industrial Revolution.",
+          "title": "New England Scenery"
+        },
+        {
+          "artist": "Thomas Cole",
+          "artwork_id": "aic:57163",
+          "chunk_index": 0,
+          "fragment_id": "aic:57163::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/57163",
+          "texto": "Thomas Cole, from 1839; W.F. Ladd, New York, around 1841; Charles Baker, New York, by 1853; Samuel Nickerson, Chicago, 1876; given to the Art Institute of Chicago, 1900.",
+          "title": "New England Scenery"
+        }
+      ],
+      "aic:64729": [
+        {
+          "artist": "George Inness",
+          "artwork_id": "aic:64729",
+          "chunk_index": 0,
+          "fragment_id": "aic:64729::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/64729",
+          "texto": "The light and landscape of Florida inspired George Inness’s Early Morning, Tarpon Springs. Amid the pale pinks and blues of sunrise, a miniscule figure stands in a grove of trees, harmonizing with the surrounding landscape. The color of his pants mirrors that of the tree trunks, and his red hat suggests a luminous, low sun. Believing that objects in the natural world were suffused with spiritual meaning, Inness incorporated the tenets of Swedenborgian Christianity into his work. Landscape painting, in turn, became a site for contemplation and religious experience.",
+          "title": "Early Morning, Tarpon Springs"
+        },
+        {
+          "artist": "George Inness",
+          "artwork_id": "aic:64729",
+          "chunk_index": 0,
+          "fragment_id": "aic:64729::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/64729",
+          "texto": "Reinhardt Galleries, Chicago, 1911; sold to Edward B. Butler, Chicago, 1911; given to the Art Institute of Chicago, 1911.",
+          "title": "Early Morning, Tarpon Springs"
+        }
+      ],
+      "aic:97292": [
+        {
+          "artist": "Robert William Vonnoh",
+          "artwork_id": "aic:97292",
+          "chunk_index": 0,
+          "fragment_id": "aic:97292::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/97292",
+          "texto": "Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.",
+          "title": "Spring in France"
+        },
+        {
+          "artist": "Robert William Vonnoh",
+          "artwork_id": "aic:97292",
+          "chunk_index": 0,
+          "fragment_id": "aic:97292::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/97292",
+          "texto": "Samuel Menat, New York, unknown dates; sold to Alexander Fisher, New York,, unknown dates; with Berry-Hill Galleries, New York, by 1982; sold to the Art Institute of Chicago, 1982.",
+          "title": "Spring in France"
+        }
+      ],
+      "cma:117715": [
+        {
+          "artist": "William Merritt Chase",
+          "artwork_id": "cma:117715",
+          "chunk_index": 0,
+          "fragment_id": "cma:117715::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1938.333",
+          "texto": "One of the most influential of the American Impressionists, William Merritt Chase established his own summer school at Shinnecock, on the eastern tip of Long Island, New York. Attracted to the low-lying dunes and beaches, Chase and his students were among the first American artists to pursue open-air painting. With its varied brushwork and warm colors, this painting is among the finest works Chase produced at Shinnecock. The panoramic scene glows with the light of a summer day. The Chase school at Shinnecock, active from 1891-1902, was instrumental in expanding the influence of Impressionism in the United States.",
+          "title": "The Old Road to the Sea"
+        },
+        {
+          "artist": "William Merritt Chase",
+          "artwork_id": "cma:117715",
+          "chunk_index": 0,
+          "fragment_id": "cma:117715::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1938.333",
+          "texto": "Chase loved big dogs, variously owning a greyhound, a borzoi, and an Irish wolfhound.",
+          "title": "The Old Road to the Sea"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:117715::description::0"
+            ],
+            "texto": "La obra está pintada al óleo y data aproximadamente de 1893, es decir, del siglo XIX.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:117715::description::0"
+            ],
+            "texto": "Utiliza colores cálidos y presenta una escena panorámica con la luz de un día de verano, lo que aporta calidez al paisaje.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena transmite una sensación de calma y serenidad propia de un día de verano en la playa.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:117715"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:97292::description::0"
+            ],
+            "texto": "La obra es una pintura al óleo realizada en 1890, dentro del siglo XIX.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:97292::description::0"
+            ],
+            "texto": "El artista utiliza una paleta brillante con verdes intensos, duraznos y lavandas, colores cálidos que sugieren la luz de un día de primavera.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena representa un paisaje rural con luz cálida y un ambiente tranquilo, lo que puede interpretarse como una sensación de calma.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:97292"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:57163::description::0"
+            ],
+            "texto": "La obra es una pintura al óleo de 1839, por lo que pertenece al siglo XIX.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:57163::description::0"
+            ],
+            "texto": "El paisaje muestra un atardecer con un brillo cálido que expresa optimismo, lo que aporta tonos cálidos a la escena.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La composición transmite una sensación de calma y serenidad en un paisaje rural idealizado.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:57163"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:151108::description::0"
+            ],
+            "texto": "La obra es una pintura al óleo de 1889, realizada en el siglo XIX.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:151108::description::0"
+            ],
+            "texto": "Utiliza pigmentos brillantes de naranja, verde y azul que electrifican la escena, aportando colores cálidos y vibrantes.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena es tranquila y transmite una atmósfera contemplativa y calmada.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:151108"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:64729::description::0"
+            ],
+            "texto": "La obra es una pintura al óleo de 1892, del siglo XIX.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:64729::description::0"
+            ],
+            "texto": "Presenta colores cálidos y suaves como rosas pálidos y azules, con un sol bajo que sugiere una luz cálida y luminosa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena transmite calma y contemplación, con un pequeño personaje que armoniza con el paisaje.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:64729"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "aic:72398",
+          "rank": 1,
+          "score": 0.6351782083511353
+        },
+        {
+          "artwork_id": "aic:57163",
+          "rank": 2,
+          "score": 0.6321542263031006
+        },
+        {
+          "artwork_id": "aic:6005",
+          "rank": 3,
+          "score": 0.5991526246070862
+        },
+        {
+          "artwork_id": "aic:16564",
+          "rank": 4,
+          "score": 0.562382161617279
+        },
+        {
+          "artwork_id": "aic:145805",
+          "rank": 5,
+          "score": 0.557846188545227
+        },
+        {
+          "artwork_id": "cma:124078",
+          "rank": 6,
+          "score": 0.5533838272094727
+        },
+        {
+          "artwork_id": "cma:150353",
+          "rank": 7,
+          "score": 0.5533708930015564
+        },
+        {
+          "artwork_id": "cma:146752",
+          "rank": 8,
+          "score": 0.550857663154602
+        },
+        {
+          "artwork_id": "aic:39691",
+          "rank": 9,
+          "score": 0.5495446920394897
+        },
+        {
+          "artwork_id": "cma:95275",
+          "rank": 10,
+          "score": 0.5486545562744141
+        },
+        {
+          "artwork_id": "cma:140078",
+          "rank": 11,
+          "score": 0.5476560592651367
+        },
+        {
+          "artwork_id": "aic:59002",
+          "rank": 12,
+          "score": 0.5405941605567932
+        },
+        {
+          "artwork_id": "aic:30701",
+          "rank": 13,
+          "score": 0.5379652976989746
+        },
+        {
+          "artwork_id": "cma:128392",
+          "rank": 14,
+          "score": 0.5343741178512573
+        },
+        {
+          "artwork_id": "cma:148968",
+          "rank": 15,
+          "score": 0.5343601703643799
+        },
+        {
+          "artwork_id": "aic:185185",
+          "rank": 16,
+          "score": 0.5333147048950195
+        },
+        {
+          "artwork_id": "aic:145807",
+          "rank": 17,
+          "score": 0.5330981612205505
+        },
+        {
+          "artwork_id": "cma:128371",
+          "rank": 18,
+          "score": 0.5313566327095032
+        },
+        {
+          "artwork_id": "cma:148215",
+          "rank": 19,
+          "score": 0.530744731426239
+        },
+        {
+          "artwork_id": "aic:4758",
+          "rank": 20,
+          "score": 0.5287764668464661
+        },
+        {
+          "artwork_id": "cma:168366",
+          "rank": 21,
+          "score": 0.5269486904144287
+        },
+        {
+          "artwork_id": "cma:83462",
+          "rank": 22,
+          "score": 0.5259068608283997
+        },
+        {
+          "artwork_id": "cma:115405",
+          "rank": 23,
+          "score": 0.5244078636169434
+        },
+        {
+          "artwork_id": "aic:151108",
+          "rank": 24,
+          "score": 0.5215047001838684
+        },
+        {
+          "artwork_id": "cma:138430",
+          "rank": 25,
+          "score": 0.5187707543373108
+        },
+        {
+          "artwork_id": "aic:55494",
+          "rank": 26,
+          "score": 0.517810046672821
+        },
+        {
+          "artwork_id": "cma:150054",
+          "rank": 27,
+          "score": 0.5172442197799683
+        },
+        {
+          "artwork_id": "cma:135512",
+          "rank": 28,
+          "score": 0.5165076851844788
+        },
+        {
+          "artwork_id": "cma:125091",
+          "rank": 29,
+          "score": 0.5156879425048828
+        },
+        {
+          "artwork_id": "aic:64724",
+          "rank": 30,
+          "score": 0.5149109959602356
+        },
+        {
+          "artwork_id": "cma:148365",
+          "rank": 31,
+          "score": 0.5144034624099731
+        },
+        {
+          "artwork_id": "cma:141639",
+          "rank": 32,
+          "score": 0.5136255025863647
+        },
+        {
+          "artwork_id": "aic:152747",
+          "rank": 33,
+          "score": 0.5122835636138916
+        },
+        {
+          "artwork_id": "aic:109228",
+          "rank": 34,
+          "score": 0.5093930959701538
+        },
+        {
+          "artwork_id": "cma:155626",
+          "rank": 35,
+          "score": 0.5081472992897034
+        },
+        {
+          "artwork_id": "aic:183293",
+          "rank": 36,
+          "score": 0.5040798783302307
+        },
+        {
+          "artwork_id": "cma:150038",
+          "rank": 37,
+          "score": 0.5033364295959473
+        },
+        {
+          "artwork_id": "aic:20535",
+          "rank": 38,
+          "score": 0.5026390552520752
+        },
+        {
+          "artwork_id": "cma:164314",
+          "rank": 39,
+          "score": 0.5018095970153809
+        },
+        {
+          "artwork_id": "aic:146272",
+          "rank": 40,
+          "score": 0.5011171698570251
+        },
+        {
+          "artwork_id": "cma:148969",
+          "rank": 41,
+          "score": 0.5009534358978271
+        },
+        {
+          "artwork_id": "cma:135480",
+          "rank": 42,
+          "score": 0.5002796649932861
+        },
+        {
+          "artwork_id": "cma:143772",
+          "rank": 43,
+          "score": 0.49823057651519775
+        },
+        {
+          "artwork_id": "aic:209942",
+          "rank": 44,
+          "score": 0.4970659017562866
+        },
+        {
+          "artwork_id": "cma:147017",
+          "rank": 45,
+          "score": 0.49594080448150635
+        },
+        {
+          "artwork_id": "aic:68388",
+          "rank": 46,
+          "score": 0.4959171414375305
+        },
+        {
+          "artwork_id": "aic:45240",
+          "rank": 47,
+          "score": 0.4944136142730713
+        },
+        {
+          "artwork_id": "cma:118042",
+          "rank": 48,
+          "score": 0.4916461706161499
+        },
+        {
+          "artwork_id": "cma:150693",
+          "rank": 49,
+          "score": 0.48967695236206055
+        },
+        {
+          "artwork_id": "cma:105480",
+          "rank": 50,
+          "score": 0.48781299591064453
+        },
+        {
+          "artwork_id": "cma:111470",
+          "rank": 51,
+          "score": 0.4871450662612915
+        },
+        {
+          "artwork_id": "aic:14556",
+          "rank": 52,
+          "score": 0.4870569705963135
+        },
+        {
+          "artwork_id": "aic:8360",
+          "rank": 53,
+          "score": 0.48594045639038086
+        },
+        {
+          "artwork_id": "cma:144967",
+          "rank": 54,
+          "score": 0.48565053939819336
+        },
+        {
+          "artwork_id": "aic:97292",
+          "rank": 55,
+          "score": 0.48524171113967896
+        },
+        {
+          "artwork_id": "cma:92844",
+          "rank": 56,
+          "score": 0.4850565195083618
+        },
+        {
+          "artwork_id": "aic:28862",
+          "rank": 57,
+          "score": 0.4848654270172119
+        },
+        {
+          "artwork_id": "aic:14620",
+          "rank": 58,
+          "score": 0.4842047095298767
+        },
+        {
+          "artwork_id": "cma:125249",
+          "rank": 59,
+          "score": 0.48406511545181274
+        },
+        {
+          "artwork_id": "cma:136911",
+          "rank": 60,
+          "score": 0.48346221446990967
+        },
+        {
+          "artwork_id": "cma:130391",
+          "rank": 61,
+          "score": 0.48059791326522827
+        },
+        {
+          "artwork_id": "aic:64729",
+          "rank": 62,
+          "score": 0.480512797832489
+        },
+        {
+          "artwork_id": "cma:150051",
+          "rank": 63,
+          "score": 0.48043715953826904
+        },
+        {
+          "artwork_id": "aic:5349",
+          "rank": 64,
+          "score": 0.4802536964416504
+        },
+        {
+          "artwork_id": "aic:212300",
+          "rank": 65,
+          "score": 0.4800858497619629
+        },
+        {
+          "artwork_id": "cma:128363",
+          "rank": 66,
+          "score": 0.4789384603500366
+        },
+        {
+          "artwork_id": "aic:100829",
+          "rank": 67,
+          "score": 0.4785580635070801
+        },
+        {
+          "artwork_id": "aic:72801",
+          "rank": 68,
+          "score": 0.47776538133621216
+        },
+        {
+          "artwork_id": "aic:120296",
+          "rank": 69,
+          "score": 0.4762316346168518
+        },
+        {
+          "artwork_id": "aic:100351",
+          "rank": 70,
+          "score": 0.47554969787597656
+        },
+        {
+          "artwork_id": "cma:173180",
+          "rank": 71,
+          "score": 0.47517311573028564
+        },
+        {
+          "artwork_id": "aic:153799",
+          "rank": 72,
+          "score": 0.47461581230163574
+        },
+        {
+          "artwork_id": "cma:172806",
+          "rank": 73,
+          "score": 0.4745963215827942
+        },
+        {
+          "artwork_id": "cma:135173",
+          "rank": 74,
+          "score": 0.47337639331817627
+        },
+        {
+          "artwork_id": "aic:28849",
+          "rank": 75,
+          "score": 0.4724074602127075
+        },
+        {
+          "artwork_id": "aic:4796",
+          "rank": 76,
+          "score": 0.4717780351638794
+        },
+        {
+          "artwork_id": "aic:256797",
+          "rank": 77,
+          "score": 0.47063350677490234
+        },
+        {
+          "artwork_id": "cma:154244",
+          "rank": 78,
+          "score": 0.47006869316101074
+        },
+        {
+          "artwork_id": "aic:97291",
+          "rank": 79,
+          "score": 0.4698689579963684
+        },
+        {
+          "artwork_id": "cma:127953",
+          "rank": 80,
+          "score": 0.46959614753723145
+        },
+        {
+          "artwork_id": "aic:90048",
+          "rank": 81,
+          "score": 0.46949970722198486
+        },
+        {
+          "artwork_id": "cma:146446",
+          "rank": 82,
+          "score": 0.4689812660217285
+        },
+        {
+          "artwork_id": "cma:95272",
+          "rank": 83,
+          "score": 0.46885257959365845
+        },
+        {
+          "artwork_id": "aic:75957",
+          "rank": 84,
+          "score": 0.468672513961792
+        },
+        {
+          "artwork_id": "cma:149410",
+          "rank": 85,
+          "score": 0.46848857402801514
+        },
+        {
+          "artwork_id": "aic:14309",
+          "rank": 86,
+          "score": 0.4678596258163452
+        },
+        {
+          "artwork_id": "cma:121188",
+          "rank": 87,
+          "score": 0.466322124004364
+        },
+        {
+          "artwork_id": "cma:91231",
+          "rank": 88,
+          "score": 0.46573567390441895
+        },
+        {
+          "artwork_id": "cma:118159",
+          "rank": 89,
+          "score": 0.46562230587005615
+        },
+        {
+          "artwork_id": "cma:174043",
+          "rank": 90,
+          "score": 0.4655604362487793
+        },
+        {
+          "artwork_id": "cma:148960",
+          "rank": 91,
+          "score": 0.4655323028564453
+        },
+        {
+          "artwork_id": "cma:149665",
+          "rank": 92,
+          "score": 0.4647098779678345
+        },
+        {
+          "artwork_id": "aic:8971",
+          "rank": 93,
+          "score": 0.46452414989471436
+        },
+        {
+          "artwork_id": "aic:27764",
+          "rank": 94,
+          "score": 0.46415913105010986
+        },
+        {
+          "artwork_id": "cma:117715",
+          "rank": 95,
+          "score": 0.46386128664016724
+        },
+        {
+          "artwork_id": "cma:150083",
+          "rank": 96,
+          "score": 0.4638163447380066
+        },
+        {
+          "artwork_id": "aic:193926",
+          "rank": 97,
+          "score": 0.4637969136238098
+        },
+        {
+          "artwork_id": "aic:81552",
+          "rank": 98,
+          "score": 0.46357643604278564
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:128371",
+          "rank": 1,
+          "score": 0.7694304585456848
+        },
+        {
+          "artwork_id": "cma:95275",
+          "rank": 2,
+          "score": 0.7483389377593994
+        },
+        {
+          "artwork_id": "cma:134072",
+          "rank": 3,
+          "score": 0.7443640232086182
+        },
+        {
+          "artwork_id": "cma:150031",
+          "rank": 4,
+          "score": 0.7374404668807983
+        },
+        {
+          "artwork_id": "cma:128392",
+          "rank": 5,
+          "score": 0.7337876558303833
+        },
+        {
+          "artwork_id": "cma:124078",
+          "rank": 6,
+          "score": 0.7299185991287231
+        },
+        {
+          "artwork_id": "aic:90062",
+          "rank": 7,
+          "score": 0.7278996706008911
+        },
+        {
+          "artwork_id": "aic:64729",
+          "rank": 8,
+          "score": 0.72554612159729
+        },
+        {
+          "artwork_id": "aic:59002",
+          "rank": 9,
+          "score": 0.7253337502479553
+        },
+        {
+          "artwork_id": "cma:150054",
+          "rank": 10,
+          "score": 0.7249218225479126
+        },
+        {
+          "artwork_id": "aic:6005",
+          "rank": 11,
+          "score": 0.7203125953674316
+        },
+        {
+          "artwork_id": "cma:108999",
+          "rank": 12,
+          "score": 0.7171233296394348
+        },
+        {
+          "artwork_id": "cma:117715",
+          "rank": 13,
+          "score": 0.7098326086997986
+        },
+        {
+          "artwork_id": "cma:136760",
+          "rank": 14,
+          "score": 0.7093737125396729
+        },
+        {
+          "artwork_id": "cma:157104",
+          "rank": 15,
+          "score": 0.7078531980514526
+        },
+        {
+          "artwork_id": "aic:64818",
+          "rank": 16,
+          "score": 0.7071050405502319
+        },
+        {
+          "artwork_id": "cma:148968",
+          "rank": 17,
+          "score": 0.702055811882019
+        },
+        {
+          "artwork_id": "aic:60239",
+          "rank": 18,
+          "score": 0.6986481547355652
+        },
+        {
+          "artwork_id": "cma:146023",
+          "rank": 19,
+          "score": 0.6944562196731567
+        },
+        {
+          "artwork_id": "aic:97292",
+          "rank": 20,
+          "score": 0.6944368481636047
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "19th-century oil landscape painting emphasizing tranquility and warm color palette, depicting rural scenery with natural elements and architecture in a serene setting",
+      "consulta_id": "c01-mixto",
+      "consulta_visual": "19th-century oil painting of a warm-toned peaceful rural landscape with a winding path, trees, and a distant house under a calm sky",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:4ba1a411e0bea2e1ab694abafbff09fa834b112792bc612f05ac3605fc6efd55",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "este paisaje en tonos más cálidos, pintado al óleo en el siglo XIX, con más calma",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "09a9c9ef4ec9dbdd",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2867,
+        "tokens_out": 67
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:128371",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 18,
+          "visual": 1
+        },
+        "score_fusionado": 0.76943051
+      },
+      {
+        "artwork_id": "cma:95275",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 10,
+          "visual": 2
+        },
+        "score_fusionado": 0.74833894
+      },
+      {
+        "artwork_id": "cma:128392",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 14,
+          "visual": 5
+        },
+        "score_fusionado": 0.73378746
+      },
+      {
+        "artwork_id": "cma:124078",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 6,
+          "visual": 6
+        },
+        "score_fusionado": 0.72991833
+      },
+      {
+        "artwork_id": "aic:64729",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 62,
+          "visual": 8
+        },
+        "score_fusionado": 0.72554616
+      },
+      {
+        "artwork_id": "aic:59002",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 12,
+          "visual": 9
+        },
+        "score_fusionado": 0.72533382
+      },
+      {
+        "artwork_id": "cma:150054",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 27,
+          "visual": 10
+        },
+        "score_fusionado": 0.72492169
+      },
+      {
+        "artwork_id": "aic:6005",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 3,
+          "visual": 11
+        },
+        "score_fusionado": 0.72031255
+      },
+      {
+        "artwork_id": "cma:117715",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 95,
+          "visual": 13
+        },
+        "score_fusionado": 0.70983223
+      },
+      {
+        "artwork_id": "cma:148968",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 15,
+          "visual": 17
+        },
+        "score_fusionado": 0.70205591
+      },
+      {
+        "artwork_id": "aic:97292",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 55,
+          "visual": 20
+        },
+        "score_fusionado": 0.69443693
+      },
+      {
+        "artwork_id": "aic:57163",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.6919259
+      },
+      {
+        "artwork_id": "aic:151108",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.69059724
+      },
+      {
+        "artwork_id": "cma:140078",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.68937733
+      },
+      {
+        "artwork_id": "cma:148960",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.68915117
+      },
+      {
+        "artwork_id": "aic:120296",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.68757109
+      },
+      {
+        "artwork_id": "aic:4758",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.68581709
+      },
+      {
+        "artwork_id": "aic:28862",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.68005906
+      },
+      {
+        "artwork_id": "aic:30701",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.67865694
+      },
+      {
+        "artwork_id": "cma:164314",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.67650118
+      },
+      {
+        "artwork_id": "aic:146272",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.67525709
+      },
+      {
+        "artwork_id": "cma:95272",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.67358695
+      },
+      {
+        "artwork_id": "cma:128363",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.67296461
+      },
+      {
+        "artwork_id": "aic:183293",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.6689394
+      },
+      {
+        "artwork_id": "aic:14556",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.66751669
+      },
+      {
+        "artwork_id": "aic:64724",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.66703584
+      },
+      {
+        "artwork_id": "aic:212300",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.66646227
+      },
+      {
+        "artwork_id": "cma:148215",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.66531887
+      },
+      {
+        "artwork_id": "cma:115405",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.66440729
+      },
+      {
+        "artwork_id": "aic:209942",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.66114665
+      },
+      {
+        "artwork_id": "cma:168366",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.65773638
+      },
+      {
+        "artwork_id": "cma:83462",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.65307632
+      },
+      {
+        "artwork_id": "aic:55494",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.64855821
+      },
+      {
+        "artwork_id": "cma:105480",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.6484876
+      },
+      {
+        "artwork_id": "aic:39691",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.64766938
+      },
+      {
+        "artwork_id": "cma:127953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.64640302
+      },
+      {
+        "artwork_id": "cma:91231",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.64543429
+      },
+      {
+        "artwork_id": "cma:111470",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.64384869
+      },
+      {
+        "artwork_id": "cma:135173",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.64356816
+      },
+      {
+        "artwork_id": "cma:150038",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.64146723
+      },
+      {
+        "artwork_id": "aic:68388",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.63861896
+      },
+      {
+        "artwork_id": "aic:28849",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.63289429
+      },
+      {
+        "artwork_id": "cma:138430",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.63193033
+      },
+      {
+        "artwork_id": "cma:147017",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.63125793
+      },
+      {
+        "artwork_id": "aic:97291",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.62906386
+      },
+      {
+        "artwork_id": "aic:8360",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.62765451
+      },
+      {
+        "artwork_id": "cma:173180",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.62696156
+      },
+      {
+        "artwork_id": "cma:150051",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.62635865
+      },
+      {
+        "artwork_id": "aic:145805",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.62056961
+      },
+      {
+        "artwork_id": "aic:109228",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.6197955
+      },
+      {
+        "artwork_id": "cma:148365",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.61974197
+      },
+      {
+        "artwork_id": "cma:125249",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.61973574
+      },
+      {
+        "artwork_id": "aic:8971",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.61952759
+      },
+      {
+        "artwork_id": "cma:135512",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.61873816
+      },
+      {
+        "artwork_id": "aic:16564",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.61699543
+      },
+      {
+        "artwork_id": "cma:172806",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.61663346
+      },
+      {
+        "artwork_id": "cma:155626",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.61528285
+      },
+      {
+        "artwork_id": "cma:143772",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.61344168
+      },
+      {
+        "artwork_id": "aic:14620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.61341938
+      },
+      {
+        "artwork_id": "aic:72398",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.60929513
+      },
+      {
+        "artwork_id": "cma:92844",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.60925667
+      },
+      {
+        "artwork_id": "aic:152747",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.60894139
+      },
+      {
+        "artwork_id": "aic:5349",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.60807495
+      },
+      {
+        "artwork_id": "aic:185185",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.60782842
+      },
+      {
+        "artwork_id": "cma:125091",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.60641053
+      },
+      {
+        "artwork_id": "aic:153799",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.60451402
+      },
+      {
+        "artwork_id": "aic:145807",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.60169466
+      },
+      {
+        "artwork_id": "aic:75957",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.59586941
+      },
+      {
+        "artwork_id": "aic:256797",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.59320704
+      },
+      {
+        "artwork_id": "cma:136911",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.59258273
+      },
+      {
+        "artwork_id": "cma:148969",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.5910144
+      },
+      {
+        "artwork_id": "aic:81552",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 98
+        },
+        "score_fusionado": 0.59064411
+      },
+      {
+        "artwork_id": "aic:72801",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.58914
+      },
+      {
+        "artwork_id": "cma:135480",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.58792074
+      },
+      {
+        "artwork_id": "cma:144967",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.58090623
+      },
+      {
+        "artwork_id": "aic:193926",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 97
+        },
+        "score_fusionado": 0.58021069
+      },
+      {
+        "artwork_id": "cma:141639",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.57868421
+      },
+      {
+        "artwork_id": "aic:14309",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.57620004
+      },
+      {
+        "artwork_id": "cma:130391",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.57486232
+      },
+      {
+        "artwork_id": "cma:149665",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.56838211
+      },
+      {
+        "artwork_id": "aic:90048",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.56616076
+      },
+      {
+        "artwork_id": "cma:118042",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.5659046
+      },
+      {
+        "artwork_id": "aic:20535",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.56515228
+      },
+      {
+        "artwork_id": "aic:45240",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.56019768
+      },
+      {
+        "artwork_id": "aic:27764",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.54852682
+      },
+      {
+        "artwork_id": "cma:149410",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.53656525
+      },
+      {
+        "artwork_id": "aic:4796",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.53373115
+      },
+      {
+        "artwork_id": "aic:100829",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.53259026
+      },
+      {
+        "artwork_id": "cma:150693",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.5302657
+      },
+      {
+        "artwork_id": "cma:118159",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.52825461
+      },
+      {
+        "artwork_id": "cma:146752",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.52636426
+      },
+      {
+        "artwork_id": "cma:146446",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.52251285
+      },
+      {
+        "artwork_id": "cma:150083",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 96
+        },
+        "score_fusionado": 0.51183338
+      },
+      {
+        "artwork_id": "cma:150353",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.5113974
+      },
+      {
+        "artwork_id": "cma:121188",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.508253
+      },
+      {
+        "artwork_id": "aic:100351",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.47554401
+      },
+      {
+        "artwork_id": "cma:174043",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.4561225
+      },
+      {
+        "artwork_id": "cma:154244",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.44709034
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:117715",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumple con la técnica y época solicitadas. Sin embargo, los tonos son más fríos que cálidos y la sensación de calma está presente pero no es tan marcada como se pide.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3378,
+          "tokens_out": 60
+        }
+      },
+      {
+        "artwork_id": "aic:97292",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumple con el medio y la época. Tiene tonos más cálidos que la imagen original y transmite una sensación de calma, aunque el encuadre y elementos son diferentes.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3129,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "aic:57163",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumple con la técnica y época solicitadas. Presenta tonos más cálidos y transmite una sensación de calma, aunque el encuadre y composición son diferentes a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3780,
+          "tokens_out": 59
+        }
+      },
+      {
+        "artwork_id": "aic:151108",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumple con la técnica y época solicitadas. Los tonos son más cálidos que la imagen original y transmite una sensación de calma, aunque no es exactamente el mismo paisaje.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3828,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "aic:64729",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero los tonos no son más cálidos sino más fríos y apagados, y la sensación de calma no es tan evidente en comparación con la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3831,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "cma:150054",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, como pide el usuario, pero los tonos no son más cálidos sino más fríos y apagados, y la escena no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3987,
+          "tokens_out": 58
+        }
+      },
+      {
+        "artwork_id": "cma:148968",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos y la escena no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 4019,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:30701",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos y la escena no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3124,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "cma:128371",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos sino más oscuros y apagados, y la sensación de calma no es evidente.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 4027,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "cma:95275",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero no presenta tonos más cálidos ni transmite una sensación de mayor calma en comparación con la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3433,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "aic:59002",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos sino más fríos y oscuros, y no transmite una sensación de mayor calma respecto a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3183,
+          "tokens_out": 62
+        }
+      },
+      {
+        "artwork_id": "cma:140078",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos sino más fríos y la escena no transmite más calma, sino más actividad y dinamismo.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 4073,
+          "tokens_out": 57
+        }
+      },
+      {
+        "artwork_id": "cma:148960",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, como pide el usuario, pero no utiliza tonos más cálidos ni transmite una sensación de calma, sino que es más oscura y densa.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3207,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:120296",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero los tonos son fríos y no cálidos, y la escena transmite más serenidad que calma, aunque no tiene elementos de agitación.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3307,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:4758",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, cumpliendo parte del pedido, pero los tonos no son más cálidos y la escena no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3175,
+          "tokens_out": 52
+        }
+      },
+      {
+        "artwork_id": "aic:28862",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero no presenta tonos más cálidos ni transmite una sensación de calma, por lo que cumple a medias el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3181,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:128392",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero no utiliza tonos más cálidos sino fríos y verdes, y no transmite una sensación de calma sino más bien de densidad y actividad visual.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3336,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "cma:124078",
+        "estado": "puntuado",
+        "justificacion": "La obra es un paisaje pintado al óleo en el siglo XIX, pero los tonos no son más cálidos sino más fríos y oscuros, y no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3856,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "aic:6005",
+        "estado": "puntuado",
+        "justificacion": "La obra es del siglo XIX y está pintada al óleo, pero no usa tonos más cálidos sino fríos y apagados, y no transmite más calma que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3002,
+          "tokens_out": 47
+        }
+      },
+      {
+        "artwork_id": "cma:164314",
+        "estado": "puntuado",
+        "justificacion": "La obra es al óleo y tiene un paisaje con calma, pero es de 1900 (siglo XX) y no presenta tonos cálidos, sino más bien oscuros y fríos, por lo que no cumple con el pedido del siglo XIX ni los tonos cálidos.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2999,
+          "tokens_out": 67
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c01-mixto",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:117715",
+          "ficha": {
+            "artist": "William Merritt Chase",
+            "culture": "America",
+            "date_display": "c. 1893",
+            "medium": "oil on canvas",
+            "title": "The Old Road to the Sea",
+            "year": 1888
+          },
+          "lineas": [
+            "La obra está pintada al óleo y data aproximadamente de 1893, es decir, del siglo XIX. [1]",
+            "Utiliza colores cálidos y presenta una escena panorámica con la luz de un día de verano, lo que aporta calidez al paisaje. [1]",
+            "La escena transmite una sensación de calma y serenidad propia de un día de verano en la playa."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "William Merritt Chase",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:117715::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1938.333",
+              "texto_citado": "One of the most influential of the American Impressionists, William Merritt Chase established his own summer school at Shinnecock, on the eastern tip of Long Island, New York. Attracted to the low-lying dunes and beaches, Chase and his students were among the first American artists to pursue open-air painting. With its varied brushwork and warm colors, this painting is among the finest works Chase produced at Shinnecock. The panoramic scene glows with the light of a summer day. The Chase school at Shinnecock, active from 1891-1902, was instrumental in expanding the influence of Impressionism in the United States.",
+              "title": "The Old Road to the Sea"
+            }
+          ],
+          "score": 0.7098322314643926,
+          "source_url": "https://clevelandart.org/art/1938.333"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:97292",
+          "ficha": {
+            "artist": "Robert William Vonnoh",
+            "culture": "France",
+            "date_display": "1890",
+            "medium": "Oil on canvas",
+            "style": "Impressionism",
+            "title": "Spring in France",
+            "year": 1890
+          },
+          "lineas": [
+            "La obra es una pintura al óleo realizada en 1890, dentro del siglo XIX. [1]",
+            "El artista utiliza una paleta brillante con verdes intensos, duraznos y lavandas, colores cálidos que sugieren la luz de un día de primavera. [1]",
+            "La escena representa un paisaje rural con luz cálida y un ambiente tranquilo, lo que puede interpretarse como una sensación de calma."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Robert William Vonnoh",
+              "atribucion": "“Spring in France”, Robert William Vonnoh. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/97292",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:97292::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/97292",
+              "texto_citado": "Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.",
+              "title": "Spring in France"
+            }
+          ],
+          "score": 0.6944369292255426,
+          "source_url": "https://www.artic.edu/artworks/97292"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:57163",
+          "ficha": {
+            "artist": "Thomas Cole",
+            "culture": "New England",
+            "date_display": "1839",
+            "medium": "Oil on canvas",
+            "title": "New England Scenery",
+            "year": 1839
+          },
+          "lineas": [
+            "La obra es una pintura al óleo de 1839, por lo que pertenece al siglo XIX. [1]",
+            "El paisaje muestra un atardecer con un brillo cálido que expresa optimismo, lo que aporta tonos cálidos a la escena. [1]",
+            "La composición transmite una sensación de calma y serenidad en un paisaje rural idealizado."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Thomas Cole",
+              "atribucion": "“New England Scenery”, Thomas Cole. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/57163",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:57163::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/57163",
+              "texto_citado": "Although Thomas Cole is best known for his scenes of the American wilderness, he also rendered pastoral vistas of cultivated landscapes. This work depicts New Hampshire’s White Mountains, an area that Cole traveled to and painted on numerous occasions, as did other 19th-century landscape artists. The prominent church spire at middle distance emphasizes the role of religion in agrarian society and the glow of the low sun expresses a sense of optimism for a rural America. The painting conveys an ideal that was increasingly far from reality, however, as the United States was then being transformed by rapid urbanization and the Industrial Revolution.",
+              "title": "New England Scenery"
+            }
+          ],
+          "score": 0.6919259039398699,
+          "source_url": "https://www.artic.edu/artworks/57163"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:151108",
+          "ficha": {
+            "artist": "George Inness",
+            "culture": "United States",
+            "date_display": "1889",
+            "medium": "Oil on canvas",
+            "style": "Impressionism",
+            "title": "The Mill Pond",
+            "year": 1889
+          },
+          "lineas": [
+            "La obra es una pintura al óleo de 1889, realizada en el siglo XIX. [1]",
+            "Utiliza pigmentos brillantes de naranja, verde y azul que electrifican la escena, aportando colores cálidos y vibrantes. [1]",
+            "La escena es tranquila y transmite una atmósfera contemplativa y calmada."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "George Inness",
+              "atribucion": "“The Mill Pond”, George Inness. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/151108",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:151108::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/151108",
+              "texto_citado": "A distinctive landscape painter of the 19th century, George Inness excelled at capturing the poetics and mood of his environs, finding spiritual resonances in nature, from its grand vistas to its quiet nooks. The Mill Pond depicts a sylvan setting, in which a small figure rows a boat in the pond at middle distance. Brilliant pigments of orange, green, and blue electrify an otherwise tranquil scene. Through color and atmosphere rather than line or detail, Inness communicated an intensity of vision, fueled by an individual encounter with nature.",
+              "title": "The Mill Pond"
+            }
+          ],
+          "score": 0.6905972410003481,
+          "source_url": "https://www.artic.edu/artworks/151108"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:64729",
+          "ficha": {
+            "artist": "George Inness",
+            "culture": "United States",
+            "date_display": "1892",
+            "medium": "Oil on canvas",
+            "style": "Impressionism",
+            "title": "Early Morning, Tarpon Springs",
+            "year": 1892
+          },
+          "lineas": [
+            "La obra es una pintura al óleo de 1892, del siglo XIX. [1]",
+            "Presenta colores cálidos y suaves como rosas pálidos y azules, con un sol bajo que sugiere una luz cálida y luminosa. [1]",
+            "La escena transmite calma y contemplación, con un pequeño personaje que armoniza con el paisaje."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "George Inness",
+              "atribucion": "“Early Morning, Tarpon Springs”, George Inness. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/64729",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:64729::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/64729",
+              "texto_citado": "The light and landscape of Florida inspired George Inness’s Early Morning, Tarpon Springs. Amid the pale pinks and blues of sunrise, a miniscule figure stands in a grove of trees, harmonizing with the surrounding landscape. The color of his pants mirrors that of the tree trunks, and his red hat suggests a luminous, low sun. Believing that objects in the natural world were suffused with spiritual meaning, Inness incorporated the tenets of Swedenborgian Christianity into his work. Landscape painting, in turn, became a site for contemplation and religious experience.",
+              "title": "Early Morning, Tarpon Springs"
+            }
+          ],
+          "score": 0.7255461555757043,
+          "source_url": "https://www.artic.edu/artworks/64729"
+        }
+      ],
+      "render": "1. **The Old Road to the Sea**\n   William Merritt Chase · c. 1893 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1938.333\n\n   La obra está pintada al óleo y data aproximadamente de 1893, es decir, del siglo XIX. [1]\n   Utiliza colores cálidos y presenta una escena panorámica con la luz de un día de verano, lo que aporta calidez al paisaje. [1]\n   La escena transmite una sensación de calma y serenidad propia de un día de verano en la playa.\n\n   **Fuentes**\n   [1] “One of the most influential of the American Impressionists, William Merritt Chase established his own summer school at Shinnecock, on the eastern tip of Long Island, New York. Attracted to the low-lying dunes and beaches, Chase and his students were among the first American artists to pursue open-air painting. With its varied brushwork and warm colors, this painting is among the finest works Chase produced at Shinnecock. The panoramic scene glows with the light of a summer day. The Chase school at Shinnecock, active from 1891-1902, was instrumental in expanding the influence of Impressionism in the United States.”\n       https://clevelandart.org/art/1938.333 · CC0 1.0\n\n2. **Spring in France**\n   Robert William Vonnoh · 1890 · Oil on canvas · Impressionism\n   Ficha oficial: https://www.artic.edu/artworks/97292\n\n   La obra es una pintura al óleo realizada en 1890, dentro del siglo XIX. [1]\n   El artista utiliza una paleta brillante con verdes intensos, duraznos y lavandas, colores cálidos que sugieren la luz de un día de primavera. [1]\n   La escena representa un paisaje rural con luz cálida y un ambiente tranquilo, lo que puede interpretarse como una sensación de calma.\n\n   **Fuentes**\n   [1] “Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.”\n       https://www.artic.edu/artworks/97292 · CC BY 4.0\n       “Spring in France”, Robert William Vonnoh. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/97292\n\n3. **New England Scenery**\n   Thomas Cole · 1839 · Oil on canvas\n   Ficha oficial: https://www.artic.edu/artworks/57163\n\n   La obra es una pintura al óleo de 1839, por lo que pertenece al siglo XIX. [1]\n   El paisaje muestra un atardecer con un brillo cálido que expresa optimismo, lo que aporta tonos cálidos a la escena. [1]\n   La composición transmite una sensación de calma y serenidad en un paisaje rural idealizado.\n\n   **Fuentes**\n   [1] “Although Thomas Cole is best known for his scenes of the American wilderness, he also rendered pastoral vistas of cultivated landscapes. This work depicts New Hampshire’s White Mountains, an area that Cole traveled to and painted on numerous occasions, as did other 19th-century landscape artists. The prominent church spire at middle distance emphasizes the role of religion in agrarian society and the glow of the low sun expresses a sense of optimism for a rural America. The painting conveys an ideal that was increasingly far from reality, however, as the United States was then being transformed by rapid urbanization and the Industrial Revolution.”\n       https://www.artic.edu/artworks/57163 · CC BY 4.0\n       “New England Scenery”, Thomas Cole. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/57163\n\n4. **The Mill Pond**\n   George Inness · 1889 · Oil on canvas · Impressionism\n   Ficha oficial: https://www.artic.edu/artworks/151108\n\n   La obra es una pintura al óleo de 1889, realizada en el siglo XIX. [1]\n   Utiliza pigmentos brillantes de naranja, verde y azul que electrifican la escena, aportando colores cálidos y vibrantes. [1]\n   La escena es tranquila y transmite una atmósfera contemplativa y calmada.\n\n   **Fuentes**\n   [1] “A distinctive landscape painter of the 19th century, George Inness excelled at capturing the poetics and mood of his environs, finding spiritual resonances in nature, from its grand vistas to its quiet nooks. The Mill Pond depicts a sylvan setting, in which a small figure rows a boat in the pond at middle distance. Brilliant pigments of orange, green, and blue electrify an otherwise tranquil scene. Through color and atmosphere rather than line or detail, Inness communicated an intensity of vision, fueled by an individual encounter with nature.”\n       https://www.artic.edu/artworks/151108 · CC BY 4.0\n       “The Mill Pond”, George Inness. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/151108\n\n5. **Early Morning, Tarpon Springs**\n   George Inness · 1892 · Oil on canvas · Impressionism\n   Ficha oficial: https://www.artic.edu/artworks/64729\n\n   La obra es una pintura al óleo de 1892, del siglo XIX. [1]\n   Presenta colores cálidos y suaves como rosas pálidos y azules, con un sol bajo que sugiere una luz cálida y luminosa. [1]\n   La escena transmite calma y contemplación, con un pequeño personaje que armoniza con el paisaje.\n\n   **Fuentes**\n   [1] “The light and landscape of Florida inspired George Inness’s Early Morning, Tarpon Springs. Amid the pale pinks and blues of sunrise, a miniscule figure stands in a grove of trees, harmonizing with the surrounding landscape. The color of his pants mirrors that of the tree trunks, and his red hat suggests a luminous, low sun. Believing that objects in the natural world were suffused with spiritual meaning, Inness incorporated the tenets of Swedenborgian Christianity into his work. Landscape painting, in turn, became a site for contemplation and religious experience.”\n       https://www.artic.edu/artworks/64729 · CC BY 4.0\n       “Early Morning, Tarpon Springs”, George Inness. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/64729\n"
+    },
+    "sellos": {
+      "commit": "d51da4d25fdecb792c4e3f0623c82d93034d087c",
+      "config_id": "c594148ceba902de",
+      "corrida_id": "51c779f4bb25895e-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "periodo": {
+          "movimiento_solo_occidente": false,
+          "n_obras": 679,
+          "rangos": [
+            [
+              1800,
+              1900
+            ]
+          ]
+        },
+        "tecnica": {
+          "familias": [
+            "oleo"
+          ],
+          "n_obras": 1085
+        },
+        "terminos": [],
+        "valores": []
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:117715",
+      "aic:97292",
+      "aic:57163",
+      "aic:151108",
+      "aic:64729"
+    ]
+  },
+  "fecha": "2026-11-17T04:04:48+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.1834,
+      "generador": 7.1357,
+      "planificador": 0.001,
+      "recolector_de_evidencia": 0.4414,
+      "recuperador_textual": 2.5038,
+      "recuperador_visual": 1.468,
+      "renderizador": 0.001,
+      "reranker": 51.5902
+    },
+    "segundos_de_la_corrida": 63.4635
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.448,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 1.892,
+      "tokens_in": 52,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.13,
+      "tokens_in": 3744,
+      "tokens_out": 900
+    },
+    "indice": {
+      "n_items": 2931,
+      "n_llamadas": 10,
+      "resultados": {
+        "ok": 10
+      },
+      "roles": {
+        "indice": 10
+      },
+      "segundos": 2.072,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 51.441,
+      "tokens_in": 69855,
+      "tokens_out": 1095
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 100,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.181,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.13,
+      "tokens_in": 3744,
+      "tokens_out": 900
+    },
+    "recolector_de_evidencia": {
+      "n_items": 11,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.439,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 2804,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 3
+      },
+      "segundos": 2.33,
+      "tokens_in": 26,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 1.461,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 51.441,
+      "tokens_in": 69855,
+      "tokens_out": 1095
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "d51da4d25fdecb792c4e3f0623c82d93034d087c",
+    "config_id": "c594148ceba902de",
+    "corrida_id": "51c779f4bb25895e-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

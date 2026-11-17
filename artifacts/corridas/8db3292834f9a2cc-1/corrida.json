@@ -1,0 +1,3309 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-reranker-v2.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "1cc2dba21da9b371",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c07-mixto",
+  "corrida_id": "8db3292834f9a2cc-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:155431",
+      "categoria": "mixto",
+      "consulta_id": "c07-mixto",
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "cma:149608": [
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149608",
+          "chunk_index": 0,
+          "fragment_id": "cma:149608::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1979.27.1.2",
+          "texto": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+          "title": "Paintings after Ancient Masters: Laozi Riding an Ox"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149608",
+          "chunk_index": 0,
+          "fragment_id": "cma:149608::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1979.27.1.2",
+          "texto": "Weng Tonghe 翁同龢 [1830–1904], by descent to Wango H. C. Weng\n(Wango H. C. Weng 翁萬戈 [1918–2020], Lyme, NH, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Paintings after Ancient Masters: Laozi Riding an Ox"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149608",
+          "chunk_index": 0,
+          "fragment_id": "cma:149608::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1979.27.1.2",
+          "texto": "Laozi was an ancient Chinese philosopher who wrote the Daodejing, the foundational text of Daoism.",
+          "title": "Paintings after Ancient Masters: Laozi Riding an Ox"
+        }
+      ],
+      "cma:149611": [
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149611",
+          "chunk_index": 0,
+          "fragment_id": "cma:149611::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1979.27.1.5",
+          "texto": "Poet Tao Yuanming (365–427 CE) turned down a career as an official in politically turbulent times to return to his home estate, northwest of Mount Lu, to write poetry and enjoy his garden and wine. Having an ailing foot, he was carried in a basket or walked with a staff. As he grew chrysanthemums, Tao is associated with this flower. \n\nThe artist Chen Hongshou, active in Zhejiang province, suffered through the violent transition from the Ming to the Qing dynasty around 1644. By portraying the poet who lived a millennium earlier during similarly fraught times, Chen intentionally chose an archaistic style.",
+          "title": "Paintings after Ancient Masters: Portrait of Tao Yuanming"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149611",
+          "chunk_index": 0,
+          "fragment_id": "cma:149611::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1979.27.1.5",
+          "texto": "Chen Hongshou made this double-album with twenty paintings for a friend, Lin Zhongqing.",
+          "title": "Paintings after Ancient Masters: Portrait of Tao Yuanming"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149611",
+          "chunk_index": 0,
+          "fragment_id": "cma:149611::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1979.27.1.5",
+          "texto": "Weng Tonghe 翁同龢 [1830–1904], by descent to Wango H. C. Weng\n(Wango H. C. Weng 翁萬戈 [1918–2020], Lyme, NH, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Paintings after Ancient Masters: Portrait of Tao Yuanming"
+        }
+      ],
+      "cma:149621": [
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149621",
+          "chunk_index": 0,
+          "fragment_id": "cma:149621::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1979.27.2.16",
+          "texto": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+          "title": "Paintings after Ancient Masters: A Lady"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149621",
+          "chunk_index": 0,
+          "fragment_id": "cma:149621::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1979.27.2.16",
+          "texto": "Weng Tonghe 翁同龢 [1830–1904], by descent to Wango H. C. Weng\n(Wango H. C. Weng 翁萬戈 [1918–2020], Lyme, NH, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Paintings after Ancient Masters: A Lady"
+        }
+      ],
+      "cma:149624": [
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149624",
+          "chunk_index": 0,
+          "fragment_id": "cma:149624::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1979.27.2.19",
+          "texto": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+          "title": "Paintings after Ancient Masters: Scholar with Staff and Brush"
+        },
+        {
+          "artist": "Chen Hongshou",
+          "artwork_id": "cma:149624",
+          "chunk_index": 0,
+          "fragment_id": "cma:149624::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1979.27.2.19",
+          "texto": "Weng Tonghe 翁同龢 [1830–1904], by descent to Wango H. C. Weng\n(Wango H. C. Weng 翁萬戈 [1918–2020], Lyme, NH, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Paintings after Ancient Masters: Scholar with Staff and Brush"
+        }
+      ],
+      "cma:150944": [
+        {
+          "artist": null,
+          "artwork_id": "cma:150944",
+          "chunk_index": 0,
+          "fragment_id": "cma:150944::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1982.35",
+          "texto": "This official's portrait was done in the portrait painting style of the Ming dynasty.",
+          "title": "Portrait of an Official"
+        },
+        {
+          "artist": null,
+          "artwork_id": "cma:150944",
+          "chunk_index": 0,
+          "fragment_id": "cma:150944::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1982.35",
+          "texto": "(Bunzo Nakanishi, Japan, sold to the Cleveland Museum of Art)\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Portrait of an Official"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay información específica sobre el uso de tonos fríos en la obra ni una descripción detallada de la paleta cromática.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149611::description::0"
+            ],
+            "texto": "La obra fue realizada por Chen Hongshou, un artista activo durante la transición violenta de la dinastía Ming a la Qing, y eligió un estilo arcaizante para representar a un poeta de tiempos turbulentos.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato muestra un estilo que puede considerarse austero, asociado a la representación de un poeta que rechazó la carrera oficial en tiempos difíciles.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149611"
+      },
+      {
+        "abstencion": "No hay datos específicos que indiquen que esta obra sea un retrato en tonos fríos o austero dentro de la dinastía Ming.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149608::description::0"
+            ],
+            "texto": "La obra forma parte de un doble álbum con veinte pinturas que incluyen figuras, paisajes y flores, realizadas por Chen Hongshou en la etapa tardía de su carrera.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:149608::description::0"
+            ],
+            "texto": "Las obras tardías de Chen Hongshou reflejan un arte arcaizante y refinado, con una miniaturización deliberada que refleja la situación psicológica de una clase deprimida durante la dinastía Ming.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra no es un retrato austero ni específicamente en tonos fríos, sino que incluye una variedad de temas y un estilo peculiar y refinado.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149608"
+      },
+      {
+        "abstencion": "No hay información suficiente para afirmar que esta obra cumple con el pedido de un retrato en tonos fríos y austero de la dinastía Ming.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149624::description::0"
+            ],
+            "texto": "Esta obra también forma parte del mismo doble álbum con veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la situación de los leales Ming.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El estilo es peculiar y sin sentimentalismo, pero no se menciona específicamente que el retrato sea austero o en tonos fríos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149624"
+      },
+      {
+        "abstencion": "No hay datos que indiquen que esta obra sea un retrato austero en tonos fríos dentro de la dinastía Ming.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:149621::description::0"
+            ],
+            "texto": "La obra pertenece al mismo conjunto de veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la clase deprimida de leales Ming.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El tema es una figura femenina, lo que no corresponde a un retrato austero típico de un oficial o erudito masculino de la dinastía Ming.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:149621"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:150944::description::0"
+            ],
+            "texto": "Este retrato fue realizado en el estilo de pintura de retratos de la dinastía Ming.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra presenta un retrato de un oficial, lo que puede asociarse a un estilo más austero y formal propio de la dinastía Ming.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [],
+            "texto": "La paleta de colores parece más sobria y con tonos que podrían considerarse más fríos en comparación con otras obras más coloridas.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:150944"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:150944",
+          "rank": 1,
+          "score": 0.6721914410591125
+        },
+        {
+          "artwork_id": "aic:62536",
+          "rank": 2,
+          "score": 0.5591150522232056
+        },
+        {
+          "artwork_id": "aic:241750",
+          "rank": 3,
+          "score": 0.5529065132141113
+        },
+        {
+          "artwork_id": "aic:76267",
+          "rank": 4,
+          "score": 0.5430218577384949
+        },
+        {
+          "artwork_id": "cma:143755",
+          "rank": 5,
+          "score": 0.5419039726257324
+        },
+        {
+          "artwork_id": "aic:75361",
+          "rank": 6,
+          "score": 0.539483904838562
+        },
+        {
+          "artwork_id": "cma:149621",
+          "rank": 7,
+          "score": 0.5359264016151428
+        },
+        {
+          "artwork_id": "cma:149623",
+          "rank": 8,
+          "score": 0.5359264016151428
+        },
+        {
+          "artwork_id": "cma:149625",
+          "rank": 9,
+          "score": 0.5359264016151428
+        },
+        {
+          "artwork_id": "cma:149626",
+          "rank": 10,
+          "score": 0.5359264016151428
+        },
+        {
+          "artwork_id": "cma:149608",
+          "rank": 11,
+          "score": 0.5357974767684937
+        },
+        {
+          "artwork_id": "cma:149605",
+          "rank": 12,
+          "score": 0.5357823967933655
+        },
+        {
+          "artwork_id": "cma:149606",
+          "rank": 13,
+          "score": 0.5357823967933655
+        },
+        {
+          "artwork_id": "cma:149614",
+          "rank": 14,
+          "score": 0.5357823967933655
+        },
+        {
+          "artwork_id": "cma:149619",
+          "rank": 15,
+          "score": 0.5357823967933655
+        },
+        {
+          "artwork_id": "cma:149620",
+          "rank": 16,
+          "score": 0.5357823967933655
+        },
+        {
+          "artwork_id": "cma:149613",
+          "rank": 17,
+          "score": 0.5357628464698792
+        },
+        {
+          "artwork_id": "cma:149607",
+          "rank": 18,
+          "score": 0.5341927409172058
+        },
+        {
+          "artwork_id": "cma:149609",
+          "rank": 19,
+          "score": 0.5341927409172058
+        },
+        {
+          "artwork_id": "cma:149610",
+          "rank": 20,
+          "score": 0.5341927409172058
+        },
+        {
+          "artwork_id": "cma:149624",
+          "rank": 21,
+          "score": 0.5341749787330627
+        },
+        {
+          "artwork_id": "cma:149627",
+          "rank": 22,
+          "score": 0.5341749787330627
+        },
+        {
+          "artwork_id": "cma:149603",
+          "rank": 23,
+          "score": 0.5341719388961792
+        },
+        {
+          "artwork_id": "cma:149604",
+          "rank": 24,
+          "score": 0.5341719388961792
+        },
+        {
+          "artwork_id": "cma:149616",
+          "rank": 25,
+          "score": 0.5341719388961792
+        },
+        {
+          "artwork_id": "cma:149615",
+          "rank": 26,
+          "score": 0.5337992310523987
+        },
+        {
+          "artwork_id": "cma:149612",
+          "rank": 27,
+          "score": 0.533423662185669
+        },
+        {
+          "artwork_id": "cma:147572",
+          "rank": 28,
+          "score": 0.532402515411377
+        },
+        {
+          "artwork_id": "cma:136463",
+          "rank": 29,
+          "score": 0.5118526220321655
+        },
+        {
+          "artwork_id": "cma:148383",
+          "rank": 30,
+          "score": 0.5102354288101196
+        },
+        {
+          "artwork_id": "cma:149880",
+          "rank": 31,
+          "score": 0.5100532174110413
+        },
+        {
+          "artwork_id": "cma:147947",
+          "rank": 32,
+          "score": 0.5076414942741394
+        },
+        {
+          "artwork_id": "cma:159726",
+          "rank": 33,
+          "score": 0.5071901082992554
+        },
+        {
+          "artwork_id": "aic:79507",
+          "rank": 34,
+          "score": 0.5013608336448669
+        },
+        {
+          "artwork_id": "cma:160723",
+          "rank": 35,
+          "score": 0.5004153847694397
+        },
+        {
+          "artwork_id": "aic:68041",
+          "rank": 36,
+          "score": 0.4985145926475525
+        },
+        {
+          "artwork_id": "cma:149109",
+          "rank": 37,
+          "score": 0.49850380420684814
+        },
+        {
+          "artwork_id": "cma:129859",
+          "rank": 38,
+          "score": 0.49442607164382935
+        },
+        {
+          "artwork_id": "cma:144920",
+          "rank": 39,
+          "score": 0.4913766384124756
+        },
+        {
+          "artwork_id": "cma:152555",
+          "rank": 40,
+          "score": 0.4879884123802185
+        },
+        {
+          "artwork_id": "cma:173756",
+          "rank": 41,
+          "score": 0.48653167486190796
+        },
+        {
+          "artwork_id": "cma:148234",
+          "rank": 42,
+          "score": 0.485590398311615
+        },
+        {
+          "artwork_id": "cma:145430",
+          "rank": 43,
+          "score": 0.4853532910346985
+        },
+        {
+          "artwork_id": "cma:135964",
+          "rank": 44,
+          "score": 0.48367732763290405
+        },
+        {
+          "artwork_id": "cma:142641",
+          "rank": 45,
+          "score": 0.4835335612297058
+        },
+        {
+          "artwork_id": "cma:149791",
+          "rank": 46,
+          "score": 0.4813743829727173
+        },
+        {
+          "artwork_id": "cma:159724",
+          "rank": 47,
+          "score": 0.48076939582824707
+        },
+        {
+          "artwork_id": "cma:149611",
+          "rank": 48,
+          "score": 0.47995662689208984
+        },
+        {
+          "artwork_id": "cma:160957",
+          "rank": 49,
+          "score": 0.477203905582428
+        },
+        {
+          "artwork_id": "cma:137125",
+          "rank": 50,
+          "score": 0.47573280334472656
+        },
+        {
+          "artwork_id": "cma:145426",
+          "rank": 51,
+          "score": 0.4755138158798218
+        },
+        {
+          "artwork_id": "aic:13954",
+          "rank": 52,
+          "score": 0.4754941463470459
+        },
+        {
+          "artwork_id": "cma:135953",
+          "rank": 53,
+          "score": 0.4750208854675293
+        },
+        {
+          "artwork_id": "cma:149622",
+          "rank": 54,
+          "score": 0.4738950729370117
+        },
+        {
+          "artwork_id": "cma:141484",
+          "rank": 55,
+          "score": 0.4720025062561035
+        },
+        {
+          "artwork_id": "cma:144829",
+          "rank": 56,
+          "score": 0.47171545028686523
+        },
+        {
+          "artwork_id": "cma:160138",
+          "rank": 57,
+          "score": 0.47102224826812744
+        },
+        {
+          "artwork_id": "cma:147930",
+          "rank": 58,
+          "score": 0.4707244634628296
+        },
+        {
+          "artwork_id": "cma:160956",
+          "rank": 59,
+          "score": 0.4699211120605469
+        },
+        {
+          "artwork_id": "cma:142578",
+          "rank": 60,
+          "score": 0.4688754677772522
+        },
+        {
+          "artwork_id": "aic:79310",
+          "rank": 61,
+          "score": 0.46850305795669556
+        },
+        {
+          "artwork_id": "cma:159727",
+          "rank": 62,
+          "score": 0.4679754376411438
+        },
+        {
+          "artwork_id": "cma:162867",
+          "rank": 63,
+          "score": 0.46722638607025146
+        },
+        {
+          "artwork_id": "aic:75317",
+          "rank": 64,
+          "score": 0.4652816653251648
+        },
+        {
+          "artwork_id": "cma:140267",
+          "rank": 65,
+          "score": 0.4638643264770508
+        },
+        {
+          "artwork_id": "cma:142579",
+          "rank": 66,
+          "score": 0.46258223056793213
+        },
+        {
+          "artwork_id": "cma:144278",
+          "rank": 67,
+          "score": 0.45345360040664673
+        },
+        {
+          "artwork_id": "cma:155051",
+          "rank": 68,
+          "score": 0.45065802335739136
+        },
+        {
+          "artwork_id": "cma:143776",
+          "rank": 69,
+          "score": 0.4501209259033203
+        },
+        {
+          "artwork_id": "cma:132014",
+          "rank": 70,
+          "score": 0.44883763790130615
+        },
+        {
+          "artwork_id": "cma:146035",
+          "rank": 71,
+          "score": 0.445016086101532
+        },
+        {
+          "artwork_id": "cma:147571",
+          "rank": 72,
+          "score": 0.44362717866897583
+        },
+        {
+          "artwork_id": "aic:80213",
+          "rank": 73,
+          "score": 0.44127368927001953
+        },
+        {
+          "artwork_id": "cma:147573",
+          "rank": 74,
+          "score": 0.44053077697753906
+        },
+        {
+          "artwork_id": "cma:140444",
+          "rank": 75,
+          "score": 0.43709230422973633
+        },
+        {
+          "artwork_id": "cma:140445",
+          "rank": 76,
+          "score": 0.43709230422973633
+        },
+        {
+          "artwork_id": "cma:140452",
+          "rank": 77,
+          "score": 0.43701452016830444
+        },
+        {
+          "artwork_id": "cma:131793",
+          "rank": 78,
+          "score": 0.4367276430130005
+        },
+        {
+          "artwork_id": "cma:140446",
+          "rank": 79,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140447",
+          "rank": 80,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140448",
+          "rank": 81,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140449",
+          "rank": 82,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140450",
+          "rank": 83,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140451",
+          "rank": 84,
+          "score": 0.43626999855041504
+        },
+        {
+          "artwork_id": "cma:140440",
+          "rank": 85,
+          "score": 0.4362456798553467
+        },
+        {
+          "artwork_id": "cma:140441",
+          "rank": 86,
+          "score": 0.4362456798553467
+        },
+        {
+          "artwork_id": "cma:140442",
+          "rank": 87,
+          "score": 0.4362456798553467
+        },
+        {
+          "artwork_id": "cma:140443",
+          "rank": 88,
+          "score": 0.4362456798553467
+        },
+        {
+          "artwork_id": "aic:75574",
+          "rank": 89,
+          "score": 0.4355422258377075
+        },
+        {
+          "artwork_id": "cma:138688",
+          "rank": 90,
+          "score": 0.43460142612457275
+        },
+        {
+          "artwork_id": "cma:145987",
+          "rank": 91,
+          "score": 0.4331280589103699
+        },
+        {
+          "artwork_id": "aic:49039",
+          "rank": 92,
+          "score": 0.4314461946487427
+        },
+        {
+          "artwork_id": "cma:95171",
+          "rank": 93,
+          "score": 0.4304521083831787
+        },
+        {
+          "artwork_id": "cma:149126",
+          "rank": 94,
+          "score": 0.4302016496658325
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:79600",
+          "rank": 1,
+          "score": 0.7691283226013184
+        },
+        {
+          "artwork_id": "cma:153777",
+          "rank": 2,
+          "score": 0.7581892609596252
+        },
+        {
+          "artwork_id": "cma:151007",
+          "rank": 3,
+          "score": 0.7527449131011963
+        },
+        {
+          "artwork_id": "cma:149079",
+          "rank": 4,
+          "score": 0.751929759979248
+        },
+        {
+          "artwork_id": "aic:147005",
+          "rank": 5,
+          "score": 0.7475870847702026
+        },
+        {
+          "artwork_id": "cma:147927",
+          "rank": 6,
+          "score": 0.7378408908843994
+        },
+        {
+          "artwork_id": "cma:146713",
+          "rank": 7,
+          "score": 0.7376986145973206
+        },
+        {
+          "artwork_id": "cma:160860",
+          "rank": 8,
+          "score": 0.7361483573913574
+        },
+        {
+          "artwork_id": "cma:151529",
+          "rank": 9,
+          "score": 0.7337685823440552
+        },
+        {
+          "artwork_id": "cma:146174",
+          "rank": 10,
+          "score": 0.7336363196372986
+        },
+        {
+          "artwork_id": "cma:160859",
+          "rank": 11,
+          "score": 0.7334347367286682
+        },
+        {
+          "artwork_id": "cma:160470",
+          "rank": 12,
+          "score": 0.7328066229820251
+        },
+        {
+          "artwork_id": "cma:150944",
+          "rank": 13,
+          "score": 0.7313132882118225
+        },
+        {
+          "artwork_id": "cma:140321",
+          "rank": 14,
+          "score": 0.7310876250267029
+        },
+        {
+          "artwork_id": "cma:161323",
+          "rank": 15,
+          "score": 0.7304826974868774
+        },
+        {
+          "artwork_id": "cma:151480",
+          "rank": 16,
+          "score": 0.726173996925354
+        },
+        {
+          "artwork_id": "cma:152428",
+          "rank": 17,
+          "score": 0.7239512205123901
+        },
+        {
+          "artwork_id": "cma:161268",
+          "rank": 18,
+          "score": 0.7199881076812744
+        },
+        {
+          "artwork_id": "cma:153395",
+          "rank": 19,
+          "score": 0.7196850776672363
+        },
+        {
+          "artwork_id": "cma:152410",
+          "rank": 20,
+          "score": 0.7168614268302917
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "portrait from the Ming dynasty emphasizing austerity and cool color palette, traditional Chinese painting style",
+      "consulta_id": "c07-mixto",
+      "consulta_visual": "Ming dynasty austere portrait of a seated man with cool tones and minimal decoration",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:1cdf3bbf114ab9871e5273d9b2638de952ae2a1d6a5884a459e597331c25fcd9",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "este retrato en tonos más fríos, en la dinastía Ming, más austero",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "a1972b8ed58dcb58",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2134,
+        "tokens_out": 47
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:150944",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 1,
+          "visual": 13
+        },
+        "score_fusionado": 0.73131331
+      },
+      {
+        "artwork_id": "cma:149621",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.70572226
+      },
+      {
+        "artwork_id": "aic:241750",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.70454044
+      },
+      {
+        "artwork_id": "cma:147947",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.68641647
+      },
+      {
+        "artwork_id": "cma:149611",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.68464173
+      },
+      {
+        "artwork_id": "cma:149608",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.68086818
+      },
+      {
+        "artwork_id": "cma:147572",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.67787428
+      },
+      {
+        "artwork_id": "cma:137125",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.67246127
+      },
+      {
+        "artwork_id": "cma:147573",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.66752528
+      },
+      {
+        "artwork_id": "cma:149609",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.6540032
+      },
+      {
+        "artwork_id": "aic:75361",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.65277029
+      },
+      {
+        "artwork_id": "cma:159727",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.64688604
+      },
+      {
+        "artwork_id": "cma:149624",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.64386775
+      },
+      {
+        "artwork_id": "aic:13954",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.64040067
+      },
+      {
+        "artwork_id": "cma:148234",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.64005456
+      },
+      {
+        "artwork_id": "cma:138688",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.63966213
+      },
+      {
+        "artwork_id": "cma:149612",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.63921937
+      },
+      {
+        "artwork_id": "cma:149620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.63918981
+      },
+      {
+        "artwork_id": "cma:155051",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.63828528
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.63713164
+      },
+      {
+        "artwork_id": "cma:149613",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.6340031
+      },
+      {
+        "artwork_id": "cma:95171",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.62999672
+      },
+      {
+        "artwork_id": "cma:147571",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.62891136
+      },
+      {
+        "artwork_id": "cma:142579",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.62719928
+      },
+      {
+        "artwork_id": "cma:160957",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.62715304
+      },
+      {
+        "artwork_id": "cma:140451",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.62703021
+      },
+      {
+        "artwork_id": "aic:49039",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.62554136
+      },
+      {
+        "artwork_id": "cma:135953",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.62517268
+      },
+      {
+        "artwork_id": "cma:149622",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.62495883
+      },
+      {
+        "artwork_id": "cma:145426",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.62307154
+      },
+      {
+        "artwork_id": "aic:79507",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.61710403
+      },
+      {
+        "artwork_id": "cma:140267",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.61576379
+      },
+      {
+        "artwork_id": "aic:80213",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.61473956
+      },
+      {
+        "artwork_id": "cma:160138",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.61365445
+      },
+      {
+        "artwork_id": "cma:159724",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.61324283
+      },
+      {
+        "artwork_id": "cma:129859",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.61312576
+      },
+      {
+        "artwork_id": "cma:146035",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.61003413
+      },
+      {
+        "artwork_id": "cma:149614",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.6086207
+      },
+      {
+        "artwork_id": "cma:159726",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.60694302
+      },
+      {
+        "artwork_id": "cma:149605",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.60595029
+      },
+      {
+        "artwork_id": "cma:140440",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.60484221
+      },
+      {
+        "artwork_id": "cma:149619",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.60438578
+      },
+      {
+        "artwork_id": "cma:145987",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.60428069
+      },
+      {
+        "artwork_id": "cma:136463",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.60424792
+      },
+      {
+        "artwork_id": "cma:149626",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.6036187
+      },
+      {
+        "artwork_id": "cma:135964",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.60269485
+      },
+      {
+        "artwork_id": "cma:162867",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.60226785
+      },
+      {
+        "artwork_id": "cma:149606",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.59966485
+      },
+      {
+        "artwork_id": "cma:144278",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.59959624
+      },
+      {
+        "artwork_id": "cma:149615",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.59924313
+      },
+      {
+        "artwork_id": "cma:149627",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.59870174
+      },
+      {
+        "artwork_id": "cma:149623",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.59671776
+      },
+      {
+        "artwork_id": "cma:148383",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.59460996
+      },
+      {
+        "artwork_id": "cma:147930",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.59388107
+      },
+      {
+        "artwork_id": "cma:132014",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.59239869
+      },
+      {
+        "artwork_id": "cma:140443",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.58907955
+      },
+      {
+        "artwork_id": "cma:144829",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.58795116
+      },
+      {
+        "artwork_id": "aic:76267",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.58781929
+      },
+      {
+        "artwork_id": "cma:143776",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.58580832
+      },
+      {
+        "artwork_id": "cma:149610",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.58392974
+      },
+      {
+        "artwork_id": "cma:149607",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.5834694
+      },
+      {
+        "artwork_id": "cma:140442",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.58312675
+      },
+      {
+        "artwork_id": "cma:173756",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.58135666
+      },
+      {
+        "artwork_id": "aic:79310",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.58133043
+      },
+      {
+        "artwork_id": "cma:145430",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.58017364
+      },
+      {
+        "artwork_id": "cma:140452",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.57857825
+      },
+      {
+        "artwork_id": "cma:140445",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.57591669
+      },
+      {
+        "artwork_id": "cma:160956",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.57001361
+      },
+      {
+        "artwork_id": "cma:140441",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.56992017
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.56979588
+      },
+      {
+        "artwork_id": "cma:149616",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.56573476
+      },
+      {
+        "artwork_id": "cma:140449",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.56551313
+      },
+      {
+        "artwork_id": "cma:141484",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.56171691
+      },
+      {
+        "artwork_id": "cma:149603",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.55938908
+      },
+      {
+        "artwork_id": "cma:144920",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.55932773
+      },
+      {
+        "artwork_id": "cma:149126",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.55873653
+      },
+      {
+        "artwork_id": "cma:149880",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.55588617
+      },
+      {
+        "artwork_id": "cma:140444",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.55409452
+      },
+      {
+        "artwork_id": "cma:149604",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.55157442
+      },
+      {
+        "artwork_id": "cma:142641",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.55092034
+      },
+      {
+        "artwork_id": "cma:142578",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.55011284
+      },
+      {
+        "artwork_id": "cma:149791",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.54888041
+      },
+      {
+        "artwork_id": "cma:140448",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.5477795
+      },
+      {
+        "artwork_id": "cma:149109",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.54559181
+      },
+      {
+        "artwork_id": "cma:140450",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.5453542
+      },
+      {
+        "artwork_id": "aic:75317",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.539322
+      },
+      {
+        "artwork_id": "aic:75574",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.52487924
+      },
+      {
+        "artwork_id": "cma:140447",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.52135288
+      },
+      {
+        "artwork_id": "cma:140446",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.51597126
+      },
+      {
+        "artwork_id": "cma:152555",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.5055507
+      },
+      {
+        "artwork_id": "aic:68041",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.50468124
+      },
+      {
+        "artwork_id": "cma:160723",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.48928655
+      },
+      {
+        "artwork_id": "cma:143755",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.48603245
+      },
+      {
+        "artwork_id": "cma:131793",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.36183382
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:149611",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores vivos y detalles ornamentales. CANDIDATA: retrato con tonos fríos, grises y azulados, paleta muy austera y simple. CAMBIO: la candidata cumple el pedido de tonos más fríos y austero claramente. Además es de la dinastía Ming. Cumple bien el pedido de tonos más fríos, austeridad y pertenencia a la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3032,
+          "tokens_out": 113
+        }
+      },
+      {
+        "artwork_id": "cma:149608",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores vivos y fondo marrón; dinastía Ming no confirmada. CANDIDATA: tonos más fríos y apagados, paleta sobria, fondo claro y simple; obra de dinastía Ming. CAMBIO: la candidata cumple el pedido de tonos más fríos y austera, y es de la dinastía Ming. La candidata cumple bien con tonos más fríos, austeridad y pertenece a la dinastía Ming, ajustándose al pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3077,
+          "tokens_out": 127
+        }
+      },
+      {
+        "artwork_id": "cma:149624",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores vivos y detalles ornamentales. CANDIDATA: tonos más fríos, predominan grises y negros, paleta más austera y sobria. CAMBIO: la paleta se movió claramente hacia tonos más fríos y austeros, cumpliendo el pedido. La candidata tiene tonos más fríos y un estilo más austero, aunque no es un retrato tan directo como el original.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3168,
+          "tokens_out": 114
+        }
+      },
+      {
+        "artwork_id": "cma:149621",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores intensos y fondo marrón oscuro. CANDIDATA: retrato con tonos más suaves y fríos, predominan los colores pálidos y el fondo claro. CAMBIO: la paleta se movió hacia tonos más fríos y menos saturados, cumpliendo el pedido. La candidata tiene tonos más fríos y una composición más austera, pero no es de la dinastía Ming, lo que limita la puntuación.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3069,
+          "tokens_out": 122
+        }
+      },
+      {
+        "artwork_id": "cma:150944",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes, fondo marrón, estilo colorido y detallado. CANDIDATA: retrato con tonos más oscuros y fríos, predominan rojos apagados y fondo grisáceo, estilo austero. CAMBIO: la candidata es más fría y austera, pero no es de la dinastía Ming sino posterior. Cumple el cambio de tonos y austeridad, pero no es de la dinastía Ming, lo que limita su cumplimiento.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2702,
+          "tokens_out": 123
+        }
+      },
+      {
+        "artwork_id": "aic:241750",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes, dinastía no Ming. CANDIDATA: retrato con tonos fríos predominantes (azul), dinastía Qing. CAMBIO: la paleta es más fría, pero la dinastía no coincide y el estilo es más recargado que austero. Cumple el pedido de tonos más fríos pero no es de la dinastía Ming ni es austero.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3952,
+          "tokens_out": 109
+        }
+      },
+      {
+        "artwork_id": "cma:159727",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y colores vivos, estilo figurativo, dinastía no especificada. CANDIDATA: paisaje monocromo con tonos fríos, tinta y color muy sutil, fechado en 1551, dinastía Ming. CAMBIO: la paleta es mucho más fría y austera, pero no es un retrato sino un paisaje. Cumple el pedido de tonos más fríos y austeros y es Ming, pero no es un retrato como pide el usuario.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2435,
+          "tokens_out": 123
+        }
+      },
+      {
+        "artwork_id": "cma:149609",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes intensos, estilo Ming. CANDIDATA: pintura con tonos fríos, monocromáticos y austera, pero no es un retrato. CAMBIO: la paleta es más fría y austera, pero no cumple con ser un retrato ni claramente de la dinastía Ming. La candidata es más fría y austera pero no es un retrato ni claramente de la dinastía Ming, por lo que cumple de costado.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3032,
+          "tokens_out": 120
+        }
+      },
+      {
+        "artwork_id": "aic:75361",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, predominan verdes y rojos, estilo Ming. CANDIDATA: paisaje con tonos más fríos y apagados, predominan azules y verdes suaves, posible Ming o Qing. CAMBIO: la paleta es más fría, pero no es un retrato ni austero. Cumple el tono más frío y la dinastía Ming, pero no es un retrato ni austero como pide el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2310,
+          "tokens_out": 115
+        }
+      },
+      {
+        "artwork_id": "aic:13954",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y vivos, colores saturados, estilo detallado y expresivo. CANDIDATA: paisaje monocromo en tonos fríos y apagados, sin figura humana ni retrato, estilo austero. CAMBIO: la paleta es más fría y austera, pero no es un retrato ni tiene la misma temática. Cumple el pedido de tonos más fríos y austeridad, pero no es un retrato ni corresponde al motivo solicitado.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 4145,
+          "tokens_out": 117
+        }
+      },
+      {
+        "artwork_id": "cma:149612",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes intensos, estilo Ming, figura humana austera. CANDIDATA: pintura en tonos fríos, monocromáticos, sin figura humana, motivo natural, no es retrato. CAMBIO: tonos más fríos sí, pero no es un retrato ni austero en sentido humano, y no es Ming sino posterior. Cumple parcialmente el pedido en tonos fríos pero no es un retrato ni de la dinastía Ming ni austero en el sentido pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3030,
+          "tokens_out": 125
+        }
+      },
+      {
+        "artwork_id": "cma:149620",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores vivos, estilo Ming. CANDIDATA: paisaje con tonos neutros y fríos, colores apagados, no es un retrato. CAMBIO: la paleta es más fría pero no es un retrato ni austero, es un paisaje. La candidata tiene tonos más fríos pero no es un retrato ni austero ni de la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3073,
+          "tokens_out": 107
+        }
+      },
+      {
+        "artwork_id": "cma:155051",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y terrosos, figura humana austera. CANDIDATA: figura divina con paleta más fría y colores variados, no austera. CAMBIO: la paleta es más fría pero la obra no es un retrato ni austera. La candidata tiene tonos más fríos pero no es un retrato ni austera, y no es de la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3022,
+          "tokens_out": 104
+        }
+      },
+      {
+        "artwork_id": "cma:149625",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y vivos, figura humana, estilo Ming. CANDIDATA: pintura de árbol con tonos neutros y fríos, sin figura humana, estilo Ming. CAMBIO: la paleta es más fría y austera, pero no es un retrato. Cumple el tono frío y austero, y es Ming, pero no es un retrato como pide el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3070,
+          "tokens_out": 102
+        }
+      },
+      {
+        "artwork_id": "cma:147947",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y saturados, colores vivos, estilo detallado y austero. CANDIDATA: paisaje monocromo en tinta, tonos fríos y apagados, sin retrato ni color saturado. CAMBIO: la candidata no es un retrato, es paisaje, y aunque es más frío y austero, no cumple el pedido de retrato ni dinastía Ming. No es un retrato ni de la dinastía Ming, aunque es más frío y austero, no cumple el pedido principal.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2619,
+          "tokens_out": 129
+        }
+      },
+      {
+        "artwork_id": "cma:147572",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes intensos, estilo austero. CANDIDATA: obra con tonos más cálidos y dorados, no es un retrato individual sino figuras múltiples. CAMBIO: no hay cambio hacia tonos más fríos ni austeridad, además no es un retrato individual. No cumple el pedido porque no es un retrato, no tiene tonos más fríos ni austeros, y no es de la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2619,
+          "tokens_out": 114
+        }
+      },
+      {
+        "artwork_id": "cma:137125",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y vivos, colores saturados, figura central austera. CANDIDATA: paisaje con tonos neutros y apagados, colores fríos y suaves, sin retrato. CAMBIO: no hay retrato ni tonos fríos en la candidata, es un cambio total de motivo y paleta. La candidata no cumple el pedido porque no es un retrato ni tiene tonos fríos ni austero, además no es de la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2406,
+          "tokens_out": 118
+        }
+      },
+      {
+        "artwork_id": "cma:147573",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato en tonos cálidos y terrosos, austero, dinastía Ming. CANDIDATA: pintura con múltiples figuras, tonos más cálidos y variados, no es un retrato ni austero, es de dinastía Yuan. CAMBIO: no cumple el pedido de tonos más fríos, retrato ni austeridad, ni es Ming. La candidata no es un retrato, no tiene tonos más fríos ni austeridad, y no pertenece a la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2615,
+          "tokens_out": 123
+        }
+      },
+      {
+        "artwork_id": "cma:138688",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes, austero. CANDIDATA: handscroll con tonos claros y cálidos, no es retrato ni austero. CAMBIO: no hay tonos más fríos ni austeridad, y no es un retrato ni de la dinastía Ming. No cumple el pedido porque no es un retrato, no tiene tonos más fríos ni austeridad, y no es de la dinastía Ming.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 2137,
+          "tokens_out": 112
+        }
+      },
+      {
+        "artwork_id": "cma:148234",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con tonos cálidos y verdes, estilo colorido y detallado, dinastía no especificada. CANDIDATA: paisaje en tonos neutros y cálidos, sin figura humana, dinastía Qing (1650s). CAMBIO: no hay retrato ni tonos más fríos, ni es Ming, ni austero. La candidata no es un retrato, no tiene tonos más fríos ni pertenece a la dinastía Ming, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3111,
+          "tokens_out": 122
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c07-mixto",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay información específica sobre el uso de tonos fríos en la obra ni una descripción detallada de la paleta cromática.",
+          "artwork_id": "cma:149611",
+          "ficha": {
+            "artist": "Chen Hongshou",
+            "culture": "China",
+            "date_display": "1598–1652",
+            "medium": "Album leaf; ink and color on silk",
+            "title": "Paintings after Ancient Masters: Portrait of Tao Yuanming",
+            "year": 1598
+          },
+          "lineas": [
+            "La obra fue realizada por Chen Hongshou, un artista activo durante la transición violenta de la dinastía Ming a la Qing, y eligió un estilo arcaizante para representar a un poeta de tiempos turbulentos. [1]",
+            "El retrato muestra un estilo que puede considerarse austero, asociado a la representación de un poeta que rechazó la carrera oficial en tiempos difíciles."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Chen Hongshou",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149611::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1979.27.1.5",
+              "texto_citado": "Poet Tao Yuanming (365–427 CE) turned down a career as an official in politically turbulent times to return to his home estate, northwest of Mount Lu, to write poetry and enjoy his garden and wine. Having an ailing foot, he was carried in a basket or walked with a staff. As he grew chrysanthemums, Tao is associated with this flower. \n\nThe artist Chen Hongshou, active in Zhejiang province, suffered through the violent transition from the Ming to the Qing dynasty around 1644. By portraying the poet who lived a millennium earlier during similarly fraught times, Chen intentionally chose an archaistic style.",
+              "title": "Paintings after Ancient Masters: Portrait of Tao Yuanming"
+            }
+          ],
+          "score": 0.6846417259602615,
+          "source_url": "https://clevelandart.org/art/1979.27.1.5"
+        },
+        {
+          "abstencion": "No hay datos específicos que indiquen que esta obra sea un retrato en tonos fríos o austero dentro de la dinastía Ming.",
+          "artwork_id": "cma:149608",
+          "ficha": {
+            "artist": "Chen Hongshou",
+            "culture": "China",
+            "date_display": "1598–1652",
+            "medium": "album leaf; ink and color on silk",
+            "title": "Paintings after Ancient Masters: Laozi Riding an Ox",
+            "year": 1598
+          },
+          "lineas": [
+            "La obra forma parte de un doble álbum con veinte pinturas que incluyen figuras, paisajes y flores, realizadas por Chen Hongshou en la etapa tardía de su carrera. [1]",
+            "Las obras tardías de Chen Hongshou reflejan un arte arcaizante y refinado, con una miniaturización deliberada que refleja la situación psicológica de una clase deprimida durante la dinastía Ming. [1]",
+            "La obra no es un retrato austero ni específicamente en tonos fríos, sino que incluye una variedad de temas y un estilo peculiar y refinado."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Chen Hongshou",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149608::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1979.27.1.2",
+              "texto_citado": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+              "title": "Paintings after Ancient Masters: Laozi Riding an Ox"
+            }
+          ],
+          "score": 0.6808681835199288,
+          "source_url": "https://clevelandart.org/art/1979.27.1.2"
+        },
+        {
+          "abstencion": "No hay información suficiente para afirmar que esta obra cumple con el pedido de un retrato en tonos fríos y austero de la dinastía Ming.",
+          "artwork_id": "cma:149624",
+          "ficha": {
+            "artist": "Chen Hongshou",
+            "culture": "China",
+            "date_display": "1598–1652",
+            "medium": "album leaf; ink and color on silk",
+            "title": "Paintings after Ancient Masters: Scholar with Staff and Brush",
+            "year": 1598
+          },
+          "lineas": [
+            "Esta obra también forma parte del mismo doble álbum con veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la situación de los leales Ming. [1]",
+            "El estilo es peculiar y sin sentimentalismo, pero no se menciona específicamente que el retrato sea austero o en tonos fríos."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Chen Hongshou",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149624::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1979.27.2.19",
+              "texto_citado": "The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+              "title": "Paintings after Ancient Masters: Scholar with Staff and Brush"
+            }
+          ],
+          "score": 0.6438677542237861,
+          "source_url": "https://clevelandart.org/art/1979.27.2.19"
+        },
+        {
+          "abstencion": "No hay datos que indiquen que esta obra sea un retrato austero en tonos fríos dentro de la dinastía Ming.",
+          "artwork_id": "cma:149621",
+          "ficha": {
+            "artist": "Chen Hongshou",
+            "culture": "China",
+            "date_display": "1598–1652",
+            "medium": "album leaf, ink and color on silk",
+            "title": "Paintings after Ancient Masters: A Lady",
+            "year": 1598
+          },
+          "lineas": [
+            "La obra pertenece al mismo conjunto de veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la clase deprimida de leales Ming. [1]",
+            "El tema es una figura femenina, lo que no corresponde a un retrato austero típico de un oficial o erudito masculino de la dinastía Ming."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Chen Hongshou",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:149621::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1979.27.2.16",
+              "texto_citado": "The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.",
+              "title": "Paintings after Ancient Masters: A Lady"
+            }
+          ],
+          "score": 0.7057222550789104,
+          "source_url": "https://clevelandart.org/art/1979.27.2.16"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:150944",
+          "ficha": {
+            "culture": "China",
+            "date_display": "1600s–1700s",
+            "medium": "hanging scroll; ink and color on silk",
+            "title": "Portrait of an Official",
+            "year": 1600
+          },
+          "lineas": [
+            "Este retrato fue realizado en el estilo de pintura de retratos de la dinastía Ming. [1]",
+            "La obra presenta un retrato de un oficial, lo que puede asociarse a un estilo más austero y formal propio de la dinastía Ming.",
+            "La paleta de colores parece más sobria y con tonos que podrían considerarse más fríos en comparación con otras obras más coloridas."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": null,
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:150944::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1982.35",
+              "texto_citado": "This official's portrait was done in the portrait painting style of the Ming dynasty.",
+              "title": "Portrait of an Official"
+            }
+          ],
+          "score": 0.7313133051541448,
+          "source_url": "https://clevelandart.org/art/1982.35"
+        }
+      ],
+      "render": "1. **Paintings after Ancient Masters: Portrait of Tao Yuanming**\n   Chen Hongshou · 1598–1652 · Album leaf; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1979.27.1.5\n\n   La obra fue realizada por Chen Hongshou, un artista activo durante la transición violenta de la dinastía Ming a la Qing, y eligió un estilo arcaizante para representar a un poeta de tiempos turbulentos. [1]\n   El retrato muestra un estilo que puede considerarse austero, asociado a la representación de un poeta que rechazó la carrera oficial en tiempos difíciles.\n   No hay información específica sobre el uso de tonos fríos en la obra ni una descripción detallada de la paleta cromática.\n\n   **Fuentes**\n   [1] “Poet Tao Yuanming (365–427 CE) turned down a career as an official in politically turbulent times to return to his home estate, northwest of Mount Lu, to write poetry and enjoy his garden and wine. Having an ailing foot, he was carried in a basket or walked with a staff. As he grew chrysanthemums, Tao is associated with this flower. \n\nThe artist Chen Hongshou, active in Zhejiang province, suffered through the violent transition from the Ming to the Qing dynasty around 1644. By portraying the poet who lived a millennium earlier during similarly fraught times, Chen intentionally chose an archaistic style.”\n       https://clevelandart.org/art/1979.27.1.5 · CC0 1.0\n\n2. **Paintings after Ancient Masters: Laozi Riding an Ox**\n   Chen Hongshou · 1598–1652 · album leaf; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1979.27.1.2\n\n   La obra forma parte de un doble álbum con veinte pinturas que incluyen figuras, paisajes y flores, realizadas por Chen Hongshou en la etapa tardía de su carrera. [1]\n   Las obras tardías de Chen Hongshou reflejan un arte arcaizante y refinado, con una miniaturización deliberada que refleja la situación psicológica de una clase deprimida durante la dinastía Ming. [1]\n   La obra no es un retrato austero ni específicamente en tonos fríos, sino que incluye una variedad de temas y un estilo peculiar y refinado.\n   No hay datos específicos que indiquen que esta obra sea un retrato en tonos fríos o austero dentro de la dinastía Ming.\n\n   **Fuentes**\n   [1] “The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.”\n       https://clevelandart.org/art/1979.27.1.2 · CC0 1.0\n\n3. **Paintings after Ancient Masters: Scholar with Staff and Brush**\n   Chen Hongshou · 1598–1652 · album leaf; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1979.27.2.19\n\n   Esta obra también forma parte del mismo doble álbum con veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la situación de los leales Ming. [1]\n   El estilo es peculiar y sin sentimentalismo, pero no se menciona específicamente que el retrato sea austero o en tonos fríos.\n   No hay información suficiente para afirmar que esta obra cumple con el pedido de un retrato en tonos fríos y austero de la dinastía Ming.\n\n   **Fuentes**\n   [1] “The twenty paintings in this double album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art—archaistic, hyper-refined—but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.”\n       https://clevelandart.org/art/1979.27.2.19 · CC0 1.0\n\n4. **Paintings after Ancient Masters: A Lady**\n   Chen Hongshou · 1598–1652 · album leaf, ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1979.27.2.16\n\n   La obra pertenece al mismo conjunto de veinte pinturas de Chen Hongshou, con un estilo arcaizante y refinado, miniaturizado y representativo de la clase deprimida de leales Ming. [1]\n   El tema es una figura femenina, lo que no corresponde a un retrato austero típico de un oficial o erudito masculino de la dinastía Ming.\n   No hay datos que indiquen que esta obra sea un retrato austero en tonos fríos dentro de la dinastía Ming.\n\n   **Fuentes**\n   [1] “The twenty paintings in this double-album by Chen Hongshou include landscapes, figures, and flowers. It also has one leaf featuring a woman, an often-used subject not found in the other albums from the latter part of his career. His late works are wonderful summations of Chen's peculiar and quirky art--archaistic, hyper-refined--but without accompanying shallowness or sentimentality.\n\nHis figures and landscapes in the late albums are miniaturized, not unlike the small Chinese gardens, or the carefully selected small table rocks or old roots used for contemplation to see the world in miniature. This loss of scale is quite deliberate and reflects the psychological situation of a depressed class like the Ming loyalist officials and scholars, deprived of their integrity and honor, and forced to lead a diminished and restricted existence.”\n       https://clevelandart.org/art/1979.27.2.16 · CC0 1.0\n\n5. **Portrait of an Official**\n   1600s–1700s · hanging scroll; ink and color on silk\n   Ficha oficial: https://clevelandart.org/art/1982.35\n\n   Este retrato fue realizado en el estilo de pintura de retratos de la dinastía Ming. [1]\n   La obra presenta un retrato de un oficial, lo que puede asociarse a un estilo más austero y formal propio de la dinastía Ming.\n   La paleta de colores parece más sobria y con tonos que podrían considerarse más fríos en comparación con otras obras más coloridas.\n\n   **Fuentes**\n   [1] “This official's portrait was done in the portrait painting style of the Ming dynasty.”\n       https://clevelandart.org/art/1982.35 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "d148f9d60992e0d80adfe489f781cd3ed906be73",
+      "config_id": "1cc2dba21da9b371",
+      "corrida_id": "8db3292834f9a2cc-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "epoca": {
+          "epocas": [
+            [
+              [
+                "China"
+              ],
+              1368,
+              1644
+            ]
+          ],
+          "n_obras": 130
+        },
+        "terminos": [],
+        "valores": []
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:149611",
+      "cma:149608",
+      "cma:149624",
+      "cma:149621",
+      "cma:150944"
+    ]
+  },
+  "fecha": "2026-11-17T04:18:11+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.1117,
+      "generador": 7.316,
+      "planificador": 0.001,
+      "recolector_de_evidencia": 0.4184,
+      "recuperador_textual": 0.5603,
+      "recuperador_visual": 0.0945,
+      "renderizador": 0.0,
+      "reranker": 38.9133
+    },
+    "segundos_de_la_corrida": 47.4173
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.167,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.791,
+      "tokens_in": 32,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.312,
+      "tokens_in": 3200,
+      "tokens_out": 1010
+    },
+    "indice": {
+      "n_items": 320,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.135,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 38.751,
+      "tokens_in": 58624,
+      "tokens_out": 2339
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 96,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.11,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 7.312,
+      "tokens_in": 3200,
+      "tokens_out": 1010
+    },
+    "recolector_de_evidencia": {
+      "n_items": 13,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.417,
+      "tokens_in": 16,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 195,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.473,
+      "tokens_in": 16,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.094,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 38.751,
+      "tokens_in": 58624,
+      "tokens_out": 2339
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "d148f9d60992e0d80adfe489f781cd3ed906be73",
+    "config_id": "1cc2dba21da9b371",
+    "corrida_id": "8db3292834f9a2cc-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
