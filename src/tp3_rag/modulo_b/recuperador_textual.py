@@ -10,6 +10,14 @@ from tp3_rag.puertos.indice_vectorial import ARTWORKS, KNOWLEDGE
 
 AGREGACIONES: tuple[str, ...] = ("mejor_fragmento", "suma_de_los_2_mejores")
 
+def _año(ficha) -> int | None:
+    """`year` como entero. El índice lo guarda como texto y comparar texto con entero rompe la rama."""
+    try:
+        return int(ficha.get("year"))
+    except (TypeError, ValueError):
+        return None
+
+
 def agregar_por_obra(
     hits: Sequence[tuple[str, float, str]], *, agregacion: str
 ) -> list[tuple[str, float, tuple[str, ...]]]:
@@ -142,7 +150,7 @@ class RecuperadorTextual(Etapa):
         if rangos:
             obras = {
                 i for i, m in fichas.items()
-                if m.get("year") is not None and any(d <= m["year"] <= h for d, h in rangos)
+                if _año(m) is not None and any(d <= _año(m) <= h for d, h in rangos)
             }
             registro["periodo"] = {"rangos": [list(r) for r in rangos], **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "periodo")}
 
@@ -154,7 +162,7 @@ class RecuperadorTextual(Etapa):
                 valores = set(fm.valores_que_cumplen(terminos_de_la_epoca, culturas.values()))
                 obras |= {
                     i for i, m in fichas.items()
-                    if culturas[i] in valores and m.get("year") is not None and desde <= m["year"] <= hasta
+                    if culturas[i] in valores and _año(m) is not None and desde <= _año(m) <= hasta
                 }
             registro["epoca"] = {
                 "epocas": [[list(c), d, h] for c, d, h in epocas],
