@@ -1,0 +1,451 @@
+{
+  "configuraciones": {
+    "C0": {
+      "etiqueta": "C0",
+      "consultas": 10,
+      "ndcg": 0.539,
+      "ic95": [
+        0.398,
+        0.682
+      ],
+      "p5_estricta": 0.28,
+      "grado2_por_top5": 1.4,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.66,
+      "cumple_restriccion": 0.378,
+      "usd_por_consulta": null,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.65,
+        "c02-mixto": 0.531,
+        "c03-mixto": 0.662,
+        "c04-mixto": 0.777,
+        "c05-mixto": 0.934,
+        "c06-mixto": 0.246,
+        "c07-mixto": 0.658,
+        "c08-mixto": 0.243,
+        "c09-mixto": 0.204,
+        "c10-mixto": 0.482
+      }
+    },
+    "C1": {
+      "etiqueta": "C1",
+      "consultas": 10,
+      "ndcg": 0.592,
+      "ic95": [
+        0.477,
+        0.704
+      ],
+      "p5_estricta": 0.28,
+      "grado2_por_top5": 1.4,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.72,
+      "cumple_restriccion": 0.356,
+      "usd_por_consulta": 0.0033,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.808,
+        "c02-mixto": 0.531,
+        "c03-mixto": 0.577,
+        "c04-mixto": 0.704,
+        "c05-mixto": 0.842,
+        "c06-mixto": 0.361,
+        "c07-mixto": 0.777,
+        "c08-mixto": 0.254,
+        "c09-mixto": 0.481,
+        "c10-mixto": 0.58
+      }
+    },
+    "C2": {
+      "etiqueta": "C2",
+      "consultas": 10,
+      "ndcg": 0.523,
+      "ic95": [
+        0.385,
+        0.651
+      ],
+      "p5_estricta": 0.28,
+      "grado2_por_top5": 1.4,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.66,
+      "cumple_restriccion": 0.4,
+      "usd_por_consulta": 0.004,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.658,
+        "c02-mixto": 0.677,
+        "c03-mixto": 0.684,
+        "c04-mixto": 0.777,
+        "c05-mixto": 0.543,
+        "c06-mixto": 0.246,
+        "c07-mixto": 0.754,
+        "c08-mixto": 0.173,
+        "c09-mixto": 0.457,
+        "c10-mixto": 0.259
+      }
+    },
+    "C3": {
+      "etiqueta": "C3·filtro100·metadata",
+      "consultas": 10,
+      "ndcg": 0.789,
+      "ic95": [
+        0.69,
+        0.887
+      ],
+      "p5_estricta": 0.58,
+      "grado2_por_top5": 2.9,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.64,
+      "cumple_restriccion": 0.956,
+      "usd_por_consulta": 0.0033,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.566,
+        "c02-mixto": 0.915,
+        "c03-mixto": 0.777,
+        "c04-mixto": 0.927,
+        "c05-mixto": 1.0,
+        "c06-mixto": 0.585,
+        "c07-mixto": 0.576,
+        "c08-mixto": 1.0,
+        "c09-mixto": 0.743,
+        "c10-mixto": 0.803
+      }
+    },
+    "C4": {
+      "etiqueta": "C4·filtro100·metadata·rerank20",
+      "consultas": 10,
+      "ndcg": 0.889,
+      "ic95": [
+        0.801,
+        0.965
+      ],
+      "p5_estricta": 0.76,
+      "grado2_por_top5": 3.8,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.78,
+      "cumple_restriccion": 0.956,
+      "usd_por_consulta": 0.0274,
+      "ndcg_por_consulta": {
+        "c01-mixto": 1.0,
+        "c02-mixto": 0.915,
+        "c03-mixto": 0.607,
+        "c04-mixto": 0.85,
+        "c05-mixto": 1.0,
+        "c06-mixto": 1.0,
+        "c07-mixto": 0.713,
+        "c08-mixto": 1.0,
+        "c09-mixto": 1.0,
+        "c10-mixto": 0.803
+      }
+    },
+    "C3 sin filtro": {
+      "etiqueta": "C3·filtro100",
+      "consultas": 10,
+      "ndcg": 0.638,
+      "ic95": [
+        0.552,
+        0.729
+      ],
+      "p5_estricta": 0.38,
+      "grado2_por_top5": 1.9,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.68,
+      "cumple_restriccion": 0.578,
+      "usd_por_consulta": 0.0029,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.566,
+        "c02-mixto": 0.82,
+        "c03-mixto": 0.595,
+        "c04-mixto": 0.842,
+        "c05-mixto": 0.85,
+        "c06-mixto": 0.585,
+        "c07-mixto": 0.459,
+        "c08-mixto": 0.661,
+        "c09-mixto": 0.424,
+        "c10-mixto": 0.58
+      }
+    },
+    "C4 sin filtro": {
+      "etiqueta": "C4·filtro100·rerank20",
+      "consultas": 10,
+      "ndcg": 0.839,
+      "ic95": [
+        0.758,
+        0.918
+      ],
+      "p5_estricta": 0.62,
+      "grado2_por_top5": 3.1,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.8,
+      "cumple_restriccion": 0.778,
+      "usd_por_consulta": 0.0274,
+      "ndcg_por_consulta": {
+        "c01-mixto": 1.0,
+        "c02-mixto": 0.757,
+        "c03-mixto": 0.754,
+        "c04-mixto": 0.861,
+        "c05-mixto": 1.0,
+        "c06-mixto": 1.0,
+        "c07-mixto": 0.647,
+        "c08-mixto": 0.927,
+        "c09-mixto": 0.67,
+        "c10-mixto": 0.777
+      }
+    },
+    "C4 luna": {
+      "etiqueta": "C4·filtro100·metadata·rerank20·gpt-6-luna",
+      "consultas": 10,
+      "ndcg": 0.905,
+      "ic95": [
+        0.815,
+        0.976
+      ],
+      "p5_estricta": 0.78,
+      "grado2_por_top5": 3.9,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.78,
+      "cumple_restriccion": 1.0,
+      "usd_por_consulta": 0.011,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.83,
+        "c02-mixto": 0.934,
+        "c03-mixto": 0.777,
+        "c04-mixto": 0.927,
+        "c05-mixto": 1.0,
+        "c06-mixto": 1.0,
+        "c07-mixto": 1.0,
+        "c08-mixto": 1.0,
+        "c09-mixto": 1.0,
+        "c10-mixto": 0.58
+      }
+    },
+    "C4 prompt v2": {
+      "etiqueta": "C4·filtro100·metadata·rerank20·prompt2",
+      "consultas": 10,
+      "ndcg": 0.9,
+      "ic95": [
+        0.847,
+        0.949
+      ],
+      "p5_estricta": 0.74,
+      "grado2_por_top5": 3.7,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.74,
+      "cumple_restriccion": 0.978,
+      "usd_por_consulta": 0.0316,
+      "ndcg_por_consulta": {
+        "c01-mixto": 1.0,
+        "c02-mixto": 0.861,
+        "c03-mixto": 0.777,
+        "c04-mixto": 0.765,
+        "c05-mixto": 1.0,
+        "c06-mixto": 0.915,
+        "c07-mixto": 0.869,
+        "c08-mixto": 1.0,
+        "c09-mixto": 0.915,
+        "c10-mixto": 0.902
+      }
+    },
+    "C4 40 candidatas": {
+      "etiqueta": "C4·filtro100·metadata·rerank40",
+      "consultas": 10,
+      "ndcg": 0.881,
+      "ic95": [
+        0.797,
+        0.954
+      ],
+      "p5_estricta": 0.74,
+      "grado2_por_top5": 3.7,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.76,
+      "cumple_restriccion": 0.956,
+      "usd_por_consulta": 0.0499,
+      "ndcg_por_consulta": {
+        "c01-mixto": 1.0,
+        "c02-mixto": 0.934,
+        "c03-mixto": 0.607,
+        "c04-mixto": 0.842,
+        "c05-mixto": 1.0,
+        "c06-mixto": 0.893,
+        "c07-mixto": 0.765,
+        "c08-mixto": 1.0,
+        "c09-mixto": 1.0,
+        "c10-mixto": 0.764
+      }
+    },
+    "C4 luna 40 candidatas": {
+      "etiqueta": "C4·filtro100·metadata·rerank40·gpt-6-luna",
+      "consultas": 10,
+      "ndcg": 0.933,
+      "ic95": [
+        0.879,
+        0.98
+      ],
+      "p5_estricta": 0.8,
+      "grado2_por_top5": 4.0,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.8,
+      "cumple_restriccion": 1.0,
+      "usd_por_consulta": 0.0176,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.915,
+        "c02-mixto": 1.0,
+        "c03-mixto": 0.777,
+        "c04-mixto": 0.934,
+        "c05-mixto": 1.0,
+        "c06-mixto": 0.927,
+        "c07-mixto": 1.0,
+        "c08-mixto": 1.0,
+        "c09-mixto": 1.0,
+        "c10-mixto": 0.777
+      }
+    },
+    "C4 terra": {
+      "etiqueta": "C4·filtro100·metadata·rerank20·gpt-6.1-terra",
+      "consultas": 10,
+      "ndcg": 0.926,
+      "ic95": [
+        0.878,
+        0.972
+      ],
+      "p5_estricta": 0.8,
+      "grado2_por_top5": 4.0,
+      "pct_sin_juzgar": 0.0,
+      "cumple_cambio_visual": 0.8,
+      "cumple_restriccion": 1.0,
+      "usd_por_consulta": 0.0603,
+      "ndcg_por_consulta": {
+        "c01-mixto": 0.83,
+        "c02-mixto": 0.934,
+        "c03-mixto": 0.777,
+        "c04-mixto": 0.934,
+        "c05-mixto": 1.0,
+        "c06-mixto": 1.0,
+        "c07-mixto": 0.927,
+        "c08-mixto": 1.0,
+        "c09-mixto": 1.0,
+        "c10-mixto": 0.862
+      }
+    }
+  },
+  "pareadas": {
+    "C1 − C0": {
+      "consultas": 10,
+      "delta": 0.053,
+      "ic95": [
+        -0.015,
+        0.125
+      ],
+      "mejoran": 6,
+      "empatan": 1,
+      "empeoran": 3
+    },
+    "C2 − C1": {
+      "consultas": 10,
+      "delta": -0.069,
+      "ic95": [
+        -0.164,
+        0.021
+      ],
+      "mejoran": 3,
+      "empatan": 0,
+      "empeoran": 7
+    },
+    "C3 − C2": {
+      "consultas": 10,
+      "delta": 0.266,
+      "ic95": [
+        0.097,
+        0.44
+      ],
+      "mejoran": 8,
+      "empatan": 0,
+      "empeoran": 2
+    },
+    "C4 − C3": {
+      "consultas": 10,
+      "delta": 0.1,
+      "ic95": [
+        -0.014,
+        0.226
+      ],
+      "mejoran": 4,
+      "empatan": 4,
+      "empeoran": 2
+    },
+    "C3 − C3 sin filtro": {
+      "consultas": 10,
+      "delta": 0.151,
+      "ic95": [
+        0.086,
+        0.22
+      ],
+      "mejoran": 8,
+      "empatan": 2,
+      "empeoran": 0
+    },
+    "C4 − C4 sin filtro": {
+      "consultas": 10,
+      "delta": 0.049,
+      "ic95": [
+        -0.018,
+        0.128
+      ],
+      "mejoran": 5,
+      "empatan": 3,
+      "empeoran": 2
+    },
+    "C4 luna − C4": {
+      "consultas": 10,
+      "delta": 0.016,
+      "ic95": [
+        -0.071,
+        0.105
+      ],
+      "mejoran": 4,
+      "empatan": 4,
+      "empeoran": 2
+    },
+    "C4 prompt v2 − C4": {
+      "consultas": 10,
+      "delta": 0.012,
+      "ic95": [
+        -0.042,
+        0.07
+      ],
+      "mejoran": 3,
+      "empatan": 3,
+      "empeoran": 4
+    },
+    "C4 40 candidatas − C4": {
+      "consultas": 10,
+      "delta": -0.008,
+      "ic95": [
+        -0.035,
+        0.013
+      ],
+      "mejoran": 2,
+      "empatan": 5,
+      "empeoran": 3
+    },
+    "C4 terra − C4": {
+      "consultas": 10,
+      "delta": 0.038,
+      "ic95": [
+        -0.025,
+        0.1
+      ],
+      "mejoran": 5,
+      "empatan": 4,
+      "empeoran": 1
+    },
+    "C4 luna 40 candidatas − C4 40 candidatas": {
+      "consultas": 10,
+      "delta": 0.053,
+      "ic95": [
+        0.001,
+        0.111
+      ],
+      "mejoran": 6,
+      "empatan": 3,
+      "empeoran": 1
+    }
+  }
+}
