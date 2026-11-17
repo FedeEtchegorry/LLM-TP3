@@ -71,6 +71,8 @@ def cargar() -> dict[str, dict[str, dict]]:
             continue
         if any(r.get("estado") == "sin_puntaje" for r in (estado.get("rerank") or [])):
             continue
+        if any(d.get("etapa") == "recuperador_textual" for d in (estado.get("degradaciones") or [])):
+            continue  # rama de texto caída (bug del año en el filtro): la corrida no midió el filtro
         orden = (int(corrida.get("ordinal", 1)), corrida.get("fecha") or "")
         previo = elegidas[clave].get(corrida["consulta_id"])
         if previo is None or orden > previo[0]:
