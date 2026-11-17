@@ -1,0 +1,28 @@
+# Candidatas: gpt-6-luna como reranker viendo 40 candidatas, con filtro por metadata.
+# Mismas advertencias que c4-luna.toml (identificador, temperature/seed y precios sin verificar).
+[consulta]
+configuracion = "C4"
+n_candidatos = 40
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+filtro_por_metadata = true
+
+[bindings.reranker]
+modelo = "openai/gpt-6-luna"
+
+[proveedor.precio_usd_por_millon_de_tokens]
+"openai/gpt-6-luna" = 0.10
+
+[proveedor.precio_usd_por_millon_de_tokens_de_salida]
+"openai/gpt-6-luna" = 0.50

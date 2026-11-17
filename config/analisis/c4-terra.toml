@@ -1,0 +1,33 @@
+# Comparación de modelos: SOLO el reranker cambia a gpt-6.1-terra (el planificador, el generador y el juez
+# quedan como en default.toml). Es la fila C4 con filtro por metadata, igual a c4-filtro-metadata.toml.
+#
+# ⚠️ Sin verificar contra la API: el identificador del modelo, si acepta `temperature = 0` y
+# `seed`, si cobra tokens de razonamiento y si lee imágenes. Probar primero con UNA consulta
+# (`set --consulta c01-conceptual`) y mirar tokens y USD antes de correr las 30.
+# Los precios (USD por millón de tokens) salen de comparadores de terceros, no de la documentación
+# de OpenAI: confirmarlos en la cuenta antes de citarlos.
+[consulta]
+configuracion = "C4"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+filtro_por_metadata = true
+
+[bindings.reranker]
+modelo = "openai/gpt-6.1-terra"
+
+[proveedor.precio_usd_por_millon_de_tokens]
+"openai/gpt-6.1-terra" = 1.00
+
+[proveedor.precio_usd_por_millon_de_tokens_de_salida]
+"openai/gpt-6.1-terra" = 5.00

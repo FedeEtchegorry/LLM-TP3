@@ -89,8 +89,38 @@ def _cuerpo(binding, mensajes: Sequence[Mapping[str, Any]], imagenes: Sequence[b
     return cuerpo
 
 def _muestreo_enviado(cuerpo: Mapping[str, Any]) -> dict:
-    claves = ("temperature", "top_p", "max_tokens", "seed", "response_format")
+    claves = ("temperature", "top_p", "max_tokens", "max_completion_tokens", "seed", "response_format")
     return {k: cuerpo[k] for k in claves if k in cuerpo}
+
+# Los modelos de razonamiento (gpt-5, gpt-6...) rechazan `max_tokens` y a veces `temperature`/`seed`.
+# Cuando el proveedor lo dice, el puerto ajusta el cuerpo y lo REGISTRA en `muestreo_efectivo`
+# (lo usado, no lo configurado). `max_completion_tokens` incluye los tokens de razonamiento, que se
+# cobran como salida: con el tope original (p. ej. 200) el modelo se queda sin lugar para responder.
+FACTOR_DE_RAZONAMIENTO = 8
+PISO_DE_RAZONAMIENTO = 2000
+PARÁMETROS_QUITABLES = ("temperature", "top_p", "seed", "response_format")
+
+def _aplicar_ajustes(cuerpo: dict, ajustes: dict) -> None:
+    if ajustes.get("max_completion_tokens") and "max_tokens" in cuerpo:
+        tope = int(cuerpo.pop("max_tokens"))
+        cuerpo["max_completion_tokens"] = max(tope * FACTOR_DE_RAZONAMIENTO, PISO_DE_RAZONAMIENTO)
+    for parámetro in ajustes.get("quitar", ()):
+        cuerpo.pop(parámetro, None)
+
+def _ajustar(cuerpo: dict, ajustes: dict, mensaje: str) -> bool:
+    """Aprende del 400 qué parámetro no soporta el modelo. True si el cuerpo cambió."""
+    antes = dict(cuerpo)
+    if "max_tokens" in cuerpo and "max_completion_tokens" in mensaje:
+        ajustes["max_completion_tokens"] = True
+    else:
+        for parámetro in PARÁMETROS_QUITABLES:
+            if parámetro in cuerpo and f"'{parámetro}'" in mensaje and (
+                "nsupported" in mensaje or "nrecognized" in mensaje
+            ):
+                ajustes.setdefault("quitar", set()).add(parámetro)
+                break
+    _aplicar_ajustes(cuerpo, ajustes)
+    return cuerpo != antes
 
 def nombre_para_el_host(modelo: str, base_url: str) -> str:
     if "api.openai.com" in (base_url or "") and modelo.startswith("openai/"):
@@ -123,6 +153,22 @@ class LLMOpenAI:
         )
         self.base_url = base_url
         self.backoff_base = float(backoff_base)
+        self._ajustes: dict[str, dict] = {}
+
+    def _crear(self, modelo: str, cuerpo: dict):
+        """`completions.create` que aprende de los 400 por parámetros no soportados (ver arriba)."""
+        from openai import APIStatusError
+
+        ajustes = self._ajustes.setdefault(modelo, {})
+        _aplicar_ajustes(cuerpo, ajustes)
+        for _ in range(len(PARÁMETROS_QUITABLES) + 2):
+            try:
+                return self._cliente.chat.completions.create(**cuerpo)
+            except APIStatusError as e:
+                if getattr(e, "status_code", None) == 400 and _ajustar(cuerpo, ajustes, str(e)):
+                    continue
+                raise
+        return self._cliente.chat.completions.create(**cuerpo)
 
     def invocar(
         self,
@@ -140,7 +186,8 @@ class LLMOpenAI:
         último: Exception | None = None
         for intento in range(1, int(binding.reintentos) + 2):
             try:
-                respuesta = self._cliente.chat.completions.create(**cuerpo)
+                respuesta = self._crear(binding.modelo, cuerpo)
+                enviado = _muestreo_enviado(cuerpo)
             except RateLimitError as e:
                 último = e
                 if intento > int(binding.reintentos):
