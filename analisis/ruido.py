@@ -34,7 +34,7 @@ def main() -> None:
         if any(r.get("estado") == "sin_puntaje" for r in (estado.get("rerank") or [])):
             continue
         etiqueta = c.etiqueta(cfg)
-        if etiqueta in CONFIGS:
+        if etiqueta in CONFIGS and not corrida["consulta_id"].endswith("-mixto"):  # las mixtas se miden aparte
             top5 = [x["artwork_id"] if isinstance(x, dict) else x for x in estado["top5"]]
             grupos[etiqueta][corrida["consulta_id"]].append((os.path.getmtime(archivo), top5))
 

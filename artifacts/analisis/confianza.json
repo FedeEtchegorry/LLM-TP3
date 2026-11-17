@@ -1,0 +1,323 @@
+{
+  "experimento": "C4·filtro100·metadata·rerank20",
+  "definicion_de_lista_mala": "menos de 3 obras de grado 2 en el top-5",
+  "consultas": 30,
+  "listas_malas": 9,
+  "auc_confianza_para_separar_buenas_de_malas": 0.88,
+  "umbral_publicado": {
+    "umbral": 7.0,
+    "avisa": 16,
+    "listas_malas_avisadas": 9,
+    "avisos_sobre_listas_buenas": 7,
+    "listas_malas_sin_aviso": 0,
+    "listas_buenas_sin_aviso": 14,
+    "precision": 0.56,
+    "cobertura": 1.0,
+    "exactitud": 0.77
+  },
+  "barrido_de_umbrales": [
+    {
+      "umbral": 4.0,
+      "avisa": 8,
+      "listas_malas_avisadas": 6,
+      "avisos_sobre_listas_buenas": 2,
+      "listas_malas_sin_aviso": 3,
+      "listas_buenas_sin_aviso": 19,
+      "precision": 0.75,
+      "cobertura": 0.67,
+      "exactitud": 0.83
+    },
+    {
+      "umbral": 5.0,
+      "avisa": 9,
+      "listas_malas_avisadas": 6,
+      "avisos_sobre_listas_buenas": 3,
+      "listas_malas_sin_aviso": 3,
+      "listas_buenas_sin_aviso": 18,
+      "precision": 0.67,
+      "cobertura": 0.67,
+      "exactitud": 0.8
+    },
+    {
+      "umbral": 5.5,
+      "avisa": 12,
+      "listas_malas_avisadas": 7,
+      "avisos_sobre_listas_buenas": 5,
+      "listas_malas_sin_aviso": 2,
+      "listas_buenas_sin_aviso": 16,
+      "precision": 0.58,
+      "cobertura": 0.78,
+      "exactitud": 0.77
+    },
+    {
+      "umbral": 6.0,
+      "avisa": 14,
+      "listas_malas_avisadas": 8,
+      "avisos_sobre_listas_buenas": 6,
+      "listas_malas_sin_aviso": 1,
+      "listas_buenas_sin_aviso": 15,
+      "precision": 0.57,
+      "cobertura": 0.89,
+      "exactitud": 0.77
+    },
+    {
+      "umbral": 6.5,
+      "avisa": 15,
+      "listas_malas_avisadas": 9,
+      "avisos_sobre_listas_buenas": 6,
+      "listas_malas_sin_aviso": 0,
+      "listas_buenas_sin_aviso": 15,
+      "precision": 0.6,
+      "cobertura": 1.0,
+      "exactitud": 0.8
+    },
+    {
+      "umbral": 7.0,
+      "avisa": 16,
+      "listas_malas_avisadas": 9,
+      "avisos_sobre_listas_buenas": 7,
+      "listas_malas_sin_aviso": 0,
+      "listas_buenas_sin_aviso": 14,
+      "precision": 0.56,
+      "cobertura": 1.0,
+      "exactitud": 0.77
+    },
+    {
+      "umbral": 7.5,
+      "avisa": 17,
+      "listas_malas_avisadas": 9,
+      "avisos_sobre_listas_buenas": 8,
+      "listas_malas_sin_aviso": 0,
+      "listas_buenas_sin_aviso": 13,
+      "precision": 0.53,
+      "cobertura": 1.0,
+      "exactitud": 0.73
+    },
+    {
+      "umbral": 8.0,
+      "avisa": 19,
+      "listas_malas_avisadas": 9,
+      "avisos_sobre_listas_buenas": 10,
+      "listas_malas_sin_aviso": 0,
+      "listas_buenas_sin_aviso": 11,
+      "precision": 0.47,
+      "cobertura": 1.0,
+      "exactitud": 0.67
+    },
+    {
+      "umbral": 8.5,
+      "avisa": 21,
+      "listas_malas_avisadas": 9,
+      "avisos_sobre_listas_buenas": 12,
+      "listas_malas_sin_aviso": 0,
+      "listas_buenas_sin_aviso": 9,
+      "precision": 0.43,
+      "cobertura": 1.0,
+      "exactitud": 0.6
+    }
+  ],
+  "exactitud_dejando_una_consulta_afuera": 0.77,
+  "umbrales_elegidos_dejando_una_consulta_afuera": {
+    "6.0": 1,
+    "6.5": 29
+  },
+  "por_categoria": {
+    "conceptual": {
+      "consultas": 10,
+      "avisa": 4,
+      "listas_malas": 1
+    },
+    "visual": {
+      "consultas": 10,
+      "avisa": 9,
+      "listas_malas": 6
+    },
+    "ambiguo": {
+      "consultas": 10,
+      "avisa": 3,
+      "listas_malas": 2
+    }
+  },
+  "por_consulta": {
+    "c01-ambiguo": {
+      "confianza": 8.4,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.66,
+      "avisa": false
+    },
+    "c01-conceptual": {
+      "confianza": 5.2,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.79,
+      "avisa": true
+    },
+    "c01-visual": {
+      "confianza": 7.2,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.93,
+      "avisa": false
+    },
+    "c02-ambiguo": {
+      "confianza": 9.0,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c02-conceptual": {
+      "confianza": 9.0,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.92,
+      "avisa": false
+    },
+    "c02-visual": {
+      "confianza": 3.8,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.9,
+      "avisa": true
+    },
+    "c03-ambiguo": {
+      "confianza": 8.6,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.86,
+      "avisa": false
+    },
+    "c03-conceptual": {
+      "confianza": 6.8,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.93,
+      "avisa": true
+    },
+    "c03-visual": {
+      "confianza": 3.6,
+      "obras_de_grado_2": 2,
+      "ndcg": 0.8,
+      "avisa": true
+    },
+    "c04-ambiguo": {
+      "confianza": 5.8,
+      "obras_de_grado_2": 0,
+      "ndcg": 0.0,
+      "avisa": true
+    },
+    "c04-conceptual": {
+      "confianza": 4.0,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.72,
+      "avisa": true
+    },
+    "c04-visual": {
+      "confianza": 3.4,
+      "obras_de_grado_2": 0,
+      "ndcg": 0.49,
+      "avisa": true
+    },
+    "c05-ambiguo": {
+      "confianza": 6.4,
+      "obras_de_grado_2": 0,
+      "ndcg": 0.0,
+      "avisa": true
+    },
+    "c05-conceptual": {
+      "confianza": 9.0,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c05-visual": {
+      "confianza": 3.2,
+      "obras_de_grado_2": 1,
+      "ndcg": 0.4,
+      "avisa": true
+    },
+    "c06-ambiguo": {
+      "confianza": 9.0,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.53,
+      "avisa": false
+    },
+    "c06-conceptual": {
+      "confianza": 7.6,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.76,
+      "avisa": false
+    },
+    "c06-visual": {
+      "confianza": 2.4,
+      "obras_de_grado_2": 1,
+      "ndcg": 0.43,
+      "avisa": true
+    },
+    "c07-ambiguo": {
+      "confianza": 9.0,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c07-conceptual": {
+      "confianza": 5.4,
+      "obras_de_grado_2": 2,
+      "ndcg": 0.78,
+      "avisa": true
+    },
+    "c07-visual": {
+      "confianza": 2.8,
+      "obras_de_grado_2": 1,
+      "ndcg": 0.5,
+      "avisa": true
+    },
+    "c08-ambiguo": {
+      "confianza": 7.6,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c08-conceptual": {
+      "confianza": 8.8,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.93,
+      "avisa": false
+    },
+    "c08-visual": {
+      "confianza": 2.2,
+      "obras_de_grado_2": 2,
+      "ndcg": 0.35,
+      "avisa": true
+    },
+    "c09-ambiguo": {
+      "confianza": 8.0,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.65,
+      "avisa": false
+    },
+    "c09-conceptual": {
+      "confianza": 8.6,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c09-visual": {
+      "confianza": 5.8,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.86,
+      "avisa": true
+    },
+    "c10-ambiguo": {
+      "confianza": 5.4,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.78,
+      "avisa": true
+    },
+    "c10-conceptual": {
+      "confianza": 9.2,
+      "obras_de_grado_2": 5,
+      "ndcg": 1.0,
+      "avisa": false
+    },
+    "c10-visual": {
+      "confianza": 2.0,
+      "obras_de_grado_2": 3,
+      "ndcg": 0.82,
+      "avisa": true
+    }
+  }
+}

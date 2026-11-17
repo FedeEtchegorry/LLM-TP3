@@ -1,39 +1,54 @@
 {
   "C3·filtro100·metadata": {
     "nombre": "C3 + metadata (sin reranker)",
-    "consultas": 40,
-    "repeticiones": 1,
+    "consultas": 30,
+    "repeticiones": 3,
     "filas": [
       {
         "repeticion": 1,
-        "ndcg": 0.622,
+        "ndcg": 0.629,
+        "pares_sin_juzgar": 0
+      },
+      {
+        "repeticion": 2,
+        "ndcg": 0.629,
+        "pares_sin_juzgar": 0
+      },
+      {
+        "repeticion": 3,
+        "ndcg": 0.629,
         "pares_sin_juzgar": 0
       }
     ],
     "rango_de_la_media": 0.0,
-    "jaccard_medio_del_top5": NaN,
+    "jaccard_medio_del_top5": 1.0,
     "consultas_con_top5_distinto": 0,
     "rango_medio_de_ndcg_por_consulta": 0.0
   },
   "C4·filtro100·metadata·rerank20": {
     "nombre": "C4 + metadata (reranker mini, 20)",
-    "consultas": 40,
-    "repeticiones": 2,
+    "consultas": 30,
+    "repeticiones": 3,
     "filas": [
       {
         "repeticion": 1,
-        "ndcg": 0.774,
-        "pares_sin_juzgar": 1
+        "ndcg": 0.746,
+        "pares_sin_juzgar": 0
       },
       {
         "repeticion": 2,
-        "ndcg": 0.753,
-        "pares_sin_juzgar": 4
+        "ndcg": 0.724,
+        "pares_sin_juzgar": 3
+      },
+      {
+        "repeticion": 3,
+        "ndcg": 0.727,
+        "pares_sin_juzgar": 6
       }
     ],
-    "rango_de_la_media": 0.021,
-    "jaccard_medio_del_top5": 0.782,
-    "consultas_con_top5_distinto": 29,
-    "rango_medio_de_ndcg_por_consulta": 0.047
+    "rango_de_la_media": 0.022,
+    "jaccard_medio_del_top5": 0.792,
+    "consultas_con_top5_distinto": 26,
+    "rango_medio_de_ndcg_por_consulta": 0.076
   }
 }
