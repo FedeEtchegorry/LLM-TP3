@@ -75,6 +75,8 @@ ALIAS_DE_CULTURA: Mapping[str, tuple[str, ...]] = {
     "Greece": ("grecia", "griego", "griega", "griegos", "griegas", "greece", "greek"),
 }
 
+_FORMAS_DE_CULTURA = frozenset(f for formas in ALIAS_DE_CULTURA.values() for f in formas)
+
 # Artista: pocas obras por artista, así que el mínimo es el top_k y no las 20 del reranker.
 MÍNIMO_DE_OBRAS_ARTISTA = 5
 
@@ -83,7 +85,8 @@ MÍNIMO_DE_OBRAS_ARTISTA = 5
 ALIAS_DE_TECNICA: Mapping[tuple[str, ...], tuple[str, ...]] = {
     ("oleo",): ("oleo", "al oleo", "oil"),
     ("temple_sobre_papel", "temple_sobre_tabla"): ("tempera", "temple"),
-    ("tinta_sobre_papel_o_seda",): ("tinta", "acuarela", "acuarelas", "ink", "watercolor"),
+    # sin «acuarela»: la familia de tinta tiene 815 obras y solo 23 son acuarelas
+    ("tinta_sobre_papel_o_seda",): ("tinta", "ink"),
     ("pastel_o_gouache",): ("al pastel", "gouache", "guache"),
     ("fresco_o_muro",): ("al fresco", "mural", "murales", "fresco mural"),
 }
@@ -115,6 +118,16 @@ MOVIMIENTOS: Mapping[str, tuple[int, int]] = {
     **dict.fromkeys(("prerrafaelita", "prerrafaelitas", "pre-raphaelite", "pre raphaelite"), (1848, 1900)),
     **dict.fromkeys(("sintetismo", "sintetista", "synthetism", "synthetist"), (1888, 1900)),
 }
+
+# Un movimiento excluye estas culturas: «barroco» por `year` solo traía 273 obras japonesas y 236 chinas
+# de 1.364. Palabra entera («India» cubre `Mughal India`). Una cultura que no esté acá queda adentro.
+NO_OCCIDENTALES: tuple[str, ...] = (
+    "China", "Chinese", "Japan", "India", "Korea", "Tibet", "Sino-Tibet", "Sino-Tibetan", "Nepal",
+    "Iran", "Mongolia", "Afghanistan", "Pakistan", "Bangladesh", "Sri Lanka", "Thailand",
+    "Rajasthan", "Guangdong", "Deccan", "Central Asia", "Middle East", "Shiraz", "Isfahan",
+    "Bukhara", "Murshidabad", "Jodhpur", "Jaipur", "Kota", "Bundi", "Lucknow", "Avadh", "Ueno",
+    "Andhra Pradesh", "Egypt", "Africa", "Ethiopia", "Algeria",
+)
 
 # Épocas del dataset (salen de `culture_raw`, por ejemplo «Japan, Edo period (1615–1868)»).
 # El índice solo conserva el primer componente de `culture` («Japan»), así que una época se
@@ -224,9 +237,12 @@ def _romano(texto: str) -> int | None:
 
 
 def periodos_pedidos(pedido: str) -> tuple[tuple[int, int], ...]:
-    """Los rangos de `year` que el pedido nombra: «siglo XVII», «17th century», «barroco»."""
+    """Los rangos de `year` que el pedido nombra: «siglo XVII», «siglos XVI y XVII», «17th century»,
+    «entre 1850 y 1900», «1650» y «barroco»."""
     texto = _normalizar(pedido)
-    siglos = [m for m in re.findall(r"\bsiglos?\s+([a-z0-9]+)\b", texto)]
+    siglos = []
+    for grupo in re.findall(r"\bsiglos?\s+([a-z0-9]+(?:\s*(?:,|y|e|o|a|-)\s*[a-z0-9]+)*)", texto):
+        siglos += re.findall(r"[a-z0-9]+", grupo)
     siglos += re.findall(r"\b(\d{1,2})(?:st|nd|rd|th)\s+century\b", texto)
     siglos += re.findall(r"\b([ivx]+)\s+century\b", texto)
     rangos = []
@@ -234,6 +250,24 @@ def periodos_pedidos(pedido: str) -> tuple[tuple[int, int], ...]:
         n = int(token) if token.isdigit() else _romano(token)
         if n and 1 <= n <= 21:
             rangos.append(((n - 1) * 100, n * 100))
+    anio = r"(1[0-9]{3}|20[0-2][0-9])"
+    for a, b in re.findall(rf"\b{anio}\s*(?:y|a|al|-|hasta|to)\s*{anio}\b", texto):
+        rangos.append((min(int(a), int(b)), max(int(a), int(b))))
+    texto = re.sub(rf"\b{anio}\s*(?:y|a|al|-|hasta|to)\s*{anio}\b", " ", texto)
+    # shortcut: un año suelto abre ±10 años porque `year` es aproximado, afinar si hay ruido
+    rangos += [(int(a) - 10, int(a) + 10) for a in re.findall(rf"\b{anio}\b", texto)]
+    movimientos = movimientos_pedidos(pedido)
+    # siglo y movimiento se cruzan, y si no se tocan («barroco del siglo XIX») queda la unión
+    cruces = [
+        (max(a, c), min(b, d)) for a, b in rangos for c, d in movimientos if max(a, c) < min(b, d)
+    ]
+    return tuple(dict.fromkeys(cruces or [*rangos, *movimientos]))
+
+
+def movimientos_pedidos(pedido: str) -> tuple[tuple[int, int], ...]:
+    """Los rangos de `year` de los movimientos que el pedido nombra («barroco», «impresionista»)."""
+    texto = _normalizar(pedido)
+    rangos = []
     # «post-impresionista» se quita antes para que no cuente también como impresionismo.
     if re.search(r"\bpost[- ]?impres", texto):
         rangos.append(_POSTIMPRESIONISMO)
@@ -264,7 +298,8 @@ def artistas_pedidos(pedido: str, vocabulario: Iterable[str]) -> tuple[str, ...]
     elegidos = []
     for artista in set(vocabulario):
         nombre = _normalizar(artista)
-        if not nombre or nombre.startswith(("style of", "attributed", "master of")):
+        # «French» y «Dutch» figuran como artista de algunas obras
+        if not nombre or nombre.startswith(("style of", "attributed", "master of")) or nombre in _FORMAS_DE_CULTURA:
             continue
         apellido = nombre.split()[-1]
         if re.search(rf"\b{re.escape(nombre)}\b", texto) or (

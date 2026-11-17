@@ -10,14 +10,6 @@ from tp3_rag.puertos.indice_vectorial import ARTWORKS, KNOWLEDGE
 
 AGREGACIONES: tuple[str, ...] = ("mejor_fragmento", "suma_de_los_2_mejores")
 
-def _año(ficha) -> int | None:
-    """`year` como entero. El índice lo guarda como texto y comparar texto con entero rompe la rama."""
-    try:
-        return int(ficha.get("year"))
-    except (TypeError, ValueError):
-        return None
-
-
 def agregar_por_obra(
     hits: Sequence[tuple[str, float, str]], *, agregacion: str
 ) -> list[tuple[str, float, tuple[str, ...]]]:
@@ -120,6 +112,9 @@ class RecuperadorTextual(Etapa):
         def aplicar(obras: set[str], minimo: int, eje: str) -> dict:
             if len(obras) < minimo:
                 return {"n_obras": len(obras), "motivo": f"menos de {minimo} obras cumplen el filtro"}
+            # ejes que solos alcanzan pueden dar una intersección vacía (china + óleo + siglo XVII)
+            if conjuntos and len(obras.intersection(*conjuntos)) < minimo:
+                return {"n_obras": len(obras), "motivo": f"junto con los otros ejes dejaría menos de {minimo} obras"}
             conjuntos.append(obras)
             return {"n_obras": len(obras)}
 
@@ -148,11 +143,21 @@ class RecuperadorTextual(Etapa):
 
         rangos = fm.periodos_pedidos(pedido)
         if rangos:
+            solo_occidente = bool(fm.movimientos_pedidos(pedido))
+            no_occidentales = set(
+                fm.valores_que_cumplen(fm.NO_OCCIDENTALES, [str(m.get(fm.CAMPO) or "") for m in fichas.values()])
+            )
             obras = {
                 i for i, m in fichas.items()
-                if _año(m) is not None and any(d <= _año(m) <= h for d, h in rangos)
+                if isinstance(m.get("year"), int)
+                and any(d <= m["year"] <= h for d, h in rangos)
+                and not (solo_occidente and str(m.get(fm.CAMPO) or "") in no_occidentales)
             }
-            registro["periodo"] = {"rangos": [list(r) for r in rangos], **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "periodo")}
+            registro["periodo"] = {
+                "rangos": [list(r) for r in rangos],
+                "movimiento_solo_occidente": solo_occidente,
+                **aplicar(obras, fm.MÍNIMO_DE_OBRAS, "periodo"),
+            }
 
         epocas = fm.epocas_pedidas(pedido)
         if epocas:
@@ -162,7 +167,7 @@ class RecuperadorTextual(Etapa):
                 valores = set(fm.valores_que_cumplen(terminos_de_la_epoca, culturas.values()))
                 obras |= {
                     i for i, m in fichas.items()
-                    if culturas[i] in valores and _año(m) is not None and desde <= _año(m) <= hasta
+                    if culturas[i] in valores and isinstance(m.get("year"), int) and desde <= m["year"] <= hasta
                 }
             registro["epoca"] = {
                 "epocas": [[list(c), d, h] for c, d, h in epocas],
