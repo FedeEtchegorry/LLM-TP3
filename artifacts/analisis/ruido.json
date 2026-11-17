@@ -6,17 +6,17 @@
     "filas": [
       {
         "repeticion": 1,
-        "ndcg": 0.629,
+        "ndcg": 0.626,
         "pares_sin_juzgar": 0
       },
       {
         "repeticion": 2,
-        "ndcg": 0.629,
+        "ndcg": 0.626,
         "pares_sin_juzgar": 0
       },
       {
         "repeticion": 3,
-        "ndcg": 0.629,
+        "ndcg": 0.626,
         "pares_sin_juzgar": 0
       }
     ],
@@ -32,23 +32,23 @@
     "filas": [
       {
         "repeticion": 1,
-        "ndcg": 0.746,
+        "ndcg": 0.742,
         "pares_sin_juzgar": 0
       },
       {
         "repeticion": 2,
-        "ndcg": 0.724,
-        "pares_sin_juzgar": 3
+        "ndcg": 0.74,
+        "pares_sin_juzgar": 0
       },
       {
         "repeticion": 3,
-        "ndcg": 0.727,
-        "pares_sin_juzgar": 6
+        "ndcg": 0.749,
+        "pares_sin_juzgar": 0
       }
     ],
-    "rango_de_la_media": 0.022,
+    "rango_de_la_media": 0.009,
     "jaccard_medio_del_top5": 0.792,
     "consultas_con_top5_distinto": 26,
-    "rango_medio_de_ndcg_por_consulta": 0.076
+    "rango_medio_de_ndcg_por_consulta": 0.065
   }
 }

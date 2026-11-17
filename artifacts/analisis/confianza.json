@@ -147,8 +147,8 @@
     },
     "c01-conceptual": {
       "confianza": 5.2,
-      "obras_de_grado_2": 3,
-      "ndcg": 0.79,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.93,
       "avisa": true
     },
     "c01-visual": {
@@ -190,7 +190,7 @@
     "c03-visual": {
       "confianza": 3.6,
       "obras_de_grado_2": 2,
-      "ndcg": 0.8,
+      "ndcg": 0.72,
       "avisa": true
     },
     "c04-ambiguo": {
@@ -214,7 +214,7 @@
     "c05-ambiguo": {
       "confianza": 6.4,
       "obras_de_grado_2": 0,
-      "ndcg": 0.0,
+      "ndcg": 0.28,
       "avisa": true
     },
     "c05-conceptual": {
@@ -237,14 +237,14 @@
     },
     "c06-conceptual": {
       "confianza": 7.6,
-      "obras_de_grado_2": 3,
-      "ndcg": 0.76,
+      "obras_de_grado_2": 4,
+      "ndcg": 0.93,
       "avisa": false
     },
     "c06-visual": {
       "confianza": 2.4,
       "obras_de_grado_2": 1,
-      "ndcg": 0.43,
+      "ndcg": 0.4,
       "avisa": true
     },
     "c07-ambiguo": {
@@ -280,7 +280,7 @@
     "c08-visual": {
       "confianza": 2.2,
       "obras_de_grado_2": 2,
-      "ndcg": 0.35,
+      "ndcg": 0.51,
       "avisa": true
     },
     "c09-ambiguo": {
