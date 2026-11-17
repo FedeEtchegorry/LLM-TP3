@@ -1,0 +1,71 @@
+﻿[18:56:41] GASTO  0.00 USD hasta ahora; 'mixtas C0-C4' estima 0.70; tope 4.50
+[18:56:41] ...  Tests
+[18:56:50] OK  Tests
+[18:56:50] ...  Autorar el set mixto
+[18:56:53] OK  Autorar el set mixto
+[18:56:53] ...  C0 mixtas
+[18:57:51] OK  C0 mixtas
+[18:57:51] ...  C1 mixtas
+[19:00:06] OK  C1 mixtas
+[19:00:06] ...  C2 mixtas
+[19:02:50] OK  C2 mixtas
+[19:02:50] ...  C3 + metadata mixtas
+[19:04:55] OK  C3 + metadata mixtas
+[19:04:55] ...  C4 + metadata mixtas (1)
+[19:13:41] OK  C4 + metadata mixtas (1)
+[19:13:41] ...  C4 + metadata mixtas (2)
+[19:21:59] OK  C4 + metadata mixtas (2)
+[19:22:19] GASTO  0.65 USD hasta ahora; 'luna' estima 0.35; tope 4.50
+[19:22:19] ...  Prueba luna c01-conceptual
+[19:24:06] OK  Prueba luna c01-conceptual
+[19:24:14] OK  prueba luna: puntuo todo, USD 0.0106 por consulta
+[19:24:14] ...  luna, 30 consultas
+[20:04:02] OK  luna, 30 consultas
+[20:04:02] ...  luna, mixtas
+[20:19:31] OK  luna, mixtas
+[20:19:36] GASTO  1.05 USD hasta ahora; 'v2 mixtas' estima 0.30; tope 4.50
+[20:19:36] ...  C4 prompt v2 mixtas
+[20:29:00] OK  C4 prompt v2 mixtas
+[20:29:05] GASTO  1.37 USD hasta ahora; 'luna con 40 candidatas' estima 0.60; tope 4.50
+[20:29:05] ...  luna 40 candidatas, 30 consultas
+[21:44:38] OK  luna 40 candidatas, 30 consultas
+[21:44:38] ...  luna 40 candidatas, mixtas
+[22:15:59] OK  luna 40 candidatas, mixtas
+[22:16:03] GASTO  2.04 USD hasta ahora; 'mini con 40 candidatas, mixtas' estima 0.55; tope 4.50
+[22:16:03] ...  mini 40 candidatas, mixtas
+[22:28:58] OK  mini 40 candidatas, mixtas
+[22:29:02] GASTO  2.53 USD hasta ahora; 'terra (conceptuales + mixtas)' estima 1.50; tope 4.50
+[22:29:02] ...  Prueba terra c01-conceptual
+[22:30:49] OK  Prueba terra c01-conceptual
+[22:30:56] OK  prueba terra: puntuo todo, USD 0.0634 por consulta
+[22:30:56] ...  terra c01-conceptual
+[22:32:40] OK  terra c01-conceptual
+[22:32:40] ...  terra c02-conceptual
+[22:34:30] OK  terra c02-conceptual
+[22:34:30] ...  terra c03-conceptual
+[22:36:08] OK  terra c03-conceptual
+[22:36:08] ...  terra c04-conceptual
+[22:37:46] OK  terra c04-conceptual
+[22:37:46] ...  terra c05-conceptual
+[22:39:18] OK  terra c05-conceptual
+[22:39:18] ...  terra c06-conceptual
+[22:40:52] OK  terra c06-conceptual
+[22:40:52] ...  terra c07-conceptual
+[22:42:39] OK  terra c07-conceptual
+[22:42:39] ...  terra c08-conceptual
+[22:44:11] OK  terra c08-conceptual
+[22:44:11] ...  terra c09-conceptual
+[22:45:52] OK  terra c09-conceptual
+[22:45:52] ...  terra c10-conceptual
+[22:47:33] OK  terra c10-conceptual
+[22:47:33] ...  terra, mixtas
+[23:02:03] OK  terra, mixtas
+[23:02:03] ...  Analisis de cascada
+[23:02:10] OK  Analisis de cascada
+[23:02:10] ...  Ruido entre repeticiones
+[23:02:12] OK  Ruido entre repeticiones
+[23:02:12] ...  Ablacion C0-C4
+[23:02:18] OK  Ablacion C0-C4
+[23:02:18] ...  Gasto medido
+[23:02:23] OK  Gasto medido
+[23:02:25] GASTO  total de este script: USD 3.78

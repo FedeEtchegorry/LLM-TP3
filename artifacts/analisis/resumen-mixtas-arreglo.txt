@@ -1,0 +1,17 @@
+﻿[01:02:08] ...  Test del filtro
+[01:02:13] OK  Test del filtro
+[01:02:17] GASTO  0.00 USD hasta ahora; 'C3 mixtas' estima 0.05; tope 0.80
+[01:02:17] ...  C3 + metadata mixtas
+[01:04:24] OK  C3 + metadata mixtas
+[01:04:29] GASTO  0.03 USD hasta ahora; 'C4 mixtas' estima 0.25; tope 0.80
+[01:04:29] ...  C4 + metadata mixtas
+[01:12:28] OK  C4 + metadata mixtas
+[01:12:33] GASTO  0.31 USD hasta ahora; 'v2 mixtas' estima 0.30; tope 0.80
+[01:12:33] ...  C4 prompt v2 mixtas
+[01:21:27] OK  C4 prompt v2 mixtas
+[01:21:32] GASTO  0.62 USD hasta ahora; 'luna mixtas' estima 0.10; tope 0.80
+[01:21:32] ...  luna, mixtas
+[01:40:23] OK  luna, mixtas
+[01:40:23] ...  Planilla de mixtas
+[01:40:27] OK  Planilla de mixtas
+[01:40:30] GASTO  total de este script: USD 0.73

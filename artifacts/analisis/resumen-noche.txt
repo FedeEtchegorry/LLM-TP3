@@ -1,0 +1,60 @@
+﻿[01:01:52] ...  Prueba C3 c01-conceptual
+[01:02:20] OK  Prueba C3 c01-conceptual
+[01:02:20] ...  C3 + metadata, 30 consultas (1)
+[01:06:27] OK  C3 + metadata, 30 consultas (1)
+[01:06:27] ...  C4 + metadata, 30 consultas (1)
+[01:25:28] OK  C4 + metadata, 30 consultas (1)
+[01:25:28] ...  C3 + metadata, 30 consultas (2)
+[01:29:30] OK  C3 + metadata, 30 consultas (2)
+[01:29:30] ...  C4 + metadata, 30 consultas (2)
+[01:47:28] OK  C4 + metadata, 30 consultas (2)
+[01:47:28] ...  C4 prompt v2 + metadata, 30 consultas
+[02:09:48] OK  C4 prompt v2 + metadata, 30 consultas
+[02:10:02] GASTO  2.74 USD hasta ahora; 'mixtas C0-C4' estima 0.70; tope 7.50
+[02:10:02] ...  Tests del set mixto
+[02:10:09] OK  Tests del set mixto
+[02:10:09] ...  Autorar el set mixto
+[02:10:11] FALLO  Autorar el set mixto (codigo 1)
+[02:10:13] GASTO  2.74 USD hasta ahora; 'luna' estima 0.35; tope 7.50
+[02:10:13] ...  Prueba luna c01-conceptual
+[02:10:53] OK  Prueba luna c01-conceptual
+[02:10:56] OK  prueba luna costo USD 0.0028 (esperado ~0,007)
+[02:10:56] ...  luna, 30 consultas
+[02:19:33] OK  luna, 30 consultas
+[02:19:37] GASTO  2.83 USD hasta ahora; '40 candidatas con mini' estima 2.30; tope 7.50
+[02:19:37] ...  C4 metadata 40 candidatas, 30 consultas
+[02:53:09] OK  C4 metadata 40 candidatas, 30 consultas
+[02:53:12] GASTO  4.37 USD hasta ahora; 'terra (conceptuales + mixtas)' estima 1.50; tope 7.50
+[02:53:12] ...  Prueba terra c01-conceptual
+[02:53:51] OK  Prueba terra c01-conceptual
+[02:53:54] OK  prueba terra costo USD 0.0027 (esperado ~0,07)
+[02:53:54] ...  terra c01-conceptual
+[02:54:30] OK  terra c01-conceptual
+[02:54:30] ...  terra c02-conceptual
+[02:54:59] OK  terra c02-conceptual
+[02:54:59] ...  terra c03-conceptual
+[02:55:28] OK  terra c03-conceptual
+[02:55:28] ...  terra c04-conceptual
+[02:55:58] OK  terra c04-conceptual
+[02:55:58] ...  terra c05-conceptual
+[02:56:30] OK  terra c05-conceptual
+[02:56:30] ...  terra c06-conceptual
+[02:57:00] OK  terra c06-conceptual
+[02:57:00] ...  terra c07-conceptual
+[02:57:29] OK  terra c07-conceptual
+[02:57:29] ...  terra c08-conceptual
+[02:58:02] OK  terra c08-conceptual
+[02:58:02] ...  terra c09-conceptual
+[02:58:33] OK  terra c09-conceptual
+[02:58:33] ...  terra c10-conceptual
+[02:59:03] OK  terra c10-conceptual
+[02:59:07] GASTO  4.40 USD hasta ahora; 'luna con 40 candidatas' estima 0.60; tope 7.50
+[02:59:07] ...  luna 40 candidatas, 30 consultas
+[03:11:54] OK  luna 40 candidatas, 30 consultas
+[03:11:54] ...  Analisis de cascada
+[03:12:00] OK  Analisis de cascada
+[03:12:00] ...  Ablacion C0-C4
+[03:12:05] OK  Ablacion C0-C4
+[03:12:05] ...  Gasto medido
+[03:12:07] FALLO  Gasto medido (codigo 1)
+[03:12:09] GASTO  total de este script: USD 4.49
