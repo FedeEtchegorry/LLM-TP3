@@ -92,13 +92,29 @@ def ruido():
 def modelos(e):
     luna, terra = C4 + "·gpt-6-luna", C4 + "·gpt-6.1-terra"
     presentes = [(n, k, col) for n, k, col in (("gpt-6-luna", luna, AZUL), ("gpt-4.1-mini", C4, NARANJA), ("gpt-6.1-terra", terra, VERDE)) if k in e]
-    fig, ax = plt.subplots(figsize=(9.5, 4.6))
-    _barras_por_tipo(ax, [(n, col, e[k]["ndcg"] if e[k]["consultas"] == 30 else {"conceptual": e[k]["ndcg"]["conceptual"]}) for n, k, col in presentes])
+    # Las mixtas salen de mixtas.py y entran como un grupo más, aparte de «todas» (que son las 30).
+    mixtas = {}
+    if (S / "mixtas.json").exists():
+        mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
+    en_mixtas = {luna: "C4 luna", C4: "C4", terra: "C4 terra"}
+    tipos = (*TIPOS, "mixtas") if mixtas else TIPOS
+    series = []
+    for n, k, col in presentes:
+        valores = dict(e[k]["ndcg"]) if e[k]["consultas"] == 30 else {"conceptual": e[k]["ndcg"]["conceptual"]}
+        if mixtas:
+            valores["mixtas"] = (mixtas.get(en_mixtas[k]) or {}).get("ndcg")
+        series.append((n, col, valores))
+    fig, ax = plt.subplots(figsize=(11 if mixtas else 9.5, 4.6))
+    _barras_por_tipo(ax, series, tipos)
+    if mixtas:
+        ax.axvline(len(TIPOS) - 0.5, color=GRIS, linewidth=1, linestyle=":")
     ax.legend(fontsize=9, loc="upper right", ncol=3)
     corto = {"gpt-6-luna": "luna", "gpt-4.1-mini": "mini", "gpt-6.1-terra": "terra"}
-    nota = "Pares sin juzgar, que cuentan como 0: " + ", ".join(f"{corto[n]} {_es(e[k]['pct_sin_juzgar'], 0)} %" for n, k, _ in presentes) + "."
+    nota = "Set de 30, pares sin juzgar (cuentan como 0): " + ", ".join(f"{corto[n]} {_es(e[k]['pct_sin_juzgar'], 0)} %" for n, k, _ in presentes) + "."
     if terra in e and e[terra]["consultas"] != 30:
-        nota += f" Terra se corrió solo en las {e[terra]['consultas']} conceptuales."
+        nota += f" Terra, solo en las {e[terra]['consultas']} conceptuales."
+    if mixtas:
+        nota += " Mixtas: 10 consultas, todas juzgadas."
     ax.set_title("Calidad por modelo de reranker (C4, 20 candidatas)", fontsize=11, pad=22)
     ax.text(0.5, 1.02, nota, transform=ax.transAxes, ha="center", va="bottom", fontsize=8.5, color="#555555")
     _guardar(fig, "modelos-calidad.png")
