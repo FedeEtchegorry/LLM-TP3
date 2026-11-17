@@ -463,7 +463,7 @@ def _mostrar(set_: SetDeConsultas, obs: Observabilidad, *, ruta, ya_estaba: bool
                     f"       desglose: {cp.n_por_etiqueta}"
                 )
 
-    faltan = [cat for cat in CATEGORÍAS if not set_.por_categoria().get(cat)]
+    faltan = [cat for cat, n in set_.por_categoria().items() if not n]
     if faltan:  # pragma: no cover - `validar()` lo vuelve inalcanzable
         obs.decir(f"\n  ⚠️ sin ninguna consulta de categoría {faltan}")
 

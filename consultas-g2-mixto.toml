@@ -1,0 +1,124 @@
+#  Declaración del set COMPLEMENTARIO de consultas mixtas — una por imagen.
+#
+#  Qué es: las mismas 10 imágenes de `consultas-g2.toml`, con UN pedido por imagen que combina
+#  las tres cosas que el set de 30 prueba por separado: un cambio visual (cromático), una
+#  restricción cultural/técnica/de período que activa el filtro de metadata, y un adjetivo vago.
+#  Instrumento aparte: no toca el set de 30 ni sus 634 juicios, y no se elige solo cuando
+#  hay más de un set completo (hay que pasar `--autoria grupo-2-mixto`).
+#
+#  Diseño: 9 de los 10 pedidos activan al menos un eje del filtro (cultura, técnica,
+#  período, época); `c06-mixto` NO activa ninguno y es el control. Cada pedido se probó contra
+#  el filtro y la intersección de sus ejes deja >= 27 obras del corpus indexado (2.605).
+#
+#  Para autorar (no gasta API):
+#    poetry run tp3-consultas autorar --declaracion consultas-g2-mixto.toml
+
+split_id = "5b6cba32126fed61"
+autoria  = "grupo-2-mixto"
+estado   = "completo"
+criterio_de_culture = "primer_componente_por_coma"
+nota = "Set complementario de 10 consultas mixtas sobre las mismas 10 imágenes de grupo-2. La rúbrica de juicio es docs/rubrica-mixta.md y no está en el pool ni en el kappa del set de 30."
+
+[revision]
+n_imagenes_revisadas = 30
+como_se_revisaron = "Las 10 imágenes son las del set grupo-2 (ver consultas-g2.toml: lista corta de 30 candidatas revisadas como hoja de contactos). Acá no se eligieron imágenes nuevas: se escribió un pedido mixto por imagen para poder comparar de a pares con sus pedidos visual, conceptual y ambiguo."
+
+#  ── 01 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:109240"
+atributos = ["paisaje", "paleta_fria", "oleo", "rural"]
+
+[[imagenes.consultas]]
+consulta_id = "c01-mixto"
+categoria   = "mixto"
+pedido      = "este paisaje en tonos más cálidos, pintado al óleo en el siglo XIX, con más calma"
+
+#  ── 02 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:111728"
+atributos = ["marina", "paleta_fria", "barcos", "hielo"]
+
+[[imagenes.consultas]]
+consulta_id = "c02-mixto"
+categoria   = "mixto"
+pedido      = "la misma escena de agua con luz dorada, como en la pintura holandesa, más serena"
+
+#  ── 03 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:159270"
+atributos = ["interior", "arquitectura", "luz_calida", "simetria"]
+
+[[imagenes.consultas]]
+consulta_id = "c03-mixto"
+categoria   = "mixto"
+pedido      = "este interior en tonos más fríos, de la pintura italiana del barroco, más imponente"
+
+#  ── 04 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:65821"
+atributos = ["abstracta", "geometrica", "colores_primarios", "lineas"]
+
+[[imagenes.consultas]]
+consulta_id = "c04-mixto"
+categoria   = "mixto"
+pedido      = "esta composición geométrica con colores más suaves, al óleo en el siglo XX, más ordenada"
+
+#  ── 05 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:105600"
+atributos = ["retrato", "femenino", "fondo_oscuro", "oleo"]
+
+[[imagenes.consultas]]
+consulta_id = "c05-mixto"
+categoria   = "mixto"
+pedido      = "el mismo retrato con una paleta más luminosa, de la pintura francesa del siglo XVIII, más cercano"
+
+#  ── 06 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:145925"
+atributos = ["retrato", "frontal", "antiguo", "encaustica"]
+
+[[imagenes.consultas]]
+consulta_id = "c06-mixto"
+categoria   = "mixto"
+pedido      = "este rostro con colores más apagados, más humano"
+
+#  ── 07 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:155431"
+atributos = ["retrato", "seda", "paleta_calida", "figura_sentada"]
+
+[[imagenes.consultas]]
+consulta_id = "c07-mixto"
+categoria   = "mixto"
+pedido      = "este retrato en tonos más fríos, en la dinastía Ming, más austero"
+
+#  ── 08 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:314432"
+atributos = ["folio", "paleta_calida", "saturado", "batalla"]
+
+[[imagenes.consultas]]
+consulta_id = "c08-mixto"
+categoria   = "mixto"
+pedido      = "esta escena con colores más apagados, en la época Edo, más caótica"
+
+#  ── 09 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "cma:148382"
+atributos = ["tinta", "monocromo", "botanico", "papel"]
+
+[[imagenes.consultas]]
+consulta_id = "c09-mixto"
+categoria   = "mixto"
+pedido      = "este motivo botánico con más color, en tinta japonesa del período Edo, más delicado"
+
+#  ── 10 ──────────────────────────────────────────────────────────────
+[[imagenes]]
+artwork_id = "aic:67362"
+atributos = ["narrativa", "jinete", "religioso", "oleo"]
+
+[[imagenes.consultas]]
+consulta_id = "c10-mixto"
+categoria   = "mixto"
+pedido      = "esta escena con una paleta más oscura, en el arte mogol del siglo XVII, más generosa"

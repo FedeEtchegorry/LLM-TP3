@@ -129,7 +129,7 @@ def set_de_consultas(cfg, almacén, manifiesto, autoria: str | None) -> SetDeCon
                 candidato = SetDeConsultas.leer(almacén, raíz, i, verificar_bytes=False)
             except ErrorDeArtefacto:
                 continue
-            if candidato.es_usable_para_medir:
+            if candidato.es_usable_para_medir and not candidato.es_complementario:
                 completos.append(i)
         if not completos:
             raise ErrorDeArtefacto(

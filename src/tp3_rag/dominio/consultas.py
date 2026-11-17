@@ -15,6 +15,7 @@ QUÉ_ESTRESA = {
     "visual_cromatico": "la rama visual y el valor de α",
     "conceptual_cultural": "la rama de texto (la similitud visual no lo resuelve)",
     "ambiguo": "el pre-retrieval con LLM (hay que interpretar)",
+    "mixto": "las tres cosas a la vez: filtro, CLIP e interpretación del pedido vago",
 }
 
 CATEGORÍA_CULTURAL = "conceptual_cultural"
@@ -24,6 +25,12 @@ ESTADOS: tuple[str, ...] = ("plantilla", "completo")
 N_IMAGENES = 10
 N_PEDIDOS_POR_IMAGEN = 3
 N_CONSULTAS = N_IMAGENES * N_PEDIDOS_POR_IMAGEN
+
+# Set complementario: UNA consulta "mixta" por imagen (cambio visual + restricción que activa el
+# filtro + adjetivo vago). Es un instrumento aparte: no entra en el set de 30 ni en sus juicios,
+# y no se elige solo cuando hay más de un set completo (hay que pasar `--autoria`).
+CATEGORÍA_MIXTA = "mixto"
+N_CONSULTAS_MIXTAS = N_IMAGENES
 
 CLAVES_OBLIGATORIAS = (
     "identidad",
@@ -127,6 +134,12 @@ class SetDeConsultas:
         return self.estado == "completo"
 
     @property
+    def es_complementario(self) -> bool:
+        """Set de consultas mixtas: no reemplaza al de 30 y no se elige solo."""
+        categorías = [c["categoria"] for img in self.contenido["imagenes"] for c in img["consultas"]]
+        return bool(categorías) and all(c == CATEGORÍA_MIXTA for c in categorías)
+
+    @property
     def criterio_de_culture(self) -> str:
         return self.contenido["criterio_de_culture"]
 
@@ -157,7 +170,8 @@ class SetDeConsultas:
         return tuple(c.cultura_pedida for c in self.consultas() if c.cultura_pedida)
 
     def por_categoria(self) -> dict[str, int]:
-        conteo = {cat: 0 for cat in CATEGORÍAS}
+        categorías = (CATEGORÍA_MIXTA,) if self.es_complementario else CATEGORÍAS
+        conteo = {cat: 0 for cat in categorías}
         for c in self.consultas():
             conteo[c.categoria] = conteo.get(c.categoria, 0) + 1
         return conteo
@@ -285,7 +299,7 @@ class SetDeConsultas:
                     f"El prefijo es de `identidad.hash_de_bytes` y existe para que un "
                     f"cambio de algoritmo lo diga en vez de colisionar."
                 )
-            if len(img.consultas) != N_PEDIDOS_POR_IMAGEN:
+            if len(img.consultas) != (1 if self.es_complementario else N_PEDIDOS_POR_IMAGEN):
                 raise ErrorDeArtefacto(
                     f"{self.identidad}: {img.artwork_id} tiene {len(img.consultas)} "
                     f"pedidos y tienen que ser {N_PEDIDOS_POR_IMAGEN}. *'Cada imagen "
@@ -294,7 +308,7 @@ class SetDeConsultas:
                     f"permite el desglose de la tabla de ablación y el delta por categoría del delta por categoría de pedido."
                 )
             categorías = [c.categoria for c in img.consultas]
-            if sorted(categorías) != sorted(CATEGORÍAS):
+            if sorted(categorías) != sorted((CATEGORÍA_MIXTA,) if self.es_complementario else CATEGORÍAS):
                 raise ErrorDeArtefacto(
                     f"{self.identidad}: {img.artwork_id} tiene las categorías "
                     f"{categorías} y tiene que tener **una de cada**: {list(CATEGORÍAS)}. "
@@ -334,7 +348,7 @@ class SetDeConsultas:
                     f"{self.identidad}: {c.consulta_id} no tiene `pedido`. El pedido es "
                     f"la mitad de la consulta (`Consulta` = imagen + pedido, el plan de consulta)."
                 )
-            if c.categoria not in CATEGORÍAS:
+            if c.categoria not in (*CATEGORÍAS, CATEGORÍA_MIXTA):
                 raise ErrorDeArtefacto(
                     f"{self.identidad}: {c.consulta_id} declara "
                     f"`categoria = {c.categoria!r}`, que no es una de {list(CATEGORÍAS)}."
@@ -458,7 +472,9 @@ class SetDeConsultas:
 
         ejemplos = [x for x in consultas if x.es_ejemplo]
         if self.estado == "completo":
-            if len(imágenes) != N_IMAGENES or len(consultas) != N_CONSULTAS:
+            if len(imágenes) != N_IMAGENES or len(consultas) != (
+                N_CONSULTAS_MIXTAS if self.es_complementario else N_CONSULTAS
+            ):
                 raise ErrorDeArtefacto(
                     f"{self.identidad}: `estado = completo` con {len(imágenes)} imágenes y "
                     f"{len(consultas)} consultas. **30 consultas = 10 imágenes × 3 "
