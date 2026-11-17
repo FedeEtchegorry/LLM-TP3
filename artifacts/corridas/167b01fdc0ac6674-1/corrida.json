@@ -1,0 +1,3350 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 45,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 9
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-filtro-metadata.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "c594148ceba902de",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c01-ambiguo",
+  "corrida_id": "167b01fdc0ac6674-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:109240",
+      "categoria": "ambiguo",
+      "consulta_id": "c01-ambiguo",
+      "imagen_hash": "sha256:4ba1a411e0bea2e1ab694abafbff09fa834b112792bc612f05ac3605fc6efd55",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:4758": [
+        {
+          "artist": "John Constable",
+          "artwork_id": "aic:4758",
+          "chunk_index": 0,
+          "fragment_id": "aic:4758::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/4758",
+          "texto": "“What say you to a summer morning?” John Constable wrote of this painting in a letter to a friend. Even after many years living in London, Constable continued to portray the countryside, dear to him from boyhood. Stoke-by-Nayland lies a few miles from his native village of East Bergholt in Suffolk. In this view, he divided the canvas between a brilliant, airy vista toward the hamlet on the left and a shady, tunnel-like country lane leading off to the right. Constable explained in his letter that the painting depicted a speciﬁc time, a morning in “July or August, at eight or nine o’clock, after a slight shower during the night, to enhance the dews in the shadowed part of the picture.” The artist emphasized the abundance of water through his painting technique, ﬂecking the surface with white highlights to create an effect of sparkling wetness. Here, the whole scene appears dewy, with a stream and puddles in the foreground and a central tree that droops from the weight of rainwater, emphasizing the fertile land.\nPainted as much with a palette knife as with brushes, Stoke-by-Nayland lacks the ﬁnish of pictures Constable exhibited publicly; it was meant as a full-scale sketch for a work that he never realized. Nonetheless, this canvas seems to capture Constable’s delight in freely scribbling and scraping the image into existence—what it lacks in detail it gains in atmosphere. The roughness of the surface evokes the textures of real landscape, and the coexistence of natural and built elements in the scene embodies an ideal of harmony indicative of Constable’s vision of rural England.",
+          "title": "Stoke-by-Nayland"
+        },
+        {
+          "artist": "John Constable",
+          "artwork_id": "aic:4758",
+          "chunk_index": 0,
+          "fragment_id": "aic:4758::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/4758",
+          "texto": "Sold, the artist’s estate sale, Foster and Sons, London, May 16, 1838, lot 40 together with a sketch of the Opening of Waterloo Bridge to Joy [Graves 1918 and Day 1968]. Miss Morris; sold June 26, 1860 lot 108 to Cox [annotated sale cat. in the Nederlands Instituut voor Kunstgeschiedenisn, The Haag; copy in curatorial object file. See also Redford 1888]. Jonathan Nield (1790–1887), Dunster House, Rochdale, England; sold, Christie’s, London, May 3, 1879, lot 13 to Permain [annotated sale cat. in curatorial object file. See also Redford 1888, Graves 1918 and Day 1968]. Sir Frederick Thorpe Mappin (1821–1910); sold, his estate sale, Christie’s, London, June 17, 1910, lot 14 to Arthur J. Sulley & Company, London [this and the following according to Knoedler Stock Book 5, no. 12466, Getty Research Institute, Los Angeles; copy in curatorial object file. See also annotated sale cat. in curatorial object file ]; sold to Knoedler and Company, New York, May 1, 1911; sold to Mrs. William Wallace Kimball (died 1921), Chicago, July 11, 1911; given to the Art Institute of Chicago, 1922.",
+          "title": "Stoke-by-Nayland"
+        }
+      ],
+      "aic:97292": [
+        {
+          "artist": "Robert William Vonnoh",
+          "artwork_id": "aic:97292",
+          "chunk_index": 0,
+          "fragment_id": "aic:97292::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/97292",
+          "texto": "Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.",
+          "title": "Spring in France"
+        },
+        {
+          "artist": "Robert William Vonnoh",
+          "artwork_id": "aic:97292",
+          "chunk_index": 0,
+          "fragment_id": "aic:97292::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/97292",
+          "texto": "Samuel Menat, New York, unknown dates; sold to Alexander Fisher, New York,, unknown dates; with Berry-Hill Galleries, New York, by 1982; sold to the Art Institute of Chicago, 1982.",
+          "title": "Spring in France"
+        }
+      ],
+      "cma:122345": [
+        {
+          "artist": "Meindert Hobbema",
+          "artwork_id": "cma:122345",
+          "chunk_index": 0,
+          "fragment_id": "cma:122345::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1942.641",
+          "texto": "Inspired by the native Dutch landscape, Meindert Hobbema specialized in scenes of dense forest growth punctured by winding paths and views toward sunlit clearings that beckon with fertile fields and rustic cottages. Hobbema’s paintings were especially popular among Dutch citizens, who took enormous pride in their land. In addition to nationalistic pride in having recently gained independence from Spain, there was also a profound awareness of the preciousness of land in a low-lying nation, which required dikes, pumps, and constant vigilance to guard against flooding. While the Dutch earned much of their considerable wealth from sea trade, agriculture and livestock were important sources of prosperity.",
+          "title": "A Cottage in the Woods"
+        },
+        {
+          "artist": "Meindert Hobbema",
+          "artwork_id": "cma:122345",
+          "chunk_index": 0,
+          "fragment_id": "cma:122345::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1942.641",
+          "texto": "A windmill, an important symbol of Dutch identity, can be found in the background of this painting.",
+          "title": "A Cottage in the Woods"
+        },
+        {
+          "artist": "Meindert Hobbema",
+          "artwork_id": "cma:122345",
+          "chunk_index": 0,
+          "fragment_id": "cma:122345::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1942.641",
+          "texto": "Mrs. W. Atherton, 1823;\nJudge Sir James Alan Park (1763-1838), who was married to a daughter of Richard Atherton of Preston; Colonel H. M. Clark, London, 1919;\n[Colnaghi & Co., London, 1920];\n[M. Knoedler & Co., New York];\nJohn L. Severance, Cleveland, upon his death, held in trust by the estate.\nEstate of John L. Severance Collection, by bequest to the Cleveland Museum of Art, 1942.",
+          "title": "A Cottage in the Woods"
+        }
+      ],
+      "cma:124078": [
+        {
+          "artist": "Jean Baptiste Camille Corot",
+          "artwork_id": "cma:124078",
+          "chunk_index": 0,
+          "fragment_id": "cma:124078::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1944.80",
+          "texto": "Corot painted this view of a pond near his home at Ville-d'Avray, just west of Paris, in his late style distinguished by soft, hazy forms and gentle, silvery light. Such paintings merge his lifelong study of nature with nostalgic memories and contrast sharply with the more formal compositions and precisely rendered shapes of his early landscapes. Corot's devotion to the direct study of nature was a major influence on the Impressionists.",
+          "title": "Pond at Ville-d'Avray"
+        },
+        {
+          "artist": "Jean Baptiste Camille Corot",
+          "artwork_id": "cma:124078",
+          "chunk_index": 0,
+          "fragment_id": "cma:124078::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1944.80",
+          "texto": "The dreamlike quality of the painting reflects Corot’s desire to reproduce the “first Impression” of the landscape.",
+          "title": "Pond at Ville-d'Avray"
+        },
+        {
+          "artist": "Jean Baptiste Camille Corot",
+          "artwork_id": "cma:124078",
+          "chunk_index": 0,
+          "fragment_id": "cma:124078::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1944.80",
+          "texto": "After 1919 Mrs. Francis F. Prentiss [1865-1944] Cleveland, OH, bequeathed to the Cleveland Museum of Art, 1944.\nThe Cleveland Museum of Art, Cleveland, OH\nM. Goupil. J. Quincy Shaw, Boston, MA, by 1917.",
+          "title": "Pond at Ville-d'Avray"
+        }
+      ],
+      "cma:157104": [
+        {
+          "artist": "Johan Barthold Jongkind",
+          "artwork_id": "cma:157104",
+          "chunk_index": 0,
+          "fragment_id": "cma:157104::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1993.236",
+          "texto": "Fellow artist Edouard Manet considered Jongkind the \"father of modern landscape painting.\"",
+          "title": "The Seine at Bas-Meudon"
+        },
+        {
+          "artist": "Johan Barthold Jongkind",
+          "artwork_id": "cma:157104",
+          "chunk_index": 0,
+          "fragment_id": "cma:157104::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1993.236",
+          "texto": "Although born and trained in Holland, Jongkind spent much of his life painting outdoors in France. In this depiction of Bas-Meudon near Paris, the artist applied paint in small patches of bright color to suggest the intensity of outdoor light. Although typcially finished in the studio from open-air sketches, Jongkind's oil paintings achieve a convincing immediacy that greatly impressed the young Claude Monet. The two met in the early 1860s and spent part of a summer painting together along the coast of Normandy. \"From that time he was my real master,\" Monet later acknowledged, \"it was to him that I owe the final education of my eye.\"",
+          "title": "The Seine at Bas-Meudon"
+        },
+        {
+          "artist": "Johan Barthold Jongkind",
+          "artwork_id": "cma:157104",
+          "chunk_index": 0,
+          "fragment_id": "cma:157104::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1993.236",
+          "texto": "(Possibly Hotel Drouot, Paris, France, April 12-14, 1883, lot 84, sale Bascle Collection, sold to Paul Dutrimont)\n(Galerie George Petit, Paris, France, December 3-4, 1906, sale, Alexandre Blanc Collection, sold to Paul Detrimont, according to annotated catalogue in Frick library)\nSamuel Mather [1851-1931], Cleveland, OH, by descent to his daughter, Constance Mather Bishop\nMrs. Robert H. Bishop, Jr., (Constance Mather Bishop) [1889-1969], Novelty, OH, by descent to her son, Dr. Johnathan S. Bishop\nDr. Johathan S. Bishop, Cleveland, OH, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "The Seine at Bas-Meudon"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:97292::description::0"
+            ],
+            "texto": "La obra utiliza una paleta brillante con pinceladas rotas y colores no mezclados para capturar la vegetación en crecimiento y la luz cálida de un día de primavera, transmitiendo una sensación de vida y frescura.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La presencia de colores intensos como verdes, duraznos y lavandas, junto con elementos domésticos como postes de cerca y ropa blanca colgada, aporta dinamismo y vitalidad a la escena.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:97292"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:122345::description::0"
+            ],
+            "texto": "La pintura representa un paisaje de bosque denso con caminos serpenteantes y vistas hacia claros iluminados por el sol, que invitan a la fertilidad y a la vida rural.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:122345::did_you_know::0"
+            ],
+            "texto": "La inclusión de un molino de viento en el fondo, símbolo importante de la identidad holandesa, añade un elemento cultural que puede sugerir actividad y movimiento en el paisaje.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La escena transmite una sensación de tranquilidad y estabilidad más que de movimiento o vida intensa.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:122345"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:157104::description::0"
+            ],
+            "texto": "El artista aplicó la pintura en pequeños parches de colores brillantes para sugerir la intensidad de la luz al aire libre, lo que aporta inmediatez y viveza a la escena.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La técnica y el uso de colores vivos contribuyen a dar una sensación de vida y frescura en el paisaje representado.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:157104"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:124078::description::0"
+            ],
+            "texto": "La obra se caracteriza por formas suaves y difusas y una luz plateada y gentil, reflejando un estilo nostálgico y onírico.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La calidad onírica y difusa de la pintura sugiere una atmósfera tranquila y contemplativa más que una escena llena de vida o movimiento.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:124078"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:4758::description::0"
+            ],
+            "texto": "La pintura representa una mañana de verano después de una ligera lluvia, con efectos de rocío y humedad que realzan la frescura y vitalidad del paisaje.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:4758::description::0"
+            ],
+            "texto": "El uso de la técnica con espátula y pinceles para crear texturas rugosas y efectos de luz que simulan el agua brillante aporta una sensación de vida y dinamismo a la escena.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La coexistencia de elementos naturales y construidos en armonía contribuye a una representación vibrante y llena de vida del campo inglés.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:4758"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:137195",
+          "rank": 1,
+          "score": 0.6311261653900146
+        },
+        {
+          "artwork_id": "aic:57163",
+          "rank": 2,
+          "score": 0.6309003829956055
+        },
+        {
+          "artwork_id": "aic:79310",
+          "rank": 3,
+          "score": 0.6071395874023438
+        },
+        {
+          "artwork_id": "aic:185185",
+          "rank": 4,
+          "score": 0.6038045287132263
+        },
+        {
+          "artwork_id": "cma:159501",
+          "rank": 5,
+          "score": 0.5984979271888733
+        },
+        {
+          "artwork_id": "aic:72398",
+          "rank": 6,
+          "score": 0.5984458923339844
+        },
+        {
+          "artwork_id": "aic:145807",
+          "rank": 7,
+          "score": 0.5914555788040161
+        },
+        {
+          "artwork_id": "cma:150697",
+          "rank": 8,
+          "score": 0.5870607495307922
+        },
+        {
+          "artwork_id": "aic:30701",
+          "rank": 9,
+          "score": 0.5849589705467224
+        },
+        {
+          "artwork_id": "aic:16340",
+          "rank": 10,
+          "score": 0.5813473463058472
+        },
+        {
+          "artwork_id": "cma:148968",
+          "rank": 11,
+          "score": 0.5709001421928406
+        },
+        {
+          "artwork_id": "cma:79932",
+          "rank": 12,
+          "score": 0.5662738084793091
+        },
+        {
+          "artwork_id": "aic:6005",
+          "rank": 13,
+          "score": 0.5657641887664795
+        },
+        {
+          "artwork_id": "aic:145805",
+          "rank": 14,
+          "score": 0.5643777251243591
+        },
+        {
+          "artwork_id": "aic:152747",
+          "rank": 15,
+          "score": 0.5643728971481323
+        },
+        {
+          "artwork_id": "cma:125093",
+          "rank": 16,
+          "score": 0.558266818523407
+        },
+        {
+          "artwork_id": "cma:152006",
+          "rank": 17,
+          "score": 0.554489254951477
+        },
+        {
+          "artwork_id": "aic:151108",
+          "rank": 18,
+          "score": 0.5479592084884644
+        },
+        {
+          "artwork_id": "cma:143772",
+          "rank": 19,
+          "score": 0.5476661920547485
+        },
+        {
+          "artwork_id": "aic:16564",
+          "rank": 20,
+          "score": 0.542927622795105
+        },
+        {
+          "artwork_id": "cma:168366",
+          "rank": 21,
+          "score": 0.5425376892089844
+        },
+        {
+          "artwork_id": "aic:863",
+          "rank": 22,
+          "score": 0.5422779321670532
+        },
+        {
+          "artwork_id": "cma:144743",
+          "rank": 23,
+          "score": 0.5417317152023315
+        },
+        {
+          "artwork_id": "cma:146752",
+          "rank": 24,
+          "score": 0.540533185005188
+        },
+        {
+          "artwork_id": "aic:4758",
+          "rank": 25,
+          "score": 0.5403816103935242
+        },
+        {
+          "artwork_id": "cma:172785",
+          "rank": 26,
+          "score": 0.5376890897750854
+        },
+        {
+          "artwork_id": "aic:65925",
+          "rank": 27,
+          "score": 0.5335993766784668
+        },
+        {
+          "artwork_id": "cma:172806",
+          "rank": 28,
+          "score": 0.5326306819915771
+        },
+        {
+          "artwork_id": "aic:220730",
+          "rank": 29,
+          "score": 0.5312660336494446
+        },
+        {
+          "artwork_id": "aic:183293",
+          "rank": 30,
+          "score": 0.5311754941940308
+        },
+        {
+          "artwork_id": "cma:173730",
+          "rank": 31,
+          "score": 0.5291112661361694
+        },
+        {
+          "artwork_id": "cma:124078",
+          "rank": 32,
+          "score": 0.5287060737609863
+        },
+        {
+          "artwork_id": "cma:122345",
+          "rank": 33,
+          "score": 0.5278088450431824
+        },
+        {
+          "artwork_id": "cma:150693",
+          "rank": 34,
+          "score": 0.5249754190444946
+        },
+        {
+          "artwork_id": "cma:128371",
+          "rank": 35,
+          "score": 0.5239639282226562
+        },
+        {
+          "artwork_id": "aic:64724",
+          "rank": 36,
+          "score": 0.5219696760177612
+        },
+        {
+          "artwork_id": "cma:140078",
+          "rank": 37,
+          "score": 0.5214724540710449
+        },
+        {
+          "artwork_id": "cma:172782",
+          "rank": 38,
+          "score": 0.5205988883972168
+        },
+        {
+          "artwork_id": "aic:146272",
+          "rank": 39,
+          "score": 0.5201860070228577
+        },
+        {
+          "artwork_id": "cma:143234",
+          "rank": 40,
+          "score": 0.5188738107681274
+        },
+        {
+          "artwork_id": "aic:209969",
+          "rank": 41,
+          "score": 0.5184034109115601
+        },
+        {
+          "artwork_id": "cma:150353",
+          "rank": 42,
+          "score": 0.5181707143783569
+        },
+        {
+          "artwork_id": "aic:68388",
+          "rank": 43,
+          "score": 0.5174505710601807
+        },
+        {
+          "artwork_id": "cma:134620",
+          "rank": 44,
+          "score": 0.5172218084335327
+        },
+        {
+          "artwork_id": "aic:214269",
+          "rank": 45,
+          "score": 0.5169790983200073
+        },
+        {
+          "artwork_id": "aic:100061",
+          "rank": 46,
+          "score": 0.5162826180458069
+        },
+        {
+          "artwork_id": "aic:238272",
+          "rank": 47,
+          "score": 0.5161190032958984
+        },
+        {
+          "artwork_id": "cma:147017",
+          "rank": 48,
+          "score": 0.5157284736633301
+        },
+        {
+          "artwork_id": "aic:28849",
+          "rank": 49,
+          "score": 0.515120267868042
+        },
+        {
+          "artwork_id": "cma:145999",
+          "rank": 50,
+          "score": 0.5139641761779785
+        },
+        {
+          "artwork_id": "aic:97292",
+          "rank": 51,
+          "score": 0.5136399269104004
+        },
+        {
+          "artwork_id": "cma:150054",
+          "rank": 52,
+          "score": 0.512589156627655
+        },
+        {
+          "artwork_id": "cma:157104",
+          "rank": 53,
+          "score": 0.5106909871101379
+        },
+        {
+          "artwork_id": "aic:79716",
+          "rank": 54,
+          "score": 0.5106410384178162
+        },
+        {
+          "artwork_id": "cma:144286",
+          "rank": 55,
+          "score": 0.5103229284286499
+        },
+        {
+          "artwork_id": "cma:164314",
+          "rank": 56,
+          "score": 0.5098430514335632
+        },
+        {
+          "artwork_id": "cma:93014",
+          "rank": 57,
+          "score": 0.5093815922737122
+        },
+        {
+          "artwork_id": "cma:140155",
+          "rank": 58,
+          "score": 0.5089014768600464
+        },
+        {
+          "artwork_id": "cma:138430",
+          "rank": 59,
+          "score": 0.5084197521209717
+        },
+        {
+          "artwork_id": "cma:148215",
+          "rank": 60,
+          "score": 0.507441520690918
+        },
+        {
+          "artwork_id": "aic:196282",
+          "rank": 61,
+          "score": 0.5064643025398254
+        },
+        {
+          "artwork_id": "cma:149665",
+          "rank": 62,
+          "score": 0.5061148405075073
+        },
+        {
+          "artwork_id": "cma:155626",
+          "rank": 63,
+          "score": 0.5036023259162903
+        },
+        {
+          "artwork_id": "cma:145123",
+          "rank": 64,
+          "score": 0.5035048723220825
+        },
+        {
+          "artwork_id": "cma:108806",
+          "rank": 65,
+          "score": 0.5034891963005066
+        },
+        {
+          "artwork_id": "cma:141639",
+          "rank": 66,
+          "score": 0.5033451914787292
+        },
+        {
+          "artwork_id": "cma:95275",
+          "rank": 67,
+          "score": 0.5028901100158691
+        },
+        {
+          "artwork_id": "cma:150051",
+          "rank": 68,
+          "score": 0.5027233958244324
+        },
+        {
+          "artwork_id": "aic:55494",
+          "rank": 69,
+          "score": 0.5022433400154114
+        },
+        {
+          "artwork_id": "cma:135483",
+          "rank": 70,
+          "score": 0.5019675493240356
+        },
+        {
+          "artwork_id": "aic:62536",
+          "rank": 71,
+          "score": 0.5019609928131104
+        },
+        {
+          "artwork_id": "aic:64729",
+          "rank": 72,
+          "score": 0.5002524852752686
+        },
+        {
+          "artwork_id": "aic:111453",
+          "rank": 73,
+          "score": 0.49873363971710205
+        },
+        {
+          "artwork_id": "cma:83462",
+          "rank": 74,
+          "score": 0.49820899963378906
+        },
+        {
+          "artwork_id": "aic:181702",
+          "rank": 75,
+          "score": 0.4974629878997803
+        },
+        {
+          "artwork_id": "aic:146701",
+          "rank": 76,
+          "score": 0.49688589572906494
+        },
+        {
+          "artwork_id": "aic:105786",
+          "rank": 77,
+          "score": 0.49602210521698
+        },
+        {
+          "artwork_id": "aic:69041",
+          "rank": 78,
+          "score": 0.49507904052734375
+        },
+        {
+          "artwork_id": "aic:262794",
+          "rank": 79,
+          "score": 0.4942493438720703
+        },
+        {
+          "artwork_id": "cma:156183",
+          "rank": 80,
+          "score": 0.4942183494567871
+        },
+        {
+          "artwork_id": "cma:148365",
+          "rank": 81,
+          "score": 0.49081122875213623
+        },
+        {
+          "artwork_id": "aic:16370",
+          "rank": 82,
+          "score": 0.490179181098938
+        },
+        {
+          "artwork_id": "aic:60239",
+          "rank": 83,
+          "score": 0.4899854063987732
+        },
+        {
+          "artwork_id": "aic:109228",
+          "rank": 84,
+          "score": 0.48916518688201904
+        },
+        {
+          "artwork_id": "aic:14556",
+          "rank": 85,
+          "score": 0.48893624544143677
+        },
+        {
+          "artwork_id": "aic:45240",
+          "rank": 86,
+          "score": 0.48889315128326416
+        },
+        {
+          "artwork_id": "aic:209942",
+          "rank": 87,
+          "score": 0.4883444309234619
+        },
+        {
+          "artwork_id": "aic:97291",
+          "rank": 88,
+          "score": 0.48816072940826416
+        },
+        {
+          "artwork_id": "cma:150038",
+          "rank": 89,
+          "score": 0.48776984214782715
+        },
+        {
+          "artwork_id": "aic:120296",
+          "rank": 90,
+          "score": 0.4873431921005249
+        },
+        {
+          "artwork_id": "aic:39691",
+          "rank": 91,
+          "score": 0.4872323274612427
+        },
+        {
+          "artwork_id": "aic:59002",
+          "rank": 92,
+          "score": 0.4872281551361084
+        },
+        {
+          "artwork_id": "cma:122338",
+          "rank": 93,
+          "score": 0.4858718514442444
+        },
+        {
+          "artwork_id": "cma:144431",
+          "rank": 94,
+          "score": 0.48559021949768066
+        },
+        {
+          "artwork_id": "aic:8360",
+          "rank": 95,
+          "score": 0.4855051040649414
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:128392",
+          "rank": 1,
+          "score": 0.7328402996063232
+        },
+        {
+          "artwork_id": "cma:128371",
+          "rank": 2,
+          "score": 0.7218255996704102
+        },
+        {
+          "artwork_id": "cma:95275",
+          "rank": 3,
+          "score": 0.7153555750846863
+        },
+        {
+          "artwork_id": "cma:150054",
+          "rank": 4,
+          "score": 0.7123476266860962
+        },
+        {
+          "artwork_id": "cma:134072",
+          "rank": 5,
+          "score": 0.7123169898986816
+        },
+        {
+          "artwork_id": "aic:6005",
+          "rank": 6,
+          "score": 0.7079711556434631
+        },
+        {
+          "artwork_id": "aic:97292",
+          "rank": 7,
+          "score": 0.704214334487915
+        },
+        {
+          "artwork_id": "cma:157104",
+          "rank": 8,
+          "score": 0.7004363536834717
+        },
+        {
+          "artwork_id": "cma:117715",
+          "rank": 9,
+          "score": 0.7002018094062805
+        },
+        {
+          "artwork_id": "cma:136760",
+          "rank": 10,
+          "score": 0.700165331363678
+        },
+        {
+          "artwork_id": "cma:150031",
+          "rank": 11,
+          "score": 0.6951113939285278
+        },
+        {
+          "artwork_id": "aic:64818",
+          "rank": 12,
+          "score": 0.6949245929718018
+        },
+        {
+          "artwork_id": "cma:108999",
+          "rank": 13,
+          "score": 0.6940329670906067
+        },
+        {
+          "artwork_id": "cma:95272",
+          "rank": 14,
+          "score": 0.6937366127967834
+        },
+        {
+          "artwork_id": "cma:124078",
+          "rank": 15,
+          "score": 0.6932812929153442
+        },
+        {
+          "artwork_id": "aic:59002",
+          "rank": 16,
+          "score": 0.6921226978302002
+        },
+        {
+          "artwork_id": "aic:4783",
+          "rank": 17,
+          "score": 0.6859041452407837
+        },
+        {
+          "artwork_id": "aic:40549",
+          "rank": 18,
+          "score": 0.6835216283798218
+        },
+        {
+          "artwork_id": "aic:16554",
+          "rank": 19,
+          "score": 0.6817993521690369
+        },
+        {
+          "artwork_id": "aic:90062",
+          "rank": 20,
+          "score": 0.6796305179595947
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "19th-century landscape painting emphasizing natural vitality and dynamic rural scenery with detailed foliage and atmospheric light",
+      "consulta_id": "c01-ambiguo",
+      "consulta_visual": "vibrant rural landscape with lively trees, bright sky, and a winding path leading to a house",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:4ba1a411e0bea2e1ab694abafbff09fa834b112792bc612f05ac3605fc6efd55",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "con más vida",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "0de6bc2af8bc0ea7",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2850,
+        "tokens_out": 52
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:128371",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 35,
+          "visual": 2
+        },
+        "score_fusionado": 0.7218254
+      },
+      {
+        "artwork_id": "cma:95275",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 67,
+          "visual": 3
+        },
+        "score_fusionado": 0.71535537
+      },
+      {
+        "artwork_id": "cma:150054",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 52,
+          "visual": 4
+        },
+        "score_fusionado": 0.71234742
+      },
+      {
+        "artwork_id": "aic:6005",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 13,
+          "visual": 6
+        },
+        "score_fusionado": 0.70797104
+      },
+      {
+        "artwork_id": "aic:97292",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 51,
+          "visual": 7
+        },
+        "score_fusionado": 0.70421416
+      },
+      {
+        "artwork_id": "cma:157104",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 53,
+          "visual": 8
+        },
+        "score_fusionado": 0.7004362
+      },
+      {
+        "artwork_id": "cma:124078",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 32,
+          "visual": 15
+        },
+        "score_fusionado": 0.69328104
+      },
+      {
+        "artwork_id": "aic:59002",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 92,
+          "visual": 16
+        },
+        "score_fusionado": 0.69212263
+      },
+      {
+        "artwork_id": "aic:4758",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.6790482
+      },
+      {
+        "artwork_id": "aic:64729",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.67823339
+      },
+      {
+        "artwork_id": "cma:148968",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.67675889
+      },
+      {
+        "artwork_id": "aic:151108",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.67620238
+      },
+      {
+        "artwork_id": "aic:14556",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.67453677
+      },
+      {
+        "artwork_id": "aic:60239",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.67214446
+      },
+      {
+        "artwork_id": "cma:140078",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.6714724
+      },
+      {
+        "artwork_id": "cma:164314",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.67116208
+      },
+      {
+        "artwork_id": "cma:122345",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.66934717
+      },
+      {
+        "artwork_id": "aic:120296",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.66283304
+      },
+      {
+        "artwork_id": "aic:57163",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.6616424
+      },
+      {
+        "artwork_id": "aic:30701",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.66150177
+      },
+      {
+        "artwork_id": "aic:146272",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.65580899
+      },
+      {
+        "artwork_id": "cma:143234",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.65500506
+      },
+      {
+        "artwork_id": "cma:83462",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.65140771
+      },
+      {
+        "artwork_id": "aic:209942",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.64405372
+      },
+      {
+        "artwork_id": "aic:209969",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.64210963
+      },
+      {
+        "artwork_id": "cma:148215",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.6420694
+      },
+      {
+        "artwork_id": "aic:16340",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.63976302
+      },
+      {
+        "artwork_id": "cma:150697",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.636991
+      },
+      {
+        "artwork_id": "aic:8360",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.63356009
+      },
+      {
+        "artwork_id": "aic:55494",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.63086222
+      },
+      {
+        "artwork_id": "cma:155626",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.63032844
+      },
+      {
+        "artwork_id": "aic:28849",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.63020535
+      },
+      {
+        "artwork_id": "aic:146701",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.62923939
+      },
+      {
+        "artwork_id": "cma:168366",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.62765433
+      },
+      {
+        "artwork_id": "cma:152006",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.62681355
+      },
+      {
+        "artwork_id": "aic:183293",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.62655215
+      },
+      {
+        "artwork_id": "cma:159501",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.62556413
+      },
+      {
+        "artwork_id": "aic:39691",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.61889589
+      },
+      {
+        "artwork_id": "aic:68388",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.6163672
+      },
+      {
+        "artwork_id": "aic:16564",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.61615118
+      },
+      {
+        "artwork_id": "aic:262794",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.61359394
+      },
+      {
+        "artwork_id": "aic:64724",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.61273905
+      },
+      {
+        "artwork_id": "cma:125093",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.6112557
+      },
+      {
+        "artwork_id": "cma:138430",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.6095823
+      },
+      {
+        "artwork_id": "cma:172806",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.60856363
+      },
+      {
+        "artwork_id": "cma:144431",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.60847215
+      },
+      {
+        "artwork_id": "cma:150038",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 89
+        },
+        "score_fusionado": 0.608022
+      },
+      {
+        "artwork_id": "cma:147017",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.6053839
+      },
+      {
+        "artwork_id": "aic:65925",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.60270355
+      },
+      {
+        "artwork_id": "aic:109228",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.60206307
+      },
+      {
+        "artwork_id": "cma:150051",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.60153462
+      },
+      {
+        "artwork_id": "aic:69041",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.60129527
+      },
+      {
+        "artwork_id": "cma:143772",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.60056205
+      },
+      {
+        "artwork_id": "aic:97291",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.59574053
+      },
+      {
+        "artwork_id": "cma:148365",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.5893356
+      },
+      {
+        "artwork_id": "aic:220730",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.58866706
+      },
+      {
+        "artwork_id": "aic:145807",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.58807133
+      },
+      {
+        "artwork_id": "aic:100061",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.58628167
+      },
+      {
+        "artwork_id": "cma:93014",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.58557655
+      },
+      {
+        "artwork_id": "aic:145805",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.58453897
+      },
+      {
+        "artwork_id": "aic:181702",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.58449355
+      },
+      {
+        "artwork_id": "cma:135483",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.58347097
+      },
+      {
+        "artwork_id": "aic:863",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.58170528
+      },
+      {
+        "artwork_id": "aic:79716",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.58063171
+      },
+      {
+        "artwork_id": "aic:185185",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.57838663
+      },
+      {
+        "artwork_id": "aic:238272",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.57533234
+      },
+      {
+        "artwork_id": "aic:214269",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.57303253
+      },
+      {
+        "artwork_id": "aic:111453",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.57109072
+      },
+      {
+        "artwork_id": "cma:134620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.5694316
+      },
+      {
+        "artwork_id": "cma:141639",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.56691344
+      },
+      {
+        "artwork_id": "aic:79310",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.56367268
+      },
+      {
+        "artwork_id": "cma:137195",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.56126704
+      },
+      {
+        "artwork_id": "aic:45240",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.56118537
+      },
+      {
+        "artwork_id": "aic:152747",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.559623
+      },
+      {
+        "artwork_id": "aic:62536",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.55945694
+      },
+      {
+        "artwork_id": "cma:108806",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.55495226
+      },
+      {
+        "artwork_id": "aic:72398",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.55365322
+      },
+      {
+        "artwork_id": "cma:172785",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.54830889
+      },
+      {
+        "artwork_id": "cma:173730",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.54424124
+      },
+      {
+        "artwork_id": "cma:79932",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.54211925
+      },
+      {
+        "artwork_id": "cma:149665",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.53660338
+      },
+      {
+        "artwork_id": "cma:145123",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.5350615
+      },
+      {
+        "artwork_id": "cma:150693",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.53471529
+      },
+      {
+        "artwork_id": "cma:156183",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.53265665
+      },
+      {
+        "artwork_id": "cma:146752",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.51588739
+      },
+      {
+        "artwork_id": "aic:105786",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.51262477
+      },
+      {
+        "artwork_id": "aic:196282",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.50461231
+      },
+      {
+        "artwork_id": "cma:140155",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.50095043
+      },
+      {
+        "artwork_id": "cma:150353",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.4948447
+      },
+      {
+        "artwork_id": "cma:172782",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.49254319
+      },
+      {
+        "artwork_id": "cma:144286",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.4798212
+      },
+      {
+        "artwork_id": "aic:16370",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.47240344
+      },
+      {
+        "artwork_id": "cma:122338",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.43611194
+      },
+      {
+        "artwork_id": "cma:144743",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.39848486
+      },
+      {
+        "artwork_id": "cma:145999",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.39249277
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "aic:97292",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con colores vivos y luz brillante que transmite más vida, cumpliendo claramente el pedido de 'con más vida' en comparación con la imagen original más apagada y oscura.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3112,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:122345",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra un paisaje similar con árboles y casas, pero incluye varias figuras humanas que aportan más vida, cumpliendo claramente el pedido de 'con más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 3960,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:157104",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra una escena con más elementos de vida, como personas y animales, en comparación con la imagen original que es más estática y vacía. Mantiene el paisaje natural y rural, cumpliendo con el pedido de 'con más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 4095,
+          "tokens_out": 62
+        }
+      },
+      {
+        "artwork_id": "cma:124078",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra más vida con la presencia de personas y un animal, cumpliendo el pedido, mientras mantiene un paisaje similar al de la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3839,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "aic:4758",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra un paisaje con más elementos vivos como personas, animales y actividad rural, cumpliendo el pedido de 'con más vida', mientras mantiene un estilo y temática similares a la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3158,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "cma:148968",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más elementos vivos, como árboles frondosos y una figura humana, lo que aporta más vida en comparación con la imagen original que es más apagada y sin presencia humana.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 4002,
+          "tokens_out": 50
+        }
+      },
+      {
+        "artwork_id": "aic:14556",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más colores vivos y variedad de elementos que sugieren más vida en comparación con la imagen original, que es más apagada y tranquila. Cumple bien el pedido de 'con más vida' manteniendo un estilo paisajístico similar.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3205,
+          "tokens_out": 62
+        }
+      },
+      {
+        "artwork_id": "cma:140078",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más elementos vivos, como personas y animales, cumpliendo el pedido de 'con más vida', mientras mantiene un estilo paisajístico similar al de la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 4056,
+          "tokens_out": 49
+        }
+      },
+      {
+        "artwork_id": "aic:57163",
+        "estado": "puntuado",
+        "justificacion": "La obra candidata muestra un paisaje con más elementos vivos como árboles frondosos, personas y animales, cumpliendo el pedido de 'con más vida', mientras mantiene la esencia de un paisaje natural similar al de la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3763,
+          "tokens_out": 55
+        }
+      },
+      {
+        "artwork_id": "aic:30701",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje similar pero con más elementos vivos como personas y animales, cumpliendo el pedido de 'con más vida' mientras mantiene el ambiente natural del original.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3107,
+          "tokens_out": 44
+        }
+      },
+      {
+        "artwork_id": "cma:150054",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más elementos vivos, como árboles con hojas y figuras humanas, lo que aporta más vida en comparación con la imagen original que es más apagada y sin presencia humana.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3970,
+          "tokens_out": 48
+        }
+      },
+      {
+        "artwork_id": "aic:59002",
+        "estado": "puntuado",
+        "justificacion": "La obra muestra un paisaje con más elementos naturales vivos, como árboles frondosos y reflejos en el agua, que aportan sensación de vida en comparación con la imagen original, que es más apagada y estática.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3166,
+          "tokens_out": 54
+        }
+      },
+      {
+        "artwork_id": "aic:64729",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más elementos vivos, como un personaje y un pájaro, aportando más vida que la imagen original, que es más estática y desierta. Sin embargo, el ambiente sigue siendo tranquilo y no muy dinámico.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3814,
+          "tokens_out": 60
+        }
+      },
+      {
+        "artwork_id": "aic:151108",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más color y actividad, incluyendo un bote con personas, lo que aporta más vida en comparación con la imagen original que es más estática y apagada.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 3811,
+          "tokens_out": 46
+        }
+      },
+      {
+        "artwork_id": "cma:95275",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con más vegetación y un personaje, lo que aporta más vida, pero el ambiente sigue siendo tranquilo y apagado, sin mucha actividad visible.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3416,
+          "tokens_out": 45
+        }
+      },
+      {
+        "artwork_id": "cma:128371",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con árboles y un ambiente tranquilo, pero no transmite más vida que la imagen original; además, la escena es más oscura y menos vibrante, por lo que no cumple con el pedido de 'con más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 4010,
+          "tokens_out": 60
+        }
+      },
+      {
+        "artwork_id": "aic:6005",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con poca actividad y colores apagados, similar a la primera imagen, por lo que no cumple con el pedido de 'más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2985,
+          "tokens_out": 43
+        }
+      },
+      {
+        "artwork_id": "aic:60239",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje con un canal, pero es más apagada y menos viva que la imagen original; no cumple el pedido de 'con más vida' y no mejora la sensación de vitalidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3205,
+          "tokens_out": 51
+        }
+      },
+      {
+        "artwork_id": "cma:164314",
+        "estado": "puntuado",
+        "justificacion": "La candidata tiene un paisaje similar pero con colores más oscuros y menos vida aparente, por lo que no cumple el pedido de 'con más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2982,
+          "tokens_out": 42
+        }
+      },
+      {
+        "artwork_id": "aic:120296",
+        "estado": "puntuado",
+        "justificacion": "La candidata muestra un paisaje más desolado y con menos elementos vivos que la primera imagen, por lo que no cumple con el pedido de 'con más vida'.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 3290,
+          "tokens_out": 43
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c01-ambiguo",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "aic:97292",
+          "ficha": {
+            "artist": "Robert William Vonnoh",
+            "culture": "France",
+            "date_display": "1890",
+            "medium": "Oil on canvas",
+            "style": "Impressionism",
+            "title": "Spring in France",
+            "year": 1890
+          },
+          "lineas": [
+            "La obra utiliza una paleta brillante con pinceladas rotas y colores no mezclados para capturar la vegetación en crecimiento y la luz cálida de un día de primavera, transmitiendo una sensación de vida y frescura. [1]",
+            "La presencia de colores intensos como verdes, duraznos y lavandas, junto con elementos domésticos como postes de cerca y ropa blanca colgada, aporta dinamismo y vitalidad a la escena."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Robert William Vonnoh",
+              "atribucion": "“Spring in France”, Robert William Vonnoh. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/97292",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:97292::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/97292",
+              "texto_citado": "Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.",
+              "title": "Spring in France"
+            }
+          ],
+          "score": 0.704214161820461,
+          "source_url": "https://www.artic.edu/artworks/97292"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:122345",
+          "ficha": {
+            "artist": "Meindert Hobbema",
+            "culture": "Netherlands",
+            "date_display": "c. 1662",
+            "medium": "oil on canvas",
+            "title": "A Cottage in the Woods",
+            "year": 1657
+          },
+          "lineas": [
+            "La pintura representa un paisaje de bosque denso con caminos serpenteantes y vistas hacia claros iluminados por el sol, que invitan a la fertilidad y a la vida rural. [1]",
+            "La inclusión de un molino de viento en el fondo, símbolo importante de la identidad holandesa, añade un elemento cultural que puede sugerir actividad y movimiento en el paisaje. [2]",
+            "La escena transmite una sensación de tranquilidad y estabilidad más que de movimiento o vida intensa."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Meindert Hobbema",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:122345::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1942.641",
+              "texto_citado": "Inspired by the native Dutch landscape, Meindert Hobbema specialized in scenes of dense forest growth punctured by winding paths and views toward sunlit clearings that beckon with fertile fields and rustic cottages. Hobbema’s paintings were especially popular among Dutch citizens, who took enormous pride in their land. In addition to nationalistic pride in having recently gained independence from Spain, there was also a profound awareness of the preciousness of land in a low-lying nation, which required dikes, pumps, and constant vigilance to guard against flooding. While the Dutch earned much of their considerable wealth from sea trade, agriculture and livestock were important sources of prosperity.",
+              "title": "A Cottage in the Woods"
+            },
+            {
+              "artist": "Meindert Hobbema",
+              "atribucion": null,
+              "campos": [
+                "did_you_know"
+              ],
+              "fragment_id": "cma:122345::did_you_know::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1942.641",
+              "texto_citado": "A windmill, an important symbol of Dutch identity, can be found in the background of this painting.",
+              "title": "A Cottage in the Woods"
+            }
+          ],
+          "score": 0.6693471742567103,
+          "source_url": "https://clevelandart.org/art/1942.641"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:157104",
+          "ficha": {
+            "artist": "Johan Barthold Jongkind",
+            "culture": "France",
+            "date_display": "1865",
+            "medium": "oil on fabric",
+            "title": "The Seine at Bas-Meudon",
+            "year": 1865
+          },
+          "lineas": [
+            "El artista aplicó la pintura en pequeños parches de colores brillantes para sugerir la intensidad de la luz al aire libre, lo que aporta inmediatez y viveza a la escena. [1]",
+            "La técnica y el uso de colores vivos contribuyen a dar una sensación de vida y frescura en el paisaje representado."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Johan Barthold Jongkind",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:157104::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1993.236",
+              "texto_citado": "Although born and trained in Holland, Jongkind spent much of his life painting outdoors in France. In this depiction of Bas-Meudon near Paris, the artist applied paint in small patches of bright color to suggest the intensity of outdoor light. Although typcially finished in the studio from open-air sketches, Jongkind's oil paintings achieve a convincing immediacy that greatly impressed the young Claude Monet. The two met in the early 1860s and spent part of a summer painting together along the coast of Normandy. \"From that time he was my real master,\" Monet later acknowledged, \"it was to him that I owe the final education of my eye.\"",
+              "title": "The Seine at Bas-Meudon"
+            }
+          ],
+          "score": 0.7004362017169963,
+          "source_url": "https://clevelandart.org/art/1993.236"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:124078",
+          "ficha": {
+            "artist": "Jean Baptiste Camille Corot",
+            "culture": "France",
+            "date_display": "late 1860s",
+            "medium": "oil on fabric",
+            "title": "Pond at Ville-d'Avray",
+            "year": 1865
+          },
+          "lineas": [
+            "La obra se caracteriza por formas suaves y difusas y una luz plateada y gentil, reflejando un estilo nostálgico y onírico. [1]",
+            "La calidad onírica y difusa de la pintura sugiere una atmósfera tranquila y contemplativa más que una escena llena de vida o movimiento."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Jean Baptiste Camille Corot",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:124078::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1944.80",
+              "texto_citado": "Corot painted this view of a pond near his home at Ville-d'Avray, just west of Paris, in his late style distinguished by soft, hazy forms and gentle, silvery light. Such paintings merge his lifelong study of nature with nostalgic memories and contrast sharply with the more formal compositions and precisely rendered shapes of his early landscapes. Corot's devotion to the direct study of nature was a major influence on the Impressionists.",
+              "title": "Pond at Ville-d'Avray"
+            }
+          ],
+          "score": 0.6932810390804656,
+          "source_url": "https://clevelandart.org/art/1944.80"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:4758",
+          "ficha": {
+            "artist": "John Constable",
+            "culture": "England",
+            "date_display": "1836",
+            "medium": "Oil on canvas",
+            "style": "19th century",
+            "title": "Stoke-by-Nayland",
+            "year": 1836
+          },
+          "lineas": [
+            "La pintura representa una mañana de verano después de una ligera lluvia, con efectos de rocío y humedad que realzan la frescura y vitalidad del paisaje. [1]",
+            "El uso de la técnica con espátula y pinceles para crear texturas rugosas y efectos de luz que simulan el agua brillante aporta una sensación de vida y dinamismo a la escena. [1]",
+            "La coexistencia de elementos naturales y construidos en armonía contribuye a una representación vibrante y llena de vida del campo inglés."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "John Constable",
+              "atribucion": "“Stoke-by-Nayland”, John Constable. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/4758",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:4758::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/4758",
+              "texto_citado": "“What say you to a summer morning?” John Constable wrote of this painting in a letter to a friend. Even after many years living in London, Constable continued to portray the countryside, dear to him from boyhood. Stoke-by-Nayland lies a few miles from his native village of East Bergholt in Suffolk. In this view, he divided the canvas between a brilliant, airy vista toward the hamlet on the left and a shady, tunnel-like country lane leading off to the right. Constable explained in his letter that the painting depicted a speciﬁc time, a morning in “July or August, at eight or nine o’clock, after a slight shower during the night, to enhance the dews in the shadowed part of the picture.” The artist emphasized the abundance of water through his painting technique, ﬂecking the surface with white highlights to create an effect of sparkling wetness. Here, the whole scene appears dewy, with a stream and puddles in the foreground and a central tree that droops from the weight of rainwater, emphasizing the fertile land.\nPainted as much with a palette knife as with brushes, Stoke-by-Nayland lacks the ﬁnish of pictures Constable exhibited publicly; it was meant as a full-scale sketch for a work that he never realized. Nonetheless, this canvas seems to capture Constable’s delight in freely scribbling and scraping the image into existence—what it lacks in detail it gains in atmosphere. The roughness of the surface evokes the textures of real landscape, and the coexistence of natural and built elements in the scene embodies an ideal of harmony indicative of Constable’s vision of rural England.",
+              "title": "Stoke-by-Nayland"
+            }
+          ],
+          "score": 0.6790482007112965,
+          "source_url": "https://www.artic.edu/artworks/4758"
+        }
+      ],
+      "render": "1. **Spring in France**\n   Robert William Vonnoh · 1890 · Oil on canvas · Impressionism\n   Ficha oficial: https://www.artic.edu/artworks/97292\n\n   La obra utiliza una paleta brillante con pinceladas rotas y colores no mezclados para capturar la vegetación en crecimiento y la luz cálida de un día de primavera, transmitiendo una sensación de vida y frescura. [1]\n   La presencia de colores intensos como verdes, duraznos y lavandas, junto con elementos domésticos como postes de cerca y ropa blanca colgada, aporta dinamismo y vitalidad a la escena.\n\n   **Fuentes**\n   [1] “Robert Vonnoh was among the first American painters to explore Impressionism. He received his formative artistic training in Boston and headed to Paris in the early 1880s for further instruction. By the late 1880s, Vonnoh had settled in Grez-sur-Loing, a rural area outside of Paris that attracted a growing colony of artists who worked outdoors. Here, using a brilliant palette, broken brushstrokes, and unblended colors, Vonnoh captured the budding vegetation and warming sunlight of a spring day. Intense greens, peaches, and lavenders convey the dappled light and shadows of a winding road at right. The fence posts marking the edge of the yard and white linens hanging from a nearby tree highlight the scene’s domestic setting.”\n       https://www.artic.edu/artworks/97292 · CC BY 4.0\n       “Spring in France”, Robert William Vonnoh. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/97292\n\n2. **A Cottage in the Woods**\n   Meindert Hobbema · c. 1662 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1942.641\n\n   La pintura representa un paisaje de bosque denso con caminos serpenteantes y vistas hacia claros iluminados por el sol, que invitan a la fertilidad y a la vida rural. [1]\n   La inclusión de un molino de viento en el fondo, símbolo importante de la identidad holandesa, añade un elemento cultural que puede sugerir actividad y movimiento en el paisaje. [2]\n   La escena transmite una sensación de tranquilidad y estabilidad más que de movimiento o vida intensa.\n\n   **Fuentes**\n   [1] “Inspired by the native Dutch landscape, Meindert Hobbema specialized in scenes of dense forest growth punctured by winding paths and views toward sunlit clearings that beckon with fertile fields and rustic cottages. Hobbema’s paintings were especially popular among Dutch citizens, who took enormous pride in their land. In addition to nationalistic pride in having recently gained independence from Spain, there was also a profound awareness of the preciousness of land in a low-lying nation, which required dikes, pumps, and constant vigilance to guard against flooding. While the Dutch earned much of their considerable wealth from sea trade, agriculture and livestock were important sources of prosperity.”\n       https://clevelandart.org/art/1942.641 · CC0 1.0\n   [2] “A windmill, an important symbol of Dutch identity, can be found in the background of this painting.”\n       https://clevelandart.org/art/1942.641 · CC0 1.0\n\n3. **The Seine at Bas-Meudon**\n   Johan Barthold Jongkind · 1865 · oil on fabric\n   Ficha oficial: https://clevelandart.org/art/1993.236\n\n   El artista aplicó la pintura en pequeños parches de colores brillantes para sugerir la intensidad de la luz al aire libre, lo que aporta inmediatez y viveza a la escena. [1]\n   La técnica y el uso de colores vivos contribuyen a dar una sensación de vida y frescura en el paisaje representado.\n\n   **Fuentes**\n   [1] “Although born and trained in Holland, Jongkind spent much of his life painting outdoors in France. In this depiction of Bas-Meudon near Paris, the artist applied paint in small patches of bright color to suggest the intensity of outdoor light. Although typcially finished in the studio from open-air sketches, Jongkind's oil paintings achieve a convincing immediacy that greatly impressed the young Claude Monet. The two met in the early 1860s and spent part of a summer painting together along the coast of Normandy. \"From that time he was my real master,\" Monet later acknowledged, \"it was to him that I owe the final education of my eye.\"”\n       https://clevelandart.org/art/1993.236 · CC0 1.0\n\n4. **Pond at Ville-d'Avray**\n   Jean Baptiste Camille Corot · late 1860s · oil on fabric\n   Ficha oficial: https://clevelandart.org/art/1944.80\n\n   La obra se caracteriza por formas suaves y difusas y una luz plateada y gentil, reflejando un estilo nostálgico y onírico. [1]\n   La calidad onírica y difusa de la pintura sugiere una atmósfera tranquila y contemplativa más que una escena llena de vida o movimiento.\n\n   **Fuentes**\n   [1] “Corot painted this view of a pond near his home at Ville-d'Avray, just west of Paris, in his late style distinguished by soft, hazy forms and gentle, silvery light. Such paintings merge his lifelong study of nature with nostalgic memories and contrast sharply with the more formal compositions and precisely rendered shapes of his early landscapes. Corot's devotion to the direct study of nature was a major influence on the Impressionists.”\n       https://clevelandart.org/art/1944.80 · CC0 1.0\n\n5. **Stoke-by-Nayland**\n   John Constable · 1836 · Oil on canvas · 19th century\n   Ficha oficial: https://www.artic.edu/artworks/4758\n\n   La pintura representa una mañana de verano después de una ligera lluvia, con efectos de rocío y humedad que realzan la frescura y vitalidad del paisaje. [1]\n   El uso de la técnica con espátula y pinceles para crear texturas rugosas y efectos de luz que simulan el agua brillante aporta una sensación de vida y dinamismo a la escena. [1]\n   La coexistencia de elementos naturales y construidos en armonía contribuye a una representación vibrante y llena de vida del campo inglés.\n\n   **Fuentes**\n   [1] ““What say you to a summer morning?” John Constable wrote of this painting in a letter to a friend. Even after many years living in London, Constable continued to portray the countryside, dear to him from boyhood. Stoke-by-Nayland lies a few miles from his native village of East Bergholt in Suffolk. In this view, he divided the canvas between a brilliant, airy vista toward the hamlet on the left and a shady, tunnel-like country lane leading off to the right. Constable explained in his letter that the painting depicted a speciﬁc time, a morning in “July or August, at eight or nine o’clock, after a slight shower during the night, to enhance the dews in the shadowed part of the picture.” The artist emphasized the abundance of water through his painting technique, ﬂecking the surface with white highlights to create an effect of sparkling wetness. Here, the whole scene appears dewy, with a stream and puddles in the foreground and a central tree that droops from the weight of rainwater, emphasizing the fertile land.\nPainted as much with a palette knife as with brushes, Stoke-by-Nayland lacks the ﬁnish of pictures Constable exhibited publicly; it was meant as a full-scale sketch for a work that he never realized. Nonetheless, this canvas seems to capture Constable’s delight in freely scribbling and scraping the image into existence—what it lacks in detail it gains in atmosphere. The roughness of the surface evokes the textures of real landscape, and the coexistence of natural and built elements in the scene embodies an ideal of harmony indicative of Constable’s vision of rural England.”\n       https://www.artic.edu/artworks/4758 · CC BY 4.0\n       “Stoke-by-Nayland”, John Constable. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/4758\n"
+    },
+    "sellos": {
+      "commit": "087137edd5ad7052b13a85c9b3136d7b5f4a1fb3",
+      "config_id": "c594148ceba902de",
+      "corrida_id": "167b01fdc0ac6674-1",
+      "filtro_por_metadata": {
+        "aplicado": false,
+        "campo": "culture",
+        "motivo": "el pedido no nombra cultura, técnica, artista ni período conocidos",
+        "terminos": [],
+        "valores": []
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "aic:97292",
+      "cma:122345",
+      "cma:157104",
+      "cma:124078",
+      "aic:4758"
+    ]
+  },
+  "fecha": "2026-11-16T04:08:11+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.119,
+      "generador": 8.0362,
+      "planificador": 0.0,
+      "recolector_de_evidencia": 0.3826,
+      "recuperador_textual": 0.4301,
+      "recuperador_visual": 0.0947,
+      "renderizador": 0.0,
+      "reranker": 32.9185
+    },
+    "segundos_de_la_corrida": 41.9842
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.181,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.682,
+      "tokens_in": 36,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.034,
+      "tokens_in": 4570,
+      "tokens_out": 874
+    },
+    "indice": {
+      "n_items": 323,
+      "n_llamadas": 9,
+      "resultados": {
+        "ok": 9
+      },
+      "roles": {
+        "indice": 9
+      },
+      "segundos": 0.088,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 32.824,
+      "tokens_in": 70946,
+      "tokens_out": 1004
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 97,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.117,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 8.034,
+      "tokens_in": 4570,
+      "tokens_out": 874
+    },
+    "recolector_de_evidencia": {
+      "n_items": 14,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.382,
+      "tokens_in": 18,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 196,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 2
+      },
+      "segundos": 0.358,
+      "tokens_in": 18,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.094,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 32.824,
+      "tokens_in": 70946,
+      "tokens_out": 1004
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "1"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "087137edd5ad7052b13a85c9b3136d7b5f4a1fb3",
+    "config_id": "c594148ceba902de",
+    "corrida_id": "167b01fdc0ac6674-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}

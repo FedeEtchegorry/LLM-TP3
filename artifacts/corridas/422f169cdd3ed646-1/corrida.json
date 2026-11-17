@@ -1,0 +1,3323 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 47,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 22,
+      "retriever": 10
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-reranker-v2.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "1cc2dba21da9b371",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c03-conceptual",
+  "corrida_id": "422f169cdd3ed646-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "cma:159270",
+      "categoria": "conceptual_cultural",
+      "consulta_id": "c03-conceptual",
+      "imagen_hash": "sha256:6eee991cdce5d8a580067f4c35d5c8e8f8381863d9717f73e0d41a7650c0eefa",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:12891": [
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "aic:12891",
+          "chunk_index": 0,
+          "fragment_id": "aic:12891::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/12891",
+          "texto": "This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.",
+          "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+        },
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "aic:12891",
+          "chunk_index": 0,
+          "fragment_id": "aic:12891::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/12891",
+          "texto": "Julius H. Weitzner, New York, by 1958 [in his possession when published by Longhi 1958]; sold to the Art Institute, 1961.",
+          "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+        }
+      ],
+      "aic:16162": [
+        {
+          "artist": "Giovanni di Paolo",
+          "artwork_id": "aic:16162",
+          "chunk_index": 0,
+          "fragment_id": "aic:16162::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/16162",
+          "texto": "This series of panels illustrates scenes from the life of Saint John the Baptist, a prophet who foretold Jesus’s arrival as the Christian savior. The Art Institute’s collection includes six panels that were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint.\nThe narrative begins as John leaves civilization, entering the wilderness to become a hermit. In a following scene, John wears a hair shirt, a coarse undergarment symbolizing his ascetic life, as he announces that Jesus is the savior prophesied as the Agnus Dei, the Lamb of God. Subsequent panels show John’s imprisonment and violent execution at the hands of Herod, ruler of Galilee. Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.olo&artist_ids=Giovanni+di+Paolo\">six paintings illustrating scenes from the life of Saint John the Baptist, a prophet considered a forerunner of Jesus. They were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint. The first painting depicts John twice, leaving civilization—marked by ornate buildings and manicured agricultural fields—and entering the wilderness to become a hermit. In the next scene, John wears a hair shirt, symbolizing his ascetic life in the wilderness, as he announces that Jesus, at his right, is the savior prophesied as the agnus dei, the Lamb of God.\nThe following three panels depict John the Baptist’s imprisonment and execution at the hands of Herod, ruler of Galilee. According to one version of the story, Herod—seen in blue at the head of the table in the fourth panel from the left—was so taken by his stepdaughter Salome’s dancing that he reluctantly obliged when she requested John’s beheading (visualized gruesomely in the fifth panel). Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.",
+          "title": "Saint John the Baptist in Prison Visited by Two Disciples"
+        },
+        {
+          "artist": "Giovanni di Paolo",
+          "artwork_id": "aic:16162",
+          "chunk_index": 0,
+          "fragment_id": "aic:16162::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/16162",
+          "texto": "Edourd Aynard, Lyons, by 1907 [see Perkins 1907]; sold Galerie Georges Petit, Paris, December 1–4, 1913 no. 51, to Kleinberger, Paris, as agent for Martin A. Ryerson (died 1932), Chicago, 1914 [an entry for June 18, 1914, in Ryerson’s notebook reads: “Bot [sic] of Kleinberter, Paris, 6 panels by Giovanni di Paolo (purchased by him at Aynard sale for 160 000 fr + 10%);” Art Institute Archives]; on loan to the Art Institute from 1914; bequeathed to the Art Institute, 1933.",
+          "title": "Saint John the Baptist in Prison Visited by Two Disciples"
+        }
+      ],
+      "aic:190405": [
+        {
+          "artist": "Girolamo da Carpi",
+          "artwork_id": "aic:190405",
+          "chunk_index": 0,
+          "fragment_id": "aic:190405::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/190405",
+          "texto": "Girolamo da Carpi painted this intimate work for the Este family of Ferrara, Italy; it adorned the oratory chapel of their palace. The painting shows Saint Luke drawing the Virgin Mary and the infant Jesus while Joseph watches from a doorway. The infant appears agitated, as if he possesses foreknowledge of his death: He is reacting to the spear-like yarn winder, an attribute of the Three Fates from Greek mythology and a symbol of death in Christian contexts as well.\nThe painting’s distinguished history extends beyond the Estes. It later came into the possession of two Roman cardinals, two Roman princes, the English Duke of Westminster, Baron Alfred de Rothschild, and the Earl of Carnavon, who famously financed the excavation of King Tutankhamen’s tomb.",
+          "title": "Saint Luke Drawing the Virgin and Christ Child"
+        },
+        {
+          "artist": "Girolamo da Carpi",
+          "artwork_id": "aic:190405",
+          "chunk_index": 0,
+          "fragment_id": "aic:190405::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/190405",
+          "texto": "Lucrezia d’Este (died 1598), Duchess of Urbino, Ferrara, by 1592, when it was recorded in the oratory of the Palazzo d’Este, Ferrara, as “…San Luca che ritrae la Madonna con Nro Sigre in brazzo di mano di Girolamo da Carpi” [see Della Pergola 1959, p. 343 and Della Pergola 1960, p. 440, no. 42, and Della Pergola 1963, p. 85, no. 312; Lucrezia had probably inherited it from her father Duke Ercole II d’Este (died 1559) or her uncle Cardinal Ippolito II d’Este (died 1572)]; bequeathed by her to Cardinal Pietro Aldobrandini (died 1621), Rome and Frascati, listed in 1603 Aldobrandini inventory as by Raphael, “San Luca, che sta ritrando la Madonna, di Raffaelle da Urbino” [see D’Onofrio 1964, Part I, p. 20, no. 61 and Part II, p. 159, listed under no. 89, as no. 61]; by descent to his nephew Cardinal Ippolito Aldobrandini (died 1638), Rome and Frascati, no. 42 in 1626 Aldobrandini inventory, “Un quadro con S luca che sta ritrahendo la Mad.a di mano di Raffael d’Urbino del n. 61” [Della Pergola 1960, p. 429]; by descent to his niece Olimpia Aldobrandini (died 1682), Rome and Frascati, in 1682 inventory as no. 312, “Un quadro in tavola con San Luca che sta ritrahendo la Madonna, alto pmi uno e tre quarti, con cornice nera di mano di Raffaele d’Urbino…”[Della Pergola 1963, p",
+          "title": "Saint Luke Drawing the Virgin and Christ Child"
+        },
+        {
+          "artist": "Girolamo da Carpi",
+          "artwork_id": "aic:190405",
+          "chunk_index": 1,
+          "fragment_id": "aic:190405::provenance::1",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/190405",
+          "texto": "74]; probably by descent to her son Prince Giovanni Battista Pamphili (died 1709), Rome; probably by descent to his son Prince Girolamo Pamphili (died 1760), Rome. Acquired in Rome by Richard Dalton about 1763 for Sir Richard Grosvenor, 1st Earl Grosvenor, London, as by Raphael [according to Young 1820, no. 56 and Grosvenor House Catalogue 1876, p. 24, no. 69]; by descent to Hugh Richard Arthur Grosvenor, 2nd Duke of Westminster, until at least 1903 [Berenson 1903]. Baron Alfred de Rothschild (died 1918), London [according to the 1925 sale catalogue of his daughter’s collection]; by descent to his daughter, Almina, Countess of Carnarvon; her sale, Christie’s, London, May 22, 1925, lot no. 89, to Douglas [according to annotated copy of sale catalogue in Ryerson Library; copy in curatorial file]; R. Langton Douglas, London and Fiesole, 1925 [this and the following provided by Michael Tollemache acting as agent for the Gronau family]. Georg Gronau (died 1938), Fiesole, by 1930; by descent to his son, Hans-Dietrich Gronau (died 1951), London and Florence; his widow, Carmen Gronau (died 1999), London and Florence; by descent to her grand-daughter, London; sold to the Art Institute of Chicago with Michael Tollemache Fine Art, London, as agent.",
+          "title": "Saint Luke Drawing the Virgin and Christ Child"
+        }
+      ],
+      "cma:111691": [
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "cma:111691",
+          "chunk_index": 0,
+          "fragment_id": "cma:111691::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1930.22",
+          "texto": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.",
+          "title": "Interior of a Synagogue"
+        },
+        {
+          "artist": "Alessandro Magnasco",
+          "artwork_id": "cma:111691",
+          "chunk_index": 0,
+          "fragment_id": "cma:111691::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1930.22",
+          "texto": "Private collection, sold Hotel Drouot, Paris, 1928\nD'Atri Gallery (Paris, France)\nBenno Geiger, 1882-1965 (Vienna, Austria)\nItalico Brass (Venice, Italy), 1870-1943, sold through Harold Parsons to the Cleveland Museum of Art, 1930.\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Interior of a Synagogue"
+        }
+      ],
+      "cma:126770": [
+        {
+          "artist": "Francesco Guardi",
+          "artwork_id": "cma:126770",
+          "chunk_index": 0,
+          "fragment_id": "cma:126770::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1949.187",
+          "texto": "From May 15-18, 1782, Pope Pius VI Braschi was in Venice, the only papal visit during the eighteenth century, an event celebrated with great festivities. Francesco Guardi (1712-1793), a native Venetian, was one of the most celebrated scenic painters of the eighteenth century, and specialized in depictions of cityscapes and the pomp and pageantry of Venetian ceremonial life. To celebrate the momentous occasion, the Englishman Peter Edwards commissioned four large scenes of the Pope's visit. The museum's two smaller paintings represent copies of the popular subject, which Guardi copied either for the open market or for other patrons. The Pontifical Ceremony (Te Deum) depicts the musical performance of Te Deum, a prayer of thanksgiving set to music by Antonio Vivaldi (1678-1741), a famous Venetian Baroque composer. Te Deum was a traditional hymn recited in thanks to God for a special blessing, including a papal election or a royal coronation, and was appropriate for the historic papal visit. In the Reception of the Doge and Senate, the Doge, the elected prince of Venice, and Senators of the Venetian Republic process towards the throne, as the pope blesses the multitude of government leaders.",
+          "title": "Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)"
+        },
+        {
+          "artist": "Francesco Guardi",
+          "artwork_id": "cma:126770",
+          "chunk_index": 0,
+          "fragment_id": "cma:126770::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1949.187",
+          "texto": "Jakob Goldschmidt, 1882-1955 (Berlin, Germany and New York, New York), by 1929, sold through\nJacques Seligman & Co. (New York, New York), to the Cleveland Museum of Art, 1949.\n[Galerie Matthiessen, Berlin, 1944]",
+          "title": "Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:111691::description::0"
+            ],
+            "texto": "La obra representa el interior arquitectónico de una sinagoga, un espacio amplio y con elementos arquitectónicos que crean un ambiente para la escena religiosa.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:111691::description::0"
+            ],
+            "texto": "La composición invita al espectador a entrar en el espacio arquitectónico y experimentar el servicio religioso, lo que evidencia un enfoque en el interior arquitectónico.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La paleta oscura y terrosa junto con la pincelada suelta y figuras alargadas contribuyen a un ambiente místico dentro del interior arquitectónico.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:111691"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:126770::description::0"
+            ],
+            "texto": "La obra muestra escenas de ceremonias papales en el interior del Salón de los Santos Giovanni e Paolo en Venecia, un espacio arquitectónico relevante.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "cma:126770::description::0"
+            ],
+            "texto": "El artista Francesco Guardi es conocido por sus pinturas escénicas que incluyen paisajes urbanos y ceremonias, lo que indica un interés en la representación arquitectónica y de interiores.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra refleja la pompa y ceremonia en un interior arquitectónico veneciano, mostrando detalles del espacio y la arquitectura del salón.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:126770"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:12891::description::0"
+            ],
+            "texto": "La pintura representa un evento histórico dentro de un edificio que es una interpretación imaginaria del atrio de una iglesia cristiana primitiva, un interior arquitectónico.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [
+              "aic:12891::description::0"
+            ],
+            "texto": "Para el fondo arquitectónico elaborado, probablemente se empleó un especialista en pintura arquitectónica, lo que resalta la importancia del interior en la obra.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El estilo fluido y enérgico del artista contrasta con la precisión del espacio arquitectónico representado en el fondo.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:12891"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:190405::description::0"
+            ],
+            "texto": "La obra muestra a San Lucas dibujando a la Virgen y el Niño Jesús dentro de un espacio interior, específicamente una capilla oratoria del palacio de la familia Este en Ferrara.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El espacio arquitectónico interior es íntimo y está ambientado en un contexto religioso y familiar, lo que aporta un enfoque en el interior arquitectónico italiano renacentista.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:190405"
+      },
+      {
+        "abstencion": "No hay suficiente información en los fragmentos para afirmar que esta obra representa interiores arquitectónicos en la pintura italiana.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:16162::description::0"
+            ],
+            "texto": "La serie de paneles ilustra escenas narrativas que incluyen edificios y campos ornamentados, pero no se menciona un enfoque específico en interiores arquitectónicos.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La representación incluye escenarios imaginativos y estilizados, pero no se destaca la representación detallada de interiores arquitectónicos italianos.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "aic:16162"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:146167",
+          "rank": 1,
+          "score": 0.6047326326370239
+        },
+        {
+          "artwork_id": "aic:23972",
+          "rank": 2,
+          "score": 0.5753495097160339
+        },
+        {
+          "artwork_id": "cma:142472",
+          "rank": 3,
+          "score": 0.5676564574241638
+        },
+        {
+          "artwork_id": "cma:142473",
+          "rank": 4,
+          "score": 0.5676564574241638
+        },
+        {
+          "artwork_id": "cma:142474",
+          "rank": 5,
+          "score": 0.5676564574241638
+        },
+        {
+          "artwork_id": "cma:142475",
+          "rank": 6,
+          "score": 0.5676564574241638
+        },
+        {
+          "artwork_id": "cma:132367",
+          "rank": 7,
+          "score": 0.5625032782554626
+        },
+        {
+          "artwork_id": "cma:119698",
+          "rank": 8,
+          "score": 0.560849666595459
+        },
+        {
+          "artwork_id": "cma:148990",
+          "rank": 9,
+          "score": 0.5578703880310059
+        },
+        {
+          "artwork_id": "aic:154037",
+          "rank": 10,
+          "score": 0.5553220510482788
+        },
+        {
+          "artwork_id": "aic:22270",
+          "rank": 11,
+          "score": 0.5553220510482788
+        },
+        {
+          "artwork_id": "cma:111691",
+          "rank": 12,
+          "score": 0.5485289692878723
+        },
+        {
+          "artwork_id": "cma:147696",
+          "rank": 13,
+          "score": 0.548403263092041
+        },
+        {
+          "artwork_id": "cma:97181",
+          "rank": 14,
+          "score": 0.5458962917327881
+        },
+        {
+          "artwork_id": "aic:22527",
+          "rank": 15,
+          "score": 0.5443263053894043
+        },
+        {
+          "artwork_id": "cma:159234",
+          "rank": 16,
+          "score": 0.5441141128540039
+        },
+        {
+          "artwork_id": "cma:97141",
+          "rank": 17,
+          "score": 0.5403426885604858
+        },
+        {
+          "artwork_id": "cma:136922",
+          "rank": 18,
+          "score": 0.531419575214386
+        },
+        {
+          "artwork_id": "cma:113202",
+          "rank": 19,
+          "score": 0.527005136013031
+        },
+        {
+          "artwork_id": "aic:217534",
+          "rank": 20,
+          "score": 0.5221525430679321
+        },
+        {
+          "artwork_id": "cma:124796",
+          "rank": 21,
+          "score": 0.5166745185852051
+        },
+        {
+          "artwork_id": "aic:110242",
+          "rank": 22,
+          "score": 0.5113828182220459
+        },
+        {
+          "artwork_id": "cma:157501",
+          "rank": 23,
+          "score": 0.5112435221672058
+        },
+        {
+          "artwork_id": "aic:80526",
+          "rank": 24,
+          "score": 0.509785532951355
+        },
+        {
+          "artwork_id": "aic:149778",
+          "rank": 25,
+          "score": 0.4991912841796875
+        },
+        {
+          "artwork_id": "aic:111074",
+          "rank": 26,
+          "score": 0.49904972314834595
+        },
+        {
+          "artwork_id": "cma:125251",
+          "rank": 27,
+          "score": 0.4989209771156311
+        },
+        {
+          "artwork_id": "aic:21445",
+          "rank": 28,
+          "score": 0.4974404573440552
+        },
+        {
+          "artwork_id": "aic:188974",
+          "rank": 29,
+          "score": 0.4953521490097046
+        },
+        {
+          "artwork_id": "cma:122339",
+          "rank": 30,
+          "score": 0.494182825088501
+        },
+        {
+          "artwork_id": "cma:143784",
+          "rank": 31,
+          "score": 0.4918164014816284
+        },
+        {
+          "artwork_id": "cma:143138",
+          "rank": 32,
+          "score": 0.4912683367729187
+        },
+        {
+          "artwork_id": "cma:137224",
+          "rank": 33,
+          "score": 0.4912186861038208
+        },
+        {
+          "artwork_id": "cma:97136",
+          "rank": 34,
+          "score": 0.4879136085510254
+        },
+        {
+          "artwork_id": "aic:36492",
+          "rank": 35,
+          "score": 0.48738229274749756
+        },
+        {
+          "artwork_id": "cma:144966",
+          "rank": 36,
+          "score": 0.4868982434272766
+        },
+        {
+          "artwork_id": "aic:16134",
+          "rank": 37,
+          "score": 0.4862111210823059
+        },
+        {
+          "artwork_id": "aic:160030",
+          "rank": 38,
+          "score": 0.4852215051651001
+        },
+        {
+          "artwork_id": "cma:140149",
+          "rank": 39,
+          "score": 0.48501259088516235
+        },
+        {
+          "artwork_id": "aic:16137",
+          "rank": 40,
+          "score": 0.4841698408126831
+        },
+        {
+          "artwork_id": "cma:140148",
+          "rank": 41,
+          "score": 0.48365068435668945
+        },
+        {
+          "artwork_id": "cma:160143",
+          "rank": 42,
+          "score": 0.4790205955505371
+        },
+        {
+          "artwork_id": "aic:44816",
+          "rank": 43,
+          "score": 0.47782623767852783
+        },
+        {
+          "artwork_id": "cma:130132",
+          "rank": 44,
+          "score": 0.4769402742385864
+        },
+        {
+          "artwork_id": "cma:126768",
+          "rank": 45,
+          "score": 0.47690874338150024
+        },
+        {
+          "artwork_id": "aic:59916",
+          "rank": 46,
+          "score": 0.4766629934310913
+        },
+        {
+          "artwork_id": "cma:142559",
+          "rank": 47,
+          "score": 0.47569745779037476
+        },
+        {
+          "artwork_id": "cma:97156",
+          "rank": 48,
+          "score": 0.4735739231109619
+        },
+        {
+          "artwork_id": "aic:12891",
+          "rank": 49,
+          "score": 0.47357177734375
+        },
+        {
+          "artwork_id": "cma:124091",
+          "rank": 50,
+          "score": 0.4727943539619446
+        },
+        {
+          "artwork_id": "cma:135483",
+          "rank": 51,
+          "score": 0.4695671796798706
+        },
+        {
+          "artwork_id": "aic:16179",
+          "rank": 52,
+          "score": 0.46895259618759155
+        },
+        {
+          "artwork_id": "cma:126770",
+          "rank": 53,
+          "score": 0.4679142236709595
+        },
+        {
+          "artwork_id": "aic:111620",
+          "rank": 54,
+          "score": 0.46738201379776
+        },
+        {
+          "artwork_id": "aic:59847",
+          "rank": 55,
+          "score": 0.4670253396034241
+        },
+        {
+          "artwork_id": "cma:97170",
+          "rank": 56,
+          "score": 0.46683430671691895
+        },
+        {
+          "artwork_id": "aic:234781",
+          "rank": 57,
+          "score": 0.46565568447113037
+        },
+        {
+          "artwork_id": "aic:2166",
+          "rank": 58,
+          "score": 0.4647520184516907
+        },
+        {
+          "artwork_id": "aic:129756",
+          "rank": 59,
+          "score": 0.4635692238807678
+        },
+        {
+          "artwork_id": "aic:19336",
+          "rank": 60,
+          "score": 0.46255290508270264
+        },
+        {
+          "artwork_id": "cma:144303",
+          "rank": 61,
+          "score": 0.46085453033447266
+        },
+        {
+          "artwork_id": "aic:111610",
+          "rank": 62,
+          "score": 0.46053552627563477
+        },
+        {
+          "artwork_id": "aic:109323",
+          "rank": 63,
+          "score": 0.46038174629211426
+        },
+        {
+          "artwork_id": "aic:111622",
+          "rank": 64,
+          "score": 0.4599614143371582
+        },
+        {
+          "artwork_id": "cma:97336",
+          "rank": 65,
+          "score": 0.4591773748397827
+        },
+        {
+          "artwork_id": "cma:124050",
+          "rank": 66,
+          "score": 0.45876961946487427
+        },
+        {
+          "artwork_id": "aic:16488",
+          "rank": 67,
+          "score": 0.457295298576355
+        },
+        {
+          "artwork_id": "aic:23333",
+          "rank": 68,
+          "score": 0.45617830753326416
+        },
+        {
+          "artwork_id": "cma:97139",
+          "rank": 69,
+          "score": 0.4557114839553833
+        },
+        {
+          "artwork_id": "cma:124076",
+          "rank": 70,
+          "score": 0.4551510810852051
+        },
+        {
+          "artwork_id": "cma:124758",
+          "rank": 71,
+          "score": 0.45469439029693604
+        },
+        {
+          "artwork_id": "cma:152842",
+          "rank": 72,
+          "score": 0.4539144039154053
+        },
+        {
+          "artwork_id": "aic:16231",
+          "rank": 73,
+          "score": 0.45161986351013184
+        },
+        {
+          "artwork_id": "cma:97160",
+          "rank": 74,
+          "score": 0.4496645927429199
+        },
+        {
+          "artwork_id": "aic:158137",
+          "rank": 75,
+          "score": 0.44837212562561035
+        },
+        {
+          "artwork_id": "aic:184371",
+          "rank": 76,
+          "score": 0.44694018363952637
+        },
+        {
+          "artwork_id": "aic:16241",
+          "rank": 77,
+          "score": 0.4453296661376953
+        },
+        {
+          "artwork_id": "aic:59974",
+          "rank": 78,
+          "score": 0.44395482540130615
+        },
+        {
+          "artwork_id": "cma:97167",
+          "rank": 79,
+          "score": 0.44386136531829834
+        },
+        {
+          "artwork_id": "aic:16197",
+          "rank": 80,
+          "score": 0.4414634108543396
+        },
+        {
+          "artwork_id": "aic:16200",
+          "rank": 81,
+          "score": 0.4414634108543396
+        },
+        {
+          "artwork_id": "aic:16205",
+          "rank": 82,
+          "score": 0.4414634108543396
+        },
+        {
+          "artwork_id": "cma:134620",
+          "rank": 83,
+          "score": 0.441045880317688
+        },
+        {
+          "artwork_id": "aic:250762",
+          "rank": 84,
+          "score": 0.44014501571655273
+        },
+        {
+          "artwork_id": "cma:110566",
+          "rank": 85,
+          "score": 0.43968236446380615
+        },
+        {
+          "artwork_id": "cma:97166",
+          "rank": 86,
+          "score": 0.4393875002861023
+        },
+        {
+          "artwork_id": "aic:16162",
+          "rank": 87,
+          "score": 0.438518762588501
+        },
+        {
+          "artwork_id": "cma:144270",
+          "rank": 88,
+          "score": 0.4384932518005371
+        },
+        {
+          "artwork_id": "cma:132647",
+          "rank": 89,
+          "score": 0.4381300210952759
+        },
+        {
+          "artwork_id": "cma:148850",
+          "rank": 90,
+          "score": 0.4363657236099243
+        },
+        {
+          "artwork_id": "cma:122223",
+          "rank": 91,
+          "score": 0.43603140115737915
+        },
+        {
+          "artwork_id": "aic:51130",
+          "rank": 92,
+          "score": 0.43530404567718506
+        },
+        {
+          "artwork_id": "cma:97164",
+          "rank": 93,
+          "score": 0.4348520040512085
+        },
+        {
+          "artwork_id": "aic:190405",
+          "rank": 94,
+          "score": 0.43270885944366455
+        },
+        {
+          "artwork_id": "aic:10509",
+          "rank": 95,
+          "score": 0.43207746744155884
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:147938",
+          "rank": 1,
+          "score": 0.7096424102783203
+        },
+        {
+          "artwork_id": "aic:43211",
+          "rank": 2,
+          "score": 0.6936479210853577
+        },
+        {
+          "artwork_id": "cma:148861",
+          "rank": 3,
+          "score": 0.6920812726020813
+        },
+        {
+          "artwork_id": "cma:126772",
+          "rank": 4,
+          "score": 0.6822278499603271
+        },
+        {
+          "artwork_id": "aic:57049",
+          "rank": 5,
+          "score": 0.680893063545227
+        },
+        {
+          "artwork_id": "cma:111691",
+          "rank": 6,
+          "score": 0.6778852343559265
+        },
+        {
+          "artwork_id": "cma:126770",
+          "rank": 7,
+          "score": 0.6763643026351929
+        },
+        {
+          "artwork_id": "aic:57048",
+          "rank": 8,
+          "score": 0.6642133593559265
+        },
+        {
+          "artwork_id": "cma:148862",
+          "rank": 9,
+          "score": 0.6609127521514893
+        },
+        {
+          "artwork_id": "cma:145450",
+          "rank": 10,
+          "score": 0.6532048583030701
+        },
+        {
+          "artwork_id": "aic:57051",
+          "rank": 11,
+          "score": 0.6446925401687622
+        },
+        {
+          "artwork_id": "cma:126771",
+          "rank": 12,
+          "score": 0.6400755643844604
+        },
+        {
+          "artwork_id": "aic:57050",
+          "rank": 13,
+          "score": 0.6340578198432922
+        },
+        {
+          "artwork_id": "cma:151377",
+          "rank": 14,
+          "score": 0.6285433173179626
+        },
+        {
+          "artwork_id": "cma:132647",
+          "rank": 15,
+          "score": 0.6197949647903442
+        },
+        {
+          "artwork_id": "aic:12891",
+          "rank": 16,
+          "score": 0.6056536436080933
+        },
+        {
+          "artwork_id": "aic:111610",
+          "rank": 17,
+          "score": 0.6043808460235596
+        },
+        {
+          "artwork_id": "aic:88619",
+          "rank": 18,
+          "score": 0.604347825050354
+        },
+        {
+          "artwork_id": "cma:457341",
+          "rank": 19,
+          "score": 0.5977692008018494
+        },
+        {
+          "artwork_id": "cma:144303",
+          "rank": 20,
+          "score": 0.5976185202598572
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "Italian painting depicting architectural interiors, focusing on church nave, classical columns, religious sculptures, and 19th-century devotional context",
+      "consulta_id": "c03-conceptual",
+      "consulta_visual": "Italian architectural interior of a church with vaulted ceilings, columns, statues, and worshippers",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:6eee991cdce5d8a580067f4c35d5c8e8f8381863d9717f73e0d41a7650c0eefa",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "interiores arquitectónicos en la pintura italiana",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "a5191c45427343df",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2350,
+        "tokens_out": 55
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:111691",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 12,
+          "visual": 6
+        },
+        "score_fusionado": 0.67788533
+      },
+      {
+        "artwork_id": "cma:126770",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 53,
+          "visual": 7
+        },
+        "score_fusionado": 0.67636443
+      },
+      {
+        "artwork_id": "cma:132647",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 89,
+          "visual": 15
+        },
+        "score_fusionado": 0.61979479
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 49,
+          "visual": 16
+        },
+        "score_fusionado": 0.60565383
+      },
+      {
+        "artwork_id": "aic:111610",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 62,
+          "visual": 17
+        },
+        "score_fusionado": 0.60438075
+      },
+      {
+        "artwork_id": "cma:144303",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 61,
+          "visual": 20
+        },
+        "score_fusionado": 0.59761883
+      },
+      {
+        "artwork_id": "cma:146167",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.59184046
+      },
+      {
+        "artwork_id": "aic:16162",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 87
+        },
+        "score_fusionado": 0.59094768
+      },
+      {
+        "artwork_id": "aic:190405",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 94
+        },
+        "score_fusionado": 0.58846358
+      },
+      {
+        "artwork_id": "aic:16200",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 81
+        },
+        "score_fusionado": 0.58448729
+      },
+      {
+        "artwork_id": "cma:147696",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.58226226
+      },
+      {
+        "artwork_id": "cma:137224",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.58133133
+      },
+      {
+        "artwork_id": "aic:51130",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 92
+        },
+        "score_fusionado": 0.58123527
+      },
+      {
+        "artwork_id": "aic:217534",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.57912657
+      },
+      {
+        "artwork_id": "aic:111620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.57304222
+      },
+      {
+        "artwork_id": "aic:80526",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.56597371
+      },
+      {
+        "artwork_id": "cma:135483",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.56444764
+      },
+      {
+        "artwork_id": "cma:160143",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.56368647
+      },
+      {
+        "artwork_id": "aic:36492",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.56126033
+      },
+      {
+        "artwork_id": "cma:97141",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.55953597
+      },
+      {
+        "artwork_id": "aic:16179",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.55910792
+      },
+      {
+        "artwork_id": "aic:2166",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.55537799
+      },
+      {
+        "artwork_id": "aic:160030",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.55425513
+      },
+      {
+        "artwork_id": "cma:142559",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.55381152
+      },
+      {
+        "artwork_id": "aic:111074",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.55275396
+      },
+      {
+        "artwork_id": "aic:16134",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.55071887
+      },
+      {
+        "artwork_id": "cma:143784",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 31
+        },
+        "score_fusionado": 0.54975762
+      },
+      {
+        "artwork_id": "cma:97166",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 86
+        },
+        "score_fusionado": 0.54747898
+      },
+      {
+        "artwork_id": "cma:126768",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.54653111
+      },
+      {
+        "artwork_id": "cma:143138",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.54568934
+      },
+      {
+        "artwork_id": "cma:113202",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.54310375
+      },
+      {
+        "artwork_id": "cma:148990",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.5425514
+      },
+      {
+        "artwork_id": "cma:140148",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.54145609
+      },
+      {
+        "artwork_id": "cma:140149",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.54105072
+      },
+      {
+        "artwork_id": "aic:188974",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.54085373
+      },
+      {
+        "artwork_id": "aic:16205",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 82
+        },
+        "score_fusionado": 0.53763806
+      },
+      {
+        "artwork_id": "cma:97136",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.53664564
+      },
+      {
+        "artwork_id": "cma:142474",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.53564119
+      },
+      {
+        "artwork_id": "cma:97139",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 69
+        },
+        "score_fusionado": 0.53483233
+      },
+      {
+        "artwork_id": "aic:16231",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 73
+        },
+        "score_fusionado": 0.53436235
+      },
+      {
+        "artwork_id": "aic:184371",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 76
+        },
+        "score_fusionado": 0.53432953
+      },
+      {
+        "artwork_id": "aic:19336",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.53279798
+      },
+      {
+        "artwork_id": "cma:124796",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.53168742
+      },
+      {
+        "artwork_id": "aic:59974",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 78
+        },
+        "score_fusionado": 0.53152296
+      },
+      {
+        "artwork_id": "aic:44816",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.53014123
+      },
+      {
+        "artwork_id": "cma:152842",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 72
+        },
+        "score_fusionado": 0.52937935
+      },
+      {
+        "artwork_id": "aic:109323",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.52872398
+      },
+      {
+        "artwork_id": "aic:23333",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 68
+        },
+        "score_fusionado": 0.52629556
+      },
+      {
+        "artwork_id": "cma:136922",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 18
+        },
+        "score_fusionado": 0.52615591
+      },
+      {
+        "artwork_id": "cma:132367",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.52487232
+      },
+      {
+        "artwork_id": "cma:142475",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.52449028
+      },
+      {
+        "artwork_id": "aic:59847",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.52220654
+      },
+      {
+        "artwork_id": "aic:16137",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.52182573
+      },
+      {
+        "artwork_id": "aic:250762",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 84
+        },
+        "score_fusionado": 0.52060001
+      },
+      {
+        "artwork_id": "cma:110566",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 85
+        },
+        "score_fusionado": 0.52001368
+      },
+      {
+        "artwork_id": "cma:97164",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 93
+        },
+        "score_fusionado": 0.51908516
+      },
+      {
+        "artwork_id": "aic:16197",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 80
+        },
+        "score_fusionado": 0.51896738
+      },
+      {
+        "artwork_id": "cma:122339",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.51823757
+      },
+      {
+        "artwork_id": "aic:129756",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.51780205
+      },
+      {
+        "artwork_id": "cma:97160",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 74
+        },
+        "score_fusionado": 0.51654058
+      },
+      {
+        "artwork_id": "aic:10509",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 95
+        },
+        "score_fusionado": 0.5146469
+      },
+      {
+        "artwork_id": "cma:122223",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 91
+        },
+        "score_fusionado": 0.51388729
+      },
+      {
+        "artwork_id": "aic:21445",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 28
+        },
+        "score_fusionado": 0.51222768
+      },
+      {
+        "artwork_id": "cma:97181",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.51215411
+      },
+      {
+        "artwork_id": "cma:97170",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.51209627
+      },
+      {
+        "artwork_id": "cma:124076",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 70
+        },
+        "score_fusionado": 0.51206874
+      },
+      {
+        "artwork_id": "aic:234781",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.51054389
+      },
+      {
+        "artwork_id": "aic:111622",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 64
+        },
+        "score_fusionado": 0.50914119
+      },
+      {
+        "artwork_id": "cma:124091",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.50912679
+      },
+      {
+        "artwork_id": "cma:97167",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 79
+        },
+        "score_fusionado": 0.50870066
+      },
+      {
+        "artwork_id": "cma:124758",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 71
+        },
+        "score_fusionado": 0.50606419
+      },
+      {
+        "artwork_id": "aic:22270",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.50584216
+      },
+      {
+        "artwork_id": "aic:22527",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.50540401
+      },
+      {
+        "artwork_id": "cma:144966",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.50502513
+      },
+      {
+        "artwork_id": "aic:16241",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 77
+        },
+        "score_fusionado": 0.50491613
+      },
+      {
+        "artwork_id": "aic:16488",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 67
+        },
+        "score_fusionado": 0.50124984
+      },
+      {
+        "artwork_id": "cma:125251",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.49980271
+      },
+      {
+        "artwork_id": "cma:159234",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.49639796
+      },
+      {
+        "artwork_id": "cma:124050",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 66
+        },
+        "score_fusionado": 0.49573131
+      },
+      {
+        "artwork_id": "cma:130132",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.49474372
+      },
+      {
+        "artwork_id": "cma:134620",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 83
+        },
+        "score_fusionado": 0.49392621
+      },
+      {
+        "artwork_id": "cma:144270",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 88
+        },
+        "score_fusionado": 0.49213688
+      },
+      {
+        "artwork_id": "cma:142472",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.4879014
+      },
+      {
+        "artwork_id": "aic:59916",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.48607365
+      },
+      {
+        "artwork_id": "aic:23972",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.48603085
+      },
+      {
+        "artwork_id": "aic:110242",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.48192869
+      },
+      {
+        "artwork_id": "cma:119698",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.47739942
+      },
+      {
+        "artwork_id": "cma:142473",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.47471015
+      },
+      {
+        "artwork_id": "aic:158137",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 75
+        },
+        "score_fusionado": 0.46990303
+      },
+      {
+        "artwork_id": "aic:149778",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.46442804
+      },
+      {
+        "artwork_id": "aic:154037",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.46433031
+      },
+      {
+        "artwork_id": "cma:148850",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 90
+        },
+        "score_fusionado": 0.45692371
+      },
+      {
+        "artwork_id": "cma:97156",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.45673236
+      },
+      {
+        "artwork_id": "cma:97336",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 65
+        },
+        "score_fusionado": 0.43487027
+      },
+      {
+        "artwork_id": "cma:157501",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.43379917
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:111691",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico claro y detallado de una iglesia italiana. CANDIDATA: interior arquitectónico oscuro y complejo de una sinagoga italiana. CAMBIO: cumple el pedido de interiores arquitectónicos italianos, aunque con una atmósfera más oscura y menos luminosa. La obra muestra un interior arquitectónico italiano, cumpliendo el pedido con una atmósfera distinta pero adecuada.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2880,
+          "tokens_out": 100
+        }
+      },
+      {
+        "artwork_id": "cma:126770",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano con luz clara y detalles visibles. CANDIDATA: interiores arquitectónicos italianos, más oscuros y con gran escala y multitud. CAMBIO: cumple el pedido de interiores arquitectónicos italianos, aunque con diferente atmósfera y escala. La candidata muestra interiores arquitectónicos italianos relevantes y cumple bien el pedido, aunque con una atmósfera más oscura y compleja.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3035,
+          "tokens_out": 103
+        }
+      },
+      {
+        "artwork_id": "aic:12891",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico claro y detallado, con enfoque en la estructura y espacio. CANDIDATA: interior arquitectónico oscuro y dramático, con figuras y acción en primer plano. CAMBIO: mantiene el motivo de interiores arquitectónicos italianos, pero cambia la claridad y el enfoque hacia la narrativa y figuras. Cumple el pedido de interiores arquitectónicos italianos, aunque con un estilo más oscuro y narrativo que la imagen original.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 2948,
+          "tokens_out": 108
+        }
+      },
+      {
+        "artwork_id": "aic:190405",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y monumental, con columnas y bóvedas, estilo renacentista italiano. CANDIDATA: interior arquitectónico más pequeño y doméstico, con elementos renacentistas italianos, pero menos monumental. CAMBIO: cumple el pedido de interiores arquitectónicos italianos, aunque el espacio es más íntimo y menos grandioso que el original. La candidata muestra un interior arquitectónico italiano renacentista, aunque menos monumental que la original, cumple bien el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3685,
+          "tokens_out": 118
+        }
+      },
+      {
+        "artwork_id": "aic:16162",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y detallado, con columnas y bóvedas, estilo renacentista italiano. CANDIDATA: arquitectura representada principalmente en exteriores y un espacio interior pequeño y poco detallado, estilo gótico italiano. CAMBIO: la candidata muestra arquitectura italiana pero no interiores arquitectónicos destacados como pide el pedido. La obra es italiana pero no muestra interiores arquitectónicos como pide el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 4169,
+          "tokens_out": 101
+        }
+      },
+      {
+        "artwork_id": "cma:147696",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y detallado, con columnas y bóvedas claras. CANDIDATA: escena religiosa con figuras en interior oscuro y poco definido arquitectónicamente. CAMBIO: no hay un enfoque claro en interiores arquitectónicos en la candidata, se centra en figuras y ambiente cerrado. La candidata es pintura italiana pero no muestra interiores arquitectónicos claros como pide el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2987,
+          "tokens_out": 96
+        }
+      },
+      {
+        "artwork_id": "cma:144303",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y detallado, con columnas y bóvedas. CANDIDATA: escena al aire libre con arquitectura mínima y poco visible. CAMBIO: no hay aumento ni presencia clara de interiores arquitectónicos en la candidata. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido de interiores en pintura italiana.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3052,
+          "tokens_out": 89
+        }
+      },
+      {
+        "artwork_id": "cma:137224",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico de iglesia italiana. CANDIDATA: vista exterior arquitectónica de plaza italiana. CAMBIO: no hay cambio hacia interiores, es un exterior amplio. La candidata muestra arquitectura italiana pero no interiores, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3591,
+          "tokens_out": 71
+        }
+      },
+      {
+        "artwork_id": "aic:111620",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico claramente definido, iglesia con columnas y bóvedas. CANDIDATA: escena con columnas clásicas pero sin interior arquitectónico definido, es un espacio abierto. CAMBIO: no hay un cambio hacia interiores arquitectónicos, la candidata muestra un espacio exterior o abierto. La candidata no muestra un interior arquitectónico, por lo que no cumple el pedido de interiores arquitectónicos en pintura italiana.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3118,
+          "tokens_out": 101
+        }
+      },
+      {
+        "artwork_id": "cma:135483",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico claramente representado con detalles precisos. CANDIDATA: paisaje con ruinas arquitectónicas al aire libre, sin interiores. CAMBIO: no hay interiores arquitectónicos en la candidata, solo ruinas exteriores. La candidata no muestra interiores arquitectónicos, solo ruinas en un paisaje, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3689,
+          "tokens_out": 89
+        }
+      },
+      {
+        "artwork_id": "aic:36492",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano con gran espacio y columnas. CANDIDATA: figura humana con fondo arquitectónico muy simple, sin interior detallado. CAMBIO: no hay un interior arquitectónico desarrollado en la candidata, se pierde el aspecto principal del pedido. La candidata no muestra un interior arquitectónico, por lo que no cumple el pedido de interiores arquitectónicos en pintura italiana.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 2,
+        "uso": {
+          "tokens_in": 3334,
+          "tokens_out": 95
+        }
+      },
+      {
+        "artwork_id": "cma:132647",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico detallado y claro de una iglesia italiana. CANDIDATA: escena religiosa sin interior arquitectónico visible. CAMBIO: no hay cambio hacia interiores arquitectónicos, se pierde ese aspecto. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 2847,
+          "tokens_out": 77
+        }
+      },
+      {
+        "artwork_id": "aic:111610",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano con detalles clásicos y figuras humanas. CANDIDATA: vista exterior de un jardín y edificios, sin interiores visibles. CAMBIO: no hay cambio hacia interiores arquitectónicos, es un exterior. La candidata muestra un exterior, no interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 2857,
+          "tokens_out": 82
+        }
+      },
+      {
+        "artwork_id": "cma:146167",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico con columnas y bóvedas, espacio amplio y detallado. CANDIDATA: escena religiosa con figuras humanas, sin interior arquitectónico visible. CAMBIO: no hay cambio hacia interiores arquitectónicos, la candidata no muestra arquitectura interior. La candidata no presenta interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3103,
+          "tokens_out": 87
+        }
+      },
+      {
+        "artwork_id": "aic:16200",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico con columnas y bóvedas italianas renacentistas. CANDIDATA: escena al aire libre con pozo y figuras, sin interior arquitectónico. CAMBIO: no hay cambio hacia interiores arquitectónicos, sino un espacio exterior. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 2811,
+          "tokens_out": 87
+        }
+      },
+      {
+        "artwork_id": "aic:51130",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano con columnas y bóvedas. CANDIDATA: escena mitológica sin interior arquitectónico. CAMBIO: no hay cambio hacia interiores arquitectónicos, sino ausencia total. La candidata no muestra interiores arquitectónicos italianos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3992,
+          "tokens_out": 77
+        }
+      },
+      {
+        "artwork_id": "aic:217534",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano con detalles claros y perspectiva espacial. CANDIDATA: escena religiosa sin interior arquitectónico visible. CAMBIO: no hay interiores arquitectónicos en la candidata, no cumple el pedido. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3676,
+          "tokens_out": 77
+        }
+      },
+      {
+        "artwork_id": "aic:80526",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y detallado, estilo italiano. CANDIDATA: escena al aire libre sin interior arquitectónico. CAMBIO: no hay cambio hacia interiores arquitectónicos, sino que se pierde ese aspecto. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3292,
+          "tokens_out": 79
+        }
+      },
+      {
+        "artwork_id": "cma:160143",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico amplio y detallado, estilo italiano. CANDIDATA: escena religiosa sin interior arquitectónico visible. CAMBIO: no hay cambio hacia interiores arquitectónicos, se pierde ese aspecto. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3096,
+          "tokens_out": 76
+        }
+      },
+      {
+        "artwork_id": "cma:97141",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: interior arquitectónico italiano claramente representado. CANDIDATA: escena aérea con figuras y fondo abstracto, sin interior arquitectónico. CAMBIO: no hay cambio hacia interiores arquitectónicos, se pierde ese aspecto. La candidata no muestra interiores arquitectónicos, por lo que no cumple el pedido.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 1,
+        "uso": {
+          "tokens_in": 3182,
+          "tokens_out": 79
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c03-conceptual",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": null,
+          "artwork_id": "cma:111691",
+          "ficha": {
+            "artist": "Alessandro Magnasco",
+            "culture": "Italy",
+            "date_display": "c. 1725–35",
+            "medium": "oil on canvas",
+            "title": "Interior of a Synagogue",
+            "year": 1725
+          },
+          "lineas": [
+            "La obra representa el interior arquitectónico de una sinagoga, un espacio amplio y con elementos arquitectónicos que crean un ambiente para la escena religiosa. [1]",
+            "La composición invita al espectador a entrar en el espacio arquitectónico y experimentar el servicio religioso, lo que evidencia un enfoque en el interior arquitectónico. [1]",
+            "La paleta oscura y terrosa junto con la pincelada suelta y figuras alargadas contribuyen a un ambiente místico dentro del interior arquitectónico."
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Alessandro Magnasco",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:111691::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1930.22",
+              "texto_citado": "The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.",
+              "title": "Interior of a Synagogue"
+            }
+          ],
+          "score": 0.6778853261979347,
+          "source_url": "https://clevelandart.org/art/1930.22"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "cma:126770",
+          "ficha": {
+            "artist": "Francesco Guardi",
+            "culture": "Italy",
+            "date_display": "c. 1783",
+            "medium": "oil on canvas",
+            "title": "Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)",
+            "year": 1778
+          },
+          "lineas": [
+            "La obra muestra escenas de ceremonias papales en el interior del Salón de los Santos Giovanni e Paolo en Venecia, un espacio arquitectónico relevante. [1]",
+            "El artista Francesco Guardi es conocido por sus pinturas escénicas que incluyen paisajes urbanos y ceremonias, lo que indica un interés en la representación arquitectónica y de interiores. [1]",
+            "La obra refleja la pompa y ceremonia en un interior arquitectónico veneciano, mostrando detalles del espacio y la arquitectura del salón."
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Francesco Guardi",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:126770::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1949.187",
+              "texto_citado": "From May 15-18, 1782, Pope Pius VI Braschi was in Venice, the only papal visit during the eighteenth century, an event celebrated with great festivities. Francesco Guardi (1712-1793), a native Venetian, was one of the most celebrated scenic painters of the eighteenth century, and specialized in depictions of cityscapes and the pomp and pageantry of Venetian ceremonial life. To celebrate the momentous occasion, the Englishman Peter Edwards commissioned four large scenes of the Pope's visit. The museum's two smaller paintings represent copies of the popular subject, which Guardi copied either for the open market or for other patrons. The Pontifical Ceremony (Te Deum) depicts the musical performance of Te Deum, a prayer of thanksgiving set to music by Antonio Vivaldi (1678-1741), a famous Venetian Baroque composer. Te Deum was a traditional hymn recited in thanks to God for a special blessing, including a papal election or a royal coronation, and was appropriate for the historic papal visit. In the Reception of the Doge and Senate, the Doge, the elected prince of Venice, and Senators of the Venetian Republic process towards the throne, as the pope blesses the multitude of government leaders.",
+              "title": "Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)"
+            }
+          ],
+          "score": 0.676364427412068,
+          "source_url": "https://clevelandart.org/art/1949.187"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:12891",
+          "ficha": {
+            "artist": "Alessandro Magnasco",
+            "culture": "Italy",
+            "date_display": "c. 1705",
+            "medium": "Oil on canvas",
+            "style": "18th Century",
+            "title": "Theodosius Repulsed from the Church by Saint Ambrose",
+            "year": 1700
+          },
+          "lineas": [
+            "La pintura representa un evento histórico dentro de un edificio que es una interpretación imaginaria del atrio de una iglesia cristiana primitiva, un interior arquitectónico. [1]",
+            "Para el fondo arquitectónico elaborado, probablemente se empleó un especialista en pintura arquitectónica, lo que resalta la importancia del interior en la obra. [1]",
+            "El estilo fluido y enérgico del artista contrasta con la precisión del espacio arquitectónico representado en el fondo."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "Alessandro Magnasco",
+              "atribucion": "“Theodosius Repulsed from the Church by Saint Ambrose”, Alessandro Magnasco. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/12891",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:12891::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/12891",
+              "texto_citado": "This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.",
+              "title": "Theodosius Repulsed from the Church by Saint Ambrose"
+            }
+          ],
+          "score": 0.6056538342457185,
+          "source_url": "https://www.artic.edu/artworks/12891"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:190405",
+          "ficha": {
+            "artist": "Girolamo da Carpi",
+            "culture": "Italy",
+            "date_display": "c. 1535",
+            "medium": "Oil on panel",
+            "style": "Renaissance",
+            "title": "Saint Luke Drawing the Virgin and Christ Child",
+            "year": 1530
+          },
+          "lineas": [
+            "La obra muestra a San Lucas dibujando a la Virgen y el Niño Jesús dentro de un espacio interior, específicamente una capilla oratoria del palacio de la familia Este en Ferrara. [1]",
+            "El espacio arquitectónico interior es íntimo y está ambientado en un contexto religioso y familiar, lo que aporta un enfoque en el interior arquitectónico italiano renacentista."
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Girolamo da Carpi",
+              "atribucion": "“Saint Luke Drawing the Virgin and Christ Child”, Girolamo da Carpi. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/190405",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:190405::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/190405",
+              "texto_citado": "Girolamo da Carpi painted this intimate work for the Este family of Ferrara, Italy; it adorned the oratory chapel of their palace. The painting shows Saint Luke drawing the Virgin Mary and the infant Jesus while Joseph watches from a doorway. The infant appears agitated, as if he possesses foreknowledge of his death: He is reacting to the spear-like yarn winder, an attribute of the Three Fates from Greek mythology and a symbol of death in Christian contexts as well.\nThe painting’s distinguished history extends beyond the Estes. It later came into the possession of two Roman cardinals, two Roman princes, the English Duke of Westminster, Baron Alfred de Rothschild, and the Earl of Carnavon, who famously financed the excavation of King Tutankhamen’s tomb.",
+              "title": "Saint Luke Drawing the Virgin and Christ Child"
+            }
+          ],
+          "score": 0.588463583611675,
+          "source_url": "https://www.artic.edu/artworks/190405"
+        },
+        {
+          "abstencion": "No hay suficiente información en los fragmentos para afirmar que esta obra representa interiores arquitectónicos en la pintura italiana.",
+          "artwork_id": "aic:16162",
+          "ficha": {
+            "artist": "Giovanni di Paolo",
+            "culture": "Italy",
+            "date_display": "1455–60",
+            "medium": "Tempera on panel",
+            "style": "Renaissance",
+            "title": "Saint John the Baptist in Prison Visited by Two Disciples",
+            "year": 1455
+          },
+          "lineas": [
+            "La serie de paneles ilustra escenas narrativas que incluyen edificios y campos ornamentados, pero no se menciona un enfoque específico en interiores arquitectónicos. [1]",
+            "La representación incluye escenarios imaginativos y estilizados, pero no se destaca la representación detallada de interiores arquitectónicos italianos."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Giovanni di Paolo",
+              "atribucion": "“Saint John the Baptist in Prison Visited by Two Disciples”, Giovanni di Paolo. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/16162",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:16162::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/16162",
+              "texto_citado": "This series of panels illustrates scenes from the life of Saint John the Baptist, a prophet who foretold Jesus’s arrival as the Christian savior. The Art Institute’s collection includes six panels that were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint.\nThe narrative begins as John leaves civilization, entering the wilderness to become a hermit. In a following scene, John wears a hair shirt, a coarse undergarment symbolizing his ascetic life, as he announces that Jesus is the savior prophesied as the Agnus Dei, the Lamb of God. Subsequent panels show John’s imprisonment and violent execution at the hands of Herod, ruler of Galilee. Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.olo&artist_ids=Giovanni+di+Paolo\">six paintings illustrating scenes from the life of Saint John the Baptist, a prophet considered a forerunner of Jesus. They were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint. The first painting depicts John twice, leaving civilization—marked by ornate buildings and manicured agricultural fields—and entering the wilderness to become a hermit. In the next scene, John wears a hair shirt, symbolizing his ascetic life in the wilderness, as he announces that Jesus, at his right, is the savior prophesied as the agnus dei, the Lamb of God.\nThe following three panels depict John the Baptist’s imprisonment and execution at the hands of Herod, ruler of Galilee. According to one version of the story, Herod—seen in blue at the head of the table in the fourth panel from the left—was so taken by his stepdaughter Salome’s dancing that he reluctantly obliged when she requested John’s beheading (visualized gruesomely in the fifth panel). Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.",
+              "title": "Saint John the Baptist in Prison Visited by Two Disciples"
+            }
+          ],
+          "score": 0.5909476791723788,
+          "source_url": "https://www.artic.edu/artworks/16162"
+        }
+      ],
+      "render": "1. **Interior of a Synagogue**\n   Alessandro Magnasco · c. 1725–35 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1930.22\n\n   La obra representa el interior arquitectónico de una sinagoga, un espacio amplio y con elementos arquitectónicos que crean un ambiente para la escena religiosa. [1]\n   La composición invita al espectador a entrar en el espacio arquitectónico y experimentar el servicio religioso, lo que evidencia un enfoque en el interior arquitectónico. [1]\n   La paleta oscura y terrosa junto con la pincelada suelta y figuras alargadas contribuyen a un ambiente místico dentro del interior arquitectónico.\n\n   **Fuentes**\n   [1] “The Jewish synagogue was among Magnasco's most frequently painted subjects, here presented in a mystical and imaginative way. Expansive architectural space creates room for a multitude of tiny, fantastical figures with elongated limbs. These characters respond to the service with emotion and expressive gestures. Flashes of light dash across the surface against a dark, muted palette of earthy tones suggesting an otherworldly presence. The composition invites the viewer to enter the space and experience the service. Though he used characteristic elements of Baroque composition and was strongly influenced by Venetian painting, Magnasco's loose brushwork, elongated figures, and mysterious subject matter set him apart. Magnasco peers into a world of which he was not part: he was not Jewish and probably perceived Jews as outsiders. At the dawn of the Enlightenment in Europe progressive aristocratic families commissioned paintings by Magnasco, suggesting the painter's support for Enlightenment ideals which included religious tolerance, but Magnasco's personal views on Judaism in Italy remain unknown.”\n       https://clevelandart.org/art/1930.22 · CC0 1.0\n\n2. **Pope Pius VI Descending the Throne to Take Leave of the Doge in the Hall of Saints Giovanni e Paolo, 1782 and Pontifical Ceremony in Saints Giovanni e Paolo, Venice, 1782 (pair)**\n   Francesco Guardi · c. 1783 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1949.187\n\n   La obra muestra escenas de ceremonias papales en el interior del Salón de los Santos Giovanni e Paolo en Venecia, un espacio arquitectónico relevante. [1]\n   El artista Francesco Guardi es conocido por sus pinturas escénicas que incluyen paisajes urbanos y ceremonias, lo que indica un interés en la representación arquitectónica y de interiores. [1]\n   La obra refleja la pompa y ceremonia en un interior arquitectónico veneciano, mostrando detalles del espacio y la arquitectura del salón.\n\n   **Fuentes**\n   [1] “From May 15-18, 1782, Pope Pius VI Braschi was in Venice, the only papal visit during the eighteenth century, an event celebrated with great festivities. Francesco Guardi (1712-1793), a native Venetian, was one of the most celebrated scenic painters of the eighteenth century, and specialized in depictions of cityscapes and the pomp and pageantry of Venetian ceremonial life. To celebrate the momentous occasion, the Englishman Peter Edwards commissioned four large scenes of the Pope's visit. The museum's two smaller paintings represent copies of the popular subject, which Guardi copied either for the open market or for other patrons. The Pontifical Ceremony (Te Deum) depicts the musical performance of Te Deum, a prayer of thanksgiving set to music by Antonio Vivaldi (1678-1741), a famous Venetian Baroque composer. Te Deum was a traditional hymn recited in thanks to God for a special blessing, including a papal election or a royal coronation, and was appropriate for the historic papal visit. In the Reception of the Doge and Senate, the Doge, the elected prince of Venice, and Senators of the Venetian Republic process towards the throne, as the pope blesses the multitude of government leaders.”\n       https://clevelandart.org/art/1949.187 · CC0 1.0\n\n3. **Theodosius Repulsed from the Church by Saint Ambrose**\n   Alessandro Magnasco · c. 1705 · Oil on canvas · 18th Century\n   Ficha oficial: https://www.artic.edu/artworks/12891\n\n   La pintura representa un evento histórico dentro de un edificio que es una interpretación imaginaria del atrio de una iglesia cristiana primitiva, un interior arquitectónico. [1]\n   Para el fondo arquitectónico elaborado, probablemente se empleó un especialista en pintura arquitectónica, lo que resalta la importancia del interior en la obra. [1]\n   El estilo fluido y enérgico del artista contrasta con la precisión del espacio arquitectónico representado en el fondo.\n\n   **Fuentes**\n   [1] “This painting depicts a historical event from the year 390 when Ambrose, the archbishop of Milan, refused to give communion to Emperor Theodosius I until he made public penance for the massacre of thousands of innocents after an insurrection. Theodosius, the last emperor to command the entire Roman Empire, eventually submitted to the archbishop’s moral authority.\nThe brushwork and arrangement of figures in this composition showcase Alessandro Magnasco’s fluid, energetic style. However, for the elaborate background edifice, an imaginary interpretation of the atrium of an early Christian church, he most likely employed an unidentified specialist in architectural painting.”\n       https://www.artic.edu/artworks/12891 · CC BY 4.0\n       “Theodosius Repulsed from the Church by Saint Ambrose”, Alessandro Magnasco. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/12891\n\n4. **Saint Luke Drawing the Virgin and Christ Child**\n   Girolamo da Carpi · c. 1535 · Oil on panel · Renaissance\n   Ficha oficial: https://www.artic.edu/artworks/190405\n\n   La obra muestra a San Lucas dibujando a la Virgen y el Niño Jesús dentro de un espacio interior, específicamente una capilla oratoria del palacio de la familia Este en Ferrara. [1]\n   El espacio arquitectónico interior es íntimo y está ambientado en un contexto religioso y familiar, lo que aporta un enfoque en el interior arquitectónico italiano renacentista.\n\n   **Fuentes**\n   [1] “Girolamo da Carpi painted this intimate work for the Este family of Ferrara, Italy; it adorned the oratory chapel of their palace. The painting shows Saint Luke drawing the Virgin Mary and the infant Jesus while Joseph watches from a doorway. The infant appears agitated, as if he possesses foreknowledge of his death: He is reacting to the spear-like yarn winder, an attribute of the Three Fates from Greek mythology and a symbol of death in Christian contexts as well.\nThe painting’s distinguished history extends beyond the Estes. It later came into the possession of two Roman cardinals, two Roman princes, the English Duke of Westminster, Baron Alfred de Rothschild, and the Earl of Carnavon, who famously financed the excavation of King Tutankhamen’s tomb.”\n       https://www.artic.edu/artworks/190405 · CC BY 4.0\n       “Saint Luke Drawing the Virgin and Christ Child”, Girolamo da Carpi. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/190405\n\n5. **Saint John the Baptist in Prison Visited by Two Disciples**\n   Giovanni di Paolo · 1455–60 · Tempera on panel · Renaissance\n   Ficha oficial: https://www.artic.edu/artworks/16162\n\n   La serie de paneles ilustra escenas narrativas que incluyen edificios y campos ornamentados, pero no se menciona un enfoque específico en interiores arquitectónicos. [1]\n   La representación incluye escenarios imaginativos y estilizados, pero no se destaca la representación detallada de interiores arquitectónicos italianos.\n   No hay suficiente información en los fragmentos para afirmar que esta obra representa interiores arquitectónicos en la pintura italiana.\n\n   **Fuentes**\n   [1] “This series of panels illustrates scenes from the life of Saint John the Baptist, a prophet who foretold Jesus’s arrival as the Christian savior. The Art Institute’s collection includes six panels that were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint.\nThe narrative begins as John leaves civilization, entering the wilderness to become a hermit. In a following scene, John wears a hair shirt, a coarse undergarment symbolizing his ascetic life, as he announces that Jesus is the savior prophesied as the Agnus Dei, the Lamb of God. Subsequent panels show John’s imprisonment and violent execution at the hands of Herod, ruler of Galilee. Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.olo&artist_ids=Giovanni+di+Paolo\">six paintings illustrating scenes from the life of Saint John the Baptist, a prophet considered a forerunner of Jesus. They were originally part of a group of 12 that possibly formed the doors of a reliquary shrine to the saint. The first painting depicts John twice, leaving civilization—marked by ornate buildings and manicured agricultural fields—and entering the wilderness to become a hermit. In the next scene, John wears a hair shirt, symbolizing his ascetic life in the wilderness, as he announces that Jesus, at his right, is the savior prophesied as the agnus dei, the Lamb of God.\nThe following three panels depict John the Baptist’s imprisonment and execution at the hands of Herod, ruler of Galilee. According to one version of the story, Herod—seen in blue at the head of the table in the fourth panel from the left—was so taken by his stepdaughter Salome’s dancing that he reluctantly obliged when she requested John’s beheading (visualized gruesomely in the fifth panel). Giovanni di Paolo related the Baptist’s complex biography with expressive figures represented multiple times to indicate their movement through highly imaginative and stylized settings.”\n       https://www.artic.edu/artworks/16162 · CC BY 4.0\n       “Saint John the Baptist in Prison Visited by Two Disciples”, Giovanni di Paolo. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/16162\n"
+    },
+    "sellos": {
+      "commit": "087137edd5ad7052b13a85c9b3136d7b5f4a1fb3",
+      "config_id": "1cc2dba21da9b371",
+      "corrida_id": "422f169cdd3ed646-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "n_obras": 197,
+        "terminos": [
+          "Italy"
+        ],
+        "valores": [
+          "Italy",
+          "Northern Italy",
+          "Spain or Northern Italy",
+          "possibly Italy"
+        ]
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:111691",
+      "cma:126770",
+      "aic:12891",
+      "aic:190405",
+      "aic:16162"
+    ]
+  },
+  "fecha": "2026-11-16T04:53:27+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.0974,
+      "generador": 13.2272,
+      "planificador": 0.0061,
+      "recolector_de_evidencia": 0.3916,
+      "recuperador_textual": 0.4565,
+      "recuperador_visual": 0.0805,
+      "renderizador": 0.0,
+      "reranker": 32.9959
+    },
+    "segundos_de_la_corrida": 47.2584
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.151,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 0.711,
+      "tokens_in": 50,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "generador": 2
+      },
+      "segundos": 13.222,
+      "tokens_in": 9508,
+      "tokens_out": 1808
+    },
+    "indice": {
+      "n_items": 518,
+      "n_llamadas": 10,
+      "resultados": {
+        "ok": 10
+      },
+      "roles": {
+        "indice": 10
+      },
+      "segundos": 0.091,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 32.871,
+      "tokens_in": 65344,
+      "tokens_out": 1792
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 97,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.097,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "generador": 2
+      },
+      "segundos": 13.222,
+      "tokens_in": 9508,
+      "tokens_out": 1808
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.391,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 393,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 3
+      },
+      "segundos": 0.387,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.079,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 32.871,
+      "tokens_in": 65344,
+      "tokens_out": 1792
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 200,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "087137edd5ad7052b13a85c9b3136d7b5f4a1fb3",
+    "config_id": "1cc2dba21da9b371",
+    "corrida_id": "422f169cdd3ed646-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
