@@ -99,22 +99,22 @@
       "usd_por_consulta": 0.0096
     },
     "C4·filtro100·metadata·rerank20·gpt-6.1-terra": {
-      "consultas": 16,
+      "consultas": 30,
       "ndcg": {
         "conceptual": 0.944,
-        "visual": 0.843,
-        "ambiguo": 0.81,
-        "todas": 0.9
+        "visual": 0.73,
+        "ambiguo": 0.669,
+        "todas": 0.781
       },
       "ic95": [
-        0.848,
-        0.948
+        0.704,
+        0.851
       ],
-      "p5": 0.938,
-      "p5_estricta": 0.812,
-      "elegibles_medio": 96.3,
-      "pct_sin_juzgar": 2.5,
-      "usd_por_consulta": 0.0589
+      "p5": 0.833,
+      "p5_estricta": 0.64,
+      "elegibles_medio": 96.6,
+      "pct_sin_juzgar": 2.0,
+      "usd_por_consulta": 0.0585
     },
     "C4·filtro100·metadata·rerank20·prompt2": {
       "consultas": 30,
@@ -610,6 +610,14 @@
     }
   },
   "pareadas_contra_C4": {
+    "C4·filtro100·metadata·rerank20·gpt-6.1-terra − C4·filtro100·metadata·rerank20": {
+      "consultas": 30,
+      "delta": 0.032,
+      "ic95": [
+        -0.016,
+        0.087
+      ]
+    },
     "C4·filtro100·rerank20 − C4·filtro100·metadata·rerank20": {
       "consultas": 30,
       "delta": -0.059,
@@ -664,14 +672,6 @@
       "ic95": [
         -0.039,
         0.033
-      ]
-    },
-    "C4·filtro100·metadata·rerank20·gpt-6.1-terra − C4·filtro100·metadata·rerank20": {
-      "consultas": 16,
-      "delta": 0.011,
-      "ic95": [
-        -0.028,
-        0.049
       ]
     }
   },

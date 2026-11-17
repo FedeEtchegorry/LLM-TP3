@@ -278,6 +278,49 @@ def aviso():
     _guardar(fig, "aviso.png")
 
 
+
+def prefiltro():
+    """Cómo clasifica el prefiltro: las 30 consultas por tipo y 12 pedidos de validación con nivel esperado."""
+    sugeridas, validacion = S / "aclaraciones-v3.json", S / "validacion-v3.json"
+    if not sugeridas.exists():
+        print("prefiltro.png: falta aclaraciones-v3.json (correr aclarar.py sugerir)")
+        return
+    niveles = ("concreto", "medio", "vago")
+    colores = {"concreto": AZUL, "medio": GRIS, "vago": NARANJA}
+    a = json.loads(sugeridas.read_text(encoding="utf-8"))
+    v = json.loads(validacion.read_text(encoding="utf-8")) if validacion.exists() else []
+    grupos = [("30 consultas del set", [(t, [x["nivel"] for x in a.values() if x["categoria"] == t]) for t in c.CATEGORIAS])]
+    if v:
+        grupos.append(("12 pedidos de validación (fuera del set)", [(f"esperado\n{n}", [x["nivel"] for x in v if x["esperado"] == n]) for n in niveles]))
+    fig, ejes = plt.subplots(1, len(grupos), figsize=(6 * len(grupos), 4.4), squeeze=False)
+    for ax, (titulo, barras) in zip(ejes[0], grupos):
+        for i, (nombre, obtenidos) in enumerate(barras):
+            abajo = 0
+            for n in niveles:
+                k = obtenidos.count(n)
+                if k:
+                    ax.bar(i, k, bottom=abajo, color=colores[n], edgecolor="white", linewidth=2, width=0.6)
+                    ax.text(i, abajo + k / 2, str(k), ha="center", va="center", fontsize=10, color="white" if n != "medio" else TINTA)
+                abajo += k
+        ax.set_xticks(range(len(barras)), [b[0] for b in barras])
+        ax.set_ylim(0, max(len(o) for _, o in barras) * 1.15)
+        ax.set_ylabel("Pedidos")
+        ax.set_title(titulo, fontsize=11)
+        ax.grid(axis="y", alpha=0.25)
+        ax.set_axisbelow(True)
+    from matplotlib.patches import Patch
+    fig.legend([Patch(color=colores[n]) for n in niveles], [f"clasificado {n}" for n in niveles], loc="lower center", ncol=3, fontsize=9, frameon=False)
+    vagos = sum(x["nivel"] == "vago" for x in a.values() if x["categoria"] == "ambiguo")
+    marcados = sum(x["nivel"] == "vago" for x in a.values())
+    sub = f"Ambiguas marcadas como vagas: {vagos} de 10 · consultas marcadas como vagas: {marcados} de {len(a)}"
+    if v:
+        sub += f" · validación: nivel exacto en {sum(x['nivel'] == x['esperado'] for x in v)} de {len(v)}"
+    fig.suptitle("Prefiltro: ¿detecta los pedidos vagos?\n" + sub, fontsize=11)
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    fig.savefig(S / "prefiltro.png", dpi=150)
+    plt.close(fig)
+    print("prefiltro.png")
+
 def main():
     r = json.loads((S / "resultados.json").read_text(encoding="utf-8"))
     e = r["experimentos"]
@@ -287,6 +330,7 @@ def main():
     filtro(e)
     honestidad()
     aviso()
+    prefiltro()
 
 
 if __name__ == "__main__":
