@@ -212,10 +212,10 @@ def tabla(ev, elegidos, precios) -> dict:
 TEMAS = {
     "oscuro": {"fondo": "#1a1612", "texto": "#f6f0e4", "secundario": "#bdb5a6", "linea": "#4a433a",
                "barra": "#8f8778", "final": "#ddb15c",
-               "tipos": {"conceptual": "#3987e5", "visual": "#d95926", "ambiguo": "#199e70"}},
+               "tipos": {"conceptual": "#3987e5", "visual": "#d95926", "ambiguo": "#199e70", "mixto": "#a77fe0"}},
     "claro": {"fondo": "#ffffff", "texto": "#0b0b0b", "secundario": "#52514e", "linea": "#d9d8d2",
               "barra": "#a3a29a", "final": "#b8860b",
-              "tipos": {"conceptual": "#2a78d6", "visual": "#eb6834", "ambiguo": "#1baf7a"}},
+              "tipos": {"conceptual": "#2a78d6", "visual": "#eb6834", "ambiguo": "#1baf7a", "mixto": "#8a5cc2"}},
 }
 METRICAS = [  # (clave, título, archivo, decimales, máximo del eje)
     ("ndcg", "nDCG@5", "ndcg", 3, 1.0),
@@ -316,20 +316,26 @@ def figuras(tab, tema) -> list[str]:
     # nDCG@5 por tipo de consulta: un grupo por configuración, un color por tipo.
     fig, ax = plt.subplots(figsize=(11, 5))
     _eje(ax, t, "nDCG@5 por tipo de consulta")
-    nombres, ancho = list(tab), 0.25
-    for j, tipo in enumerate(c.CATEGORIAS):
-        xs = [i + (j - 1) * ancho for i in range(len(nombres))]
-        ys = [tab[n]["ndcg"][tipo] for n in nombres]
+    nombres = list(tab)
+    # El set mixto sale de `mixtas.py`: se suma como cuarto grupo si ya está medido.
+    mixtas = {}
+    if (c.SALIDA / "mixtas.json").exists():
+        mixtas = json.loads((c.SALIDA / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
+    tipos = [*c.CATEGORIAS, "mixto"] if all(n in mixtas for n in nombres) else list(c.CATEGORIAS)
+    ancho = 0.8 / len(tipos)
+    for j, tipo in enumerate(tipos):
+        xs = [i + (j - (len(tipos) - 1) / 2) * ancho for i in range(len(nombres))]
+        ys = [mixtas[n]["ndcg"] if tipo == "mixto" else tab[n]["ndcg"][tipo] for n in nombres]
         ax.bar(xs, ys, width=ancho, color=t["tipos"][tipo], edgecolor=t["fondo"], linewidth=1.5, label=tipo.capitalize())
         for x, y in zip(xs, ys):
             ax.text(x, y + 0.012, numero(y, 2), ha="center", va="bottom", color=t["texto"], fontsize=8)
     ax.set_ylim(0, 1.08)
     ax.set_xticks(range(len(nombres)), [f"{n}\n{tab[n]['agrega']}" for n in nombres])
     ax.yaxis.set_major_formatter(lambda y, _: numero(y, 1))
-    leyenda = ax.legend(frameon=False, ncols=3, loc="upper left", fontsize=10)
+    leyenda = ax.legend(frameon=False, ncols=len(tipos), loc="upper left", fontsize=10)
     for texto in leyenda.get_texts():
         texto.set_color(t["texto"])
-    fig.text(0.012, 0.015, "10 consultas por tipo · 634 juicios", color=t["secundario"], fontsize=9)
+    fig.text(0.012, 0.015, "10 consultas por tipo · 634 juicios en las 30 consultas, más los de las mixtas" if len(tipos) == 4 else "10 consultas por tipo · 634 juicios", color=t["secundario"], fontsize=9)
     fig.tight_layout(rect=(0, 0.04, 1, 1))
     hechas.append(_guardar(fig, t, "ablacion-por-tipo.png")); plt.close(fig)
 

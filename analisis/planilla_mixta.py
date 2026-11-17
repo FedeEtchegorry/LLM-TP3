@@ -3,13 +3,15 @@
     python analisis/planilla_mixta.py
 
 Lee el top-5 de todas las corridas `cNN-mixto` y escribe
-`artifacts/analisis/planilla-juicios-mixtas.html`. Cada persona abre su copia, marca A, B y C
+`artifacts/analisis/planilla-juicios-mixtas.html`. Con `--pendientes` deja solo los pares que ningun
+`juicios-*.csv` cubre y escribe `planilla-pendientes-mixtas.html`. Cada persona abre su copia, marca A, B y C
 por obra (rúbrica: docs/rubrica-mixta.md) y descarga un CSV `juicios-mixtas-<nombre>.csv`.
 El grado sale solo: A + B, y en el control (sin restricción) A + C.
 La planilla no dice qué configuración recuperó cada obra y las mezcla con semilla fija.
 """
 from __future__ import annotations
 
+import csv
 import glob
 import html
 import json
@@ -67,8 +69,9 @@ section{margin-bottom:36px}
 GUION = """
 const obras=[...document.querySelectorAll('.obra')], anotador=document.getElementById('anotador');
 const CLAVE='planilla-juicios-mixtas-v1';
-let estado={};
-try{estado=JSON.parse(localStorage.getItem(CLAVE)||'{}')}catch(e){}
+const PREVIOS=__PREVIOS__;
+let estado=Object.assign({},PREVIOS);
+try{estado=Object.assign(estado,JSON.parse(localStorage.getItem(CLAVE)||'{}'))}catch(e){}
 function guardar(){try{localStorage.setItem(CLAVE,JSON.stringify(estado))}catch(e){}}
 function grado(o,v){if(!v||v.a===undefined)return null;const s=o.dataset.control?v.c:v.b;if(s===undefined)return null;return v.a+s}
 function pintar(){let n=0;obras.forEach(o=>{const g=grado(o,estado[o.dataset.clave]);o.classList.toggle('hecha',g!==null);
@@ -78,7 +81,7 @@ anotador.value=estado.__anotador||'';
 anotador.addEventListener('input',()=>{estado.__anotador=anotador.value;guardar()});
 obras.forEach(o=>{const k=o.dataset.clave,v=estado[k]||{};
  o.querySelectorAll('input[type=radio]').forEach(r=>{const c=r.dataset.comp;if(String(v[c])===r.value)r.checked=true;
-  r.addEventListener('change',()=>{estado[k]=Object.assign(estado[k]||{},{[c]:Number(r.value)});guardar();pintar()})});
+  r.addEventListener('change',()=>{estado[k]=Object.assign(estado[k]||{},{[c]:Number(r.value),previo:false});guardar();pintar()})});
  const nota=o.querySelector('.nota');nota.value=v.nota||'';
  nota.addEventListener('input',()=>{estado[k]=Object.assign(estado[k]||{},{nota:nota.value});guardar()})});
 pintar();
@@ -86,11 +89,23 @@ document.getElementById('descargar').addEventListener('click',()=>{
  const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
  const x=n=>n===undefined?'':n;
  const filas=['consulta_id,artwork_id,grado,nota,anotador,cambio_visual,restriccion,adjetivo'];
- obras.forEach(o=>{const v=estado[o.dataset.clave],g=grado(o,v);if(g!==null){const p=o.dataset.clave.split('|');
+ obras.forEach(o=>{const v=estado[o.dataset.clave],g=grado(o,v);if(g!==null&&!v.previo){const p=o.dataset.clave.split('|');
   filas.push([p[0],p[1],g,q(v.nota),q(anotador.value),x(v.a),x(v.b),x(v.c)].join(','))}});
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([filas.join('\\n')],{type:'text/csv'}));
  a.download='juicios-mixtas-'+(anotador.value||'anotador').replace(/\\W+/g,'-')+'.csv';a.click()});
 """
+
+
+def _previos() -> dict[str, dict]:
+    """Juicios ya hechos con sus componentes, para que la planilla los traiga marcados y no los descargue."""
+    previos = {}
+    for archivo in sorted(glob.glob(str(SALIDA.parent / "juicios-mixtas-*.csv"))):
+        with open(archivo, encoding="utf-8", newline="") as f:
+            for fila in csv.DictReader(f):
+                v = {k: int(fila[col]) for k, col in (("a", "cambio_visual"), ("b", "restriccion"), ("c", "adjetivo")) if fila.get(col)}
+                if "a" in v:
+                    previos[f"{fila['consulta_id']}|{fila['artwork_id']}"] = {**v, "nota": fila.get("nota", ""), "previo": True}
+    return previos
 
 
 def _imagen(artwork_id: str) -> str:
@@ -175,9 +190,17 @@ def _obra(consulta: str, artwork_id: str, r: dict, control: bool) -> str:
     )
 
 
-def main() -> None:
+def main(pendientes: bool = False) -> None:
     e = html.escape
     catalogo, consultas, pares = _catalogo(), _consultas(), _pares()
+    destino = SALIDA
+    if pendientes:
+        import cascada as c
+
+        gt = c.cargar_juicios([*c.JUICIOS_BASE, *sorted(c.SALIDA.glob("juicios-*.csv"))])
+        pares = {q: [o for o in v if (q, o) not in gt] for q, v in pares.items()}
+        pares = {q: v for q, v in pares.items() if v}
+        destino = SALIDA.with_name("planilla-pendientes-mixtas.html")
     total = sum(len(v) for v in pares.values())
     secciones = []
     for consulta, obras in pares.items():
@@ -207,12 +230,15 @@ def main() -> None:
         "<li><strong>C, adjetivo vago</strong>: es subjetivo y no suma al grado, salvo en el control (c06), donde reemplaza a B.</li>"
         "<li><strong>Grado</strong> = A + B: 2 si cumple las dos, 1 si cumple una, 0 si ninguna. Se calcula solo.</li></ul>"
         "Juzgá cada obra por separado. Cada persona usa su propia copia y no mira los grados de la otra. "
-        "El avance queda guardado en este navegador.</div>"
-        f'{"".join(secciones)}</main><script>{GUION}</script></body></html>\n'
+        "El avance queda guardado en este navegador. Los pares que ya tienen juicio vienen precargados y no se descargan de nuevo.</div>"
+        f'{"".join(secciones)}</main><script>{GUION.replace("__PREVIOS__", json.dumps(_previos(), ensure_ascii=False, separators=(",", ":")))}</script></body></html>\n'
     )
-    SALIDA.write_text(pagina, encoding="utf-8")
-    print(f"{SALIDA.relative_to(RAIZ)}: {len(pares)} consultas, {total} pares")
+    destino.write_text(pagina, encoding="utf-8")
+    print(f"{destino.relative_to(RAIZ)}: {len(pares)} consultas, {total} pares")
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    main("--pendientes" in sys.argv)

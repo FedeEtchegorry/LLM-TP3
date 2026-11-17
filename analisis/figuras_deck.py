@@ -188,13 +188,31 @@ def v1_vs_v2(e, pareadas):
 
 
 def filtro(e):
-    fig, ejes = plt.subplots(1, 2, figsize=(11, 4.4), sharey=True)
-    for ax, sin, con, titulo in ((ejes[0], "C3·filtro100", C3, "C3: sin reranker"), (ejes[1], "C4·filtro100·rerank20", C4, "C4: con reranker")):
-        _barras_por_tipo(ax, [("sin filtro de metadata", GRIS, e[sin]["ndcg"]), ("con filtro de metadata", AZUL, e[con]["ndcg"])])
+    # Las mixtas salen de mixtas.py y entran como un grupo más. Sin las corridas de C3 y C4 sin filtro no hay barra gris.
+    mixtas = {}
+    if (S / "mixtas.json").exists():
+        mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
+    tipos = (*TIPOS, "mixtas") if mixtas else TIPOS
+    fig, ejes = plt.subplots(1, 2, figsize=(12.5 if mixtas else 11, 4.4), sharey=True)
+    for ax, sin, con, titulo, c_sin, c_con in (
+        (ejes[0], "C3·filtro100", C3, "C3: sin reranker", "C3 sin filtro", "C3"),
+        (ejes[1], "C4·filtro100·rerank20", C4, "C4: con reranker", "C4 sin filtro", "C4"),
+    ):
+        v_sin, v_con = dict(e[sin]["ndcg"]), dict(e[con]["ndcg"])
+        if mixtas:
+            v_sin["mixtas"] = (mixtas.get(c_sin) or {}).get("ndcg")
+            v_con["mixtas"] = (mixtas.get(c_con) or {}).get("ndcg")
+        _barras_por_tipo(ax, [("sin filtro de metadata", GRIS, v_sin), ("con filtro de metadata", AZUL, v_con)], tipos)
+        if mixtas and v_sin["mixtas"] is None:
+            ax.text(len(tipos) - 1 - 0.2, 0.02, "sin corrida", rotation=90, ha="center", va="bottom", fontsize=8, color=GRIS)
+        elif mixtas and (mixtas[c_sin].get("pct_sin_juzgar") or 0) > 0:  # pares sin juicio cuentan 0: el nDCG es cota inferior
+            ax.set_xlabel(f"mixtas sin filtro: {_es(mixtas[c_sin]['pct_sin_juzgar'], 0)} % de pares sin juzgar, nDCG es cota inferior", fontsize=8, color=GRIS)
         ax.set_title(titulo, fontsize=11)
     ejes[1].set_ylabel("")
     ejes[0].legend(fontsize=9, loc="upper right")
-    fig.suptitle("Efecto del filtro de metadata: solo cambia en las conceptuales, las únicas que lo activan", fontsize=11)
+    ejes[0].set_ylim(0, 1.2)  # lugar para la leyenda sin tapar las etiquetas
+    ejes[0].set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    fig.suptitle("Efecto del filtro de metadata en las 30 consultas y en las mixtas" if mixtas else "Efecto del filtro de metadata en las 30 consultas", fontsize=11)
     _guardar(fig, "filtro-metadata.png")
 
 
