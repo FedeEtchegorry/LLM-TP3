@@ -77,11 +77,15 @@ def cargar() -> tuple[dict[str, dict[str, dict]], dict]:
         with open(archivo, encoding="utf-8") as f:
             corrida = json.load(f)
         cfg, estado = corrida["configuracion_resuelta"], corrida["estado"]
+        if corrida["consulta_id"].endswith("-mixto"):
+            continue  # el set mixto es complementario y se mide aparte
         clave = _clave(cfg)
         if clave not in buscadas or not corrida.get("agrega_a_la_tabla", True) or not estado.get("top5"):
             continue
         if (estado.get("entrada") or {}).get("procedencia") == "ad_hoc":
             continue
+        if any(r.get("estado") == "sin_puntaje" for r in (estado.get("rerank") or [])):
+            continue  # reranker fallido: no es una medicion del reranker
         fila = {
             "ordinal": int(corrida.get("ordinal", 1)),
             "fecha": corrida.get("fecha") or "",

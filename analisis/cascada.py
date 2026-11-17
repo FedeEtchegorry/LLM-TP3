@@ -20,6 +20,7 @@ toda cifra va con su porcentaje sin juzgar: con mucho sin juzgar, es una cota in
 from __future__ import annotations
 
 import argparse
+import re
 import collections
 import csv
 import glob
@@ -38,8 +39,8 @@ JUICIOS_BASE = [
     GT / "juicios" / f"{SPLIT}-v1-ia-incremental.csv",
 ]
 CATEGORIAS = ("conceptual", "visual", "ambiguo")
-BASE_C3 = "C3·filtro100"
-BASE_C4 = "C4·filtro100·rerank20"
+BASE_C3 = "C3·filtro100·metadata"
+BASE_C4 = "C4·filtro100·metadata·rerank20"
 K = 5
 
 
@@ -69,17 +70,23 @@ def etiqueta(cfg: dict) -> str:
         version = str(((cfg.get("bindings") or {}).get("reranker") or {}).get("version_del_prompt", "1"))
         if version != "1":
             partes.append(f"prompt{version}")
+        # El modelo entra en la etiqueta: sin esto, dos modelos con la misma configuracion se pisan.
+        modelo = str(((cfg.get("bindings") or {}).get("reranker") or {}).get("modelo", ""))
+        if modelo and modelo != "openai/gpt-4.1-mini":
+            partes.append(modelo.split("/")[-1])
     if float(consulta["alfa"]) != 0.5:
         partes.append(f"alfa{consulta['alfa']}")
     return "·".join(partes)
 
 
-def cargar_corridas() -> dict[str, dict[str, dict]]:
+def cargar_corridas(mixtas: bool = False) -> dict[str, dict[str, dict]]:
     """{experimento: {consulta_id: estado}} — solo cascada, solo corridas que agregan a la tabla."""
     experimentos: dict[str, dict[str, dict]] = collections.defaultdict(dict)
     for archivo in sorted(glob.glob(str(RAIZ / "artifacts" / "corridas" / "*" / "corrida.json"))):
         with open(archivo, encoding="utf-8") as f:
             corrida = json.load(f)
+        if corrida["consulta_id"].endswith("-mixto") != mixtas:
+            continue  # el set mixto es complementario y se mide aparte
         cfg = corrida["configuracion_resuelta"]
         if (cfg.get("fusion") or {}).get("estrategia") != "cascada":
             continue
@@ -90,6 +97,8 @@ def cargar_corridas() -> dict[str, dict[str, dict]]:
         estado = corrida["estado"]
         if not estado.get("ranking_fusionado") or not estado.get("top5"):
             continue
+        if any(r.get("estado") == "sin_puntaje" for r in (estado.get("rerank") or [])):
+            continue  # el reranker fallo: el top-5 es el orden de CLIP, no una medicion del reranker
         estado["_usd"] = _usd(corrida)
         estado["_ordinal"] = int(corrida.get("ordinal", 1))
         previo = experimentos[etiqueta(cfg)].get(corrida["consulta_id"])
@@ -392,7 +401,7 @@ def main() -> None:
     experimentos = cargar_corridas()
     c3 = experimentos.get(BASE_C3, {})
     c4 = experimentos.get(BASE_C4, {})
-    mas_profundo = max((e for n, e in experimentos.items() if n.startswith("C4·filtro100·rerank") and len(e) == 30),
+    mas_profundo = max((e for n, e in experimentos.items() if re.fullmatch(r"C4·filtro100·metadata·rerank\d+", n) and len(e) == 30),
                        key=lambda e: min(len(x["rerank"]) for x in e.values()), default=c4)
 
     resultados = {
