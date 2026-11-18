@@ -193,6 +193,7 @@ def embudo(ev, c3, c4, umbral=2) -> dict:
             f["conocidas"] += len(relevantes)
             f["pasan_el_filtro"] += len(relevantes & set(elegibles))
             f["top_n_de_clip"] += len(relevantes & set(elegibles[:n]))
+            f["techo_top5"] += min(K, len(relevantes & set(elegibles[:n])))  # lo máximo que el top-5 podía tener
             if consulta in c3:
                 f["top5_sin_reranker"] += len(relevantes & set(c3[consulta]["top5"]))
             f["top5_con_reranker"] += len(relevantes & set(estado["top5"]))
@@ -336,22 +337,10 @@ def figuras(resultados) -> list[str]:
 
     emb = resultados["embudo_grado_2"]
     if emb:
-        etapas = ["conocidas", "pasan_el_filtro", "top_n_de_clip", "top5_sin_reranker", "top5_con_reranker"]
-        nombres = ["Conocidas", "Pasan el filtro", "Top-N de CLIP", "Top-5 sin reranker", "Top-5 con reranker"]
-        fig, ax = plt.subplots(figsize=(9, 4.5))
-        ancho = 0.25
-        for i, cat in enumerate(CATEGORIAS):
-            ax.bar([x + (i - 1) * ancho for x in range(len(etapas))], [emb[cat].get(e, 0) for e in etapas], ancho, label=cat, color=colores[cat])
-        ax.set_xticks(range(len(etapas)), nombres)
-        ax.set_ylabel("Obras de grado 2 por consulta")
-        ax.set_title("Embudo de la cascada: dónde se pierden las obras relevantes")
-        ax.legend()
-        fig.tight_layout(); fig.savefig(SALIDA / "embudo.png", dpi=150); plt.close(fig)
-        hechas.append("embudo.png")
+        hechas.append(figura_embudo(plt, emb))
 
     for clave, eje_x, titulo, archivo in (
         ("barrido_del_filtro", "obras_elegibles", "nDCG@5 según el tamaño del filtro (sin reranker, simulado)", "filtro.png"),
-        ("barrido_del_reranker", "candidatas", "nDCG@5 según cuántas candidatas ve el reranker", "reranker.png"),
     ):
         filas = [f for f in resultados[clave] if isinstance(f[eje_x], int)]
         if not filas:
@@ -371,6 +360,9 @@ def figuras(resultados) -> list[str]:
         fig.tight_layout(); fig.savefig(SALIDA / archivo, dpi=150); plt.close(fig)
         hechas.append(archivo)
 
+    if resultados["barrido_del_reranker"]:
+        hechas.append(figura_reranker(plt, resultados["barrido_del_reranker"]))
+
     tabla = {n: f for n, f in resultados["experimentos"].items() if f["usd_por_consulta"] and f["consultas"] == 30}
     if len(tabla) >= 2:
         fig, ax = plt.subplots(figsize=(7, 4.5))
@@ -383,6 +375,92 @@ def figuras(resultados) -> list[str]:
         fig.tight_layout(); fig.savefig(SALIDA / "costo.png", dpi=150); plt.close(fig)
         hechas.append("costo.png")
     return hechas
+
+
+def figura_reranker(plt, filas) -> str:
+    """nDCG@5 según cuántas candidatas puntúa el reranker, simulado recortando la corrida de 40 candidatas.
+
+    Cada candidata se puntúa en una llamada aparte, así que recortar a las k primeras (orden de
+    CLIP) y quedarse con las 5 de mayor puntaje es lo mismo que haber corrido con k.
+    """
+    tinta, sec, linea = "#0b0b0b", "#52514e", "#d9d8d2"
+    colores = {"conceptual": "#2a78d6", "visual": "#eb6834", "ambiguo": "#1baf7a", "todas": "#3b3934"}
+    xs = [f["candidatas"] for f in filas]
+    fig, ax = plt.subplots(figsize=(13, 5.4))
+    ax.set_facecolor("white")
+    for lado in ("top", "right", "left", "bottom"):
+        ax.spines[lado].set_color("#a9a59b")
+    ax.yaxis.grid(True, color=linea, linewidth=0.6)
+    ax.set_axisbelow(True)
+    ax.tick_params(length=0, colors=sec, labelsize=9)
+    ax.fill_between(xs, [f["ic95"][0] for f in filas], [f["ic95"][1] for f in filas], color=colores["todas"], alpha=0.08, linewidth=0)
+    for cat, nombre in (("conceptual", "Conceptual"), ("ambiguo", "Ambiguo"), ("visual", "Visual"), ("todas", "Set de 30")):
+        ys = [f["ndcg"][cat] for f in filas]
+        ax.plot(xs, ys, marker="o", markersize=6 if cat != "todas" else 7, color=colores[cat], linewidth=3 if cat == "todas" else 1.8)
+        ax.annotate(nombre, (xs[-1], ys[-1]), textcoords="offset points", xytext=(10, 0), va="center", fontsize=10.5, fontweight="bold", color=colores[cat])
+    ax.axvline(20, color=sec, linewidth=1, linestyle="--")
+    ax.text(20.4, 0.465, "C4 usa 20", color=sec, fontsize=9, va="bottom")
+    marcas = [k for k in xs if k % 5 == 0]  # 8 y 12 quedan como puntos sin rótulo para que no se pisen
+    ax.set_xticks(marcas, [str(k) for k in marcas], fontsize=10, color=tinta)
+    ax.set_xlim(3.5, 44.5)
+    ax.set_ylim(0.45, 1.0)
+    ax.yaxis.set_major_formatter(lambda y, _: f"{y:.1f}".replace(".", ","))
+    ax.set_ylabel("nDCG@5", color=sec, fontsize=9)
+    ax.set_xlabel("Candidatas que puntúa el reranker", color=sec, fontsize=9)
+    fig.text(0.012, 0.015,
+             "Simulado sobre una corrida de C4 con 40 candidatas (gpt-4.1-mini, prompt v1): para cada k se toman las k primeras en el orden de CLIP y se eligen las 5 de mayor puntaje. "
+             "Es válido porque el reranker puntúa\ncada candidata en una llamada aparte. Banda: IC 95 % del set de 30. Hasta 2 % de pares sin juzgar en algunos k (cuentan como 0). "
+             "Corrida real con 40 contra 20: +0,012 (IC −0,031 a 0,056).",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 0.97, 1))
+    fig.savefig(SALIDA / "reranker.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    return "reranker.png"
+
+
+def figura_embudo(plt, emb) -> str:
+    """Un panel por tipo de consulta: cuántas obras de grado 2 sobreviven a cada etapa.
+
+    Las dos últimas barras no son etapas sucesivas sino dos finales alternativos sobre las
+    mismas 20 candidatas: el top-5 que arma CLIP (C3) y el que elige el reranker (C4). La
+    línea punteada es el máximo que el top-5 podía tener con esas 20 (a lo sumo 5 por consulta).
+    """
+    texto, secundario, linea = "#0b0b0b", "#52514e", "#d9d8d2"
+    colores = {"conceptual": "#2a78d6", "visual": "#eb6834", "ambiguo": "#1baf7a"}
+    etapas = [("conocidas", "Conocidas"), ("pasan_el_filtro", "Entran por\ntexto"), ("top_n_de_clip", "Top-20\nde CLIP"),
+              ("top5_sin_reranker", "Top-5\nsin reranker"), ("top5_con_reranker", "Top-5\ncon reranker")]
+    techo = max(emb[cat]["conocidas"] for cat in CATEGORIAS) * 1.15
+    fig, ejes = plt.subplots(1, len(CATEGORIAS), figsize=(16, 5.4), sharey=True)
+    for ax, cat in zip(ejes, CATEGORIAS):
+        fila, color = emb[cat], colores[cat]
+        xs = range(len(etapas))
+        valores = [fila[clave] for clave, _ in etapas]
+        estilos = [dict(color=color)] * 3 + [dict(color="white", edgecolor=color, hatch="///", linewidth=1.2), dict(color=color)]
+        for x, v, estilo in zip(xs, valores, estilos):
+            ax.bar(x, v, width=0.62, **estilo)
+            ax.text(x, v + techo * 0.015, f"{v:.1f}".replace(".", ","), ha="center", va="bottom", color=texto, fontsize=11, fontweight="bold")
+        ax.axvline(2.5, color=linea, linewidth=1, linestyle="-")
+        ax.hlines(fila["techo_top5"], 2.55, 4.45, colors=texto, linestyles="--", linewidth=1.2)
+        ax.set_title(cat.capitalize(), color=texto, fontsize=13, fontweight="bold", loc="left", pad=10)
+        ax.set_xticks(list(xs), [nombre for _, nombre in etapas], fontsize=9.5, color=texto)
+        ax.set_ylim(0, techo)
+        for lado in ("top", "right", "left"):
+            ax.spines[lado].set_visible(False)
+        ax.spines["bottom"].set_color(linea)
+        ax.tick_params(length=0, axis="both")
+        ax.tick_params(axis="y", colors=secundario, labelsize=9)
+        ax.yaxis.grid(True, color=linea, linewidth=0.6)
+        ax.set_axisbelow(True)
+    ejes[0].set_ylabel("Obras de grado 2 por consulta", color=secundario, fontsize=10)
+    fig.text(0.012, 0.015, "Media de 10 consultas por tipo. «Conocidas»: obras juzgadas con grado 2 para la consulta, no todas las del catálogo. "
+             "«Entran por texto»: aparecen entre los 100 fragmentos de la rama de texto (con filtro de metadata si el pedido lo activa).\n"
+             "Las dos barras finales son alternativas sobre las mismas 20 candidatas: C3 (orden de CLIP) y C4 (reranker gpt-4.1-mini, prompt v1). "
+             "Línea punteada: máximo posible en el top-5 (por consulta, el mínimo entre 5 y las obras de grado 2 del top-20).",
+             color=secundario, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1), w_pad=3)
+    fig.savefig(SALIDA / "embudo.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    return "embudo.png"
 
 
 # ---------------------------------------------------------------- main

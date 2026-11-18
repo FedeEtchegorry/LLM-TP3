@@ -231,6 +231,7 @@
       "conocidas": 10.9,
       "pasan_el_filtro": 10.2,
       "top_n_de_clip": 8.0,
+      "techo_top5": 5.0,
       "top5_sin_reranker": 3.5,
       "top5_con_reranker": 4.0,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.4
@@ -239,6 +240,7 @@
       "conocidas": 8.53,
       "pasan_el_filtro": 7.5,
       "top_n_de_clip": 5.87,
+      "techo_top5": 4.17,
       "top5_sin_reranker": 2.43,
       "top5_con_reranker": 3.03,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 0.9
@@ -247,6 +249,7 @@
       "conocidas": 8.5,
       "pasan_el_filtro": 7.3,
       "top_n_de_clip": 5.9,
+      "techo_top5": 4.1,
       "top5_sin_reranker": 2.0,
       "top5_con_reranker": 3.1,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.1
@@ -255,6 +258,7 @@
       "conocidas": 6.2,
       "pasan_el_filtro": 5.0,
       "top_n_de_clip": 3.7,
+      "techo_top5": 3.4,
       "top5_sin_reranker": 1.8,
       "top5_con_reranker": 2.0,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.2
@@ -265,6 +269,7 @@
       "conocidas": 21.4,
       "pasan_el_filtro": 14.8,
       "top_n_de_clip": 11.0,
+      "techo_top5": 5.0,
       "top5_sin_reranker": 4.9,
       "top5_con_reranker": 4.8,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 5.2
@@ -273,6 +278,7 @@
       "conocidas": 16.13,
       "pasan_el_filtro": 12.5,
       "top_n_de_clip": 9.43,
+      "techo_top5": 4.9,
       "top5_sin_reranker": 3.43,
       "top5_con_reranker": 3.97,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 3.13
@@ -281,6 +287,7 @@
       "conocidas": 13.3,
       "pasan_el_filtro": 11.4,
       "top_n_de_clip": 8.5,
+      "techo_top5": 4.7,
       "top5_sin_reranker": 2.7,
       "top5_con_reranker": 3.6,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 1.8
@@ -289,6 +296,7 @@
       "conocidas": 13.7,
       "pasan_el_filtro": 11.3,
       "top_n_de_clip": 8.8,
+      "techo_top5": 5.0,
       "top5_sin_reranker": 2.7,
       "top5_con_reranker": 3.5,
       "descartadas_por_el_filtro_que_la_rama_visual_tenia": 2.4
