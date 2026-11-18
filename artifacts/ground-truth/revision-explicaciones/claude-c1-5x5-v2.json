@@ -1,0 +1,1058 @@
+{
+ "artefacto": "RevisionDeExplicaciones",
+ "version_de_la_revision": "2",
+ "autoria": {
+  "tipo": "LLM",
+  "asistente": "Claude (modelo configurado: claude-opus-5-5; el modelo que efectivamente respondió puede diferir)",
+  "sesion": "claude.ai, 18/11/2026",
+  "nota": "Revisión hecha por un asistente de IA, no por una persona. Se valida con una persona del grupo sobre un subconjunto (planilla-explicaciones.html) antes de presentarla como resultado."
+ },
+ "procedimiento": [
+  "Misma muestra y mismas 51 afirmaciones que la revisión m13b (C1, 5 consultas × 5 obras); el generador es idéntico en C1–C4.",
+  "Revisión ciega respecto de m13b: los veredictos anteriores se quitaron antes de revisar y recién se compararon al final.",
+  "Eje 1: si el tipo (dato u observación) que puso el generador es correcto. Fallas: A observación o afirmación visual presentada como dato citado; B dato de museo (fragmento o ficha) presentado como observación; C conocimiento general del modelo presentado como observación. Si una afirmación mezcla cosas, se juzga por lo central.",
+  "Eje 2 (solo datos): leyendo el fragmento citado completo, si dice lo que la afirmación dice. sostiene / parcial (alguna parte no está en el fragmento) / no.",
+  "Eje 3 (solo observaciones): mirando la imagen de la obra en data/imagenes/. defendible / discutible / falsa / no_visual (no afirma nada visible).",
+  "Cero llamadas a la API: todo sobre artefactos guardados."
+ ],
+ "procedencia": {
+  "commit": "d0ea89b80674c04c8060f6550a99a10bd4b04a1b",
+  "split_id": "5b6cba32126fed61",
+  "set_de_consultas": "artifacts/ground-truth/consultas/5b6cba32126fed61-grupo-2.json",
+  "config_id": "4443862ae45e62d6",
+  "configuracion": "C1",
+  "variante_id": "c3274567371ff42b",
+  "corrida_ids": {
+   "c02-conceptual": "741ec5641728b34a-1",
+   "c03-visual": "a2b517ea3aea5b1a-1",
+   "c06-ambiguo": "d0a9d25b8e3f1aad-1",
+   "c09-conceptual": "07d7cb12b5dd7fe1-1",
+   "c10-visual": "6618567b004daa93-1"
+  },
+  "binding_del_generador": {
+   "modelo": "openai/gpt-4.1-mini",
+   "prompt_id": "generador-es-afirmaciones-tipadas",
+   "version_del_prompt": "2",
+   "reintentos": 2,
+   "muestreo": {
+    "temperature": 0.2,
+    "top_p": 1.0,
+    "seed": 7369,
+    "max_tokens": 1500
+   }
+  },
+  "evidencia": {
+   "n_fragmentos_por_obra": 3,
+   "orden": "por_similitud_al_pedido"
+  },
+  "llamadas_al_proxy": 0,
+  "nota_de_presupuesto": "la decisión de presupuesto: el tope está agotado. Esta revisión se hizo **leyendo artefactos ya persistidos** y las imágenes del corpus en `data/imagenes/`. Cero llamadas.",
+  "nota_del_texto_por_valor": "Las 25 explicaciones van **copiadas adentro** con sus afirmaciones, sus referencias y la evidencia que tenían disponible (la tabla de identidades, deuda el contrato de la salida citada): las corridas son clase 2, no van al repo y no se reproducen, así que anclar el veredicto a un `corrida_id` sería el camino de anotación/ por una cuarta puerta."
+ },
+ "conteos": {
+  "n_explicaciones": 25,
+  "n_afirmaciones": 51,
+  "n_afirmaciones_dato": 27,
+  "n_afirmaciones_observacion": 24,
+  "eje_1_clasificacion": {
+   "n": 51,
+   "bien_clasificadas": 35,
+   "mal_clasificadas": 16,
+   "observacion_disfrazada_de_dato_citado": 1,
+   "dato_de_museo_como_observacion_propia": 11,
+   "conocimiento_general_como_observacion_propia": 4
+  },
+  "eje_2_la_cita_se_sostiene": {
+   "n": 27,
+   "sostiene": 22,
+   "sostiene_parcialmente": 4,
+   "no_sostiene": 1
+  },
+  "eje_3_la_observacion_es_defendible": {
+   "n_observaciones": 24,
+   "n_con_asercion_visual_verificable": 17,
+   "n_sin_asercion_visual": 7,
+   "defendible": 12,
+   "discutible": 4,
+   "falsa_a_la_vista": 1
+  }
+ },
+ "verificaciones_automaticas": {
+  "P3_a_referencias_colgadas": {
+   "n_referencias": 27,
+   "n_colgadas": 0,
+   "nota": "Confirma el umbral duro del conteo de referencias colgadas sobre la muestra. Es independiente del eje 2: las 3 citas que **no sostienen** apuntan a fragmentos que existen y fueron recuperados."
+  },
+  "P8_contrato_de_idioma": {
+   "n_explicaciones": 25,
+   "en_espanol": 25,
+   "n_citas": 25,
+   "citas_textuales_en_ingles_sin_traducir": 25,
+   "byte_a_byte_contra_el_fragmento": 25,
+   "nota": "25/25. No se encontró ninguna cita traducida (el contrato de la salida citada, las obligaciones de la cita)."
+  },
+  "P4_atribucion_CC_BY": {
+   "n_refs_CC_BY_4_0": 7,
+   "con_atribucion": 7,
+   "sin_atribucion": 0,
+   "n_refs_CC0": 18,
+   "con_atribucion_no_exigida": 0,
+   "nota": "7/7. Las 7 son `description` de AIC y las 7 llevan título, artista, museo, «Texto bajo CC BY 4.0» y URL."
+  },
+  "SA1_forma": {
+   "n_afirmaciones": 51,
+   "dato_con_refs_vacias": 0,
+   "observacion_con_refs": 0,
+   "explicaciones_cuyo_artwork_id_no_esta_en_el_top5": 0,
+   "nota": "El bicondicional `dato ⟺ refs ≠ ∅` se cumple 51/51. ⚠️ Que la **forma** se cumpla 51/51 y la **clasificación** falle 12/51 es justamente por qué la revisión humana necesita muestra humana: la regla de que un dato lleva referencia es verificable como forma y no como semántica."
+  },
+  "SA5": {
+   "n_afirmaciones_descartadas_por_sa5": 0
+  },
+  "SA6_reportado_aparte_por_DB_4": {
+   "n_afirmaciones_mal_formadas": 0,
+   "nota": "una afirmación mal formada no tiene `ref` y la clave del artefacto es `n_afirmaciones_descartadas_por_sa5`. **No se metió en ese conteo y no se renombró nada**: va en esta clave propia, al lado. En las 5 corridas no apareció ninguna — los 51 tipos son `dato` u `observacion`."
+  }
+ },
+ "obras": [
+  {
+   "consulta_id": "c02-conceptual",
+   "pedido": "escenas de agua en la pintura china",
+   "artwork_id": "cma:148368",
+   "ficha": {
+    "culture": "Netherlands",
+    "date_display": "1690",
+    "medium": "oil on canvas",
+    "title": "English Warship Firing a Salute",
+    "year": 1690
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un barco de guerra inglés disparando una salva, con énfasis en la marina real y sus grandes barcos.",
+     "refs": [
+      "cma:148368::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "parcial",
+     "observacion": null,
+     "motivo": "El fragmento respalda la marina real y sus grandes barcos; «disparando una salva» sale del título, no del fragmento citado."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Se observa agua en la escena, ya que los barcos están en el mar, pero no es una pintura china ni se menciona ninguna relación con la pintura china.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Agua y barcos se ven en la imagen. La aclaración de que no es china mezcla un dato de la ficha, pero la afirmación central es visual."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "pedido": "escenas de agua en la pintura china",
+   "artwork_id": "cma:163456",
+   "ficha": {
+    "artist": "Fitz Henry Lane",
+    "culture": "United States",
+    "date_display": "c. 1846–47",
+    "medium": "oil on canvas",
+    "title": "Harbor of Boston, with the City in the Distance",
+    "year": 1846
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura muestra una vista del puerto de Boston con reflejos de luz sobre el agua, destacando la calidad del agua y la presencia de barcos.",
+     "refs": [
+      "cma:163456::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento habla del puerto de Boston, la luz reflejada en el agua y los barcos."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la escena incluye agua y barcos, la obra es de un artista estadounidense y no está relacionada con la pintura china.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Lo central («artista estadounidense») es un dato de la ficha presentado como observación propia; agua y barcos sí se ven."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "pedido": "escenas de agua en la pintura china",
+   "artwork_id": "aic:120163",
+   "ficha": {
+    "artist": "Thomas Birch",
+    "culture": "Philadelphia",
+    "date_display": "1806–12",
+    "medium": "Oil on canvas",
+    "title": "Capture of the Tripoli by the Enterprise",
+    "year": 1806
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un combate naval entre barcos estadounidenses y tripolitanos en el mar Mediterráneo, con agua y barcos como elementos centrales.",
+     "refs": [
+      "aic:120163::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento describe el combate entre el Enterprise y un crucero tripolitano en el Mediterráneo."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La pintura es de un artista estadounidense y no tiene relación con la pintura china.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Nacionalidad del artista: dato de la ficha presentado como observación; no dice nada visible."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "pedido": "escenas de agua en la pintura china",
+   "artwork_id": "aic:244013",
+   "ficha": {
+    "artist": "Thomas Birch",
+    "culture": "United States",
+    "date_display": "1833",
+    "medium": "Oil on canvas",
+    "style": "19th century",
+    "title": "Shipwreck near a Rocky Coast",
+    "year": 1833
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra muestra un naufragio cerca de una costa rocosa, con detalles dramáticos del mar y la lucha humana contra la naturaleza.",
+     "refs": [
+      "aic:244013::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona el naufragio, la costa rocosa, el detalle dramático y la lucha contra la naturaleza."
+    },
+    {
+     "n": 2,
+     "tipo": "dato",
+     "texto": "El artista es estadounidense y la obra pertenece al género marino americano del siglo XIX, sin relación con la pintura china.",
+     "refs": [
+      "aic:244013::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento dice que Birch, de Filadelfia, ayudó a establecer la pintura marina estadounidense de comienzos del XIX; lo de «sin relación con la pintura china» es una inferencia menor."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c02-conceptual",
+   "pedido": "escenas de agua en la pintura china",
+   "artwork_id": "aic:495",
+   "ficha": {
+    "artist": "Reinier Nooms, called Zeeman",
+    "culture": "Netherlands",
+    "date_display": "c. 1655",
+    "medium": "Oil on canvas",
+    "style": "17th Century",
+    "title": "Coast Scene",
+    "year": 1645
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura representa una escena costera con barcos de pesca holandeses sobre un mar tranquilo y un cielo amplio.",
+     "refs": [
+      "aic:495::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona barcos de pesca holandeses, mar en calma y cielo amplio."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La obra es de un artista neerlandés del siglo XVII y no tiene relación con la pintura china.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Nacionalidad y siglo del artista: dato de la ficha presentado como observación; no dice nada visible."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "artwork_id": "aic:43211",
+   "ficha": {
+    "artist": "Emanuel de Witte",
+    "culture": "Holland",
+    "date_display": "c. 1680",
+    "medium": "Oil on panel",
+    "style": "17th Century",
+    "title": "Interior of the Oude Kerk, Delft",
+    "year": 1675
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa un interior de iglesia con luz y sombra, con decoración mínima y tonos cálidos propios del óleo sobre panel del siglo XVII en Holanda.",
+     "refs": [
+      "aic:43211::description::0"
+     ],
+     "clasificacion": "A",
+     "cita": "parcial",
+     "observacion": null,
+     "motivo": "El fragmento respalda la luz, la sombra y la decoración mínima. «Tonos cálidos» es una afirmación visual que no está en el fragmento y queda presentada como dato citado."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de colores es cálida, con predominancia de tonos marrones y amarillentos, no se observan tonos fríos predominantes.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "discutible",
+     "motivo": "La iglesia está dominada por blancos y grises de piedra encalada y figuras negras; hay madera cálida, pero «predominan marrones y amarillentos» no es la impresión dominante."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "artwork_id": "cma:148861",
+   "ficha": {
+    "artist": "Hubert Robert",
+    "culture": "France",
+    "date_display": "c.1769",
+    "medium": "oil on canvas",
+    "title": "The Colonnade of Saint Peter's, Rome, during the Conclave",
+    "year": 1764
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una arquitectura clásica italiana con columnas y elementos antiguos, basada en un dibujo de 1758.",
+     "refs": [
+      "cma:148861::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona la arquitectura clásica y el dibujo de 1758."
+    },
+    {
+     "n": 2,
+     "tipo": "dato",
+     "texto": "La escena incluye elementos arquitectónicos envejecidos y un soldado con armadura romana, lo que sugiere una atmósfera histórica y clásica.",
+     "refs": [
+      "cma:148861::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona las columnas envejecidas y el soldado con armadura romana."
+    },
+    {
+     "n": 3,
+     "tipo": "observacion",
+     "texto": "La paleta de colores probablemente incluye tonos neutros y terrosos propios de la arquitectura antigua, pero no se especifica el uso de tonos fríos.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "La paleta es de marrones y ocres terrosos; la afirmación está matizada con «probablemente»."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "artwork_id": "cma:147938",
+   "ficha": {
+    "artist": "Giovanni Paolo Panini",
+    "culture": "Italy",
+    "date_display": "1747",
+    "medium": "oil on canvas",
+    "title": "Interior of the Pantheon, Rome",
+    "year": 1747
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa el interior del Panteón de Roma, un espacio arquitectónico complejo con múltiples figuras y luz natural bajo la cúpula.",
+     "refs": [
+      "cma:147938::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "parcial",
+     "observacion": null,
+     "motivo": "El fragmento respalda la complejidad del espacio y las figuras bajo la cúpula; «luz natural» no está en el fragmento."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El uso de luz natural y la representación de un espacio abierto sugiere una paleta que puede incluir tonos neutros y cálidos, pero no se menciona específicamente el uso de tonos fríos.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Se ven ocres, amarillos y grises cálidos, con luz entrando por el óculo."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "artwork_id": "cma:148862",
+   "ficha": {
+    "artist": "Hubert Robert",
+    "culture": "France",
+    "date_display": "c. 1769",
+    "medium": "oil on canvas",
+    "title": "The Grotto of Posillipo",
+    "year": 1764
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa la Gruta de Posillipo con elementos arquitectónicos clásicos y una interpretación imaginativa del artista.",
+     "refs": [
+      "cma:148862::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento dice que Robert retrata la gruta de Posillipo de manera imaginativa y que su obra es de temas arquitectónicos clásicos."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El artista utiliza una representación idealizada y antigua, probablemente con tonos terrosos y neutros, sin indicación de predominancia de tonos fríos.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "La gruta es oscura, en marrones terrosos; la afirmación está matizada con «probablemente»."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c03-visual",
+   "pedido": "el mismo interior pero en tonos fríos",
+   "artwork_id": "cma:111691",
+   "ficha": {
+    "artist": "Alessandro Magnasco",
+    "culture": "Italy",
+    "date_display": "c. 1725–35",
+    "medium": "oil on canvas",
+    "title": "Interior of a Synagogue",
+    "year": 1725
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa el interior de una sinagoga con una paleta oscura y apagada, con tonos terrosos y un uso expresivo de la luz.",
+     "refs": [
+      "cma:111691::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento dice «dark, muted palette of earthy tones» y «flashes of light»."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la paleta es oscura y con tonos apagados, se menciona que hay destellos de luz que podrían aportar cierta frescura, pero no se indica que predominen tonos fríos.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Repite lo que dice el fragmento («se menciona que hay destellos de luz») como si fuera observación propia. Lo visual (paleta oscura y apagada) sí se ve."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "pedido": "más humano",
+   "artwork_id": "cma:314500",
+   "ficha": {
+    "culture": "Northwestern India",
+    "date_display": "c. 1670s–80s",
+    "medium": "gum tempera and gold on paper",
+    "title": "Royal Woman Holding a Flower",
+    "year": 1665
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato sigue el modelo formal del retrato imperial Mughal, con un cuidado detallado en el sombreado del rostro de una mujer real y en las texturas lujosas de sus ropas, lo que aporta una representación humana y detallada.",
+     "refs": [
+      "cma:314500::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona el modelo del retrato mogol, el sombreado del rostro y los textiles; «representación humana» es una lectura menor."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La expresión y el detalle en el rostro, junto con los elementos naturales como las flores en su cabello, contribuyen a una sensación de humanidad en la obra.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "discutible",
+     "motivo": "Las flores en el cabello salen del fragmento («sprigs of flowers tucked in her hair»). En la imagen la figura es pequeña y de perfil: la expresión del rostro casi no se distingue."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "pedido": "más humano",
+   "artwork_id": "cma:314448",
+   "ficha": {
+    "date_display": "c. 1710–20",
+    "medium": "gum tempera and gold on paper",
+    "title": "A European Woman Pouring Wine into a Cup",
+    "year": 1700
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La mujer está representada en un acto cotidiano, vertiendo vino, con una mirada que sugiere una actitud casi furtiva, lo que añade un aspecto humano y narrativo a la imagen.",
+     "refs": [
+      "cma:314448::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento dice que mira «almost surreptitiously» mientras sirve vino."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La combinación de elementos europeos e indios en su vestimenta y joyería refleja una identidad compleja y humana, con influencias culturales mixtas.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "La mezcla de boina europea y joyas indias está en el fragmento; presentada como observación. Se ve en la imagen."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "pedido": "más humano",
+   "artwork_id": "cma:169341",
+   "ficha": {
+    "artist": "Sahib Ram",
+    "culture": "Northwestern India",
+    "date_display": "c. 1793",
+    "medium": "Colored ink drawing",
+    "title": "Portrait of Maharaja Pratap Singh (1764–1803)",
+    "year": 1788
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato es altamente estilizado pero reconocible como la imagen del Maharaja Pratap Singh, con detalles específicos como la marca en la frente que indica su devoción religiosa.",
+     "refs": [
+      "cma:169341::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona el estilo, el reconocimiento y la marca en la frente por su devoción a Krishna."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque estilizado, el retrato muestra rasgos personales y simbólicos que humanizan al personaje, como el perfil y el rizo distintivo en la nuca.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "El perfil y el rizo en la nuca son exactamente lo que dice el fragmento; presentados como observación. Se ven en la imagen."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "pedido": "más humano",
+   "artwork_id": "cma:162509",
+   "ficha": {
+    "culture": "Eastern India",
+    "date_display": "c. 1890",
+    "medium": "Gum tempera, graphite, ink, and tin on paper",
+    "title": "Kartikeya, from a Kalighat album",
+    "year": 1875
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa a Kartikeya, un dios, con elementos de moda contemporánea de la época, integrando normas sociales bengalíes con imágenes tradicionales.",
+     "refs": [
+      "cma:162509::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona a Kartikeya como dandy y la integración de costumbres bengalíes con imágenes tradicionales."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La representación de un dios con características de dandy y elementos modernos puede interpretarse como una humanización o actualización del personaje divino.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Lo de «dandy» sale del fragmento; la lectura como humanización es del modelo. El peinado y los zapatos europeos se ven."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c06-ambiguo",
+   "pedido": "más humano",
+   "artwork_id": "cma:142520",
+   "ficha": {
+    "culture": "India",
+    "date_display": "c. 1690–1700",
+    "medium": "Gum tempera and ink on paper",
+    "title": "Man Dhata in Yogi Position",
+    "year": 1685
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "El retrato muestra a Raja Mandhata en una postura de práctica yogui, enfocándose en un momento espiritual y corporal poco convencional para un retrato de gobernante.",
+     "refs": [
+      "cma:142520::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento describe el retrato poco convencional del rajá en práctica yogui."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La imagen refleja una dimensión humana profunda al mostrar al rey en un acto de meditación y control del cuerpo, más allá de su rol político.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Que el rey esté en meditación sale del fragmento; presentado como observación. La postura sentada con las piernas cruzadas se ve."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "pedido": "el mismo tema en la pintura china",
+   "artwork_id": "cma:149661",
+   "ficha": {
+    "artist": "Soga Shōhaku",
+    "culture": "Japan",
+    "date_display": "1777",
+    "medium": "hanging scroll; ink on silk",
+    "title": "Orchid Pavilion Gathering",
+    "year": 1777
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura representa una reunión famosa que tuvo lugar en China en el año 353 d.C. para celebrar el Festival de la Purificación de Primavera, un tema chino histórico y cultural.",
+     "refs": [
+      "cma:149661::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento describe la reunión de 353 en China por el Festival de Purificación de Primavera."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema es chino, aunque la obra fue realizada por un artista japonés, lo que muestra la influencia y la representación del mismo tema en la pintura china y japonesa.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Que el artista sea japonés sale de la ficha; presentado como observación. No dice nada visible."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "pedido": "el mismo tema en la pintura china",
+   "artwork_id": "cma:148359",
+   "ficha": {
+    "artist": "Genga",
+    "culture": "Japan",
+    "date_display": "early 1500s",
+    "medium": "hanging scroll; ink on silk",
+    "title": "Bamboo in Wind",
+    "year": 1500
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "Las pinturas de bambú y rocas en tinta sobre seda reflejan un estilo y tema común en la pintura del Este Asiático, incluyendo China, aunque la autoría exacta es incierta entre Corea y Japón.",
+     "refs": [
+      "cma:148359::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona pinturas de China, Corea y Japón, las formas de rocas y bambú y la duda entre autoría coreana o japonesa; «sobre seda» es un detalle de la ficha."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema del bambú es recurrente en la pintura china, por lo que esta obra puede relacionarse con el mismo tema en la pintura china aunque su origen sea japonés o coreano.",
+     "refs": [],
+     "clasificacion": "C",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Que el bambú sea recurrente en la pintura china es conocimiento general del modelo, presentado como observación."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "pedido": "el mismo tema en la pintura china",
+   "artwork_id": "cma:147045",
+   "ficha": {
+    "artist": "Wang Jianzhang",
+    "culture": "China",
+    "date_display": "first half 1600s",
+    "medium": "hanging scroll; ink and color on satin",
+    "title": "Solitary Colors of the Autumn Woods",
+    "year": 1628
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra es una pintura china que representa un paisaje otoñal con dos caballeros y hace referencia a un texto daoísta chino, mostrando un tema cultural y literario chino.",
+     "refs": [
+      "cma:147045::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona los dos caballeros, el bosque otoñal y el texto daoísta Zhuangzi."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema de la naturaleza y la reflexión filosófica es común en la pintura china, por lo que esta obra representa un tema típico de la pintura china.",
+     "refs": [],
+     "clasificacion": "C",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Que la naturaleza y la reflexión filosófica sean comunes en la pintura china es conocimiento general, presentado como observación."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "pedido": "el mismo tema en la pintura china",
+   "artwork_id": "cma:79579",
+   "ficha": {
+    "artist": "Narihide",
+    "culture": "Japan",
+    "date_display": "1500s",
+    "medium": "hanging scroll; ink on paper",
+    "title": "Landscape",
+    "year": 1500
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura incluye imágenes de las Ocho Vistas de los ríos Xiao y Xiang, un tema clásico de la pintura china que fue adoptado por artistas japoneses.",
+     "refs": [
+      "cma:79579::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "parcial",
+     "observacion": null,
+     "motivo": "El fragmento menciona las Ocho Vistas de los ríos Xiao y Xiang; que sea un tema chino adoptado por artistas japoneses no está en el fragmento."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la obra es japonesa, el tema es directamente tomado de la pintura china, mostrando el mismo tema en la pintura china y su influencia en Japón.",
+     "refs": [],
+     "clasificacion": "C",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Que el tema venga de la pintura china es conocimiento general (más la cultura de la ficha), presentado como observación."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c09-conceptual",
+   "pedido": "el mismo tema en la pintura china",
+   "artwork_id": "cma:152831",
+   "ficha": {
+    "artist": "Min Zhen",
+    "culture": "China",
+    "date_display": "1788",
+    "medium": "album leaf, ink on paper",
+    "title": "Dragon amid Clouds",
+    "year": 1788
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra es una pintura china de un dragón entre nubes, un motivo tradicional en la pintura china.",
+     "refs": [
+      "cma:152831::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "no",
+     "observacion": null,
+     "motivo": "El fragmento citado es una biografía de Min Zhen y no menciona ningún dragón: eso sale del título. El dato es de museo, pero la cita no lo respalda."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "El tema del dragón en la pintura china es un motivo clásico y emblemático, por lo que esta obra representa un tema típico de la pintura china.",
+     "refs": [],
+     "clasificacion": "C",
+     "cita": null,
+     "observacion": "no_visual",
+     "motivo": "Que el dragón sea un motivo emblemático de la pintura china es conocimiento general, presentado como observación."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "pedido": "la misma escena con una paleta más oscura",
+   "artwork_id": "cma:97169",
+   "ficha": {
+    "artist": "Bartholomaeus Spranger",
+    "culture": "Flanders",
+    "date_display": "1600s",
+    "medium": "oil on canvas",
+    "title": "Ceres and Bacchus",
+    "year": 1600
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa a Ceres y Baco, dos deidades agrícolas, y está basada en una estampa de Jan Harmensz Muller que a su vez se basa en una pintura de Spranger.",
+     "refs": [
+      "cma:97169::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona a Ceres y Baco, deidades agrícolas, y la estampa de Muller basada en Spranger."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de esta obra es relativamente clara y luminosa, con colores vivos y un fondo azul brillante, por lo que no corresponde a una paleta más oscura.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "falsa",
+     "motivo": "La pintura tiene un fondo marrón oscuro y figuras en tonos cálidos; no hay ningún fondo azul brillante ni una paleta clara."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "pedido": "la misma escena con una paleta más oscura",
+   "artwork_id": "cma:150082",
+   "ficha": {
+    "artist": "Octave Tassaert",
+    "culture": "France",
+    "date_display": "c. 1850",
+    "medium": "oil on fabric",
+    "title": "Heaven and Hell",
+    "year": 1845
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La pintura muestra la lucha entre el bien y el mal por el alma de una joven, con figuras como un ángel, Satanás y San Miguel en la composición.",
+     "refs": [
+      "cma:150082::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento describe la lucha por el alma de la joven, el ángel, Satanás y San Miguel."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La escena es dramática y compleja, pero no se menciona ni se observa una paleta particularmente oscura en la descripción ni en la imagen.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "discutible",
+     "motivo": "La parte alta es clara pero la mitad inferior es oscura y la paleta general es apagada; «no particularmente oscura» se puede sostener solo a medias. Además mezcla lo que dice la descripción con lo que se ve."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "pedido": "la misma escena con una paleta más oscura",
+   "artwork_id": "aic:110663",
+   "ficha": {
+    "artist": "Eugène Delacroix",
+    "culture": "France",
+    "date_display": "1826",
+    "medium": "Oil on canvas",
+    "style": "19th century",
+    "title": "The Combat of the Giaour and Hassan",
+    "year": 1826
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una escena violenta inspirada en un poema romántico de Lord Byron, con dos figuras centrales enfrentadas en combate.",
+     "refs": [
+      "aic:110663::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona el poema de Byron, la lucha violenta y las dos figuras centrales enfrentadas."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Delacroix utiliza colores primarios brillantes y una pincelada suelta que crea dinamismo, lo que implica una paleta más luminosa que oscura.",
+     "refs": [],
+     "clasificacion": "B",
+     "cita": null,
+     "observacion": "discutible",
+     "motivo": "«Colores primarios brillantes» y «pincelada suelta que crea dinamismo» son frases del fragmento presentadas como observación. En la imagen dominan ocres, marrones y un cielo gris, con acentos rojos: «más luminosa que oscura» es discutible."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "pedido": "la misma escena con una paleta más oscura",
+   "artwork_id": "aic:16499",
+   "ficha": {
+    "artist": "Édouard Manet",
+    "culture": "France",
+    "date_display": "1865",
+    "medium": "Oil on canvas",
+    "style": "Realism",
+    "title": "Jesus Mocked by the Soldiers",
+    "year": 1865
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "Manet representa a Jesús burlado por soldados romanos, con un enfoque realista y una paleta que enfatiza la materialidad y la vulnerabilidad humana.",
+     "refs": [
+      "aic:16499::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona a los soldados romanos, el realismo, la vulnerabilidad física y la paleta que crea materialidad."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "La paleta de la obra es más oscura y sobria, con tonos apagados y un tratamiento que enfatiza la crudeza y el dramatismo de la escena.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Fondo negro, contraste fuerte y tonos sobrios: se ve."
+    }
+   ]
+  },
+  {
+   "consulta_id": "c10-visual",
+   "pedido": "la misma escena con una paleta más oscura",
+   "artwork_id": "aic:81505",
+   "ficha": {
+    "artist": "Eugène Delacroix",
+    "culture": "France",
+    "date_display": "1860–61",
+    "medium": "Oil on canvas",
+    "style": "nineteenth century",
+    "title": "Lion Hunt",
+    "year": 1860
+   },
+   "afirmaciones": [
+    {
+     "n": 1,
+     "tipo": "dato",
+     "texto": "La obra representa una cacería de leones inspirada en la experiencia de Delacroix en Argelia, con una composición teatral y detallada.",
+     "refs": [
+      "aic:81505::description::0"
+     ],
+     "clasificacion": "bien",
+     "cita": "sostiene",
+     "observacion": null,
+     "motivo": "El fragmento menciona Argelia y la intensidad teatral; «detallada» es un agregado menor."
+    },
+    {
+     "n": 2,
+     "tipo": "observacion",
+     "texto": "Aunque la escena es intensa, la paleta no se describe ni se observa como particularmente oscura, sino que combina colores vivos y contrastes fuertes.",
+     "refs": [],
+     "clasificacion": "bien",
+     "cita": null,
+     "observacion": "defendible",
+     "motivo": "Se ven rojos, verdes y ocres intensos con contrastes fuertes."
+    }
+   ]
+  }
+ ]
+}
