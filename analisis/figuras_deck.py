@@ -1,17 +1,18 @@
 """Figuras del deck que no salen de cascada.py ni de ablacion.py. No gasta.
 
-    python analisis/cascada.py && python analisis/ruido.py && python analisis/confianza.py
+    python analisis/cascada.py && python analisis/ablacion.py && python analisis/mixtas.py
+    python analisis/ruido.py && python analisis/confianza.py
     python analisis/figuras_deck.py
 
-Lee resultados.json, ruido.json, confianza.json y la revisión de explicaciones, y escribe en
+Lee resultados.json, ablacion.json, mixtas.json, ruido.json, confianza.json, aclaraciones-v3.json,
+validacion-v3.json y la revisión de explicaciones (claude-c1-5x5-v2.json), y escribe en
 artifacts/analisis: ruido.png, modelos-calidad.png, modelos-costo.png, v1-vs-v2.png,
-filtro-metadata.png, honestidad.png y aviso.png.
+filtro-metadata.png, honestidad.png, aviso.png y prefiltro.png. Todas comparten estilo: fondo
+blanco con recuadro, coma decimal, arena para la base y colores fijos por tipo de consulta.
 """
 from __future__ import annotations
 
 import json
-import math
-
 import matplotlib
 
 matplotlib.use("Agg")
@@ -20,126 +21,202 @@ import matplotlib.pyplot as plt  # noqa: E402
 import cascada as c  # noqa: E402
 
 S = c.SALIDA
-TIPOS = ("conceptual", "visual", "ambiguo", "todas")
-AZUL, NARANJA, VERDE, GRIS, TINTA = "#1f77b4", "#ff7f0e", "#2ca02c", "#9a9a9a", "#333333"
 C3, C4 = "C3·filtro100·metadata", "C4·filtro100·metadata·rerank20"
-RUIDO = 0.02
 
 
 def _es(x, d=2):
     return f"{x:.{d}f}".replace(".", ",")
 
 
-def _guardar(fig, nombre):
-    fig.tight_layout()
-    fig.savefig(S / nombre, dpi=150)
-    plt.close(fig)
-    print(nombre)
-
-
-def _barras_por_tipo(ax, series, tipos=TIPOS):
-    """series: [(nombre, color, {tipo: valor})]. Un valor ausente o NaN no se dibuja."""
-    ancho = 0.8 / len(series)
-    for i, (nombre, color, valores) in enumerate(series):
-        xs, ys = [], []
-        for j, t in enumerate(tipos):
-            v = valores.get(t)
-            if v is not None and not (isinstance(v, float) and math.isnan(v)):
-                xs.append(j + (i - (len(series) - 1) / 2) * ancho)
-                ys.append(v)
-        barras = ax.bar(xs, ys, ancho * 0.92, label=nombre, color=color)
-        for b, y in zip(barras, ys):
-            ax.annotate(_es(y), (b.get_x() + b.get_width() / 2, y), textcoords="offset points", xytext=(0, 3), ha="center", fontsize=8)
-    ax.set_xticks(range(len(tipos)), tipos)
-    ax.set_ylim(0, 1.05)
-    ax.set_ylabel("nDCG@5")
-    ax.grid(axis="y", alpha=0.25)
+def _estilo(ax, titulo):
+    """Mismo estilo que las figuras de ablacion.py (tema claro)."""
+    ax.set_title(titulo, color="#0b0b0b", fontsize=12, fontweight="bold", loc="left", pad=10)
+    for lado in ("top", "right", "left"):
+        ax.spines[lado].set_visible(False)
+    ax.spines["bottom"].set_color("#d9d8d2")
+    ax.tick_params(length=0)
+    ax.tick_params(axis="y", colors="#52514e", labelsize=8.5)
+    ax.yaxis.grid(True, color="#d9d8d2", linewidth=0.6)
     ax.set_axisbelow(True)
 
 
 def ruido():
+    """Izquierda: el nDCG@5 medio no se mueve entre repeticiones. Derecha: el de cada consulta sí, sobre todo en las visuales."""
     r = json.loads((S / "ruido.json").read_text(encoding="utf-8"))
-    fig, (a, b) = plt.subplots(1, 2, figsize=(10, 4.3), gridspec_kw={"width_ratios": [3, 2]})
-    for clave, nombre, color in ((C3, "C3 (sin reranker)", AZUL), (C4, "C4 (con reranker)", NARANJA)):
-        filas = r[clave]["filas"]
-        xs, ys = [f["repeticion"] for f in filas], [f["ndcg"] for f in filas]
-        a.plot(xs, ys, marker="o", color=color, linewidth=2, label=nombre)
+    gris, oro, tinta, sec = "#a3a29a", "#b8860b", "#0b0b0b", "#52514e"
+    colores = {"conceptual": "#2a78d6", "visual": "#eb6834", "ambiguo": "#1baf7a"}
+    fig, (a, b) = plt.subplots(1, 2, figsize=(14, 5.4), gridspec_kw={"width_ratios": [1, 1.25]})
+
+    _estilo(a, "nDCG@5 medio en cada repetición")
+    for clave, nombre, color, dy in ((C4, "C4 (con reranker)", oro, 10), (C3, "C3 (sin reranker)", gris, -18)):
+        ys = [f["ndcg"] for f in r[clave]["filas"]]
+        xs = list(range(1, len(ys) + 1))
+        a.plot(xs, ys, marker="o", markersize=9, linewidth=2.5, color=color)
         for x, y in zip(xs, ys):
-            a.annotate(_es(y, 3), (x, y), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=9)
-    media = sum(f["ndcg"] for f in r[C4]["filas"]) / len(r[C4]["filas"])
-    a.axhspan(media - RUIDO, media + RUIDO, color=NARANJA, alpha=0.12, label=f"±{_es(RUIDO)} alrededor de la media de C4")
-    a.set_xticks([f["repeticion"] for f in r[C4]["filas"]])
-    a.set_xlabel("Repetición de la misma configuración")
-    a.set_ylabel("nDCG@5 (30 consultas)")
-    a.set_ylim(0.55, 0.82)
-    a.grid(axis="y", alpha=0.25)
-    a.legend(fontsize=8, loc="lower right")
-    a.set_title("La media se mueve poco…")
-    n = r[C4]["consultas"]
-    cambian = [r[C3]["consultas_con_top5_distinto"], r[C4]["consultas_con_top5_distinto"]]
-    barras = b.bar(["C3", "C4"], cambian, color=[AZUL, NARANJA], width=0.55)
-    for barra, v in zip(barras, cambian):
-        b.annotate(f"{v} de {n}", (barra.get_x() + barra.get_width() / 2, v), textcoords="offset points", xytext=(0, 4), ha="center", fontsize=10)
-    b.set_ylim(0, n + 3)
-    b.set_ylabel("Consultas con top-5 distinto entre repeticiones")
-    b.grid(axis="y", alpha=0.25)
-    b.set_axisbelow(True)
-    b.set_title("…pero el top-5 cambia")
-    fig.suptitle("Ruido entre repeticiones: C3 es determinista, C4 no", fontsize=12)
-    _guardar(fig, "ruido.png")
+            a.annotate(_es(y, 3), (x, y), textcoords="offset points", xytext=(0, dy), ha="center", fontsize=10.5, fontweight="bold", color=tinta)
+        a.annotate(nombre, (xs[-1], ys[-1]), textcoords="offset points", xytext=(14, 0), va="center", fontsize=10.5, fontweight="bold", color=color)
+    a.set_xticks([1, 2, 3], ["Repetición 1", "Repetición 2", "Repetición 3"], fontsize=10)
+    a.set_xlim(0.6, 4.3)
+    a.set_ylim(0, 1.0)
+    a.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+
+    _estilo(b, "Cuánto cambia el nDCG@5 de una consulta en C4")
+    d = r[C4]
+    tipos = list(colores)
+    rangos, cambian = [], []
+    for tipo in tipos:
+        qs = [q for q in d["ndcg_por_consulta"] if c.categoria(q) == tipo]
+        rangos.append(sum(max(d["ndcg_por_consulta"][q]) - min(d["ndcg_por_consulta"][q]) for q in qs) / len(qs))
+        cambian.append((sum(d["top5_distinto_por_consulta"][q] for q in qs), len(qs)))
+    barras = b.bar(range(len(tipos)), rangos, width=0.55, color=[colores[t] for t in tipos])
+    for barra, v in zip(barras, rangos):
+        b.text(barra.get_x() + barra.get_width() / 2, v + 0.003, _es(v, 3), ha="center", va="bottom", fontsize=11, fontweight="bold", color=tinta)
+    b.set_xticks(range(len(tipos)), [f"{t.capitalize()}\ntop-5 distinto en {k} de {n}" for t, (k, n) in zip(tipos, cambian)], fontsize=10)
+    b.set_ylim(0, max(rangos) * 1.3)
+    b.set_ylabel("Mejor − peor repetición (media por consulta)", color=sec, fontsize=9)
+    b.yaxis.set_major_formatter(lambda y, _: _es(y, 2))
+
+    fig.text(0.012, 0.015,
+             "30 consultas (10 por tipo), tres repeticiones de cada configuración con el mismo plan. "
+             "C4: reranker gpt-4.1-mini, 20 candidatas, prompt v1. C3 devuelve el mismo top-5 en las tres repeticiones.\n"
+             f"Entre repeticiones de C4, la diferencia de nDCG@5 medio no es significativa (IC 95 % pareado, las tres cruzan 0). "
+             f"Jaccard medio del top-5 entre repeticiones: {_es(d['jaccard_medio_del_top5'])}.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.09, 1, 1), w_pad=4)
+    fig.savefig(S / "ruido.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("ruido.png")
+
+
+MODELOS = (  # (nombre, sufijo de la etiqueta, color): mini es la base, luna el de mejor resultado
+    ("gpt-4.1-mini", "", "#d6cdbd"),
+    ("gpt-6-luna", "·gpt-6-luna", "#8a6a2f"),
+    ("gpt-6.1-terra", "·gpt-6.1-terra", "#7f9c96"),
+)
+
+
+CORTO_MODELO = {"gpt-4.1-mini": "mini", "gpt-6-luna": "luna", "gpt-6.1-terra": "terra"}
+
+
+def _recuadro(ax):
+    for lado in ("top", "right", "left", "bottom"):
+        ax.spines[lado].set_visible(True)
+        ax.spines[lado].set_color("#a9a59b")
+        ax.spines[lado].set_linewidth(1)
 
 
 def modelos(e):
-    luna, terra = C4 + "·gpt-6-luna", C4 + "·gpt-6.1-terra"
-    presentes = [(n, k, col) for n, k, col in (("gpt-6-luna", luna, AZUL), ("gpt-4.1-mini", C4, NARANJA), ("gpt-6.1-terra", terra, VERDE)) if k in e]
-    # Las mixtas salen de mixtas.py y entran como un grupo más, aparte de «todas» (que son las 30).
-    mixtas = {}
-    if (S / "mixtas.json").exists():
-        mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
-    en_mixtas = {luna: "C4 luna", C4: "C4", terra: "C4 terra"}
-    tipos = (*TIPOS, "mixtas") if mixtas else TIPOS
-    series = []
-    for n, k, col in presentes:
-        valores = dict(e[k]["ndcg"]) if e[k]["consultas"] == 30 else {"conceptual": e[k]["ndcg"]["conceptual"]}
-        if mixtas:
-            valores["mixtas"] = (mixtas.get(en_mixtas[k]) or {}).get("ndcg")
-        series.append((n, col, valores))
-    fig, ax = plt.subplots(figsize=(11 if mixtas else 9.5, 4.6))
-    _barras_por_tipo(ax, series, tipos)
+    """nDCG@5 de C4 con cada modelo de reranker, por tipo de consulta, en el set de 30 y en las mixtas."""
+    from matplotlib.patches import Patch
+    tinta, sec, linea = "#0b0b0b", "#52514e", "#d9d8d2"
+    mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"] if (S / "mixtas.json").exists() else {}
+    en_mixtas = {"": "C4", "·gpt-6-luna": "C4 luna", "·gpt-6.1-terra": "C4 terra"}
+    presentes = [(n, C4 + suf, col, suf) for n, suf, col in MODELOS if C4 + suf in e]
+    grupos = [("conceptual", "Conceptual"), ("visual", "Visual"), ("ambiguo", "Ambiguo"), ("todas", "Set de 30")]
     if mixtas:
-        ax.axvline(len(TIPOS) - 0.5, color=GRIS, linewidth=1, linestyle=":")
-    ax.legend(fontsize=9, loc="upper right", ncol=3)
-    corto = {"gpt-6-luna": "luna", "gpt-4.1-mini": "mini", "gpt-6.1-terra": "terra"}
-    nota = "Set de 30, pares sin juzgar (cuentan como 0): " + ", ".join(f"{corto[n]} {_es(e[k]['pct_sin_juzgar'], 0)} %" for n, k, _ in presentes) + "."
-    if terra in e and e[terra]["consultas"] != 30:
-        nota += f" Terra, solo en las {e[terra]['consultas']} conceptuales."
-    if mixtas:
-        nota += " Mixtas: 10 consultas, todas juzgadas."
-    ax.set_title("Calidad por modelo de reranker (C4, 20 candidatas)", fontsize=11, pad=22)
-    ax.text(0.5, 1.02, nota, transform=ax.transAxes, ha="center", va="bottom", fontsize=8.5, color="#555555")
-    _guardar(fig, "modelos-calidad.png")
+        grupos.append(("mixtas", "Mixtas"))
+    xs = [0, 1, 2, 3.5, 5][: len(grupos)]
+    ancho = 0.8 / len(presentes)
+    fig, ax = plt.subplots(figsize=(13, 5.2))
+    _estilo(ax, "")
+    _recuadro(ax)
+    for k, (nombre, clave, color, suf) in enumerate(presentes):
+        for x, (g, _) in zip(xs, grupos):
+            v = (mixtas.get(en_mixtas[suf]) or {}).get("ndcg") if g == "mixtas" else e[clave]["ndcg"].get(g)
+            if v is None:
+                continue
+            xb = x + (k - (len(presentes) - 1) / 2) * ancho
+            ax.bar(xb, v, width=ancho * 0.94, color=color, edgecolor="white", linewidth=1)
+            ax.text(xb, v + 0.012, _es(v, 2), ha="center", va="bottom", fontsize=9.5, color=tinta)
+    for x in (2.75, 4.25)[: len(grupos) - 3]:
+        ax.axvline(x, color=linea, linewidth=1)
+    ax.set_xticks(xs, [n for _, n in grupos], fontsize=10.5, color=tinta)
+    ax.set_xlim(-0.6, xs[-1] + 0.6)
+    ax.set_ylim(0, 1.08)
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+    ax.set_ylabel("nDCG@5", color=sec, fontsize=9)
+    leyenda = ax.legend(handles=[Patch(color=col, label=n) for n, _, col, _ in presentes], frameon=False, loc="upper left",
+                        fontsize=10, ncols=len(presentes), bbox_to_anchor=(0, 1.0))
+    for t in leyenda.get_texts():
+        t.set_color(tinta)
+    fig.text(0.012, 0.015,
+             "C4 con 20 candidatas y prompt v1; solo cambia el modelo del reranker. nDCG@5 medio; set de 30 (10 consultas por tipo), todos los pares juzgados.\n"
+             "Mixtas: 10 consultas con otra rúbrica (cambio visual + restricción verificada en metadata); se comparan entre modelos, no con el set de 30.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.savefig(S / "modelos-calidad.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("modelos-calidad.png")
+    presentes = [(n, k, col) for n, k, col, _ in presentes]
 
-    # Costo y consumo: cada medida en su panel, porque las escalas no se comparan.
+    modelos_costo(e, presentes)
+
+
+def modelos_costo(e, presentes):
+    """USD por consulta (reranker sobre el resto), latencia por etapa y calidad contra costo, por modelo de reranker."""
+    from matplotlib.patches import Patch
+    tinta, sec, linea, neutro = "#0b0b0b", "#52514e", "#d9d8d2", "#d5d9dc"
     consumo = _consumo({k for _, k, _ in presentes})
-    paneles = [("usd", "USD por consulta", 4), ("tokens_in", "Tokens de entrada por consulta", 0),
-               ("tokens_out", "Tokens de salida por consulta", 0), ("segundos", "Latencia media (s)", 1)]
-    fig, ejes = plt.subplots(2, 2, figsize=(12, 7.2))
-    nombres = [f"{n}\n({consumo[k]['n']} consultas)" for n, k, _ in presentes]
-    for ax, (clave, titulo, dec) in zip(ejes.flat, paneles):
-        valores = [consumo[k][clave] for _, k, _ in presentes]
-        barras = ax.bar(nombres, valores, color=[col for _, _, col in presentes], width=0.6)
-        base = consumo[C4][clave]
-        for barra, v, (_, k, _) in zip(barras, valores, presentes):
-            texto = _es(v, dec) if dec else f"{v:,.0f}".replace(",", ".")
-            if k != C4 and base:
-                texto += f"\n({_es(v / base, 1)}× mini)"
-            ax.annotate(texto, (barra.get_x() + barra.get_width() / 2, v), textcoords="offset points", xytext=(0, 4), ha="center", fontsize=9)
-        ax.set_ylim(0, max(valores) * 1.28)
-        ax.set_title(titulo, fontsize=11)
-        ax.grid(axis="y", alpha=0.25)
-        ax.set_axisbelow(True)
-    fig.suptitle("Costo y consumo por modelo de reranker (C4, 20 candidatas, toda la cadena)", fontsize=12)
-    _guardar(fig, "modelos-costo.png")
+    xs = list(range(len(presentes)))
+    fig, (a_usd, a_seg, a_cal) = plt.subplots(1, 3, figsize=(16, 5.6), gridspec_kw={"width_ratios": (1, 1, 1.15)})
+
+    _estilo(a_usd, "USD por consulta")
+    _recuadro(a_usd)
+    for x, (n, k, col) in zip(xs, presentes):
+        d = consumo[k]
+        resto = d["usd"] - d["usd_reranker"]
+        a_usd.bar(x, resto, width=0.58, color=neutro, edgecolor="white")
+        a_usd.bar(x, d["usd_reranker"], bottom=resto, width=0.58, color=col, edgecolor="white")
+        a_usd.text(x, d["usd"] + 0.0012, _es(d["usd"], 4), ha="center", va="bottom", fontsize=10.5, fontweight="bold", color=tinta)
+    a_usd.set_xticks(xs, [f"{CORTO_MODELO[n]}\n{_es(consumo[k]['tokens_in'] / 1000, 0)} mil entrada\n{_es(consumo[k]['tokens_out'] / 1000, 1)} mil salida"
+                          for n, k, _ in presentes], fontsize=9.5, color=tinta)
+    a_usd.set_ylim(0, max(consumo[k]["usd"] for _, k, _ in presentes) * 1.2)
+    a_usd.yaxis.set_major_formatter(lambda y, _: _es(y, 2))
+
+    _estilo(a_seg, "Latencia media (s)")
+    _recuadro(a_seg)
+    for x, (n, k, col) in zip(xs, presentes):
+        g = consumo[k]["segundos_por_grupo"]
+        base = 0.0
+        for grupo, color in (("Recuperación y armado", neutro), ("Generador", "#9ea4a8"), ("Reranker", col)):
+            a_seg.bar(x, g[grupo], bottom=base, width=0.58, color=color, edgecolor="white")
+            base += g[grupo]
+        a_seg.text(x, consumo[k]["segundos"] + 1.5, _es(consumo[k]["segundos"], 1), ha="center", va="bottom", fontsize=10.5, fontweight="bold", color=tinta)
+    a_seg.set_xticks(xs, [CORTO_MODELO[n] for n, _, _ in presentes], fontsize=10, color=tinta)
+    a_seg.set_ylim(0, max(consumo[k]["segundos"] for _, k, _ in presentes) * 1.2)
+    a_seg.yaxis.set_major_formatter(lambda y, _: _es(y, 0))
+    leyenda = a_seg.legend(handles=[Patch(color=neutro, label="Recuperación y armado"), Patch(color="#9ea4a8", label="Generador"),
+                                    Patch(facecolor="white", edgecolor=sec, label="Reranker (color del modelo)")],
+                           frameon=False, loc="upper left", fontsize=8.5)
+    for t in leyenda.get_texts():
+        t.set_color(tinta)
+
+    _estilo(a_cal, "Calidad contra costo")
+    _recuadro(a_cal)
+    a_cal.xaxis.grid(True, color=linea, linewidth=0.6)
+    a_cal.tick_params(axis="x", colors=sec, labelsize=8.5)
+    for n, k, col in presentes:
+        x, y = consumo[k]["usd"], e[k]["ndcg"]["todas"]
+        a_cal.plot([x, x], e[k]["ic95"], color=col, linewidth=1.6)
+        a_cal.plot(x, y, "o", color=col, markersize=11, markeredgecolor="#6b675f")
+        a_cal.annotate(CORTO_MODELO[n], (x, y), textcoords="offset points", xytext=(10, 0), va="center", fontsize=10.5, fontweight="bold", color=tinta)
+    a_cal.set_xlim(0, max(consumo[k]["usd"] for _, k, _ in presentes) * 1.25)
+    a_cal.set_ylim(0.5, 1.0)
+    a_cal.set_xlabel("USD por consulta", color=sec, fontsize=9)
+    a_cal.set_ylabel("nDCG@5, set de 30 (IC 95 %)", color=sec, fontsize=9)
+    a_cal.xaxis.set_major_formatter(lambda x, _: _es(x, 2))
+    a_cal.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+
+    fig.text(0.012, 0.015,
+             "C4 con 20 candidatas y prompt v1, media de 30 consultas; costo y latencia de toda la cadena. En USD, en gris el resto de la cadena (planificador y generador, siempre gpt-4.1-mini). "
+             "Precios por millón de tokens (entrada / salida):\nmini 0,40 / 1,60 (lista de OpenAI); luna 0,10 / 0,50 y terra 1,00 / 5,00 (comparadores, no factura). "
+             "Los tokens de salida de luna y terra incluyen razonamiento. Latencia medida a través de un proxy compartido.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1), w_pad=3)
+    fig.savefig(S / "modelos-costo.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("modelos-costo.png")
 
 
 def _consumo(etiquetas) -> dict:
@@ -165,6 +242,7 @@ def _consumo(etiquetas) -> dict:
             "fecha": os.path.getmtime(archivo),
             "libro": {r: l for r, l in (corrida.get("libro_mayor") or {}).items() if isinstance(l, dict)},
             "segundos": (corrida.get("latencia") or {}).get("segundos_de_la_corrida"),
+            "por_etapa": (corrida.get("latencia") or {}).get("por_etapa") or {},
             "modelos": {r: b.get("modelo") for r, b in (cfg.get("bindings") or {}).items()},
             "modelo_de_embedding": (cfg.get("embebido_texto") or {}).get("modelo"),
             "precios": cfg.get("proveedor") or {},
@@ -185,141 +263,287 @@ def _consumo(etiquetas) -> dict:
             "tokens_in": c.media(u["tokens_in"] for u in usos),
             "tokens_out": c.media(u["tokens_out"] for u in usos),
             "segundos": c.media(segundos) if segundos else 0.0,
+            "usd_reranker": c.media(u["usd_por_rol"].get("reranker", 0) for u in usos),
+            "segundos_por_grupo": {g: c.media(sum(f["por_etapa"].get(x, 0) for x in etapas) for f in filas)
+                                   for g, etapas in ab.GRUPOS_DE_ETAPAS.items()},
         }
     return salida
 
 
+def _barras_agrupadas(series, archivo, pie):
+    """series: [(nombre, color, {grupo: valor})]. Grupos: tres tipos | set de 30 | mixtas, con el estilo del deck."""
+    from matplotlib.patches import Patch
+    tinta, sec, linea = "#0b0b0b", "#52514e", "#d9d8d2"
+    grupos = [("conceptual", "Conceptual"), ("visual", "Visual"), ("ambiguo", "Ambiguo"), ("todas", "Set de 30")]
+    if any(v.get("mixtas") is not None for _, _, v in series):
+        grupos.append(("mixtas", "Mixtas"))
+    xs = [0, 1, 2, 3.5, 5][: len(grupos)]
+    ancho = 0.8 / len(series)
+    fig, ax = plt.subplots(figsize=(13, 5.2))
+    _estilo(ax, "")
+    _recuadro(ax)
+    for k, (nombre, color, valores) in enumerate(series):
+        for x, (g, _) in zip(xs, grupos):
+            v = valores.get(g)
+            if v is None:
+                continue
+            xb = x + (k - (len(series) - 1) / 2) * ancho
+            ax.bar(xb, v, width=ancho * 0.94, color=color, edgecolor="white", linewidth=1)
+            ax.text(xb, v + 0.012, _es(v, 2), ha="center", va="bottom", fontsize=9.5, color=tinta)
+    for x in (2.75, 4.25)[: len(grupos) - 3]:
+        ax.axvline(x, color=linea, linewidth=1)
+    ax.set_xticks(xs, [n for _, n in grupos], fontsize=10.5, color=tinta)
+    ax.set_xlim(-0.6, xs[-1] + 0.6)
+    ax.set_ylim(0, 1.08)
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+    ax.set_ylabel("nDCG@5", color=sec, fontsize=9)
+    leyenda = ax.legend(handles=[Patch(color=col, label=n) for n, col, _ in series], frameon=False, loc="upper left",
+                        fontsize=10, ncols=len(series))
+    for t in leyenda.get_texts():
+        t.set_color(tinta)
+    fig.text(0.012, 0.015, pie, color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.savefig(S / archivo, dpi=200, facecolor="white")
+    plt.close(fig)
+    print(archivo)
+
+
 def v1_vs_v2(e, pareadas):
+    """nDCG@5 de C4 (gpt-4.1-mini) con el prompt v1 y el v2 del reranker."""
     v2 = C4 + "·prompt2"
-    fig, ax = plt.subplots(figsize=(8.5, 4.6))
-    _barras_por_tipo(ax, [("prompt v1", GRIS, e[C4]["ndcg"]), ("prompt v2", AZUL, e[v2]["ndcg"])])
-    d = pareadas[f"{v2} − {C4}"]
-    ax.legend(fontsize=9, loc="upper right", ncol=2)
-    ax.set_title(
-        f"Prompt del reranker: v1 contra v2\nDiferencia en todas: {d['delta']:+.3f}".replace(".", ",")
-        + f" (IC 95 %: {_es(d['ic95'][0], 3)} a {_es(d['ic95'][1], 3)}) · v2 tiene {_es(e[v2]['pct_sin_juzgar'], 0)} % de pares sin juzgar",
-        fontsize=10,
-    )
-    _guardar(fig, "v1-vs-v2.png")
+    mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"] if (S / "mixtas.json").exists() else {}
+    series = []
+    for nombre, clave, color, en_mixtas in (("Prompt v1", C4, "#d6cdbd", "C4"), ("Prompt v2", v2, "#6d84a0", "C4 prompt v2")):
+        valores = dict(e[clave]["ndcg"])
+        valores["mixtas"] = (mixtas.get(en_mixtas) or {}).get("ndcg")
+        series.append((nombre, color, valores))
+    _barras_agrupadas(series, "v1-vs-v2.png",
+                      "C4 con gpt-4.1-mini y 20 candidatas; solo cambia el prompt del reranker. v2 obliga a comparar la obra original y la candidata en el aspecto pedido antes de puntuar.\n"
+                      "nDCG@5 medio; set de 30 (10 consultas por tipo), todos los pares juzgados. Mixtas: 10 consultas con otra rúbrica; se comparan entre prompts, no con el set de 30.")
 
 
 def filtro(e):
-    # Las mixtas salen de mixtas.py y entran como un grupo más. Sin las corridas de C3 y C4 sin filtro no hay barra gris.
-    mixtas = {}
-    if (S / "mixtas.json").exists():
-        mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
-    tipos = (*TIPOS, "mixtas") if mixtas else TIPOS
-    fig, ejes = plt.subplots(1, 2, figsize=(12.5 if mixtas else 11, 4.4), sharey=True)
-    for ax, sin, con, titulo, c_sin, c_con in (
+    """Con y sin filtro de metadata, en C3 y en C4: un punto por variante y la diferencia pareada a la derecha.
+
+    Para cada consulta del set de 30 el filtro se considera activo si cambia la lista que entra a CLIP.
+    Las mixtas salen de mixtas.py (otra rúbrica) y van separadas.
+    """
+    ev = c.Evaluador(c.cargar_juicios([*c.JUICIOS_BASE, *sorted(S.glob("juicios-*.csv"))]))
+    ex = c.cargar_corridas()
+    mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8")) if (S / "mixtas.json").exists() else None
+    tinta, sec, linea, gris, oscuro = "#0b0b0b", "#52514e", "#d9d8d2", "#d6cdbd", "#8a6a2f"
+    s3, c3 = ex["C3·filtro100"], ex[C3]
+    qs = sorted(c3)
+    activo = {q: [x["artwork_id"] for x in c3[q]["ranking_fusionado"]] != [x["artwork_id"] for x in s3[q]["ranking_fusionado"]] for q in qs}
+
+    fig, ejes = plt.subplots(1, 2, figsize=(15, 5.4), sharey=True)
+    for ax, sin, con, titulo, m_sin, m_con in (
         (ejes[0], "C3·filtro100", C3, "C3: sin reranker", "C3 sin filtro", "C3"),
         (ejes[1], "C4·filtro100·rerank20", C4, "C4: con reranker", "C4 sin filtro", "C4"),
     ):
-        v_sin, v_con = dict(e[sin]["ndcg"]), dict(e[con]["ndcg"])
+        filas = []
+        for tipo in (*c.CATEGORIAS, "todas"):
+            sel = [q for q in qs if tipo == "todas" or c.categoria(q) == tipo]
+            v_sin = c.media(ev.ndcg(q, ex[sin][q]["top5"]) for q in sel)
+            v_con = c.media(ev.ndcg(q, ex[con][q]["top5"]) for q in sel)
+            dif = [ev.ndcg(q, ex[con][q]["top5"]) - ev.ndcg(q, ex[sin][q]["top5"]) for q in sel]
+            nombre = "Set de 30" if tipo == "todas" else f"{tipo.capitalize()} (filtro en {sum(activo[q] for q in sel)} de {len(sel)})"
+            filas.append((nombre, v_sin, v_con, c.media(dif), c.ic95(dif)))
         if mixtas:
-            v_sin["mixtas"] = (mixtas.get(c_sin) or {}).get("ndcg")
-            v_con["mixtas"] = (mixtas.get(c_con) or {}).get("ndcg")
-        _barras_por_tipo(ax, [("sin filtro de metadata", GRIS, v_sin), ("con filtro de metadata", AZUL, v_con)], tipos)
-        if mixtas and v_sin["mixtas"] is None:
-            ax.text(len(tipos) - 1 - 0.2, 0.02, "sin corrida", rotation=90, ha="center", va="bottom", fontsize=8, color=GRIS)
-        elif mixtas and (mixtas[c_sin].get("pct_sin_juzgar") or 0) > 0:  # pares sin juicio cuentan 0: el nDCG es cota inferior
-            ax.set_xlabel(f"mixtas sin filtro: {_es(mixtas[c_sin]['pct_sin_juzgar'], 0)} % de pares sin juzgar, nDCG es cota inferior", fontsize=8, color=GRIS)
-        ax.set_title(titulo, fontsize=11)
-    ejes[1].set_ylabel("")
-    ejes[0].legend(fontsize=9, loc="upper right")
-    ejes[0].set_ylim(0, 1.2)  # lugar para la leyenda sin tapar las etiquetas
-    ejes[0].set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    fig.suptitle("Efecto del filtro de metadata en las 30 consultas y en las mixtas" if mixtas else "Efecto del filtro de metadata en las 30 consultas", fontsize=11)
-    _guardar(fig, "filtro-metadata.png")
+            d = mixtas["pareadas"][f"{m_con} − {m_sin}"]
+            filas.append(("Mixtas (filtro en 9 de 10)", mixtas["configuraciones"][m_sin]["ndcg"], mixtas["configuraciones"][m_con]["ndcg"], d["delta"], tuple(d["ic95"])))
+        _estilo(ax, titulo)
+        for lado in ("top", "right", "left", "bottom"):  # recuadro alrededor de cada panel
+            ax.spines[lado].set_visible(True)
+            ax.spines[lado].set_color("#a9a59b")
+            ax.spines[lado].set_linewidth(1)
+        xs = [0, 1, 2, 3.5, 5][: len(filas)]
+        ancho = 0.36
+        for x, (nombre, v_sin, v_con, _delta, _ic) in zip(xs, filas):
+            ax.bar(x - ancho / 2, v_sin, width=ancho, color=gris, edgecolor="white", linewidth=1)
+            ax.bar(x + ancho / 2, v_con, width=ancho, color=oscuro, edgecolor="white", linewidth=1)
+            for dx, v in ((-ancho / 2, v_sin), (ancho / 2, v_con)):
+                ax.text(x + dx, v + 0.012, _es(v, 2), ha="center", va="bottom", fontsize=9, color=tinta)
+        for x in (2.75, 4.25)[: len(filas) - 3]:
+            ax.axvline(x, color=linea, linewidth=1)
+        etiquetas = [f[0].replace(" (filtro en ", "\nfiltro ").replace(" de 10)", "/10") for f in filas]
+        ax.set_xticks(xs, etiquetas, fontsize=9.5, color=tinta)
+        ax.set_xlim(-0.6, 5.6)
+        ax.set_ylim(0, 1.08)
+        ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+    ejes[0].set_ylabel("nDCG@5", color=sec, fontsize=9)
+    from matplotlib.patches import Patch
+    leyenda = ejes[0].legend(handles=[Patch(color=gris, label="Sin filtro"), Patch(color=oscuro, label="Con filtro")],
+                             frameon=False, loc="upper left", fontsize=9.5, ncols=2, bbox_to_anchor=(0, 1.02))
+    for t in leyenda.get_texts():
+        t.set_color(tinta)
+    fig.text(0.012, 0.015,
+             "nDCG@5 medio. "
+             "«Filtro k/n»: consultas en las que el filtro cambia la lista que entra a CLIP.\n"
+             "Mixtas: 10 consultas con otra rúbrica (cambio visual + restricción verificada en metadata); se comparan con y sin filtro entre sí, no con el set de 30.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1), w_pad=3)
+    fig.savefig(S / "filtro-metadata.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("filtro-metadata.png")
 
 
 def honestidad():
-    r = json.loads((c.RAIZ / "artifacts" / "ground-truth" / "revision-explicaciones" / "m13b-c1-5x5.json").read_text(encoding="utf-8"))["conteos"]
+    """Revisión manual de explicaciones: barras al 100 % por eje (bien, a medias, mal)."""
+    d = json.loads((c.RAIZ / "artifacts" / "ground-truth" / "revision-explicaciones" / "claude-c1-5x5-v2.json").read_text(encoding="utf-8"))
+    r, auto = d["conteos"], d["verificaciones_automaticas"]
     e1, e2, e3 = r["eje_1_clasificacion"], r["eje_2_la_cita_se_sostiene"], r["eje_3_la_observacion_es_defendible"]
+    tinta, sec = "#0b0b0b", "#52514e"
+    bien, medio, mal = "#7f9c96", "#d6cdbd", "#c0634a"
     filas = [
-        (f"¿Dato u observación bien tipados?\n({e1['n']} afirmaciones)", [("bien", e1["bien_clasificadas"], AZUL), ("mal", e1["mal_clasificadas"], NARANJA)]),
-        (f"¿La cita sostiene el dato?\n({e2['n']} datos con cita)", [("sí", e2["sostiene"], AZUL), ("en parte", e2["sostiene_parcialmente"], GRIS), ("no", e2["no_sostiene"], NARANJA)]),
-        (f"¿La observación visual es defendible?\n({e3['n_con_asercion_visual_verificable']} observaciones verificables)",
-         [("sí", e3["defendible"], AZUL), ("discutible", e3["discutible"], GRIS), ("falsa", e3["falsa_a_la_vista"], NARANJA)]),
+        (f"¿Dato u observación,\nbien clasificado?\n({e1['n']} afirmaciones)", [("Bien", e1["bien_clasificadas"], bien), ("Mal", e1["mal_clasificadas"], mal)]),
+        (f"¿La cita sostiene el dato?\n({e2['n']} datos con cita)", [("Sí", e2["sostiene"], bien), ("En parte", e2["sostiene_parcialmente"], medio), ("No", e2["no_sostiene"], mal)]),
+        (f"¿La observación visual\nes defendible?\n({e3['n_con_asercion_visual_verificable']} verificables)",
+         [("Sí", e3["defendible"], bien), ("Discutible", e3["discutible"], medio), ("Falsa", e3["falsa_a_la_vista"], mal)]),
     ]
-    fig, ax = plt.subplots(figsize=(9.5, 3.8))
+    fig, ax = plt.subplots(figsize=(13, 4.6))
+    _recuadro(ax)
     for y, (_, partes) in enumerate(filas):
         total, izq = sum(n for _, n, _ in partes), 0.0
         for nombre, n, color in partes:
             ancho = 100 * n / total
-            ax.barh(y, ancho, left=izq, color=color, edgecolor="white", linewidth=2, height=0.6)
-            if ancho > 5:
-                ax.text(izq + ancho / 2, y, f"{nombre}: {n}", ha="center", va="center", fontsize=9, color="white" if color != GRIS else TINTA)
+            ax.barh(y, ancho, left=izq, color=color, edgecolor="white", linewidth=2.5, height=0.62)
+            ax.text(izq + ancho / 2, y, f"{nombre}\n{n}", ha="center", va="center", fontsize=10.5, fontweight="bold",
+                    color="white" if color in (bien, mal) else tinta)
             izq += ancho
-    ax.set_yticks(range(len(filas)), [f for f, _ in filas], fontsize=9)
+    ax.set_yticks(range(len(filas)), [f for f, _ in filas], fontsize=10, color=tinta)
     ax.invert_yaxis()
     ax.set_xlim(0, 100)
-    ax.set_xlabel("% de las afirmaciones de cada eje")
-    ax.set_title(f"Revisión manual de {r['n_explicaciones']} explicaciones ({r['n_afirmaciones']} afirmaciones)", fontsize=11)
-    _guardar(fig, "honestidad.png")
+    ax.set_xticks(range(0, 101, 20), [f"{x} %" for x in range(0, 101, 20)])
+    ax.tick_params(length=0, colors=sec, labelsize=9)
+    ax.set_xlabel("Porcentaje de las afirmaciones de cada pregunta", color=sec, fontsize=9)
+    p3, p8, p4 = auto["P3_a_referencias_colgadas"], auto["P8_contrato_de_idioma"], auto["P4_atribucion_CC_BY"]
+    fig.text(0.012, 0.015,
+             f"Revisión hecha por un asistente de IA (Claude), sin validación humana, de {r['n_explicaciones']} explicaciones de C1 (5 consultas × 5 obras; el generador es el mismo en C1–C4), {r['n_afirmaciones']} afirmaciones: "
+             f"{r['n_afirmaciones_dato']} datos con cita y {r['n_afirmaciones_observacion']} observaciones.\n"
+             f"Verificaciones automáticas: {p3['n_colgadas']} de {p3['n_referencias']} referencias colgadas; {p8['byte_a_byte_contra_el_fragmento']} de {p8['n_citas']} citas textuales al fragmento; "
+             f"{p4['con_atribucion']} de {p4['n_refs_CC_BY_4_0']} textos CC BY con atribución.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.1, 1, 1))
+    fig.savefig(S / "honestidad.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("honestidad.png")
 
 
 def aviso():
+    """Izquierda: la confianza de cada consulta, separando listas buenas y malas. Derecha: cobertura y precisión según el umbral."""
     d = json.loads((S / "confianza.json").read_text(encoding="utf-8"))
-    filas = d["barrido_de_umbrales"]
-    xs = [f["umbral"] for f in filas]
-    fig, ax = plt.subplots(figsize=(8.5, 4.4))
-    for clave, nombre, color in (("cobertura", "Cobertura: listas malas que avisa", AZUL), ("precision", "Precisión: avisos que eran listas malas", NARANJA)):
-        ax.plot(xs, [f[clave] for f in filas], marker="o", color=color, linewidth=2, label=nombre)
-    u = d["umbral_publicado"]
-    ax.axvline(u["umbral"], color=TINTA, linestyle="--", linewidth=1)
-    ax.annotate(f"umbral {_es(u['umbral'], 0)}: avisa {u['avisa']} de {d['consultas']},\ncobertura {_es(u['cobertura'])}, precisión {_es(u['precision'])}",
-                (u["umbral"], 0.18), textcoords="offset points", xytext=(8, 0), fontsize=9)
-    ax.set_ylim(0, 1.05)
-    ax.set_xlabel("Umbral de confianza (puntaje medio del reranker en el top-5)")
-    ax.set_ylabel("Proporción")
-    ax.grid(alpha=0.25)
-    ax.legend(fontsize=9, loc="lower left")
-    ax.set_title(f"Aviso por confianza: {d['listas_malas']} de {d['consultas']} listas son malas ({d['definicion_de_lista_mala']})", fontsize=10)
-    _guardar(fig, "aviso.png")
+    tinta, sec, linea = "#0b0b0b", "#52514e", "#d9d8d2"
+    mala_c, buena_c, avisa_c = "#c0634a", "#7f9c96", "#f3ece4"
+    u = d["umbral_publicado"]["umbral"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(15, 5.2), gridspec_kw={"width_ratios": (1.25, 1)})
 
+    _estilo(a, "Confianza de cada consulta")
+    _recuadro(a)
+    a.yaxis.grid(False)
+    a.xaxis.grid(True, color=linea, linewidth=0.6)
+    a.axvspan(0, u, color=avisa_c, linewidth=0, zorder=0)
+    a.axvline(u, color=sec, linewidth=1.2, linestyle="--")
+    a.text(u - 0.1, 1.42, "avisa", ha="right", va="center", fontsize=10, color=sec, fontweight="bold")
+    a.text(u + 0.1, 1.42, "no avisa", ha="left", va="center", fontsize=10, color=sec, fontweight="bold")
+    filas = sorted(d["por_consulta"].items(), key=lambda kv: kv[1]["confianza"])
+    contados = {}
+    for q, f in filas:
+        mala = f["obras_de_grado_2"] < 3
+        y = 0 if mala else 1
+        clave = (y, f["confianza"])
+        contados[clave] = contados.get(clave, 0) + 1
+        dy = (contados[clave] - 1) * 0.09  # apila las consultas con la misma confianza
+        a.plot(f["confianza"], y + dy - 0.1, "o", markersize=10, color=mala_c if mala else buena_c, markeredgecolor="white", zorder=3)
+    n_malas = d["listas_malas"]
+    a.set_yticks([0, 1], [f"Listas malas ({n_malas})", f"Listas buenas ({d['consultas'] - n_malas})"], fontsize=10.5, color=tinta)
+    a.set_ylim(-0.5, 1.6)
+    a.set_xlim(0, 10)
+    a.set_xticks(range(0, 11))
+    a.set_xlabel("Puntaje medio del reranker en el top-5 (0 a 10)", color=sec, fontsize=9)
+    a.tick_params(axis="x", colors=sec, labelsize=9)
+    a.tick_params(axis="y", length=0)
+
+    _estilo(b, "Cobertura y precisión según el umbral")
+    _recuadro(b)
+    barrido = d["barrido_de_umbrales"]
+    xs = [f["umbral"] for f in barrido]
+    for clave, nombre, color in (("cobertura", "Cobertura: listas malas que avisa", "#6d84a0"),
+                                 ("precision", "Precisión: avisos que eran listas malas", "#8a6a2f")):
+        b.plot(xs, [f[clave] for f in barrido], marker="o", markersize=7, linewidth=2.4, color=color, label=nombre)
+    b.axvline(u, color=sec, linewidth=1.2, linestyle="--")
+    b.set_ylim(0, 1.08)
+    b.set_xlim(min(xs) - 0.3, max(xs) + 0.3)
+    b.xaxis.set_major_formatter(lambda x, _: _es(x, 1))
+    b.yaxis.set_major_formatter(lambda y, _: _es(y, 1))
+    b.set_xlabel("Umbral", color=sec, fontsize=9)
+    b.tick_params(axis="x", colors=sec, labelsize=9)
+    leyenda = b.legend(frameon=False, loc="lower left", fontsize=9.5)
+    for t in leyenda.get_texts():
+        t.set_color(tinta)
+
+    t = d["umbral_publicado"]
+    fig.text(0.012, 0.015,
+             f"C4 (gpt-4.1-mini, prompt v1), 30 consultas. Lista mala: {d['definicion_de_lista_mala']}. Umbral {_es(u, 0)}: avisa en {t['avisa']}, "
+             f"detecta las {t['listas_malas_avisadas']} malas y da {t['avisos_sobre_listas_buenas']} falsas alarmas. AUC {_es(d['auc_confianza_para_separar_buenas_de_malas'])}.\n"
+             f"El umbral se eligió con las mismas 30 consultas; dejando una consulta afuera, la exactitud es {_es(d['exactitud_dejando_una_consulta_afuera'])}.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1), w_pad=3)
+    fig.savefig(S / "aviso.png", dpi=200, facecolor="white")
+    plt.close(fig)
+    print("aviso.png")
 
 
 def prefiltro():
-    """Cómo clasifica el prefiltro: las 30 consultas por tipo y 12 pedidos de validación con nivel esperado."""
+    """Matrices de confusión del prefiltro: las 30 consultas por tipo y 12 pedidos de validación con nivel esperado."""
+    from matplotlib.colors import LinearSegmentedColormap
     sugeridas, validacion = S / "aclaraciones-v3.json", S / "validacion-v3.json"
     if not sugeridas.exists():
         print("prefiltro.png: falta aclaraciones-v3.json (correr aclarar.py sugerir)")
         return
+    tinta, sec = "#0b0b0b", "#52514e"
+    mapa = LinearSegmentedColormap.from_list("arena", ["#faf8f4", "#d6cdbd", "#8a6a2f"])
     niveles = ("concreto", "medio", "vago")
-    colores = {"concreto": AZUL, "medio": GRIS, "vago": NARANJA}
     a = json.loads(sugeridas.read_text(encoding="utf-8"))
     v = json.loads(validacion.read_text(encoding="utf-8")) if validacion.exists() else []
-    grupos = [("30 consultas del set", [(t, [x["nivel"] for x in a.values() if x["categoria"] == t]) for t in c.CATEGORIAS])]
+    paneles = [("Set de 30", "Tipo de consulta", [(t.capitalize(), [x["nivel"] for x in a.values() if x["categoria"] == t]) for t in c.CATEGORIAS])]
     if v:
-        grupos.append(("12 pedidos de validación (fuera del set)", [(f"esperado\n{n}", [x["nivel"] for x in v if x["esperado"] == n]) for n in niveles]))
-    fig, ejes = plt.subplots(1, len(grupos), figsize=(6 * len(grupos), 4.4), squeeze=False)
-    for ax, (titulo, barras) in zip(ejes[0], grupos):
-        for i, (nombre, obtenidos) in enumerate(barras):
-            abajo = 0
-            for n in niveles:
-                k = obtenidos.count(n)
-                if k:
-                    ax.bar(i, k, bottom=abajo, color=colores[n], edgecolor="white", linewidth=2, width=0.6)
-                    ax.text(i, abajo + k / 2, str(k), ha="center", va="center", fontsize=10, color="white" if n != "medio" else TINTA)
-                abajo += k
-        ax.set_xticks(range(len(barras)), [b[0] for b in barras])
-        ax.set_ylim(0, max(len(o) for _, o in barras) * 1.15)
-        ax.set_ylabel("Pedidos")
-        ax.set_title(titulo, fontsize=11)
-        ax.grid(axis="y", alpha=0.25)
-        ax.set_axisbelow(True)
-    from matplotlib.patches import Patch
-    fig.legend([Patch(color=colores[n]) for n in niveles], [f"clasificado {n}" for n in niveles], loc="lower center", ncol=3, fontsize=9, frameon=False)
-    vagos = sum(x["nivel"] == "vago" for x in a.values() if x["categoria"] == "ambiguo")
-    marcados = sum(x["nivel"] == "vago" for x in a.values())
-    sub = f"Ambiguas marcadas como vagas: {vagos} de 10 · consultas marcadas como vagas: {marcados} de {len(a)}"
-    if v:
-        sub += f" · validación: nivel exacto en {sum(x['nivel'] == x['esperado'] for x in v)} de {len(v)}"
-    fig.suptitle("Prefiltro: ¿detecta los pedidos vagos?\n" + sub, fontsize=11)
-    fig.tight_layout(rect=(0, 0.07, 1, 1))
-    fig.savefig(S / "prefiltro.png", dpi=150)
+        paneles.append((f"Validación ({len(v)} pedidos escritos aparte)", "Nivel esperado",
+                        [(n.capitalize(), [x["nivel"] for x in v if x["esperado"] == n]) for n in niveles]))
+    fig, ejes = plt.subplots(1, len(paneles), figsize=(6.2 * len(paneles), 4.6), squeeze=False)
+    for ax, (titulo, eje_y, filas) in zip(ejes[0], paneles):
+        m = [[obt.count(n) for n in niveles] for _, obt in filas]
+        tope = max(max(f) for f in m)
+        ax.imshow(m, cmap=mapa, vmin=0, vmax=tope, aspect="auto")
+        for r, fila in enumerate(m):
+            for k, val in enumerate(fila):
+                ax.text(k, r, str(val), ha="center", va="center", fontsize=15, fontweight="bold",
+                        color="white" if val > tope * 0.6 else (tinta if val else "#b9b4aa"))
+        ax.set_xticks(range(3), [n.capitalize() for n in niveles], fontsize=10.5, color=tinta)
+        ax.set_yticks(range(len(filas)), [nombre for nombre, _ in filas], fontsize=10.5, color=tinta)
+        ax.set_xlabel("Clasificado por el prefiltro", color=sec, fontsize=9.5)
+        ax.set_ylabel(eje_y, color=sec, fontsize=9.5)
+        ax.xaxis.set_label_position("top")
+        ax.xaxis.tick_top()
+        ax.tick_params(length=0)
+        for lado in ax.spines.values():
+            lado.set_color("#a9a59b")
+        ax.set_xticks([x - 0.5 for x in range(1, 3)], minor=True)
+        ax.set_yticks([y - 0.5 for y in range(1, len(filas))], minor=True)
+        ax.grid(which="minor", color="white", linewidth=3)
+        ax.tick_params(which="minor", length=0)
+        ax.set_title(titulo, color=tinta, fontsize=12, fontweight="bold", loc="left", pad=34)
+    fig.text(0.012, 0.015,
+             "El prefiltro (gpt-4.1-mini, prompt v3) clasifica cada pedido como concreto, medio o vago antes del planificador; si es vago, sugiere una versión más concreta (solo sugiere).\n"
+             "La validación son 12 pedidos escritos por el grupo con el nivel esperado de antemano (4 por nivel). No se midió si buscar con la sugerencia mejora el resultado.",
+             color=sec, fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.09, 1, 1), w_pad=4)
+    fig.savefig(S / "prefiltro.png", dpi=200, facecolor="white")
     plt.close(fig)
     print("prefiltro.png")
+
 
 def main():
     r = json.loads((S / "resultados.json").read_text(encoding="utf-8"))

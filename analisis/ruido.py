@@ -60,6 +60,8 @@ def main() -> None:
             "jaccard_medio_del_top5": round(c.media(jacc), 3),
             "consultas_con_top5_distinto": cambian,
             "rango_medio_de_ndcg_por_consulta": round(c.media(por_q), 3),
+            "top5_distinto_por_consulta": {q: len({tuple(t) for t in v[:n]}) > 1 for q, v in sorted(por_consulta.items())},
+            "ndcg_por_consulta": {q: [round(ev.ndcg(q, t), 3) for t in v[:n]] for q, v in sorted(por_consulta.items())},
         }
     (c.SALIDA / "ruido.json").write_text(json.dumps(salida, indent=2, ensure_ascii=False), encoding="utf-8")
     for e, d in salida.items():
