@@ -8,10 +8,10 @@ Lee las corridas y los juicios que ya están en `artifacts/` (los mismos que `ca
 y escribe en `artifacts/analisis/`:
 
   ablacion.json            todas las cifras de la tabla
-  ablacion-metricas.png    seis métricas de calidad, un panel por métrica
+  ablacion-metricas.png    nDCG@5 con IC, saltos pareados, precisión, MRR y QS
   ablacion-<metrica>.png   cada métrica sola, para una diapositiva
   ablacion-por-tipo.png    nDCG@5 por tipo de consulta y configuración
-  ablacion-costo.png       USD, tokens, latencia y llamadas LLM por consulta
+  ablacion-costo.png       USD por rol, latencia por etapa y calidad contra costo
 
 Las cinco filas:
   C0  solo imagen (CLIP)            C3  + cascada con filtro por metadata
@@ -47,6 +47,11 @@ FILAS = [  # (clave, nombre corto, qué agrega)
 ]
 ROLES_LLM = ("planificador", "aclarador", "reranker", "generador")
 PLANES = c.RAIZ / "artifacts" / "planes"
+GRUPOS_DE_ETAPAS = {  # para la latencia apilada: lo que no es LLM va junto
+    "Recuperación y armado": ("recuperador_visual", "recuperador_textual", "fusionador", "recolector_de_evidencia", "renderizador", "planificador"),
+    "Generador": ("generador",),
+    "Reranker": ("reranker",),
+}
 
 
 # ---------------------------------------------------------------- carga
@@ -92,6 +97,7 @@ def cargar() -> tuple[dict[str, dict[str, dict]], dict]:
             "top5": [x["artwork_id"] if isinstance(x, dict) else x for x in estado["top5"]],
             "libro": {r: l for r, l in (corrida.get("libro_mayor") or {}).items() if isinstance(l, dict)},
             "segundos": (corrida.get("latencia") or {}).get("segundos_de_la_corrida"),
+            "por_etapa": (corrida.get("latencia") or {}).get("por_etapa") or {},
             "modelos": {r: b.get("modelo") for r, b in (cfg.get("bindings") or {}).items()},
             "modelo_de_embedding": (cfg.get("embebido_texto") or {}).get("modelo"),
             "precios": cfg.get("proveedor") or {},
@@ -184,6 +190,7 @@ def tabla(ev, elegidos, precios) -> dict:
             "consultas": len(consultas),
             "ndcg": c.por_categoria(consultas, lambda q: ev.ndcg(q, top(q))),
             "ic95": c.ic95(ev.ndcg(q, top(q)) for q in consultas),
+            "ndcg_por_consulta": {cat: [ev.ndcg(q, top(q)) for q in consultas if c.categoria(q) == cat] for cat in c.CATEGORIAS},
             "p5": round(c.media(ev.p5(q, top(q)) for q in consultas), 3),
             "p5_estricta": round(c.media(ev.p5(q, top(q), 2) for q in consultas), 3),
             "mrr": round(c.media(mrr(ev, q, top(q)) for q in consultas), 3),
@@ -198,6 +205,9 @@ def tabla(ev, elegidos, precios) -> dict:
             "segundos_media": round(c.media(segundos), 1) if segundos else None,
             "segundos_p95": round(percentil(segundos, 0.95), 1) if segundos else None,
             "plan_de_cache": any(u["plan_de_cache"] for u in usos),
+            "segundos_por_grupo": {g: round(c.media(sum(corridas[q]["por_etapa"].get(e, 0) for e in etapas) for q in consultas), 1)
+                                   for g, etapas in GRUPOS_DE_ETAPAS.items()},
+            "fecha": max(corridas[q]["fecha"] for q in consultas)[:10],
         }
         if previa is not None:
             deltas = [ev.ndcg(q, top(q)) - ev.ndcg(q, elegidos[previa][q]["top5"]) for q in consultas if q in elegidos[previa]]
@@ -223,8 +233,8 @@ METRICAS = [  # (clave, título, archivo, decimales, máximo del eje)
     ("p5_estricta", "P@5 estricta (grado 2)", "p5-estricta", 3, 1.0),
     ("mrr", "MRR", "mrr", 3, 1.0),
     ("qs", "QS (cuánto cambia el top-5 con el pedido)", "qs", 3, 1.0),
-    ("grado2_por_top5", "Obras de grado 2 por top-5", "grado2", 2, 5.0),
-]
+]  # «obras de grado 2 por top-5» no va: es 5 × P@5 estricta.
+CORTO = {"C0": "solo imagen", "C1": "+ pedido", "C2": "+ reescritura", "C3": "+ cascada", "C4": "+ reranker"}
 COSTOS = [
     ("usd_por_consulta", "USD por consulta", 4),
     ("tokens_in", "Tokens de entrada por consulta", 0),
@@ -276,8 +286,62 @@ def _barras(ax, t, tab, clave, titulo, decimales, maximo=None, con_delta=True, d
             signo = "+" if delta >= 0 else "−"
             ax.text(i, base + techo * 0.085, f"{signo}{numero(abs(delta), decimales)}", ha="center", va="bottom", color=t["secundario"], fontsize=8)
     # En los paneles chicos la segunda línea se pisa: ahí va solo el nombre y la leyenda al pie.
-    ax.set_xticks(range(len(nombres)), [f"{n}\n{tab[n]['agrega']}" if detalle else n for n in nombres])
+    ax.set_xticks(range(len(nombres)), [f"{n}\n{CORTO.get(n, tab[n]['agrega'])}" if detalle else n for n in nombres])
     ax.yaxis.set_major_formatter(lambda y, _: numero(y, 3 if techo < 0.1 else (1 if techo <= 1 else 0)))
+
+
+def _saltos(ax, t, tab):
+    """Salto pareado de nDCG@5 de cada configuración contra la anterior, con IC 95 %. Es mejora si el IC no cruza 0."""
+    nombres = [n for n in tab if tab[n].get("delta_ndcg_contra_la_anterior")]
+    _eje(ax, t, "Salto de nDCG@5 contra la anterior")
+    ax.yaxis.grid(False)
+    ax.xaxis.grid(True, color=t["linea"], linewidth=0.6)
+    ax.spines["bottom"].set_visible(False)
+    ax.tick_params(axis="y", colors=t["texto"], labelsize=10)
+    ax.tick_params(axis="x", colors=t["secundario"], labelsize=8)
+    ax.axvline(0, color=t["secundario"], linewidth=0.9)
+    for y, n in enumerate(nombres):
+        d = tab[n]["delta_ndcg_contra_la_anterior"]
+        bajo, alto = d["ic95"]
+        mejora = bajo > 0
+        color = t["final"] if mejora else t["barra"]
+        ax.plot([bajo, alto], [y, y], color=color, linewidth=2.2, solid_capstyle="butt")
+        ax.plot(d["delta"], y, "o", color=color, markersize=8)
+        signo = "+" if d["delta"] >= 0 else "−"
+        ax.text(alto + 0.008, y, f"{signo}{numero(abs(d['delta']), 3)}", va="center", color=t["texto"],
+                fontsize=10, fontweight="bold" if mejora else "normal")
+    ax.set_yticks(range(len(nombres)), [f"{n} {CORTO.get(n, tab[n]['agrega'])}" for n in nombres])
+    ax.set_ylim(len(nombres) - 0.4, -0.5)
+    ax.set_xlim(-0.1, 0.33)
+    ax.set_xticks([-0.1, 0, 0.1, 0.2, 0.3])
+    ax.xaxis.set_major_formatter(lambda x, _: ("+" if x > 0 else "") + numero(x, 1))
+
+
+def _precision(ax, t, tab):
+    """P@5 laxa y estricta lado a lado: la distancia entre las dos es cuánto del top-5 es solo «algo relevante»."""
+    nombres = list(tab)
+    _eje(ax, t, "Precisión en el top-5")
+    series = [("p5", "grado ≥ 1", t["barra"]), ("p5_estricta", "grado 2", t["final"])]
+    ancho = 0.38
+    for j, (clave, etiqueta, color) in enumerate(series):
+        xs = [i + (j - 0.5) * ancho for i in range(len(nombres))]
+        ys = [tab[n][clave] for n in nombres]
+        ax.bar(xs, ys, width=ancho, color=color, edgecolor=t["fondo"], linewidth=1.2, label=etiqueta)
+        for x, y in zip(xs, ys):
+            ax.text(x, y + 0.02, numero(y, 2), ha="center", va="bottom", color=t["texto"], fontsize=8)
+    ax.set_ylim(0, 1.0)
+    ax.set_xticks(range(len(nombres)), nombres)
+    ax.yaxis.set_major_formatter(lambda y, _: numero(y, 1))
+    leyenda = ax.legend(frameon=False, loc="upper left", fontsize=9, ncols=2)
+    for texto in leyenda.get_texts():
+        texto.set_color(t["texto"])
+
+
+def _rotulo_de_uso(nombre, fila) -> str:
+    llamadas = round(fila["llamadas_llm"])
+    if not llamadas:
+        return f"{nombre}\nSin LLM"
+    return f"{nombre}\n{llamadas} llamada{'s' if llamadas > 1 else ''}\n{numero(fila['tokens_in'] / 1000, 0)} mil tokens"
 
 
 def _guardar(fig, t, archivo) -> str:
@@ -286,25 +350,35 @@ def _guardar(fig, t, archivo) -> str:
     return archivo
 
 
-def figuras(tab, tema) -> list[str]:
+def figuras(tab, tema, juicios) -> list[str]:
     try:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
+        from matplotlib.gridspec import GridSpec
     except ImportError:
         print("Sin matplotlib no hay figuras: `poetry install --with figuras`.")
         return []
     t = TEMAS[tema]
     hechas = []
     filas = "   ".join(f"{n}: {f['agrega'].lstrip('+ ')}" for n, f in tab.items())
-    pie = "30 consultas · 634 juicios · en gris, la diferencia con la configuración anterior"
+    miles = numero(juicios, 0)
 
-    fig, ejes = plt.subplots(2, 3, figsize=(16, 8.4))
-    for ax, (clave, titulo, _, decimales, maximo) in zip(ejes.flat, METRICAS):
-        _barras(ax, t, tab, clave, titulo, decimales, maximo, detalle=False)
-    fig.text(0.012, 0.04, filas, color=t["texto"], fontsize=10)
-    fig.text(0.012, 0.012, pie + " · línea en nDCG@5: IC95", color=t["secundario"], fontsize=9)
-    fig.tight_layout(rect=(0, 0.07, 1, 1), h_pad=2.5, w_pad=2.5)
+    # Arriba, la métrica principal y lo que aporta cada componente; abajo, las secundarias.
+    fig = plt.figure(figsize=(16, 9))
+    grilla = GridSpec(2, 6, figure=fig, height_ratios=(1.15, 1))
+    ax = fig.add_subplot(grilla[0, :3])
+    _barras(ax, t, tab, "ndcg", "nDCG@5 (IC 95 %)", 3, 1.0, con_delta=False)
+    _saltos(fig.add_subplot(grilla[0, 3:]), t, tab)
+    _precision(fig.add_subplot(grilla[1, :2]), t, tab)
+    _barras(fig.add_subplot(grilla[1, 2:4]), t, tab, "mrr", "MRR", 2, 1.0, con_delta=False, detalle=False)
+    _barras(fig.add_subplot(grilla[1, 4:]), t, tab, "qs", "QS (diversidad entre pedidos)", 2, 1.0, con_delta=False, detalle=False)
+    pie = (f"30 consultas (10 por tipo) · {miles} juicios 0/1/2; obra sin juicio = 0 · IC 95 %: bootstrap sobre consultas "
+           "(4.000 remuestreos); saltos pareados por consulta · en dorado, salto con IC 95 % pareado mayor que 0\n"
+           "C1: α = 0,5 imagen + texto · C4: gpt-4.1-mini, 20 candidatas, prompt v1, corrida más reciente de tres · "
+           "QS: 1 − Jaccard medio entre los top-5 de los tres pedidos de cada imagen")
+    fig.text(0.012, 0.012, pie, color=t["secundario"], fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.06, 1, 1), h_pad=2.2, w_pad=2.5)
     hechas.append(_guardar(fig, t, "ablacion-metricas.png")); plt.close(fig)
 
     for clave, titulo, archivo, decimales, maximo in METRICAS:
@@ -313,42 +387,100 @@ def figuras(tab, tema) -> list[str]:
         fig.tight_layout()
         hechas.append(_guardar(fig, t, f"ablacion-{archivo}.png")); plt.close(fig)
 
-    # nDCG@5 por tipo de consulta: un grupo por configuración, un color por tipo.
-    fig, ax = plt.subplots(figsize=(11, 5))
-    _eje(ax, t, "nDCG@5 por tipo de consulta")
+    # nDCG@5 por tipo: una línea por tipo a lo largo de la ablación. Las mixtas van en su
+    # propio panel porque se juzgan con otra rúbrica y su nivel no se compara con el resto.
     nombres = list(tab)
-    # El set mixto sale de `mixtas.py`: se suma como cuarto grupo si ya está medido.
+    xs = list(range(len(nombres)))
     mixtas = {}
     if (c.SALIDA / "mixtas.json").exists():
         mixtas = json.loads((c.SALIDA / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"]
-    tipos = [*c.CATEGORIAS, "mixto"] if all(n in mixtas for n in nombres) else list(c.CATEGORIAS)
-    ancho = 0.8 / len(tipos)
-    for j, tipo in enumerate(tipos):
-        xs = [i + (j - (len(tipos) - 1) / 2) * ancho for i in range(len(nombres))]
-        ys = [mixtas[n]["ndcg"] if tipo == "mixto" else tab[n]["ndcg"][tipo] for n in nombres]
-        ax.bar(xs, ys, width=ancho, color=t["tipos"][tipo], edgecolor=t["fondo"], linewidth=1.5, label=tipo.capitalize())
+    con_mixtas = all(n in mixtas for n in nombres)
+    paneles = [(tipo, tipo.capitalize(), [tab[n]["ndcg"][tipo] for n in nombres],
+                [c.ic95(tab[n]["ndcg_por_consulta"][tipo]) for n in nombres]) for tipo in c.CATEGORIAS]
+    if con_mixtas:
+        paneles.append(("mixto", "Mixto", [mixtas[n]["ndcg"] for n in nombres], [mixtas[n]["ic95"] for n in nombres]))
+    fig, ejes = plt.subplots(1, len(paneles), figsize=(4.1 * len(paneles), 5.2), sharey=True)
+    for k, (eje, (tipo, titulo, ys, ics)) in enumerate(zip(ejes, paneles)):
+        color = t["tipos"][tipo]
+        _eje(eje, t, titulo)
+        bajos, altos = zip(*ics)
+        eje.fill_between(xs, bajos, altos, color=color, alpha=0.13, linewidth=0)
+        eje.plot(xs, ys, marker="o", markersize=7, linewidth=2.4, color=color)
         for x, y in zip(xs, ys):
-            ax.text(x, y + 0.012, numero(y, 2), ha="center", va="bottom", color=t["texto"], fontsize=8)
-    ax.set_ylim(0, 1.08)
-    ax.set_xticks(range(len(nombres)), [f"{n}\n{tab[n]['agrega']}" for n in nombres])
-    ax.yaxis.set_major_formatter(lambda y, _: numero(y, 1))
-    leyenda = ax.legend(frameon=False, ncols=len(tipos), loc="upper left", fontsize=10)
-    for texto in leyenda.get_texts():
-        texto.set_color(t["texto"])
-    fig.text(0.012, 0.015, "10 consultas por tipo · 634 juicios en las 30 consultas, más los de las mixtas" if len(tipos) == 4 else "10 consultas por tipo · 634 juicios", color=t["secundario"], fontsize=9)
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
+            eje.annotate(numero(y, 2), (x, y), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=10, color=t["texto"], fontweight="bold")
+        eje.set_xticks(xs, nombres, fontsize=10)
+        eje.set_xlim(-0.4, len(nombres) - 0.6)
+        eje.set_ylim(0, 1.05)
+        eje.yaxis.set_major_formatter(lambda y, _: numero(y, 1))
+        if tipo == "mixto":
+            eje.axvline(-0.4, color=t["linea"], linewidth=1)
+    filas = "   ".join(f"{n}: {CORTO.get(n, tab[n]['agrega']).lstrip('+ ')}" for n in nombres)
+    pie = (f"{filas}\nBanda sombreada: IC 95 % por bootstrap sobre las 10 consultas de cada tipo · {miles} juicios 0/1/2 en el set de 30; obra sin juicio = 0.")
+    if con_mixtas:
+        pie += ("\nMixto: pedidos que combinan cambio visual, restricción de metadata y adjetivo vago; grado = cambio visual (A) + restricción verificada en metadata (B). "
+                "Su nivel no se compara con el de los otros tipos.")
+    fig.text(0.012, 0.015, pie, color=t["secundario"], fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.13 if con_mixtas else 0.09, 1, 1), w_pad=2.5)
     hechas.append(_guardar(fig, t, "ablacion-por-tipo.png")); plt.close(fig)
 
-    # Costo y consumo: cada medida en su propio panel, porque las escalas no se comparan.
-    fig, ejes = plt.subplots(2, 2, figsize=(13, 8.4))
-    for ax, (clave, titulo, decimales) in zip(ejes.flat, COSTOS):
-        _barras(ax, t, tab, clave, titulo, decimales, con_delta=False, detalle=False)
-    nota = "Por consulta, media de 30. USD y tokens incluyen la llamada del pre-retrieval tomada del plan guardado."
-    if any(f["plan_de_cache"] for f in tab.values()):
-        nota += " La latencia no incluye esa llamada cuando el plan salió de caché."
-    fig.text(0.012, 0.04, filas, color=t["texto"], fontsize=10)
-    fig.text(0.012, 0.012, nota, color=t["secundario"], fontsize=8.5)
-    fig.tight_layout(rect=(0, 0.07, 1, 1), h_pad=2.5, w_pad=2.5)
+    # Costo: de dónde sale la plata, de dónde sale el tiempo y qué se compra con eso.
+    fig, (ax_usd, ax_seg, ax_cal) = plt.subplots(1, 3, figsize=(17, 5.8), gridspec_kw={"width_ratios": (1, 1, 1.1)})
+    nombres = list(tab)
+    xs = range(len(nombres))
+    claro, oscuro = "#cfcec7", "#6f6e67"
+    roles = [("planificador", "Planificador", claro), ("generador", "Generador", oscuro), ("reranker", "Reranker", t["final"])]
+    _eje(ax_usd, t, "USD por consulta")
+    base = [0.0] * len(nombres)
+    for rol, etiqueta, color in roles:
+        ys = [tab[n]["usd_por_rol"].get(rol, 0) for n in nombres]
+        ax_usd.bar(xs, ys, bottom=base, width=0.56, color=color, edgecolor=t["fondo"], linewidth=1, label=etiqueta)
+        base = [b + y for b, y in zip(base, ys)]
+    for i, n in enumerate(nombres):
+        f = tab[n]
+        ax_usd.text(i, base[i] + 0.0006, numero(f["usd_por_consulta"], 4), ha="center", va="bottom", color=t["texto"], fontsize=10, fontweight="bold")
+    ax_usd.set_ylim(0, max(base) * 1.18)
+    ax_usd.set_xticks(xs, [_rotulo_de_uso(n, tab[n]) for n in nombres], fontsize=9)
+    ax_usd.yaxis.set_major_formatter(lambda y, _: numero(y, 3))
+
+    _eje(ax_seg, t, "Latencia media (s)")
+    base = [0.0] * len(nombres)
+    for grupo, color in zip(GRUPOS_DE_ETAPAS, (claro, oscuro, t["final"])):
+        ys = [tab[n]["segundos_por_grupo"][grupo] for n in nombres]
+        ax_seg.bar(xs, ys, bottom=base, width=0.56, color=color, edgecolor=t["fondo"], linewidth=1, label=grupo)
+        base = [b + y for b, y in zip(base, ys)]
+    for i, n in enumerate(nombres):
+        ax_seg.text(i, base[i] + 0.6, numero(tab[n]["segundos_media"], 1), ha="center", va="bottom", color=t["texto"], fontsize=10, fontweight="bold")
+    ax_seg.set_ylim(0, max(base) * 1.18)
+    ax_seg.set_xticks(xs, nombres)
+    ax_seg.yaxis.set_major_formatter(lambda y, _: numero(y, 0))
+    for ax in (ax_usd, ax_seg):
+        leyenda = ax.legend(frameon=False, loc="upper left", fontsize=9)
+        for texto in leyenda.get_texts():
+            texto.set_color(t["texto"])
+
+    _eje(ax_cal, t, "Calidad contra costo")
+    ax_cal.xaxis.grid(True, color=t["linea"], linewidth=0.6)
+    ax_cal.tick_params(axis="x", colors=t["secundario"], labelsize=8)
+    for n in nombres:
+        f = tab[n]
+        x, y = f["usd_por_consulta"], f["ndcg"]["todas"]
+        color = t["final"] if n == nombres[-1] else t["barra"]
+        ax_cal.plot([x, x], f["ic95"], color=color, linewidth=1.2)
+        ax_cal.plot(x, y, "o", color=color, markersize=9)
+        ax_cal.annotate(n, (x, y), xytext=(7, 0), textcoords="offset points", va="center", color=t["texto"], fontsize=10, fontweight="bold")
+    ax_cal.set_xlim(-0.002, 0.032)
+    ax_cal.set_ylim(0, 1)
+    ax_cal.set_xlabel("USD por consulta", color=t["secundario"], fontsize=9)
+    ax_cal.set_ylabel("nDCG@5 (IC 95 %)", color=t["secundario"], fontsize=9)
+    ax_cal.set_xticks([0, 0.01, 0.02, 0.03])
+    ax_cal.xaxis.set_major_formatter(lambda x, _: numero(x, 2))
+    ax_cal.yaxis.set_major_formatter(lambda y, _: numero(y, 1))
+
+    nota = ("Media de 30 consultas. Precios de lista de OpenAI: gpt-4.1-mini (USD 0,40 / 1,60 por millón de tokens de entrada / salida) en los tres roles; text-embedding-3-small < USD 0,0001; CLIP sin costo de API. "
+            "\nEl plan se reutiliza de caché en C2–C4: su costo se suma desde el plan guardado, pero su latencia no se midió. C0 no genera explicación. C0–C2 corrieron el 27/10 y C3–C4 el 16/11: "
+            "la diferencia de latencia entre C2 y C3 es del generador (8,6 s contra 6,4 s), no de la cascada.")
+    fig.text(0.012, 0.012, nota, color=t["secundario"], fontsize=8.5, linespacing=1.5)
+    fig.tight_layout(rect=(0, 0.08, 1, 1), w_pad=3)
     hechas.append(_guardar(fig, t, "ablacion-costo.png")); plt.close(fig)
     return hechas
 
@@ -370,7 +502,7 @@ def main() -> None:
 
     c.SALIDA.mkdir(parents=True, exist_ok=True)
     (c.SALIDA / "ablacion.json").write_text(json.dumps({"juicios": len(ev.gt), "filas": tab}, ensure_ascii=False, indent=2), encoding="utf-8")
-    hechas = [] if args.sin_figuras else figuras(tab, args.tema)
+    hechas = [] if args.sin_figuras else figuras(tab, args.tema, len(ev.gt))
 
     print(f"Juicios: {len(ev.gt)}" + (f" · sin corridas completas: {', '.join(faltan)}" if faltan else "") + "\n")
     print(f"{'fila':<5}{'agrega':<24}{'nDCG@5':>7}  {'IC95':<16}{'concep':>7}{'visual':>7}{'ambig':>7}{'P@5':>7}{'P@5 2':>7}{'MRR':>7}{'QS':>7}{'G2/5':>6}{'USD':>8}{'tok in':>8}{'seg':>6}{'LLM':>6}")
