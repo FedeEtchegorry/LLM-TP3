@@ -37,12 +37,14 @@ VARIANTES = [
     ("C4·filtro100·metadata·rerank40", "C4 40 candidatas"),
     ("C4·filtro100·metadata·rerank40·gpt-6-luna", "C4 luna 40 candidatas"),
     ("C4·filtro100·metadata·rerank20·gpt-6.1-terra", "C4 terra"),
+    ("C4·filtro100·metadata·rerank20·prompt2·gpt-6-luna", "C4 luna v2"),
 ]
 PASOS = [  # (nombre, base)
     ("C1", "C0"), ("C2", "C1"), ("C3", "C2"), ("C4", "C3"),
     ("C3", "C3 sin filtro"), ("C4", "C4 sin filtro"),
     ("C4 luna", "C4"), ("C4 prompt v2", "C4"), ("C4 40 candidatas", "C4"), ("C4 terra", "C4"),
     ("C4 luna 40 candidatas", "C4 40 candidatas"),
+    ("C4 luna v2", "C4"), ("C4 luna v2", "C4 luna"), ("C4 luna v2", "C4 prompt v2"),
 ]
 CONTROL = "c06-mixto"  # sin restricción: no entra en la tasa de B
 

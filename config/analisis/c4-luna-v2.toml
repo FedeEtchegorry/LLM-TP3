@@ -1,0 +1,29 @@
+# Iteración final (Ej. 4): reranker gpt-6-luna CON el prompt v2. Combina c4-luna.toml y
+# c4-reranker-v2.toml; todo lo demás igual a la fila C4 con filtro por metadata (20 candidatas).
+# Precios de luna: de comparadores de terceros, no de la factura (igual que en c4-luna.toml).
+[consulta]
+configuracion = "C4"
+
+etapas = [
+    "planificador",
+    "recuperador_visual",
+    "recuperador_textual",
+    "fusionador",
+    "reranker",
+    "recolector_de_evidencia",
+    "generador",
+    "renderizador",
+]
+
+[recuperacion_textual]
+filtro_por_metadata = true
+
+[bindings.reranker]
+modelo = "openai/gpt-6-luna"
+version_del_prompt = "2"
+
+[proveedor.precio_usd_por_millon_de_tokens]
+"openai/gpt-6-luna" = 0.10
+
+[proveedor.precio_usd_por_millon_de_tokens_de_salida]
+"openai/gpt-6-luna" = 0.50
