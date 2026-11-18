@@ -1,6 +1,6 @@
 # Análisis de la cascada
 
-Rama `analisis`. Estudia la cascada (el texto filtra, CLIP ordena, el reranker decide el
+Estudia la cascada (el texto filtra, CLIP ordena, el reranker decide el
 top-5) para decidir tres cosas: qué tan estricto tiene que ser el filtro, cuántas
 candidatas tiene que ver el reranker y dónde se pierden las obras relevantes.
 
