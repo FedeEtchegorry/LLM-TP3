@@ -1,0 +1,8 @@
+consulta_id,artwork_id,grado,nota,anotador,cambio_visual,restriccion,adjetivo
+c02-mixto,aic:869,1,"","Julieta",0,1,1
+c03-mixto,cma:137224,1,"","Julieta",0,1,0
+c03-mixto,cma:144303,1,"","Julieta",0,1,1
+c04-mixto,cma:151015,1,"","Julieta",0,1,0
+c05-mixto,cma:122166,2,"","Julieta",1,1,0
+c06-mixto,cma:137259,2,"","Julieta",1,,1
+c07-mixto,cma:138688,1,"","Julieta",0,1,0

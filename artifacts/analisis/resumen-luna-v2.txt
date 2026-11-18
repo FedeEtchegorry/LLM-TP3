@@ -1,0 +1,17 @@
+﻿[01:27:17] GASTO  0.00 USD hasta ahora; 'luna + v2 (30 + mixtas)' estima 0.45; tope 0.80
+[01:27:17] ...  Prueba luna v2 c01-conceptual
+[01:30:02] OK  Prueba luna v2 c01-conceptual
+[01:30:13] OK  prueba luna v2: puntuo todo, USD 0.0114 por consulta
+[01:30:13] ...  luna v2, 30 consultas
+[02:20:44] OK  luna v2, 30 consultas
+[02:20:44] ...  luna v2, mixtas
+[02:44:16] OK  luna v2, mixtas
+[02:44:16] ...  Analisis de cascada
+[02:44:25] OK  Analisis de cascada
+[02:44:25] ...  Mixtas
+[02:44:30] OK  Mixtas
+[02:44:30] ...  Planilla de juicios (set de 30)
+[02:44:31] OK  Planilla de juicios (set de 30)
+[02:44:31] ...  Planilla de juicios (mixtas, pendientes)
+[02:44:34] OK  Planilla de juicios (mixtas, pendientes)
+[02:44:37] GASTO  total de este script: USD 0.47

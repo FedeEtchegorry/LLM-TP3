@@ -303,24 +303,34 @@ def _barras_agrupadas(series, archivo, pie):
     for t in leyenda.get_texts():
         t.set_color(tinta)
     fig.text(0.012, 0.015, pie, color=sec, fontsize=8.5, linespacing=1.5)
-    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.tight_layout(rect=(0, 0.04 + 0.04 * pie.count("\n"), 1, 1))
     fig.savefig(S / archivo, dpi=200, facecolor="white")
     plt.close(fig)
     print(archivo)
 
 
 def v1_vs_v2(e, pareadas):
-    """nDCG@5 de C4 (gpt-4.1-mini) con el prompt v1 y el v2 del reranker."""
-    v2 = C4 + "·prompt2"
+    """nDCG@5 de C4 con cada combinación de modelo del reranker (mini, luna) y prompt (v1, v2)."""
     mixtas = json.loads((S / "mixtas.json").read_text(encoding="utf-8"))["configuraciones"] if (S / "mixtas.json").exists() else {}
     series = []
-    for nombre, clave, color, en_mixtas in (("Prompt v1", C4, "#d6cdbd", "C4"), ("Prompt v2", v2, "#6d84a0", "C4 prompt v2")):
+    for nombre, clave, color, en_mixtas in (
+        ("mini · prompt v1", C4, "#d6cdbd", "C4"),
+        ("mini · prompt v2", C4 + "·prompt2", "#6d84a0", "C4 prompt v2"),
+        ("luna · prompt v1", C4 + "·gpt-6-luna", "#8a6a2f", "C4 luna"),
+        ("luna · prompt v2", C4 + "·prompt2·gpt-6-luna", "#3d3a5c", "C4 luna v2"),
+    ):
+        if clave not in e:
+            continue
         valores = dict(e[clave]["ndcg"])
         valores["mixtas"] = (mixtas.get(en_mixtas) or {}).get("ndcg")
         series.append((nombre, color, valores))
+    usd = " · ".join(f"{n.replace(' · prompt ', ' ')} {_es(e[k]['usd_por_consulta'], 4)}" for n, k in (
+        ("mini · prompt v1", C4), ("mini · prompt v2", C4 + "·prompt2"), ("luna · prompt v1", C4 + "·gpt-6-luna"),
+        ("luna · prompt v2", C4 + "·prompt2·gpt-6-luna")) if k in e and e[k].get("usd_por_consulta"))
     _barras_agrupadas(series, "v1-vs-v2.png",
-                      "C4 con gpt-4.1-mini y 20 candidatas; solo cambia el prompt del reranker. v2 obliga a comparar la obra original y la candidata en el aspecto pedido antes de puntuar.\n"
-                      "nDCG@5 medio; set de 30 (10 consultas por tipo), todos los pares juzgados. Mixtas: 10 consultas con otra rúbrica; se comparan entre prompts, no con el set de 30.")
+                      "C4 con 20 candidatas; cambian el modelo del reranker y su prompt. v2 obliga a comparar la obra original y la candidata en el aspecto pedido antes de puntuar.\n"
+                      f"USD por consulta: {usd}.\n"
+                      "nDCG@5 medio; set de 30 (10 consultas por tipo), todos los pares juzgados. Mixtas: 10 consultas con otra rúbrica; se comparan entre sí, no con el set de 30.")
 
 
 def filtro(e):

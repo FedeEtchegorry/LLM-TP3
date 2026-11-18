@@ -1,0 +1,2902 @@
+{
+  "agrega_a_la_tabla": true,
+  "alcance_del_config_id": [
+    "bindings.generador",
+    "bindings.planificador",
+    "bindings.reranker",
+    "consulta.alfa",
+    "consulta.configuracion",
+    "consulta.etapas",
+    "consulta.n_candidatos",
+    "consulta.plan_de_falla",
+    "consulta.top_k",
+    "embebido",
+    "embebido_texto",
+    "evidencia.n_fragmentos_por_obra",
+    "evidencia.orden",
+    "fragmentacion",
+    "fusion.estrategia",
+    "fusion.k",
+    "indice",
+    "ingesta",
+    "museos",
+    "normalizacion",
+    "recuperacion_textual.agregacion",
+    "recuperacion_textual.filtro_por_metadata",
+    "recuperacion_textual.n_fragmentos_recuperados",
+    "retencion",
+    "salida",
+    "split",
+    "trazas.proveedor"
+  ],
+  "arbol_de_trazas": {
+    "campos_censurados": 0,
+    "etapas_trazadas": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador",
+      "corrida C4"
+    ],
+    "fallas_del_puerto": 0,
+    "n_nodos": 46,
+    "nodos_con_entradas": 1,
+    "nota": "El árbol lo arman el `EjecutorDeEtapas` (corrida y etapa) y el decorador de puertos (una traza por llamada a puerto). **Ninguna etapa emite su propio span** — la observabilidad lo prohíbe y señala al ejecutor como el lugar correcto para el desglose. `campos_censurados > 0` es el registro de decisiones actuando: en una consulta ad-hoc no viaja ni el pedido ni la imagen.",
+    "politica": {
+      "captura_entradas": true,
+      "decision": "el registro de decisiones",
+      "por_que": "Las 30 consultas de evaluación se trazan **completas** (`el registro de decisiones la política de trazado`). No son dato de un tercero: son obras de nuestro propio held-out, versionadas con el ground truth porque son el **instrumento de medición** (el registro de decisiones). Trazarlas enteras cumple las técnicas avanzadas aisladas por medición, la tabla de tokens, costo y la figura y el criterio de costo sin tocar el compromiso de privacidad.",
+      "procedencia": "set"
+    },
+    "por_tipo": {
+      "chain": 9,
+      "embedding": 6,
+      "llm": 21,
+      "retriever": 10
+    }
+  },
+  "artefacto": "Corrida",
+  "capas_de_configuracion": [
+    "config\\default.toml",
+    "config\\analisis\\c4-luna-v2.toml"
+  ],
+  "clase_de_identidad": 2,
+  "config_id": "f14f376d6f065b1c",
+  "configuracion_resuelta": {
+    "bindings": {
+      "aclarador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "aclarador-pedido-vago",
+        "reintentos": 2,
+        "version_del_prompt": "3"
+      },
+      "generador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 1500,
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "prompt_id": "generador-es-afirmaciones-tipadas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "juez": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4o",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "juez-grado-0-1-2-un-par",
+        "reintentos": 2,
+        "version_del_prompt": "1"
+      },
+      "planificador": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-4.1-mini",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      },
+      "reranker": {
+        "esquema_de_salida": "json",
+        "modelo": "openai/gpt-6-luna",
+        "muestreo": {
+          "max_tokens": 200,
+          "seed": 7369,
+          "temperature": 0.0,
+          "top_p": 1.0
+        },
+        "prompt_id": "reranker-score-0-10-un-candidato",
+        "reintentos": 2,
+        "version_del_prompt": "2"
+      }
+    },
+    "consulta": {
+      "alfa": 0.5,
+      "alfa_congelado": true,
+      "configuracion": "C4",
+      "etapas": [
+        "planificador",
+        "recuperador_visual",
+        "recuperador_textual",
+        "fusionador",
+        "reranker",
+        "recolector_de_evidencia",
+        "generador",
+        "renderizador"
+      ],
+      "n_candidatos": 20,
+      "plan_de_falla": {},
+      "top_k": 5
+    },
+    "embebido": {
+      "batch": 16,
+      "batch_maximo": 64,
+      "checkpoint": "openai/clip-vit-base-patch32",
+      "threads": 8,
+      "version_del_preprocesado": "1"
+    },
+    "embebido_texto": {
+      "batch": 128,
+      "dim": 1536,
+      "limite_de_tokens": 8191,
+      "modelo": "openai/text-embedding-3-small"
+    },
+    "evidencia": {
+      "n_fragmentos_por_obra": 3,
+      "orden": "por_similitud_al_pedido"
+    },
+    "fragmentacion": {
+      "campos_de_knowledge": [
+        "description",
+        "did_you_know",
+        "provenance"
+      ],
+      "estrategia": "por_campo_semantico",
+      "separadores": [
+        "\n\n",
+        "\n",
+        ". ",
+        " ",
+        ""
+      ],
+      "solapamiento": 50,
+      "tamano_objetivo": 500,
+      "tokenizador": "cl100k_base",
+      "unidad": "tokens"
+    },
+    "fusion": {
+      "estrategia": "cascada",
+      "k": 60
+    },
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice": {
+      "batch_de_upsert": 5000,
+      "metrica": "cosine"
+    },
+    "ingesta": {
+      "campos_canonicos": {
+        "aic": {
+          "artist": "artist_title",
+          "culture": "place_of_origin",
+          "date_display": "date_display",
+          "medium": "medium_display",
+          "source_url": "id",
+          "style": "style_title",
+          "title": "title",
+          "type": "artwork_type_title",
+          "year": "date_start"
+        },
+        "cma": {
+          "artist": "creators.description",
+          "culture": "culture",
+          "date_display": "creation_date",
+          "medium": "technique",
+          "source_url": "url",
+          "title": "title",
+          "type": "type",
+          "year": "sortable_date"
+        }
+      },
+      "campos_de_texto": {
+        "aic": {
+          "citations": {
+            "origen": "publication_history",
+            "render": "html_a_texto"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibition_history",
+            "render": "html_a_texto"
+          },
+          "provenance": {
+            "origen": "provenance_text",
+            "render": "html_a_texto"
+          }
+        },
+        "cma": {
+          "citations": {
+            "origen": "citations",
+            "render": "lista_de_citas"
+          },
+          "description": {
+            "origen": "description",
+            "render": "html_a_texto"
+          },
+          "did_you_know": {
+            "origen": "did_you_know",
+            "render": "html_a_texto"
+          },
+          "exhibitions": {
+            "origen": "exhibitions",
+            "render": "exhibiciones_cma"
+          },
+          "provenance": {
+            "origen": "provenance",
+            "render": "lista_de_descripciones"
+          }
+        }
+      },
+      "criterio_de_inclusion": {
+        "description_no_vacia": true,
+        "imagen_real": true
+      },
+      "licencia": "libre",
+      "limite_n": 0,
+      "media_license": {
+        "aic": "CC0",
+        "cma": "CC0"
+      },
+      "museos": [
+        "aic",
+        "cma"
+      ],
+      "tabla_de_licencias": {
+        "aic": {
+          "citations": "CC0",
+          "description": "CC-BY-4.0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        },
+        "cma": {
+          "citations": "CC0",
+          "description": "CC0",
+          "did_you_know": "CC0",
+          "exhibitions": "CC0",
+          "provenance": "CC0"
+        }
+      },
+      "tipos": [
+        "Painting"
+      ],
+      "urls": {
+        "aic": {
+          "campo_de_ficha": "id",
+          "campo_de_imagen": "image_id",
+          "ficha": "https://www.artic.edu/artworks/{id}",
+          "imagen": "https://www.artic.edu/iiif/2/{image_id}/full/843,/0/default.jpg"
+        },
+        "cma": {
+          "campo_de_ficha": "url",
+          "campo_de_imagen": "images.web.url"
+        }
+      }
+    },
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "museos": {
+      "aic": {
+        "base": "https://api.artic.edu/api/v1/artworks",
+        "campos": [
+          "id",
+          "title",
+          "artist_title",
+          "date_display",
+          "date_start",
+          "date_end",
+          "medium_display",
+          "style_title",
+          "place_of_origin",
+          "artwork_type_title",
+          "image_id",
+          "is_public_domain",
+          "description",
+          "provenance_text",
+          "publication_history",
+          "exhibition_history"
+        ]
+      },
+      "cma": {
+        "base": "https://openaccess-api.clevelandart.org/api/artworks/"
+      }
+    },
+    "normalizacion": {
+      "culture": {
+        "criterio": "primer_componente_por_coma"
+      }
+    },
+    "proveedor": {
+      "base_url": "https://api.openai.com/v1/",
+      "precio_usd_por_millon_de_tokens": {
+        "openai/gpt-4.1-mini": 0.4,
+        "openai/gpt-4o": 2.5,
+        "openai/gpt-6-luna": 0.1,
+        "openai/text-embedding-3-small": 0.02
+      },
+      "precio_usd_por_millon_de_tokens_de_salida": {
+        "openai/gpt-4.1-mini": 1.6,
+        "openai/gpt-4o": 10.0,
+        "openai/gpt-6-luna": 0.5
+      }
+    },
+    "recuperacion_textual": {
+      "agregacion": "mejor_fragmento",
+      "filtro_por_metadata": true,
+      "n_fragmentos_recuperados": 100
+    },
+    "retencion": {
+      "dias": 0,
+      "imagen": false,
+      "pedido": false
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "salida": {
+      "atribucion": "al_pie_de_la_referencia",
+      "campos_de_la_ficha": [
+        "artist",
+        "date_display",
+        "medium",
+        "style",
+        "museum"
+      ],
+      "exigen_atribucion": {
+        "CC-BY-4.0": true,
+        "CC0": false
+      },
+      "formato": "markdown",
+      "nombre_de_la_licencia": {
+        "CC-BY-4.0": "CC BY 4.0",
+        "CC0": "CC0 1.0"
+      },
+      "nombre_del_museo": {
+        "aic": "Art Institute of Chicago",
+        "cma": "The Cleveland Museum of Art"
+      }
+    },
+    "split": {
+      "estrato": {
+        "campo_de_periodo": "year",
+        "ejes": [
+          "museo",
+          "periodo"
+        ],
+        "etiqueta_sin_periodo": "sin_periodo",
+        "tramos": [
+          {
+            "hasta": 1399,
+            "nombre": "hasta-1399"
+          },
+          {
+            "desde": 1400,
+            "hasta": 1599,
+            "nombre": "1400-1599"
+          },
+          {
+            "desde": 1600,
+            "hasta": 1699,
+            "nombre": "1600-1699"
+          },
+          {
+            "desde": 1700,
+            "hasta": 1799,
+            "nombre": "1700-1799"
+          },
+          {
+            "desde": 1800,
+            "hasta": 1874,
+            "nombre": "1800-1874"
+          },
+          {
+            "desde": 1875,
+            "nombre": "1875-1949"
+          }
+        ]
+      },
+      "proporcion_held_out": 0.1,
+      "semilla": 7369
+    },
+    "trazas": {
+      "proveedor": "langsmith",
+      "proyecto": "tp3-rag-g2-m4",
+      "timeout_segundos": 10
+    }
+  },
+  "consulta_id": "c05-mixto",
+  "corrida_id": "3a9396e71a12843c-1",
+  "estado": {
+    "afirmaciones_descartadas": [],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "degradaciones": [],
+    "entrada": {
+      "artwork_id_de_la_imagen": "aic:105600",
+      "categoria": "mixto",
+      "consulta_id": "c05-mixto",
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "imagen_retenida": false,
+      "nota_de_retencion": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Los bytes de la imagen no se guardan nunca —no hay clave que los active— y el `pedido` solo si `[retencion] pedido = true`. Lo que se vacía son **campos**, y que estaban vaciados queda registrado (la regla de qué se versiona): la corrida conserva su `corrida_id`, su ordinal, sus rankings y sus degradaciones, porque borrarla reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+      "pedido": null,
+      "pedido_retenido": false,
+      "procedencia": "set"
+    },
+    "evidencia": {
+      "aic:88632": [
+        {
+          "artist": "Jacques Louis David",
+          "artwork_id": "aic:88632",
+          "chunk_index": 0,
+          "fragment_id": "aic:88632::description::0",
+          "license": "CC-BY-4.0",
+          "museum": "aic",
+          "section": "description",
+          "source_url": "https://www.artic.edu/artworks/88632",
+          "texto": "Following his father’s death in 1757, the young Jacques-Louis David was raised in the house of his uncle, architect François Buron, and his wife, Marie-Josèphe Fromont. Madame Buron was particularly supportive of David’s desire to become a painter, in opposition to her husband’s wish that he study architecture. In this intimate early portrait, David presented his aunt looking up momentarily from her reading to acknowledge the viewer with a warm reserve. Her glance suggests an affectionate bond between the painter and sitter and displays the ambitious young artist’s awareness of contemporary conventions for depicting middle-class women of sensibility.",
+          "title": "Madame François Buron"
+        },
+        {
+          "artist": "Jacques Louis David",
+          "artwork_id": "aic:88632",
+          "chunk_index": 0,
+          "fragment_id": "aic:88632::provenance::0",
+          "license": "CC0",
+          "museum": "aic",
+          "section": "provenance",
+          "source_url": "https://www.artic.edu/artworks/88632",
+          "texto": "Probably in the sitter’s possession [for the descent of this portrait and the companion portrait of François Buron, see Schnapper in Paris 1989-90, p. 44, under no. 2]; probably by descent to her daughter, Marie Françoise Buron, who married François Charles Seigneur; probably by descent to their daughter, Alexandrine Marie Louise, who married Charles François Baudry; probably by descent to their son, A. Baudry, and his wife (both d. 1903), by 1879; probably in 1903 to Mme Baudry’s brother, M. Dussault (or Dussaud), and his wife [according to London 1948 and Péreire 1907]; presumably by descent to M. Regnault, a family member, Paris, until 1925; offered for sale, Hôtel Drouot, Paris, 22 June 1905, no. 2 (ill.), bought in [subsequently lent by Regnault to Paris 1913]; sold by Regnault to Wildenstein, Paris in 1925; transferred from Wildenstein, Paris, on 22 March 1939; inventoried in Wildenstein, New York, stock on 27 February 1940 [acc.to Ay-Whang Hsia of Wildenstein, conversation with Martha Wolff 4 November 2003, note in curatorial file]; sold by Wildenstein to the Art Institute, 1963.",
+          "title": "Madame François Buron"
+        }
+      ],
+      "cma:122166": [
+        {
+          "artist": "Jean-Honoré Fragonard",
+          "artwork_id": "cma:122166",
+          "chunk_index": 0,
+          "fragment_id": "cma:122166::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1942.49",
+          "texto": "In the course of his long career, Fragonard produced more than 550 paintings. In this particular painting, the seventeenth-century costume, the brown palette, and his technique suggest that Fragonard is reflecting upon the work of Peter Paul Rubens and Rembrandt rather than his teacher François Boucher. While there is considerable evidence that the sitter is Alexander Evariste Fragonard, the artist's son, this identity has never been confirmed.",
+          "title": "A Boy in a Red-Lined Cloak"
+        },
+        {
+          "artist": "Jean-Honoré Fragonard",
+          "artwork_id": "cma:122166",
+          "chunk_index": 0,
+          "fragment_id": "cma:122166::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1942.49",
+          "texto": "Hippolyte Walferdin [1795-1880], Paris, France\n(Sale: Hôtel Drouot, Paris, France, Walferdin sale, April 12-14, 1880, no. 4)\nComte Cahen d’Anvers, probably Edouard [1832-1894]\nNicolas Ambatielos [1885-1956], London, England\n(Wildenstein & Co., New York, NY)\nGrace Rainey Rogers [1867-1943], New York, NY, given to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, Ohio",
+          "title": "A Boy in a Red-Lined Cloak"
+        }
+      ],
+      "cma:130163": [
+        {
+          "artist": "Jacques-Louis David",
+          "artwork_id": "cma:130163",
+          "chunk_index": 0,
+          "fragment_id": "cma:130163::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1952.542",
+          "texto": "Known as a tête d'expression or \"expressive head,\" this painting represents an essential part of the academic training of history painters who specialized in religious, mythological, or historical subjects. In 1760, such exercises became standard at the École des Beaux-Arts (School of Fine Arts) in Paris, then known as Académie royale de peinture et de sculpture. Focusing on the relationship between morality and beauty, the goal of a history painter is not only to create a pleasing image, but also to represent the emotions of the soul.",
+          "title": "Young Woman with a Turban"
+        },
+        {
+          "artist": "Jacques-Louis David",
+          "artwork_id": "cma:130163",
+          "chunk_index": 0,
+          "fragment_id": "cma:130163::did_you_know::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "did_you_know",
+          "source_url": "https://clevelandart.org/art/1952.542",
+          "texto": "The high quality of this painting was of such renown that David’s students requested permission to copy it.",
+          "title": "Young Woman with a Turban"
+        },
+        {
+          "artist": "Jacques-Louis David",
+          "artwork_id": "cma:130163",
+          "chunk_index": 0,
+          "fragment_id": "cma:130163::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1952.542",
+          "texto": "Sale?: Hôtel de Bullion, Didot Collection, Paris, France, 6 April 1825 (lot 114).\nSale: Baron Gros, Paris, France, November-1 December 1835 (lot 127).\nAugustin Alexandre Dumont (1801-1884), Paris, France\nMme Audard\nHenry G. Dalton (1862-1932), Cleveland, OH, left to his grandson, George S. Kendrick\nGeorge S. Kendrick (1899-1979), Cleveland, OH, gifted to the Cleveland Museum of Art\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Young Woman with a Turban"
+        }
+      ],
+      "cma:145135": [
+        {
+          "artist": "Nicolas de Largillière",
+          "artwork_id": "cma:145135",
+          "chunk_index": 0,
+          "fragment_id": "cma:145135::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/1970.31",
+          "texto": "By positioning the figure close to the picture plane and engulfed in a swirl of drapery, Nicolas de Largillière created a remarkably informal likeness of the 26-year-old Goislard. This impression is enhanced by the sitter’s open shirt and the drift of wig powder that dusts the shoulders of his velvet doublet. Warm hues and thick brushstrokes reveal the artist’s study of earlier Flemish painters, notably Anthony van Dyck. Despite his youth and seeming nonchalance, Goislard was a figure of prominence. He may have commissioned this work to commemorate his appointment to the Parlement, or governing council, of France in 1732, or earning the title Lord of Montsabert the following year.",
+          "title": "Portrait of Anne Louis Goislard de Montsabert, Comte de Richbourg-le-Toureil"
+        },
+        {
+          "artist": "Nicolas de Largillière",
+          "artwork_id": "cma:145135",
+          "chunk_index": 0,
+          "fragment_id": "cma:145135::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/1970.31",
+          "texto": "Anne Louis Goislard de Montsabert and the Montsabert family\nPossibly Comte André de Ganay [1863-1912], Paris1\nCharles Fairfax Murray [1849 – 1919], London, sold to Thomas Agnew & Sons\n(Thomas Agnew & Sons, London, sold to Calouste S. Gulbenkian)1\nCalouste S. Gulbenkian [1869 –1955], sold to Thomas Agnew & Sons\n(Thomas Agnew & Sons, London, sold to Charles Fairfax Murray)\nCharles Fairfax Murray [1849 – 1919], London\n(Galerie Georges Petit, Paris, Fairfax Murray sale, June 15, 1914, no. 24, sold to Bousquet)\nBousquet 1\nGalerie Cailleux, Paris, sold to the Detroit Institute of Arts with funds provided by Ernest Kanzler 1\nErnest Kanzler [1892-1967], Detroit, MI 1\nThe estate of Ernest Kanzler and Rosemarie Kanzler, sold to Eugene V. Thaw\n(Eugene V. Thaw, New York, sold to the Cleveland Museum of Art)1\nThe Cleveland Museum of Art, Cleveland, Ohio",
+          "title": "Portrait of Anne Louis Goislard de Montsabert, Comte de Richbourg-le-Toureil"
+        }
+      ],
+      "cma:170510": [
+        {
+          "artist": "François Boucher",
+          "artwork_id": "cma:170510",
+          "chunk_index": 0,
+          "fragment_id": "cma:170510::description::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "description",
+          "source_url": "https://clevelandart.org/art/2012.95",
+          "texto": "This work was catalogued as \"style of Chardin\" when it entered the museum's collection, and was considered a minor rococo revival work of the 1800s. In 2011, the museum asked Alastair Laing, the leading scholar of the artist Boucher, to study it. He confirmed that the painting is a rare survival from the artist's early career—one of only two known oil studies of this type by the artist.",
+          "title": "Head of a Young Woman"
+        },
+        {
+          "artist": "François Boucher",
+          "artwork_id": "cma:170510",
+          "chunk_index": 0,
+          "fragment_id": "cma:170510::provenance::0",
+          "license": "CC0",
+          "museum": "cma",
+          "section": "provenance",
+          "source_url": "https://clevelandart.org/art/2012.95",
+          "texto": "Mrs. Muriel Spiro Butkin (1915-2008), Shaker Heights, OH\nEstate of Muriel Butkin\nThe Cleveland Museum of Art, Cleveland, OH",
+          "title": "Head of a Young Woman"
+        }
+      ]
+    },
+    "explicacion": [
+      {
+        "abstencion": "No hay información suficiente para afirmar que esta obra tenga una paleta más luminosa o que sea una versión más cercana del retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:130163::description::0"
+            ],
+            "texto": "La obra es un retrato francés del siglo XVIII, realizado por Jacques-Louis David, un pintor académico especializado en temas religiosos, mitológicos o históricos.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato tiene una paleta más bien sobria y oscura, sin predominancia de colores luminosos.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [
+              "cma:130163::did_you_know::0"
+            ],
+            "texto": "El retrato es conocido y fue copiado por los estudiantes de David, lo que indica su importancia en la formación académica.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "cma:130163"
+      },
+      {
+        "afirmaciones": [
+          {
+            "refs": [
+              "aic:88632::description::0"
+            ],
+            "texto": "Este retrato fue pintado por Jacques-Louis David en 1769, en Francia, durante el siglo XVIII.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato muestra a una mujer con una expresión cálida y reservada, con una paleta que puede considerarse luminosa en comparación con tonos oscuros.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [
+              "aic:88632::description::0"
+            ],
+            "texto": "La obra es un retrato íntimo y cercano, que refleja un vínculo afectivo entre el pintor y la modelo.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "aic:88632"
+      },
+      {
+        "abstencion": "No hay información suficiente para confirmar que este retrato sea una versión del mismo retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:170510::description::0"
+            ],
+            "texto": "La obra es un retrato francés del siglo XVIII, realizado por François Boucher en los primeros años de la década de 1730.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato es un estudio al óleo, con una paleta que puede considerarse luminosa y un estilo rococó, más brillante que el retrato original.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:170510"
+      },
+      {
+        "abstencion": "No se indica que este retrato sea una versión del mismo retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:145135::description::0"
+            ],
+            "texto": "Este retrato fue pintado en 1734 por Nicolas de Largillière, un artista francés del siglo XVIII.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "La obra presenta una figura cercana al plano pictórico, con una paleta cálida y pinceladas gruesas que recuerdan a pintores flamencos.",
+            "tipo": "observacion"
+          },
+          {
+            "refs": [
+              "cma:145135::description::0"
+            ],
+            "texto": "El retrato es informal y muestra detalles como la camisa abierta y polvo de peluca, lo que da una sensación de cercanía.",
+            "tipo": "dato"
+          }
+        ],
+        "artwork_id": "cma:145135"
+      },
+      {
+        "abstencion": "No hay evidencia de que esta obra sea una versión más luminosa del mismo retrato original.",
+        "afirmaciones": [
+          {
+            "refs": [
+              "cma:122166::description::0"
+            ],
+            "texto": "La obra es un retrato francés del siglo XVIII, pintado por Jean-Honoré Fragonard en la década de 1780.",
+            "tipo": "dato"
+          },
+          {
+            "refs": [],
+            "texto": "El retrato utiliza una paleta marrón y un estilo que refleja influencias de Rubens y Rembrandt, con un enfoque menos luminoso.",
+            "tipo": "observacion"
+          }
+        ],
+        "artwork_id": "cma:122166"
+      }
+    ],
+    "fallida": null,
+    "fuentes_de_ranking": {
+      "texto": [
+        {
+          "artwork_id": "cma:122341",
+          "rank": 1,
+          "score": 0.6949639916419983
+        },
+        {
+          "artwork_id": "aic:93900",
+          "rank": 2,
+          "score": 0.6756874322891235
+        },
+        {
+          "artwork_id": "aic:69003",
+          "rank": 3,
+          "score": 0.6254435777664185
+        },
+        {
+          "artwork_id": "cma:169684",
+          "rank": 4,
+          "score": 0.610611081123352
+        },
+        {
+          "artwork_id": "aic:31233",
+          "rank": 5,
+          "score": 0.6035440564155579
+        },
+        {
+          "artwork_id": "aic:133859",
+          "rank": 6,
+          "score": 0.5920416712760925
+        },
+        {
+          "artwork_id": "cma:124084",
+          "rank": 7,
+          "score": 0.5831201076507568
+        },
+        {
+          "artwork_id": "cma:145135",
+          "rank": 8,
+          "score": 0.5781976580619812
+        },
+        {
+          "artwork_id": "aic:76212",
+          "rank": 9,
+          "score": 0.5759478807449341
+        },
+        {
+          "artwork_id": "cma:122166",
+          "rank": 10,
+          "score": 0.5734742283821106
+        },
+        {
+          "artwork_id": "cma:149663",
+          "rank": 11,
+          "score": 0.5729846954345703
+        },
+        {
+          "artwork_id": "cma:130163",
+          "rank": 12,
+          "score": 0.5694531798362732
+        },
+        {
+          "artwork_id": "aic:27307",
+          "rank": 13,
+          "score": 0.5609038472175598
+        },
+        {
+          "artwork_id": "cma:125950",
+          "rank": 14,
+          "score": 0.5598182082176208
+        },
+        {
+          "artwork_id": "cma:159309",
+          "rank": 15,
+          "score": 0.5584983825683594
+        },
+        {
+          "artwork_id": "cma:125948",
+          "rank": 16,
+          "score": 0.5552525520324707
+        },
+        {
+          "artwork_id": "cma:125949",
+          "rank": 17,
+          "score": 0.5552525520324707
+        },
+        {
+          "artwork_id": "cma:125951",
+          "rank": 18,
+          "score": 0.5464768409729004
+        },
+        {
+          "artwork_id": "cma:125941",
+          "rank": 19,
+          "score": 0.5431565642356873
+        },
+        {
+          "artwork_id": "cma:125942",
+          "rank": 20,
+          "score": 0.5420725345611572
+        },
+        {
+          "artwork_id": "cma:144743",
+          "rank": 21,
+          "score": 0.5404917597770691
+        },
+        {
+          "artwork_id": "aic:16405",
+          "rank": 22,
+          "score": 0.5387254953384399
+        },
+        {
+          "artwork_id": "aic:94126",
+          "rank": 23,
+          "score": 0.5367595553398132
+        },
+        {
+          "artwork_id": "cma:146148",
+          "rank": 24,
+          "score": 0.5357041358947754
+        },
+        {
+          "artwork_id": "cma:150115",
+          "rank": 25,
+          "score": 0.5290111303329468
+        },
+        {
+          "artwork_id": "aic:51577",
+          "rank": 26,
+          "score": 0.5257484912872314
+        },
+        {
+          "artwork_id": "aic:44742",
+          "rank": 27,
+          "score": 0.5253512859344482
+        },
+        {
+          "artwork_id": "cma:122347",
+          "rank": 28,
+          "score": 0.5236492156982422
+        },
+        {
+          "artwork_id": "cma:147607",
+          "rank": 29,
+          "score": 0.5216994881629944
+        },
+        {
+          "artwork_id": "aic:12007",
+          "rank": 30,
+          "score": 0.5202920436859131
+        },
+        {
+          "artwork_id": "cma:170510",
+          "rank": 31,
+          "score": 0.5198876857757568
+        },
+        {
+          "artwork_id": "aic:88632",
+          "rank": 32,
+          "score": 0.5197376012802124
+        },
+        {
+          "artwork_id": "cma:136844",
+          "rank": 33,
+          "score": 0.5144243240356445
+        },
+        {
+          "artwork_id": "cma:143206",
+          "rank": 34,
+          "score": 0.5142204165458679
+        },
+        {
+          "artwork_id": "cma:139729",
+          "rank": 35,
+          "score": 0.5105998516082764
+        },
+        {
+          "artwork_id": "aic:61741",
+          "rank": 36,
+          "score": 0.5037018656730652
+        },
+        {
+          "artwork_id": "aic:57048",
+          "rank": 37,
+          "score": 0.49725937843322754
+        },
+        {
+          "artwork_id": "cma:166505",
+          "rank": 38,
+          "score": 0.49152541160583496
+        },
+        {
+          "artwork_id": "cma:123435",
+          "rank": 39,
+          "score": 0.4899008870124817
+        },
+        {
+          "artwork_id": "cma:150068",
+          "rank": 40,
+          "score": 0.48458731174468994
+        },
+        {
+          "artwork_id": "cma:149290",
+          "rank": 41,
+          "score": 0.48156118392944336
+        },
+        {
+          "artwork_id": "aic:105704",
+          "rank": 42,
+          "score": 0.4792606830596924
+        },
+        {
+          "artwork_id": "aic:57051",
+          "rank": 43,
+          "score": 0.47771310806274414
+        },
+        {
+          "artwork_id": "aic:57049",
+          "rank": 44,
+          "score": 0.47083085775375366
+        },
+        {
+          "artwork_id": "cma:117774",
+          "rank": 45,
+          "score": 0.46344882249832153
+        },
+        {
+          "artwork_id": "cma:163042",
+          "rank": 46,
+          "score": 0.46215903759002686
+        },
+        {
+          "artwork_id": "aic:100061",
+          "rank": 47,
+          "score": 0.45947253704071045
+        },
+        {
+          "artwork_id": "aic:57050",
+          "rank": 48,
+          "score": 0.45402735471725464
+        },
+        {
+          "artwork_id": "aic:58052",
+          "rank": 49,
+          "score": 0.4272052049636841
+        },
+        {
+          "artwork_id": "cma:130161",
+          "rank": 50,
+          "score": 0.4225165843963623
+        },
+        {
+          "artwork_id": "cma:163043",
+          "rank": 51,
+          "score": 0.41723012924194336
+        },
+        {
+          "artwork_id": "cma:128877",
+          "rank": 52,
+          "score": 0.40089738368988037
+        },
+        {
+          "artwork_id": "cma:162295",
+          "rank": 53,
+          "score": 0.40031516551971436
+        },
+        {
+          "artwork_id": "cma:166508",
+          "rank": 54,
+          "score": 0.3982536792755127
+        },
+        {
+          "artwork_id": "cma:141476",
+          "rank": 55,
+          "score": 0.391746461391449
+        },
+        {
+          "artwork_id": "cma:163044",
+          "rank": 56,
+          "score": 0.37784063816070557
+        },
+        {
+          "artwork_id": "cma:147523",
+          "rank": 57,
+          "score": 0.3777174949645996
+        },
+        {
+          "artwork_id": "cma:145309",
+          "rank": 58,
+          "score": 0.37439393997192383
+        },
+        {
+          "artwork_id": "cma:148862",
+          "rank": 59,
+          "score": 0.3617309331893921
+        },
+        {
+          "artwork_id": "cma:148861",
+          "rank": 60,
+          "score": 0.36166226863861084
+        },
+        {
+          "artwork_id": "cma:121869",
+          "rank": 61,
+          "score": 0.3615143299102783
+        },
+        {
+          "artwork_id": "cma:121870",
+          "rank": 62,
+          "score": 0.3615143299102783
+        },
+        {
+          "artwork_id": "cma:147479",
+          "rank": 63,
+          "score": 0.36139506101608276
+        }
+      ],
+      "visual": [
+        {
+          "artwork_id": "cma:95286",
+          "rank": 1,
+          "score": 0.7154583930969238
+        },
+        {
+          "artwork_id": "aic:61151",
+          "rank": 2,
+          "score": 0.7128274440765381
+        },
+        {
+          "artwork_id": "cma:124080",
+          "rank": 3,
+          "score": 0.7125968337059021
+        },
+        {
+          "artwork_id": "cma:109248",
+          "rank": 4,
+          "score": 0.7004715800285339
+        },
+        {
+          "artwork_id": "cma:173240",
+          "rank": 5,
+          "score": 0.6970616579055786
+        },
+        {
+          "artwork_id": "cma:95269",
+          "rank": 6,
+          "score": 0.6954917907714844
+        },
+        {
+          "artwork_id": "aic:120102",
+          "rank": 7,
+          "score": 0.6948935389518738
+        },
+        {
+          "artwork_id": "aic:11003",
+          "rank": 8,
+          "score": 0.6860926747322083
+        },
+        {
+          "artwork_id": "cma:125247",
+          "rank": 9,
+          "score": 0.6859303712844849
+        },
+        {
+          "artwork_id": "cma:99428",
+          "rank": 10,
+          "score": 0.6855854988098145
+        },
+        {
+          "artwork_id": "cma:125895",
+          "rank": 11,
+          "score": 0.6822083592414856
+        },
+        {
+          "artwork_id": "aic:40599",
+          "rank": 12,
+          "score": 0.6816998720169067
+        },
+        {
+          "artwork_id": "cma:103366",
+          "rank": 13,
+          "score": 0.68138587474823
+        },
+        {
+          "artwork_id": "aic:76166",
+          "rank": 14,
+          "score": 0.6806091666221619
+        },
+        {
+          "artwork_id": "cma:125951",
+          "rank": 15,
+          "score": 0.6800163388252258
+        },
+        {
+          "artwork_id": "cma:170510",
+          "rank": 16,
+          "score": 0.6797279119491577
+        },
+        {
+          "artwork_id": "cma:149769",
+          "rank": 17,
+          "score": 0.679102897644043
+        },
+        {
+          "artwork_id": "cma:128365",
+          "rank": 18,
+          "score": 0.6787279844284058
+        },
+        {
+          "artwork_id": "cma:122347",
+          "rank": 19,
+          "score": 0.677699863910675
+        },
+        {
+          "artwork_id": "aic:40388",
+          "rank": 20,
+          "score": 0.6773088574409485
+        }
+      ]
+    },
+    "plan": {
+      "artefacto": "PlanDeConsulta",
+      "binding": {
+        "modelo": "openai/gpt-4.1-mini",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo": {
+          "max_tokens": 300,
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "muestreo_efectivo": {
+          "max_tokens": 300,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.1,
+          "top_p": 1.0
+        },
+        "prompt_id": "planificador-pre-retrieval-dos-consultas",
+        "rol": "planificador",
+        "version_del_prompt": "2"
+      },
+      "clase_de_identidad": "1/2",
+      "consulta_conceptual": "18th century French portrait painting, focusing on detailed costume and facial expression, characterized by a luminous color palette and intimate composition",
+      "consulta_id": "c05-mixto",
+      "consulta_visual": "close-up portrait of an elderly woman with lace bonnet and bow, bright and luminous palette, 18th century French style",
+      "cumple_pl3": true,
+      "imagen_hash": "sha256:0040c1913df96029083e011a89a9f952f4593e81d6e0eba9767ef439e60b58f3",
+      "imagen_retenida": false,
+      "n_intentos": 1,
+      "nota_de_identidad": "Clase **1 / 2** (la tabla de identidades), el **híbrido**: se *direcciona* como caché de entradas —eso **es** el reuso del plan al barrer el peso de fusión, cinco corridas de un barrido de `α` reusando un plan— y su contenido es la salida **no determinista** de un LLM. Por eso la regla de que un id determina su contenido no aplica y lo que rige es **escritura única** (la escritura única del plan). lo que no entra en la identidad del plan: `α`, N, la fusión y el `variante_id` **no** son ingredientes. la versión del prompt como ingrediente del plan: el prompt **+ su versión**, el modelo y el muestreo **sí**.",
+      "nota_de_pl3": "Las **tres** cláusulas van escritas porque son **tres cosas**: que las dos consultas existan, que difieran del pedido crudo (*rewriting*) y que difieran entre sí (lo que distingue *expansion* de *rewriting*). El veredicto viaja adentro para que las tres cláusulas de las consultas del plan se pueda contar **también sobre una ad-hoc**, cuyo pedido el registro de decisiones no deja guardar.",
+      "nota_de_pl5": "la escritura única del plan: un `plan_id` se escribe **una sola vez**; si ya existe se **lee** y la corrida registra si lo **produjo o lo reusó**. Sin ese registro no habría forma de saber **qué corrida pagó la llamada que la tabla de tokens, costo y la figura cuenta**.",
+      "nota_de_retencion": {
+        "decision": "el registro de decisiones (corrección de la fila de la pregunta por el ciclo de vida de la corrida purgada, 2026-10-25)",
+        "por_que": "La consulta sale del `SetDeConsultas`: **no es dato de un tercero**, es una obra de nuestro propio held-out versionada con el ground truth porque es el **instrumento de medición** (el registro de decisiones). El plan se guarda entero para que el informe lo pueda leer, que es la misma frontera que el registro de decisiones trazó para las trazas.",
+        "procedencia": "set",
+        "retiene_pedido": true
+      },
+      "pedido": "el mismo retrato con una paleta más luminosa, de la pintura francesa del siglo XVIII, más cercano",
+      "pedido_retenido": true,
+      "pl3": {
+        "distintas_del_pedido_crudo": true,
+        "distintas_entre_si": true,
+        "no_vacias": true
+      },
+      "plan_id": "4e072b9ff664f51a",
+      "procedencia": "set",
+      "produccion_descartada": false,
+      "reusado": true,
+      "uso": {
+        "tokens_in": 2672,
+        "tokens_out": 62
+      },
+      "version_del_plan": "1"
+    },
+    "ranking_fusionado": [
+      {
+        "artwork_id": "cma:125951",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 18,
+          "visual": 15
+        },
+        "score_fusionado": 0.68001623
+      },
+      {
+        "artwork_id": "cma:170510",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 31,
+          "visual": 16
+        },
+        "score_fusionado": 0.67972767
+      },
+      {
+        "artwork_id": "cma:122347",
+        "estrategia": "cascada",
+        "n_ramas": 2,
+        "rangos_de_origen": {
+          "texto": 28,
+          "visual": 19
+        },
+        "score_fusionado": 0.67769982
+      },
+      {
+        "artwork_id": "aic:12007",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 30
+        },
+        "score_fusionado": 0.67662051
+      },
+      {
+        "artwork_id": "aic:27307",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 13
+        },
+        "score_fusionado": 0.67560537
+      },
+      {
+        "artwork_id": "aic:61741",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 36
+        },
+        "score_fusionado": 0.65776426
+      },
+      {
+        "artwork_id": "cma:122341",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 1
+        },
+        "score_fusionado": 0.65587851
+      },
+      {
+        "artwork_id": "cma:130163",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 12
+        },
+        "score_fusionado": 0.64629338
+      },
+      {
+        "artwork_id": "aic:31233",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 5
+        },
+        "score_fusionado": 0.61871055
+      },
+      {
+        "artwork_id": "cma:166505",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 38
+        },
+        "score_fusionado": 0.61502677
+      },
+      {
+        "artwork_id": "cma:145135",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 8
+        },
+        "score_fusionado": 0.61418885
+      },
+      {
+        "artwork_id": "cma:123435",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 39
+        },
+        "score_fusionado": 0.60944335
+      },
+      {
+        "artwork_id": "aic:69003",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 3
+        },
+        "score_fusionado": 0.59800194
+      },
+      {
+        "artwork_id": "cma:143206",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 34
+        },
+        "score_fusionado": 0.59696552
+      },
+      {
+        "artwork_id": "aic:88632",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 32
+        },
+        "score_fusionado": 0.59416581
+      },
+      {
+        "artwork_id": "cma:122166",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 10
+        },
+        "score_fusionado": 0.59354723
+      },
+      {
+        "artwork_id": "cma:141476",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 55
+        },
+        "score_fusionado": 0.58792347
+      },
+      {
+        "artwork_id": "cma:159309",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 15
+        },
+        "score_fusionado": 0.57959285
+      },
+      {
+        "artwork_id": "cma:169684",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 4
+        },
+        "score_fusionado": 0.57620698
+      },
+      {
+        "artwork_id": "aic:133859",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 6
+        },
+        "score_fusionado": 0.57521102
+      },
+      {
+        "artwork_id": "aic:76212",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 9
+        },
+        "score_fusionado": 0.56903758
+      },
+      {
+        "artwork_id": "cma:124084",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 7
+        },
+        "score_fusionado": 0.56365169
+      },
+      {
+        "artwork_id": "cma:147523",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 57
+        },
+        "score_fusionado": 0.54790072
+      },
+      {
+        "artwork_id": "cma:136844",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 33
+        },
+        "score_fusionado": 0.5459345
+      },
+      {
+        "artwork_id": "cma:125942",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 20
+        },
+        "score_fusionado": 0.53860475
+      },
+      {
+        "artwork_id": "aic:44742",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 27
+        },
+        "score_fusionado": 0.52965775
+      },
+      {
+        "artwork_id": "cma:117774",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 45
+        },
+        "score_fusionado": 0.51891778
+      },
+      {
+        "artwork_id": "cma:128877",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 52
+        },
+        "score_fusionado": 0.51739046
+      },
+      {
+        "artwork_id": "cma:147607",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 29
+        },
+        "score_fusionado": 0.51644007
+      },
+      {
+        "artwork_id": "aic:93900",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 2
+        },
+        "score_fusionado": 0.50603677
+      },
+      {
+        "artwork_id": "cma:166508",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 54
+        },
+        "score_fusionado": 0.50383414
+      },
+      {
+        "artwork_id": "aic:100061",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 47
+        },
+        "score_fusionado": 0.49918431
+      },
+      {
+        "artwork_id": "cma:121870",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 62
+        },
+        "score_fusionado": 0.49800861
+      },
+      {
+        "artwork_id": "cma:163044",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 56
+        },
+        "score_fusionado": 0.49571079
+      },
+      {
+        "artwork_id": "cma:148862",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 59
+        },
+        "score_fusionado": 0.49472486
+      },
+      {
+        "artwork_id": "cma:163043",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 51
+        },
+        "score_fusionado": 0.48916652
+      },
+      {
+        "artwork_id": "cma:149663",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 11
+        },
+        "score_fusionado": 0.48659305
+      },
+      {
+        "artwork_id": "cma:130161",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 50
+        },
+        "score_fusionado": 0.48579425
+      },
+      {
+        "artwork_id": "cma:125950",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 14
+        },
+        "score_fusionado": 0.48565685
+      },
+      {
+        "artwork_id": "aic:57049",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 44
+        },
+        "score_fusionado": 0.48415711
+      },
+      {
+        "artwork_id": "cma:162295",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 53
+        },
+        "score_fusionado": 0.48120698
+      },
+      {
+        "artwork_id": "cma:148861",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 60
+        },
+        "score_fusionado": 0.48074585
+      },
+      {
+        "artwork_id": "aic:16405",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 22
+        },
+        "score_fusionado": 0.46793313
+      },
+      {
+        "artwork_id": "cma:147479",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 63
+        },
+        "score_fusionado": 0.45535533
+      },
+      {
+        "artwork_id": "aic:94126",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 23
+        },
+        "score_fusionado": 0.45482962
+      },
+      {
+        "artwork_id": "cma:149290",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 41
+        },
+        "score_fusionado": 0.45389627
+      },
+      {
+        "artwork_id": "cma:125941",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 19
+        },
+        "score_fusionado": 0.45370884
+      },
+      {
+        "artwork_id": "aic:51577",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 26
+        },
+        "score_fusionado": 0.45352715
+      },
+      {
+        "artwork_id": "cma:150115",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 25
+        },
+        "score_fusionado": 0.45314897
+      },
+      {
+        "artwork_id": "cma:139729",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 35
+        },
+        "score_fusionado": 0.44895569
+      },
+      {
+        "artwork_id": "aic:57050",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 48
+        },
+        "score_fusionado": 0.44356712
+      },
+      {
+        "artwork_id": "cma:146148",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 24
+        },
+        "score_fusionado": 0.44298544
+      },
+      {
+        "artwork_id": "cma:125949",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 17
+        },
+        "score_fusionado": 0.44209263
+      },
+      {
+        "artwork_id": "cma:125948",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 16
+        },
+        "score_fusionado": 0.43912544
+      },
+      {
+        "artwork_id": "aic:105704",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 42
+        },
+        "score_fusionado": 0.42703122
+      },
+      {
+        "artwork_id": "aic:58052",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 49
+        },
+        "score_fusionado": 0.4198283
+      },
+      {
+        "artwork_id": "cma:163042",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 46
+        },
+        "score_fusionado": 0.4191915
+      },
+      {
+        "artwork_id": "aic:57051",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 43
+        },
+        "score_fusionado": 0.41051035
+      },
+      {
+        "artwork_id": "aic:57048",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 37
+        },
+        "score_fusionado": 0.40817016
+      },
+      {
+        "artwork_id": "cma:145309",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 58
+        },
+        "score_fusionado": 0.40255585
+      },
+      {
+        "artwork_id": "cma:150068",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 40
+        },
+        "score_fusionado": 0.39773246
+      },
+      {
+        "artwork_id": "cma:144743",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 21
+        },
+        "score_fusionado": 0.36881483
+      },
+      {
+        "artwork_id": "cma:121869",
+        "estrategia": "cascada",
+        "n_ramas": 1,
+        "rangos_de_origen": {
+          "texto": 61
+        },
+        "score_fusionado": 0.36266674
+      }
+    ],
+    "rerank": [
+      {
+        "artwork_id": "cma:130163",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de busto con fondo y ropa muy oscuros. CANDIDATA: retrato más cercano, con rostro y paño blanco luminosos sobre fondo gris. CAMBIO: paleta más clara y encuadre más próximo; además, es francesa del siglo XVIII. Conserva el motivo de retrato, aclara notablemente la paleta, acerca el encuadre y coincide con la época y procedencia solicitadas.",
+        "n_intentos": 1,
+        "rango_fusionado": 8,
+        "score_0_10": 9,
+        "uso": {
+          "tokens_in": 2843,
+          "tokens_out": 310
+        }
+      },
+      {
+        "artwork_id": "aic:88632",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de paleta oscura y apagada, con blancos tenues. CANDIDATA: retrato más claro, con piel luminosa y franjas de color. CAMBIO: la paleta se vuelve notablemente más luminosa; la época y procedencia coinciden con lo pedido. Cumple con fuerza la paleta más luminosa y la pintura francesa del siglo XVIII, aunque muestra otro retrato y no es un encuadre más cercano.",
+        "n_intentos": 1,
+        "rango_fusionado": 15,
+        "score_0_10": 8,
+        "uso": {
+          "tokens_in": 3076,
+          "tokens_out": 393
+        }
+      },
+      {
+        "artwork_id": "cma:170510",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de busto con fondo oscuro y paleta apagada. CANDIDATA: rostro en primer plano, tonos claros y azules; francesa del siglo XVIII. CAMBIO: paleta claramente más luminosa y encuadre más cercano, aunque el rostro es distinto. Cumple con claridad la luminosidad, el acercamiento y la época y procedencia pedidas, pero no conserva a la misma retratada.",
+        "n_intentos": 1,
+        "rango_fusionado": 2,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2871,
+          "tokens_out": 590
+        }
+      },
+      {
+        "artwork_id": "cma:145135",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato muy oscuro, encuadrado de cerca, con blancos luminosos. CANDIDATA: retrato francés del siglo XVIII, con tonos más claros y rojos intensos, pero encuadre más amplio. CAMBIO: la paleta se ilumina claramente; la cercanía visual disminuye. Cumple la época y el tipo de obra, y ofrece una paleta más luminosa, aunque el encuadre es menos cercano al original.",
+        "n_intentos": 1,
+        "rango_fusionado": 11,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2825,
+          "tokens_out": 456
+        }
+      },
+      {
+        "artwork_id": "cma:122166",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con fondo muy oscuro y blancos luminosos. CANDIDATA: retrato más cercano, con rostro iluminado, rojos y fondo gris apagado. CAMBIO: es francesa del siglo XVIII y gana algo de claridad, aunque la paleta sigue siendo tenue. Mantiene el formato de retrato, se acerca más al rostro y cumple el origen y período pedidos, con una mejora moderada de luminosidad.",
+        "n_intentos": 1,
+        "rango_fusionado": 16,
+        "score_0_10": 7,
+        "uso": {
+          "tokens_in": 2782,
+          "tokens_out": 411
+        }
+      },
+      {
+        "artwork_id": "cma:125951",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de tonos apagados y fondo muy oscuro, encuadre cercano. CANDIDATA: paleta algo más luminosa y azul intenso, con encuadre menos cercano. CAMBIO: aclara parcialmente, pero se aleja en proximidad. Es un retrato francés del siglo XVIII y aclara la paleta, aunque no conserva la cercanía del encuadre original.",
+        "n_intentos": 1,
+        "rango_fusionado": 1,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 2810,
+          "tokens_out": 462
+        }
+      },
+      {
+        "artwork_id": "aic:12007",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, de paleta muy oscura con blancos luminosos. CANDIDATA: figura femenina de cuerpo entero, con cielo claro y tonos rojizos, aunque conserva sombras. CAMBIO: paleta más luminosa y época francesa del XVIII, pero el encuadre queda mucho menos cercano. Cumple la época y aclara la paleta, pero se aleja del retrato cercano al mostrar la figura de cuerpo entero.",
+        "n_intentos": 1,
+        "rango_fusionado": 4,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3216,
+          "tokens_out": 320
+        }
+      },
+      {
+        "artwork_id": "aic:27307",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, oscuro y de tonos apagados. CANDIDATA: retrato francés del siglo XVIII, mucho más claro, pero de figura más alejada. CAMBIO: ilumina la paleta y coincide con época y cultura; no acerca el encuadre. Cumple con fuerza la paleta más luminosa y la pintura francesa del siglo XVIII, pero se aleja del encuadre cercano y solo conserva la semejanza general de retrato.",
+        "n_intentos": 1,
+        "rango_fusionado": 5,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3211,
+          "tokens_out": 516
+        }
+      },
+      {
+        "artwork_id": "aic:31233",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de busto con tonos oscuros y apagados. CANDIDATA: retrato francés de 1797, con blancos y azul luminosos, pero encuadre más amplio. CAMBIO: la paleta se aclara mucho y cumple época; no conserva el mismo retrato ni se acerca. La candidata cumple con fuerza la paleta más luminosa y la pintura francesa del siglo XVIII, pero muestra otra mujer y un encuadre menos cercano.",
+        "n_intentos": 1,
+        "rango_fusionado": 9,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3179,
+          "tokens_out": 469
+        }
+      },
+      {
+        "artwork_id": "aic:69003",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato femenino con fondo oscuro y blancos luminosos. CANDIDATA: retrato masculino, con fondo más claro, cabello y rostro iluminados, pero ropa muy oscura. CAMBIO: la paleta gana algo de luminosidad y la época y procedencia coinciden; el encuadre es parecido, pero no es la misma persona. Cumple la pintura francesa del siglo XVIII y aporta algo más de luz, aunque cambia a la persona retratada y la ropa oscura limita el efecto luminoso.",
+        "n_intentos": 1,
+        "rango_fusionado": 13,
+        "score_0_10": 6,
+        "uso": {
+          "tokens_in": 3146,
+          "tokens_out": 744
+        }
+      },
+      {
+        "artwork_id": "cma:122347",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato muy cercano, con fondo casi negro y paleta oscura. CANDIDATA: retrato más amplio, de tonos apagados pero con ropa clara y fondo menos oscuro. CAMBIO: paleta algo más luminosa y época francesa del XVIII; el encuadre se aleja. Mantiene el motivo de retrato y cumple la época francesa del siglo XVIII, pero solo aclara moderadamente la paleta y se aleja en vez de acercarse.",
+        "n_intentos": 1,
+        "rango_fusionado": 3,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2810,
+          "tokens_out": 465
+        }
+      },
+      {
+        "artwork_id": "cma:143206",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de busto, con tonos oscuros y ropa clara. CANDIDATA: retrato sentado, con blancos y rojos más vivos, aunque fondo oscuro. CAMBIO: paleta más luminosa y época/lugar pedidos; composición y sujeto menos cercanos. Es un retrato francés del siglo XVIII y su paleta destaca más, pero difiere mucho del original en sujeto y encuadre.",
+        "n_intentos": 1,
+        "rango_fusionado": 14,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2776,
+          "tokens_out": 437
+        }
+      },
+      {
+        "artwork_id": "cma:159309",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, oscuro y de tonos apagados. CANDIDATA: figura sentada, con dorados y azules más luminosos. CAMBIO: aclara la paleta y corresponde a Francia, siglo XVIII, pero no conserva el retrato ni lo acerca. Cumple claramente la época y la paleta más luminosa, pero se aleja mucho del retrato original y presenta una figura de cuerpo entero.",
+        "n_intentos": 1,
+        "rango_fusionado": 18,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 2805,
+          "tokens_out": 385
+        }
+      },
+      {
+        "artwork_id": "aic:133859",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de busto, con tonos oscuros y apagados. CANDIDATA: figura más amplia, con blancos y rosas más luminosos. CAMBIO: aclara la paleta, pero no acerca el encuadre ni conserva el mismo retrato. Coincide con la pintura francesa del siglo XVIII y ofrece una paleta más luminosa, pero se aleja del retrato original y no lo muestra más de cerca.",
+        "n_intentos": 1,
+        "rango_fusionado": 20,
+        "score_0_10": 5,
+        "uso": {
+          "tokens_in": 3185,
+          "tokens_out": 516
+        }
+      },
+      {
+        "artwork_id": "aic:61741",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, con blancos luminosos y fondo muy oscuro. CANDIDATA: retrato más alejado, de paleta apagada verde y parda. CAMBIO: mantiene la época y procedencia pedidas, pero no aclara la paleta ni acerca el encuadre. Es un retrato francés del siglo XVIII, pero la paleta no es más luminosa y el encuadre es menos cercano que el original.",
+        "n_intentos": 1,
+        "rango_fusionado": 6,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 3110,
+          "tokens_out": 388
+        }
+      },
+      {
+        "artwork_id": "cma:122341",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, de tonos oscuros con ropa blanca. CANDIDATA: retrato más amplio, con vestimenta clara y colorida, pero fondo oscuro. CAMBIO: la paleta se aclara algo; el encuadre se aleja, no se acerca. Es pintura francesa del siglo XVIII y ofrece más color y claridad en la vestimenta, pero muestra otro retrato y un encuadre mucho menos cercano.",
+        "n_intentos": 1,
+        "rango_fusionado": 7,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2813,
+          "tokens_out": 492
+        }
+      },
+      {
+        "artwork_id": "cma:123435",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato de encuadre cercano, con fondo muy oscuro y blancos luminosos. CANDIDATA: retrato más abierto, de paleta clara pero grisácea. CAMBIO: gana luminosidad, pero no cercanía; es francesa, aunque data de c. 1801. Ilumina la paleta y mantiene el género de retrato, pero el encuadre es menos cercano y la fecha no corresponde al siglo XVIII.",
+        "n_intentos": 1,
+        "rango_fusionado": 12,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2807,
+          "tokens_out": 425
+        }
+      },
+      {
+        "artwork_id": "cma:141476",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato cercano, con fondo oscuro y blancos luminosos. CANDIDATA: retrato de cuerpo más amplio, con dorados vivos pero también sombras oscuras. CAMBIO: paleta algo más luminosa y época francesa del XVIII; encuadre más lejano, contrario al pedido. Aunque coincide con la pintura francesa del siglo XVIII y aporta algunos tonos más luminosos, el retrato está mucho menos cercano que el original.",
+        "n_intentos": 1,
+        "rango_fusionado": 17,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2780,
+          "tokens_out": 411
+        }
+      },
+      {
+        "artwork_id": "cma:169684",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato con blancos muy luminosos contra un fondo oscuro. CANDIDATA: paleta más apagada, gris y azul, con el rostro iluminado; encuadre más cercano. CAMBIO: se acerca, pero no gana luminosidad. Es un retrato francés del siglo XVIII y ofrece un encuadre más cercano, pero la paleta no es más luminosa que la original.",
+        "n_intentos": 1,
+        "rango_fusionado": 19,
+        "score_0_10": 4,
+        "uso": {
+          "tokens_in": 2850,
+          "tokens_out": 449
+        }
+      },
+      {
+        "artwork_id": "cma:166505",
+        "estado": "puntuado",
+        "justificacion": "ORIGINAL: retrato individual muy cercano, con fondo oscuro y ropa clara. CANDIDATA: madre e hija en un encuadre más amplio, también con fondo oscuro y prendas claras; es francesa del siglo XVIII. CAMBIO: no acerca el retrato y la paleta no se ve más luminosa. Cumple la época y el origen pedidos, pero muestra dos figuras más pequeñas y no aporta una paleta claramente más luminosa.",
+        "n_intentos": 1,
+        "rango_fusionado": 10,
+        "score_0_10": 3,
+        "uso": {
+          "tokens_in": 2813,
+          "tokens_out": 580
+        }
+      }
+    ],
+    "salida": {
+      "consulta_id": "c05-mixto",
+      "formato": {
+        "atribucion": "al_pie_de_la_referencia",
+        "campos_de_la_ficha": [
+          "artist",
+          "date_display",
+          "medium",
+          "style",
+          "museum"
+        ],
+        "exigen_atribucion": {
+          "CC-BY-4.0": true,
+          "CC0": false
+        },
+        "formato": "markdown",
+        "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+      },
+      "idioma_de_la_explicacion": "es",
+      "idioma_de_las_citas": "en",
+      "nota_de_idioma": "el contrato de la salida citada / el criterio de idioma: la explicación en **español**, el fragmento citado **textual en inglés, sin traducir**. La cita viaja desde `knowledge` hasta acá **sin pasar por el modelo** (el contrato de salida), y las obligaciones de la cita lo verifica byte a byte: si el formateo viviera dentro del prompt, *'textual'* dependería de que el modelo no lo reescriba.",
+      "obras": [
+        {
+          "abstencion": "No hay información suficiente para afirmar que esta obra tenga una paleta más luminosa o que sea una versión más cercana del retrato original.",
+          "artwork_id": "cma:130163",
+          "ficha": {
+            "artist": "Jacques-Louis David",
+            "culture": "France",
+            "date_display": "c. 1780",
+            "medium": "oil on canvas",
+            "title": "Young Woman with a Turban",
+            "year": 1775
+          },
+          "lineas": [
+            "La obra es un retrato francés del siglo XVIII, realizado por Jacques-Louis David, un pintor académico especializado en temas religiosos, mitológicos o históricos. [1]",
+            "El retrato tiene una paleta más bien sobria y oscura, sin predominancia de colores luminosos.",
+            "El retrato es conocido y fue copiado por los estudiantes de David, lo que indica su importancia en la formación académica. [2]"
+          ],
+          "rango": 1,
+          "referencias": [
+            {
+              "artist": "Jacques-Louis David",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:130163::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1952.542",
+              "texto_citado": "Known as a tête d'expression or \"expressive head,\" this painting represents an essential part of the academic training of history painters who specialized in religious, mythological, or historical subjects. In 1760, such exercises became standard at the École des Beaux-Arts (School of Fine Arts) in Paris, then known as Académie royale de peinture et de sculpture. Focusing on the relationship between morality and beauty, the goal of a history painter is not only to create a pleasing image, but also to represent the emotions of the soul.",
+              "title": "Young Woman with a Turban"
+            },
+            {
+              "artist": "Jacques-Louis David",
+              "atribucion": null,
+              "campos": [
+                "did_you_know"
+              ],
+              "fragment_id": "cma:130163::did_you_know::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 2,
+              "source_url": "https://clevelandart.org/art/1952.542",
+              "texto_citado": "The high quality of this painting was of such renown that David’s students requested permission to copy it.",
+              "title": "Young Woman with a Turban"
+            }
+          ],
+          "score": 0.646293375591891,
+          "source_url": "https://clevelandart.org/art/1952.542"
+        },
+        {
+          "abstencion": null,
+          "artwork_id": "aic:88632",
+          "ficha": {
+            "artist": "Jacques Louis David",
+            "culture": "France",
+            "date_display": "1769",
+            "medium": "Oil on canvas",
+            "style": "18th Century",
+            "title": "Madame François Buron",
+            "year": 1769
+          },
+          "lineas": [
+            "Este retrato fue pintado por Jacques-Louis David en 1769, en Francia, durante el siglo XVIII. [1]",
+            "El retrato muestra a una mujer con una expresión cálida y reservada, con una paleta que puede considerarse luminosa en comparación con tonos oscuros.",
+            "La obra es un retrato íntimo y cercano, que refleja un vínculo afectivo entre el pintor y la modelo. [1]"
+          ],
+          "rango": 2,
+          "referencias": [
+            {
+              "artist": "Jacques Louis David",
+              "atribucion": "“Madame François Buron”, Jacques Louis David. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/88632",
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "aic:88632::description::0",
+              "licencias": [
+                "CC-BY-4.0"
+              ],
+              "license": "CC-BY-4.0",
+              "mezcla_licencias": false,
+              "museum": "aic",
+              "n": 1,
+              "source_url": "https://www.artic.edu/artworks/88632",
+              "texto_citado": "Following his father’s death in 1757, the young Jacques-Louis David was raised in the house of his uncle, architect François Buron, and his wife, Marie-Josèphe Fromont. Madame Buron was particularly supportive of David’s desire to become a painter, in opposition to her husband’s wish that he study architecture. In this intimate early portrait, David presented his aunt looking up momentarily from her reading to acknowledge the viewer with a warm reserve. Her glance suggests an affectionate bond between the painter and sitter and displays the ambitious young artist’s awareness of contemporary conventions for depicting middle-class women of sensibility.",
+              "title": "Madame François Buron"
+            }
+          ],
+          "score": 0.5941658105144881,
+          "source_url": "https://www.artic.edu/artworks/88632"
+        },
+        {
+          "abstencion": "No hay información suficiente para confirmar que este retrato sea una versión del mismo retrato original.",
+          "artwork_id": "cma:170510",
+          "ficha": {
+            "artist": "François Boucher",
+            "culture": "France",
+            "date_display": "early 1730s",
+            "medium": "oil on canvas",
+            "title": "Head of a Young Woman",
+            "year": 1730
+          },
+          "lineas": [
+            "La obra es un retrato francés del siglo XVIII, realizado por François Boucher en los primeros años de la década de 1730. [1]",
+            "El retrato es un estudio al óleo, con una paleta que puede considerarse luminosa y un estilo rococó, más brillante que el retrato original."
+          ],
+          "rango": 3,
+          "referencias": [
+            {
+              "artist": "François Boucher",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:170510::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/2012.95",
+              "texto_citado": "This work was catalogued as \"style of Chardin\" when it entered the museum's collection, and was considered a minor rococo revival work of the 1800s. In 2011, the museum asked Alastair Laing, the leading scholar of the artist Boucher, to study it. He confirmed that the painting is a rare survival from the artist's early career—one of only two known oil studies of this type by the artist.",
+              "title": "Head of a Young Woman"
+            }
+          ],
+          "score": 0.6797276715246638,
+          "source_url": "https://clevelandart.org/art/2012.95"
+        },
+        {
+          "abstencion": "No se indica que este retrato sea una versión del mismo retrato original.",
+          "artwork_id": "cma:145135",
+          "ficha": {
+            "artist": "Nicolas de Largillière",
+            "culture": "France",
+            "date_display": "1734",
+            "medium": "oil on canvas",
+            "title": "Portrait of Anne Louis Goislard de Montsabert, Comte de Richbourg-le-Toureil",
+            "year": 1734
+          },
+          "lineas": [
+            "Este retrato fue pintado en 1734 por Nicolas de Largillière, un artista francés del siglo XVIII. [1]",
+            "La obra presenta una figura cercana al plano pictórico, con una paleta cálida y pinceladas gruesas que recuerdan a pintores flamencos.",
+            "El retrato es informal y muestra detalles como la camisa abierta y polvo de peluca, lo que da una sensación de cercanía. [1]"
+          ],
+          "rango": 4,
+          "referencias": [
+            {
+              "artist": "Nicolas de Largillière",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:145135::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1970.31",
+              "texto_citado": "By positioning the figure close to the picture plane and engulfed in a swirl of drapery, Nicolas de Largillière created a remarkably informal likeness of the 26-year-old Goislard. This impression is enhanced by the sitter’s open shirt and the drift of wig powder that dusts the shoulders of his velvet doublet. Warm hues and thick brushstrokes reveal the artist’s study of earlier Flemish painters, notably Anthony van Dyck. Despite his youth and seeming nonchalance, Goislard was a figure of prominence. He may have commissioned this work to commemorate his appointment to the Parlement, or governing council, of France in 1732, or earning the title Lord of Montsabert the following year.",
+              "title": "Portrait of Anne Louis Goislard de Montsabert, Comte de Richbourg-le-Toureil"
+            }
+          ],
+          "score": 0.61418884801676,
+          "source_url": "https://clevelandart.org/art/1970.31"
+        },
+        {
+          "abstencion": "No hay evidencia de que esta obra sea una versión más luminosa del mismo retrato original.",
+          "artwork_id": "cma:122166",
+          "ficha": {
+            "artist": "Jean-Honoré Fragonard",
+            "culture": "France",
+            "date_display": "1780s",
+            "medium": "oil on wood",
+            "title": "A Boy in a Red-Lined Cloak",
+            "year": 1780
+          },
+          "lineas": [
+            "La obra es un retrato francés del siglo XVIII, pintado por Jean-Honoré Fragonard en la década de 1780. [1]",
+            "El retrato utiliza una paleta marrón y un estilo que refleja influencias de Rubens y Rembrandt, con un enfoque menos luminoso."
+          ],
+          "rango": 5,
+          "referencias": [
+            {
+              "artist": "Jean-Honoré Fragonard",
+              "atribucion": null,
+              "campos": [
+                "description"
+              ],
+              "fragment_id": "cma:122166::description::0",
+              "licencias": [
+                "CC0"
+              ],
+              "license": "CC0",
+              "mezcla_licencias": false,
+              "museum": "cma",
+              "n": 1,
+              "source_url": "https://clevelandart.org/art/1942.49",
+              "texto_citado": "In the course of his long career, Fragonard produced more than 550 paintings. In this particular painting, the seventeenth-century costume, the brown palette, and his technique suggest that Fragonard is reflecting upon the work of Peter Paul Rubens and Rembrandt rather than his teacher François Boucher. While there is considerable evidence that the sitter is Alexander Evariste Fragonard, the artist's son, this identity has never been confirmed.",
+              "title": "A Boy in a Red-Lined Cloak"
+            }
+          ],
+          "score": 0.5935472298765679,
+          "source_url": "https://clevelandart.org/art/1942.49"
+        }
+      ],
+      "render": "1. **Young Woman with a Turban**\n   Jacques-Louis David · c. 1780 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1952.542\n\n   La obra es un retrato francés del siglo XVIII, realizado por Jacques-Louis David, un pintor académico especializado en temas religiosos, mitológicos o históricos. [1]\n   El retrato tiene una paleta más bien sobria y oscura, sin predominancia de colores luminosos.\n   El retrato es conocido y fue copiado por los estudiantes de David, lo que indica su importancia en la formación académica. [2]\n   No hay información suficiente para afirmar que esta obra tenga una paleta más luminosa o que sea una versión más cercana del retrato original.\n\n   **Fuentes**\n   [1] “Known as a tête d'expression or \"expressive head,\" this painting represents an essential part of the academic training of history painters who specialized in religious, mythological, or historical subjects. In 1760, such exercises became standard at the École des Beaux-Arts (School of Fine Arts) in Paris, then known as Académie royale de peinture et de sculpture. Focusing on the relationship between morality and beauty, the goal of a history painter is not only to create a pleasing image, but also to represent the emotions of the soul.”\n       https://clevelandart.org/art/1952.542 · CC0 1.0\n   [2] “The high quality of this painting was of such renown that David’s students requested permission to copy it.”\n       https://clevelandart.org/art/1952.542 · CC0 1.0\n\n2. **Madame François Buron**\n   Jacques Louis David · 1769 · Oil on canvas · 18th Century\n   Ficha oficial: https://www.artic.edu/artworks/88632\n\n   Este retrato fue pintado por Jacques-Louis David en 1769, en Francia, durante el siglo XVIII. [1]\n   El retrato muestra a una mujer con una expresión cálida y reservada, con una paleta que puede considerarse luminosa en comparación con tonos oscuros.\n   La obra es un retrato íntimo y cercano, que refleja un vínculo afectivo entre el pintor y la modelo. [1]\n\n   **Fuentes**\n   [1] “Following his father’s death in 1757, the young Jacques-Louis David was raised in the house of his uncle, architect François Buron, and his wife, Marie-Josèphe Fromont. Madame Buron was particularly supportive of David’s desire to become a painter, in opposition to her husband’s wish that he study architecture. In this intimate early portrait, David presented his aunt looking up momentarily from her reading to acknowledge the viewer with a warm reserve. Her glance suggests an affectionate bond between the painter and sitter and displays the ambitious young artist’s awareness of contemporary conventions for depicting middle-class women of sensibility.”\n       https://www.artic.edu/artworks/88632 · CC BY 4.0\n       “Madame François Buron”, Jacques Louis David. Art Institute of Chicago. Texto bajo CC BY 4.0 — https://www.artic.edu/artworks/88632\n\n3. **Head of a Young Woman**\n   François Boucher · early 1730s · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/2012.95\n\n   La obra es un retrato francés del siglo XVIII, realizado por François Boucher en los primeros años de la década de 1730. [1]\n   El retrato es un estudio al óleo, con una paleta que puede considerarse luminosa y un estilo rococó, más brillante que el retrato original.\n   No hay información suficiente para confirmar que este retrato sea una versión del mismo retrato original.\n\n   **Fuentes**\n   [1] “This work was catalogued as \"style of Chardin\" when it entered the museum's collection, and was considered a minor rococo revival work of the 1800s. In 2011, the museum asked Alastair Laing, the leading scholar of the artist Boucher, to study it. He confirmed that the painting is a rare survival from the artist's early career—one of only two known oil studies of this type by the artist.”\n       https://clevelandart.org/art/2012.95 · CC0 1.0\n\n4. **Portrait of Anne Louis Goislard de Montsabert, Comte de Richbourg-le-Toureil**\n   Nicolas de Largillière · 1734 · oil on canvas\n   Ficha oficial: https://clevelandart.org/art/1970.31\n\n   Este retrato fue pintado en 1734 por Nicolas de Largillière, un artista francés del siglo XVIII. [1]\n   La obra presenta una figura cercana al plano pictórico, con una paleta cálida y pinceladas gruesas que recuerdan a pintores flamencos.\n   El retrato es informal y muestra detalles como la camisa abierta y polvo de peluca, lo que da una sensación de cercanía. [1]\n   No se indica que este retrato sea una versión del mismo retrato original.\n\n   **Fuentes**\n   [1] “By positioning the figure close to the picture plane and engulfed in a swirl of drapery, Nicolas de Largillière created a remarkably informal likeness of the 26-year-old Goislard. This impression is enhanced by the sitter’s open shirt and the drift of wig powder that dusts the shoulders of his velvet doublet. Warm hues and thick brushstrokes reveal the artist’s study of earlier Flemish painters, notably Anthony van Dyck. Despite his youth and seeming nonchalance, Goislard was a figure of prominence. He may have commissioned this work to commemorate his appointment to the Parlement, or governing council, of France in 1732, or earning the title Lord of Montsabert the following year.”\n       https://clevelandart.org/art/1970.31 · CC0 1.0\n\n5. **A Boy in a Red-Lined Cloak**\n   Jean-Honoré Fragonard · 1780s · oil on wood\n   Ficha oficial: https://clevelandart.org/art/1942.49\n\n   La obra es un retrato francés del siglo XVIII, pintado por Jean-Honoré Fragonard en la década de 1780. [1]\n   El retrato utiliza una paleta marrón y un estilo que refleja influencias de Rubens y Rembrandt, con un enfoque menos luminoso.\n   No hay evidencia de que esta obra sea una versión más luminosa del mismo retrato original.\n\n   **Fuentes**\n   [1] “In the course of his long career, Fragonard produced more than 550 paintings. In this particular painting, the seventeenth-century costume, the brown palette, and his technique suggest that Fragonard is reflecting upon the work of Peter Paul Rubens and Rembrandt rather than his teacher François Boucher. While there is considerable evidence that the sitter is Alexander Evariste Fragonard, the artist's son, this identity has never been confirmed.”\n       https://clevelandart.org/art/1942.49 · CC0 1.0\n"
+    },
+    "sellos": {
+      "commit": "41c5aaf3f03118fc28296dbb8bd0d3c3931e2dcb",
+      "config_id": "f14f376d6f065b1c",
+      "corrida_id": "3a9396e71a12843c-1",
+      "filtro_por_metadata": {
+        "aplicado": true,
+        "campo": "culture",
+        "n_obras": 372,
+        "periodo": {
+          "movimiento_solo_occidente": false,
+          "n_obras": 511,
+          "rangos": [
+            [
+              1700,
+              1800
+            ]
+          ]
+        },
+        "terminos": [
+          "France"
+        ],
+        "valores": [
+          "France",
+          "Northeastern France or the Burgundian Netherlands"
+        ]
+      },
+      "split_id": "5b6cba32126fed61",
+      "variante_id": "c3274567371ff42b"
+    },
+    "top5": [
+      "cma:130163",
+      "aic:88632",
+      "cma:170510",
+      "cma:145135",
+      "cma:122166"
+    ]
+  },
+  "fecha": "2026-11-18T05:30:37+00:00",
+  "invariante_et6": {
+    "cadena_declarada": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_pobladas": [
+      "fusionador",
+      "generador",
+      "planificador",
+      "recolector_de_evidencia",
+      "recuperador_textual",
+      "recuperador_visual",
+      "renderizador",
+      "reranker"
+    ],
+    "cumple_et6": true,
+    "etapa_fallida": null,
+    "etapas_degradadas": [],
+    "nota": "Las **dos** direcciones son error de corrida (la forma declarada del artefacto). la precondición declarada mira la cadena **antes** de correr y la degradación registrada registra lo que falló; sin la forma declarada del artefacto, una etapa muda pasa por omisión legítima. Lo verifica el ejecutor al cerrar y lo vuelve a verificar `MétricasDeRanking` al leer (la regla de qué corridas agregan a la tabla).",
+    "top5": {
+      "contra": "reranker",
+      "n": 5,
+      "verificado": true
+    }
+  },
+  "latencia": {
+    "nota": "🔑 **Esto acota el recuadro ⚠️ de la observabilidad.** Ahí se declaraba que *las etapas puras no tienen span* —el `Fusionador` y el `RenderizadorDeSalida` no llaman a ningún puerto— y que por lo tanto *prometer latencia por etapa sobre-promete*. Instrumentando en el **`EjecutorDeEtapas`**, que es el lugar que ese mismo recuadro señala, **sí hay latencia para las ocho**. la latencia por etapa deja de estar sobre-prometido. **Va reportado.**",
+    "por_etapa": {
+      "fusionador": 0.6201,
+      "generador": 10.6228,
+      "planificador": 0.001,
+      "recolector_de_evidencia": 0.7142,
+      "recuperador_textual": 1.2004,
+      "recuperador_visual": 0.1329,
+      "renderizador": 0.0,
+      "reranker": 127.9076
+    },
+    "segundos_de_la_corrida": 141.2009
+  },
+  "libro_mayor": {
+    "embedding_imagen": {
+      "n_items": 4,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_imagen": 4
+      },
+      "segundos": 0.71,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "embedding_texto": {
+      "n_items": 2,
+      "n_llamadas": 2,
+      "resultados": {
+        "ok": 2
+      },
+      "roles": {
+        "embedding_texto": 2
+      },
+      "segundos": 1.607,
+      "tokens_in": 50,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 10.618,
+      "tokens_in": 4176,
+      "tokens_out": 979
+    },
+    "indice": {
+      "n_items": 629,
+      "n_llamadas": 10,
+      "resultados": {
+        "ok": 10
+      },
+      "roles": {
+        "indice": 10
+      },
+      "segundos": 0.181,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 127.737,
+      "tokens_in": 58708,
+      "tokens_out": 9219
+    }
+  },
+  "libro_mayor_por_etapa": {
+    "fusionador": {
+      "n_items": 65,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.619,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "generador": {
+      "n_items": 1,
+      "n_llamadas": 1,
+      "resultados": {
+        "ok": 1
+      },
+      "roles": {
+        "generador": 1
+      },
+      "segundos": 10.618,
+      "tokens_in": 4176,
+      "tokens_out": 979
+    },
+    "recolector_de_evidencia": {
+      "n_items": 12,
+      "n_llamadas": 6,
+      "resultados": {
+        "ok": 6
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 5
+      },
+      "segundos": 0.709,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_textual": {
+      "n_items": 536,
+      "n_llamadas": 4,
+      "resultados": {
+        "ok": 4
+      },
+      "roles": {
+        "embedding_texto": 1,
+        "indice": 3
+      },
+      "segundos": 1.038,
+      "tokens_in": 25,
+      "tokens_out": 0
+    },
+    "recuperador_visual": {
+      "n_items": 22,
+      "n_llamadas": 3,
+      "resultados": {
+        "ok": 3
+      },
+      "roles": {
+        "embedding_imagen": 2,
+        "indice": 1
+      },
+      "segundos": 0.132,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
+    "reranker": {
+      "n_items": 20,
+      "n_llamadas": 20,
+      "resultados": {
+        "ok": 20
+      },
+      "roles": {
+        "reranker": 20
+      },
+      "segundos": 127.737,
+      "tokens_in": 58708,
+      "tokens_out": 9219
+    }
+  },
+  "no_determinan_el_config_id": {
+    "bindings.aclarador": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4.1-mini",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.2,
+        "top_p": 1.0
+      },
+      "prompt_id": "aclarador-pedido-vago",
+      "reintentos": 2,
+      "version_del_prompt": "3"
+    },
+    "bindings.juez": {
+      "esquema_de_salida": "json",
+      "modelo": "openai/gpt-4o",
+      "muestreo": {
+        "max_tokens": 300,
+        "seed": 7369,
+        "temperature": 0.0,
+        "top_p": 1.0
+      },
+      "prompt_id": "juez-grado-0-1-2-un-par",
+      "reintentos": 2,
+      "version_del_prompt": "1"
+    },
+    "consulta.alfa_congelado": true,
+    "embebido.batch": 16,
+    "embebido.batch_maximo": 64,
+    "embebido.threads": 8,
+    "embebido_texto.batch": 128,
+    "http": {
+      "backoff_base": 1.5,
+      "headers_por_dominio": {
+        "artic.edu": {
+          "AIC-User-Agent": "{aic_user_agent}",
+          "User-Agent": "{user_agent}"
+        },
+        "clevelandart.org": {
+          "User-Agent": "{user_agent}"
+        }
+      },
+      "proyecto": "ITBA-TP3-G2",
+      "rate_limit_por_minuto": {
+        "api.artic.edu": 60,
+        "openaccess-api.clevelandart.org": 0,
+        "openaccess-cdn.clevelandart.org": 0,
+        "www.artic.edu": 0
+      },
+      "reintentos": 4,
+      "timeout_segundos": 60,
+      "user_agent": "ITBA-TP3-G2"
+    },
+    "indice.batch_de_upsert": 5000,
+    "medicion": {
+      "marcadores_de_negacion": [
+        "not related",
+        "unrelated",
+        "not associated",
+        "rather than",
+        "instead of",
+        "unlike",
+        "no connection",
+        "devoid of"
+      ],
+      "terminos_de_cultura": {
+        "China": [
+          "Chinese"
+        ],
+        "France": [
+          "French"
+        ],
+        "India": [
+          "Indian",
+          "South Asian"
+        ],
+        "Italy": [
+          "Italian"
+        ],
+        "Japan": [
+          "Japanese"
+        ],
+        "Mughal India": [
+          "Mughal",
+          "Indian"
+        ]
+      }
+    },
+    "proveedor.base_url": "https://api.openai.com/v1/",
+    "proveedor.precio_usd_por_millon_de_tokens": {
+      "openai/gpt-4.1-mini": 0.4,
+      "openai/gpt-4o": 2.5,
+      "openai/gpt-6-luna": 0.1,
+      "openai/text-embedding-3-small": 0.02
+    },
+    "proveedor.precio_usd_por_millon_de_tokens_de_salida": {
+      "openai/gpt-4.1-mini": 1.6,
+      "openai/gpt-4o": 10.0,
+      "openai/gpt-6-luna": 0.5
+    },
+    "rutas": {
+      "artefactos_corridas": "artifacts/corridas",
+      "artefactos_embebido": "artifacts/embebido",
+      "artefactos_indices": "artifacts/indices",
+      "artefactos_ingesta": "artifacts/ingesta",
+      "artefactos_planes": "artifacts/planes",
+      "artefactos_splits": "artifacts/splits",
+      "catalogo": "data/catalogo",
+      "chroma": "data/chroma",
+      "embeddings_imagen": "data/embeddings-imagen",
+      "ground_truth_consultas": "artifacts/ground-truth/consultas",
+      "http_cache": "data/http-cache",
+      "imagenes": "data/imagenes",
+      "tokenizadores": "data/tokenizadores"
+    },
+    "trazas.proyecto": "tp3-rag-g2-m4",
+    "trazas.timeout_segundos": 10
+  },
+  "nota_de_a8_vs_bd4": "🔴 **Las dos lecturas del libro mayor, y son proyecciones del mismo dato**: la tabla de costo pide el gasto *por etapa* y la atribución de cada llamada lo cuenta *por rol, no por el nombre de la etapa*. En C1–C3 son **1:1**; en C4 el reranker es **N llamadas de un rol y una etapa** y `embedding_texto` es **un rol en dos etapas**. `libro_mayor` agrupa por rol —que sigue siendo la atribución de registro, declarada por el binding— y `libro_mayor_por_etapa` por la etapa en que el span corrió, **derivada del árbol de trazas y no de un parámetro**. Los totales coinciden por construcción: son dos `GROUP BY` de la misma lista de spans, no dos acumuladores — dos acumuladores serían el **modo de falla 1** sobre la cifra de costo que se publica.",
+  "nota_de_identidad": "Clase 2 (la tabla de identidades): *registro de una ejecución*. La identidad fija **las entradas, no la salida** —una salida no determinista con la misma entrada es el dato que el muestreo fijado, registrado y con su variabilidad medida mide—, así que lleva **ordinal** y la regla de que un id determina su contenido no aplica. El ordinal se **reserva** creando el directorio de forma exclusiva: `1 + n` es un *leer, después escribir* y el barrido es paralelo.",
+  "nota_de_la_tabla": "degradación/la regla de qué corridas agregan a la tabla: una corrida con degradación **no planificada** no agrega a la tabla C0–C4 —*una C4 que degradó en silencio entraría etiquetada como C4 comportándose como C3*— y una con degradación **planificada** tampoco: es el criterio de respuesta garantizada y se reporta aparte. Una etapa **ausente por configuración** no degrada: no corre, y por eso C0–C3 sí agregan.",
+  "nota_de_m5_1": "🔴 **La regla**: *toda identidad y toda comparación de contenido **declaran** su bloque de claves no determinantes*. El `config_id` hashea la configuración resuelta **menos** las claves de arriba —layout, parámetros de máquina, ruteo, transporte y el precio declarado—, que son **procedencia**: viajan enteras en `configuracion_resuelta` y no mueven la identidad. Antes de esta versión el `config_id` hasheaba todo, y por eso se movió **dos veces** por claves que no cambian nada de lo que el pipeline produce, huerfanando las corridas las dos veces. Declararlo es la mitad de la decisión: sin esta clave, *«el `config_id` excluye el layout»* sería una afirmación de documento, y una afirmación de documento no es un control (los detectores estructurales).",
+  "nota_de_m9_3": "🔴 **La regla**: *el `config_id` se computa sobre las claves que **la cadena declarada lee**, no sobre el árbol entero. había sacado el layout, el ruteo y el precio con un bloque **global**, y no alcanzó: agregar `[bindings.reranker]` movió el id de C1–C3 —cadenas que no tienen reranker— *justo antes de congelar*. El alcance de arriba son `CLAVES_DE_TODA_CORRIDA` (los ingredientes del `variante_id`, del `split_id`, la cadena, `top_k`, el plan de falla y la retención) más lo que declara cada etapa de **esta** cadena en `Etapa.CLAVES_DE_CONFIGURACIÓN`. Y no es una promesa: el `ArmadorDePipeline` **registra las lecturas** que hace al construir la cadena y rechaza la que leyó una clave que no declaró — porque la dirección peligrosa es incluir **de menos**, que deja dos corridas con el mismo id y contenido distinto (la regla de que un id determina su contenido).",
+  "nota_de_ob2": "*Los tokens se **persisten en el artefacto de corrida**, no solo en LangSmith* (los tokens en el artefacto de corrida): si el servicio se cae, se pierde la herramienta de debugging, **no los números** que la tabla de tokens, costo y la figura y el criterio de costo publican. Y el árbol declara qué se trazó y qué no, que es el registro de decisiones hecho artefacto.",
+  "ordinal": 1,
+  "pipeline": {
+    "cadena": [
+      "planificador",
+      "recuperador_visual",
+      "recuperador_textual",
+      "fusionador",
+      "reranker",
+      "recolector_de_evidencia",
+      "generador",
+      "renderizador"
+    ],
+    "claves_por_etapa": {
+      "fusionador": "ranking_fusionado",
+      "generador": "explicacion",
+      "planificador": "plan",
+      "recolector_de_evidencia": "evidencia",
+      "recuperador_textual": "fuentes_de_ranking[\"texto\"]",
+      "recuperador_visual": "fuentes_de_ranking[\"visual\"]",
+      "renderizador": "salida",
+      "reranker": "rerank"
+    },
+    "configuracion": "C4",
+    "etapas": [
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.planificador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 300,
+            "seed": 7369,
+            "temperature": 0.1,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "planificador-pre-retrieval-dos-consultas",
+          "reintentos": 2,
+          "rol": "planificador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "planificador",
+        "idioma_de_las_consultas": "en",
+        "llamadas_al_llm_por_consulta": 1,
+        "nota": "**Una sola llamada por consulta y es normativo** (el diseño de la arquitectura): los dos campos salen del mismo JSON porque *partirla costaría reenviar la imagen sin ganar nada* y porque de eso depende el conteo **C1 = 1, C2 = C3 = 2, C4 = 2 + N** que el criterio de costo compromete. Las dos consultas van **en inglés**: los consumidores son el text encoder de CLIP y el texto de museo de AIC y CMA, que está en inglés — el diseño de la arquitectura da los ejemplos en español y no lo cierra. **Va reportado.**",
+        "nota_de_m7_1": "🔴 **El v2 arregla un defecto medido**: con el v1, en **4 de los 10** pedidos culturales el plan describía **la cultura de la imagen subida en vez de la pedida** (y en `c04` la **negaba**). El v2 declara la precedencia *el pedido gana sobre la imagen*, prohíbe nombrar una cultura que el pedido no pidió, prohíbe escribir en negativo y manda la cultura a **las dos** consultas. **El v1 queda citable** —es otra `version` del binding, así que es otro `plan_id` (la versión del prompt como ingrediente del plan)— porque *su medición es un resultado*: «el pre-retrieval ingenuo suelta la cultura pedida en el 40 % de los pedidos culturales» entra al informe del Ej. 4 como antes/después.",
+        "politica": "**pedido crudo al text encoder de CLIP** — que es exactamente el comportamiento de C1 en la rama visual (degradación). La clave `plan` queda ausente y `consulta_visual` cae al pedido, que es el mismo código que corre C1 (que omitir y fallar produzcan la misma forma).",
+        "version_del_prompt": "2",
+        "versiones_del_prompt_disponibles": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "alfa": 0.5,
+        "degrada": false,
+        "etapa": "recuperador_visual",
+        "n_candidatos": 20,
+        "politica": "no degrada: es el piso (la asimetría del piso de recuperación). Si falla, la consulta falla.",
+        "top_k": 5
+      },
+      {
+        "agregacion": "mejor_fragmento",
+        "agregaciones_declaradas": [
+          "mejor_fragmento",
+          "suma_de_los_2_mejores"
+        ],
+        "degrada": true,
+        "etapa": "recuperador_textual",
+        "filtro_por_metadata": true,
+        "n_fragmentos": 100,
+        "nota_de_m4_2": "⚠️ **La `consulta_conceptual` la leen dos piezas y no es doble conteo**: el `RecolectorDeEvidencia` la usa desde C2 para ordenar fragmentos dentro de una obra ya elegida**, y esta rama **rankea obras**. En C3 con el orden por defecto son **dos embeddings** por consulta, y eso aparece en la tabla de tokens, costo y la figura; el criterio de costo cuenta **2 llamadas al LLM**, porque un embedding no es una.",
+        "nota_de_p4": "La estrategia de agregación es el criterio de atribución y **no se cierra en **: el pendiente dice *«¿Mejor chunk, o suma de los 2 mejores? **Decidir empíricamente**»*, y empíricamente es con los números del barrido. Lo que esta pieza implementa es el **punto de variación**, que es el mismo patrón con que trató el criterio de normalización de culture, trató el criterio de trazabilidad y trató el criterio de respuesta garantizada.",
+        "politica": "se cae la fuente `\"texto\"` y el resto corre con una sola: el `Fusionador` pasa a través con la **visual** (degradación). `fuentes_de_ranking[\"texto\"]` queda ausente **+ degradación** — sin la entrada, la forma declarada del artefacto rechaza la corrida, que es su primera dirección. Es la omisión de etapas en runtime literal: *si falla la rama de texto, el visual*."
+      },
+      {
+        "alfa": 0.5,
+        "degrada": true,
+        "estrategia": "cascada",
+        "estrategias_declaradas": [
+          "rrf",
+          "suma_de_scores_normalizados",
+          "concatenacion",
+          "cascada"
+        ],
+        "etapa": "fusionador",
+        "k": null,
+        "nota_de_d5": "**la fusión recíproca de rangos con k = 60: RRF usa solo rangos.** Un coseno de CLIP y uno de `text-embedding-3-small` **no son calibrables entre sí**, así que el default no lee `score` en ninguna línea. El brazo `suma_de_scores_normalizados` sí lo hace y es el único lugar del sistema donde dos escalas se suman: está **declarado** (el stack declarado) y compararlo requiere un barrido de variantes que no está hecho.",
+        "nota_del_nombre": "⚠️ El campo de la fila se llama **`score_fusionado`** y el contrato de etapa/la no destrucción de lo ya registrado lo nombran `score_rrf`: con tres estrategias declaradas, un campo llamado `score_rrf` que a veces trae una suma de scores normalizados **miente**. La `estrategia` viaja en la misma fila. **Va reportado.**",
+        "politica": "con **una sola** fuente **pasa a través**; con dos y una falla, **se usa la visual** (degradación). Si falla el fusionador mismo, `ranking_fusionado` queda ausente + degradación, y el `top5` sigue siendo el de la última etapa de ranking que no degradó — que es la **visual**, porque es el piso (la asimetría del piso de recuperación).",
+        "top_k": 5
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.reranker",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-6-luna",
+          "muestreo": {
+            "max_tokens": 200,
+            "seed": 7369,
+            "temperature": 0.0,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "reranker-score-0-10-un-candidato",
+          "reintentos": 2,
+          "rol": "reranker",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "desempate": "rango del ranking fusionado",
+        "escala": [
+          0,
+          10
+        ],
+        "etapa": "reranker",
+        "imagenes_por_llamada": 2,
+        "llamadas_al_llm_por_consulta": "min(N=20, |fusionado|)",
+        "modelo_efectivo": "gpt-6-luna",
+        "muestreo_efectivo": {
+          "max_completion_tokens": 2000,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "top_p": 1.0
+        },
+        "n_candidatos": 20,
+        "nota_de_et3": "la no destrucción de lo ya registrado: esta etapa **agrega** `rerank` y **reordena** `top5` por `proyectar_top5`; **no pisa** el `score_fusionado` ni los `rangos_de_origen` —*si los pisara, `C3−C2` y `C4−C3` dejarían de ser legibles del mismo artefacto*—. Y lo que vuelve esto expresable es un *subconjunto de lo que alguna etapa de ranking propuso*, porque el reranker puntúa N y se queda con 5.",
+        "nota_de_p6": "**`C4 = 2 + N`** (el criterio de costo), y la `N` es `consulta.n_candidatos` —la misma clave que la cantidad de candidatos a rerankear deja abierta en 10/20/50— **y no una clave propia**: dos hogares para el mismo dato son dos lugares que editar y acá serían dos valores que pueden discrepar justo en el número que el criterio de costo publica. ⚠️ El reranker puntúa `min(N, |fusionado|)`, así que `2 + N` es una **cota superior**: se alcanza cuando el fusionado tiene ≥ N filas, que con N candidatas visuales es verdad por construcción.",
+        "nota_de_un_candidato_por_llamada": "🔴 **Un candidato por llamada, y no es ineficiencia** (el diseño de la arquitectura, la cantidad de candidatos a rerankear **firme**): *meter 5 imágenes en un mismo mensaje reduciría llamadas 5×, pero **contamina los scores entre candidatos** —el modelo los compara entre sí en vez de evaluarlos contra el pedido—*. Y de eso depende el conteo que el criterio de costo compromete: un batch de 5 haría `2 + N/5`.",
+        "nota_del_pedido_crudo": "🔑 **Entra el pedido crudo y NO la consulta reescrita** (el diseño de la arquitectura: *queremos verificar contra lo que el usuario realmente pidió*). Es la única etapa de C4 que no consume el plan, y es lo que vuelve informativo `C4−C3`: si leyera `consulta_conceptual` estaría midiendo la reescritura otra vez.",
+        "politica": "**top-5 del ranking fusionado** (= C3, degradación). Queda el fusionado con su `score_fusionado` y el top-5 **sin reordenar**, más la degradación. 🔑 Para esta etapa la glosa *«la escalera de degradación es la escalera de la ablación»* es **exacta** —C4 degradado entrega C3— y es el único caso en que lo es (degradación, recuadro 📌). Un candidato **sin puntaje** degrada igual: ordenar mezclando «puntuado» con «no pude puntuarlo» sería publicar dos escalas en una columna , y los puntajes que sí se pagaron quedan en el artefacto.",
+        "top_k": 5
+      },
+      {
+        "degrada": true,
+        "etapa": "recolector_de_evidencia",
+        "n_fragmentos_por_obra": 3,
+        "nota": "la evidencia copiada por valor es la **identidad** sobre `license`, `source_url`, `texto`, `title` y `artist`: esta pieza devuelve `Fragmento`s completos y no dicts proyectados, así que *no hay proyección* que pueda olvidar una columna. Y `media_license` **no está en el tipo** (la licencia de imagen y metadata), así que el renderizador no puede leerlo mal.",
+        "orden": "por_similitud_al_pedido",
+        "politica": "evidencia vacía para la obra afectada → el generador **abstiene** por esa obra (degradación). La obra sale igual, con su metadata y su link."
+      },
+      {
+        "binding": {
+          "clave_de_configuracion": "bindings.generador",
+          "esquema_de_salida": "json",
+          "modelo": "openai/gpt-4.1-mini",
+          "muestreo": {
+            "max_tokens": 1500,
+            "seed": 7369,
+            "temperature": 0.2,
+            "top_p": 1.0
+          },
+          "nota": "el binding como único camino al puerto: el binding es el **único camino al puerto** y el prompt es parte de su identidad, no un argumento. la atribución de cada llamada a su rol: la llamada se atribuye a `rol`, no al nombre de la etapa. El `base_url` **no** es ingrediente: sale de `[proveedor]`.",
+          "prompt_id": "generador-es-afirmaciones-tipadas",
+          "reintentos": 2,
+          "rol": "generador",
+          "version_del_prompt": "2"
+        },
+        "degrada": true,
+        "etapa": "generador",
+        "idioma": "es",
+        "modelo_efectivo": "gpt-4.1-mini-2025-04-14",
+        "muestreo_efectivo": {
+          "max_tokens": 1500,
+          "response_format": {
+            "type": "json_object"
+          },
+          "seed": 7369,
+          "temperature": 0.2,
+          "top_p": 1.0
+        },
+        "nota": "la regla de que un dato lleva referencia y que el generador emite ids y no números **no están en el prompt: están en el tipo**. Un `dato` sin `refs`, una `observacion` con `refs` y una `ref` numérica no se pueden construir (`dominio/explicacion.py`). Lo que el prompt pide es la calidad; lo que el tipo garantiza es la forma.",
+        "politica": "**salida sin explicación**: 5 obras con metadata, link y técnica. Degradación visible (degradación). Es lo que el criterio de respuesta garantizada compromete: *30/30 devuelven 5 obras*."
+      },
+      {
+        "degrada": false,
+        "etapa": "renderizador",
+        "formato": {
+          "atribucion": "al_pie_de_la_referencia",
+          "campos_de_la_ficha": [
+            "artist",
+            "date_display",
+            "medium",
+            "style",
+            "museum"
+          ],
+          "exigen_atribucion": {
+            "CC-BY-4.0": true,
+            "CC0": false
+          },
+          "formato": "markdown",
+          "nota": "El formato concreto **sigue abierto**: esto es la **cosmética declarada**, no el contrato. El contrato —`[n]` que asigna el renderizador, toda afirmación con dato citando un `fragment_id` recuperado en esta consulta, 100 % de los CC-BY con atribución, español + cita textual en inglés— vive en el código y es el conteo de referencias colgadas, el criterio de atribución, el criterio de idioma y las obligaciones de la cita."
+        },
+        "nota": "La numeración `[n]` nace acá (que el generador emite ids y no números) y es lo que vuelve al conteo de referencias colgadas un evento contable. las obligaciones de la cita se verifica **contra el texto renderizado** porque el criterio de atribución compromete *en toda superficie donde se muestren*. Y *fallar* es escribir `fallida` en el estado, no lanzar: la clausura de la etapa sigue valiendo (la política de fallas).",
+        "politica": "las **obligaciones** no degradan: fallan (las obligaciones de la cita). Una `ref` colgada **sí** degrada: se cae la afirmación y se cuenta (el descarte contado de afirmaciones), y si se cae la última de una obra, esa obra sale con **abstención**."
+      }
+    ],
+    "nota": "**Las cinco configuraciones son subsecuencias de una sola cadena** (la clausura de la etapa, la ablación por configuración), no cinco pipelines. la precondición declarada las rechaza antes de correr por dos caminos: precondiciones insatisfechas, y una cadena que no coincide con la fila que `[consulta] configuracion` dice ser.",
+    "plan_de_falla": {},
+    "top_k": 5
+  },
+  "retencion": {
+    "dias": 0,
+    "imagen": false,
+    "nota": "el registro de decisiones (cierra la pregunta por el ciclo de vida de la corrida purgada): **no se persiste nada de un tercero**. Aplica al **dato del usuario**, no al ciclo de vida del artefacto: esta corrida conserva su `corrida_id`, su ordinal, sus rankings, sus métricas y sus degradaciones, y **pierde** la imagen y el pedido. Lo que se vacía son campos, y que estaban vaciados queda registrado. Borrar la corrida reasignaría el ordinal y un informe que cita la corrida #1 apuntaría a otra ejecución.",
+    "pedido": false
+  },
+  "sellos": {
+    "commit": "41c5aaf3f03118fc28296dbb8bd0d3c3931e2dcb",
+    "config_id": "f14f376d6f065b1c",
+    "corrida_id": "3a9396e71a12843c-1",
+    "split_id": "5b6cba32126fed61",
+    "variante_id": "c3274567371ff42b"
+  },
+  "version_de_la_corrida": "1"
+}
